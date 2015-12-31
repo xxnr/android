@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="50dp"
+    android:background="@android:color/transparent">
+
+    <RelativeLayout
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/round_line_gary_radius">
+
+        <TextView
+            android:id="@+id/alert_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="15dp"
+            android:gravity="center"
+            android:textColor="@color/black_goods_titile"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/dialog_line"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_below="@id/alert_message"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/line_chang" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/dialog_line"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+
+            <Button
+                android:id="@+id/btn_sure"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:drawablePadding="12dp"
+                android:background="@drawable/list_bg_selector"
+                android:paddingLeft="10dp"
+                android:text="本地上传"
+                android:drawableLeft="@drawable/local_pic"
+                android:gravity="left|center_vertical"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <include layout="@layout/line_lay" />
+
+            <Button
+                android:id="@+id/btn_normal"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/list_bg_selector"
+                android:paddingLeft="10dp"
+                android:drawablePadding="12dp"
+                android:drawableLeft="@drawable/camera"
+                android:gravity="left|center_vertical"
+                android:text="拍照上传"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <include layout="@layout/line_lay" />
+
+            <Button
+                android:id="@+id/btn_cancel"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/list_bg_selector"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+
+        </LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>

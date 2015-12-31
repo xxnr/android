@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <Button
+        android:id="@+id/btn_pop_item_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/green"
+        android:gravity="center_vertical|right"
+        android:padding="10dip"
+        android:text="完成"
+        android:textColor="@android:color/white" />
+
+    <TextView
+        android:background="@color/white"
+        android:gravity="center"
+        android:textSize="15sp"
+        android:padding="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="到货日期为5天之后" />
+
+    <com.ksfc.newfarmer.widget.wheel.WheelView
+        android:id="@+id/wv_date"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        gravity="center_vertical"
+        android:background="@color/white" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:background="#e033ffcc" />
+
+</LinearLayout>

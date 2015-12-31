@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/default_act_bg"
+    android:orientation="vertical">
+
+    <include layout="@layout/title_lay" />
+
+    <com.handmark.pulltorefresh.library.PullToRefreshScrollView
+        xmlns:ptr="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/pull_ll_srcoll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        ptr:ptrAnimationStyle="rotate"
+        ptr:ptrDrawable="@drawable/loader"
+        ptr:ptrHeaderBackground="@color/re_flash"
+        ptr:ptrListViewExtrasEnabled="false"
+        ptr:ptrScrollingWhileRefreshingEnabled="true"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:id="@+id/pull_ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.ksfc.newfarmer.widget.GridViewWithHeaderAndFooter
+                android:id="@+id/huafei_gv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:columnWidth="90dp"
+                android:gravity="center"
+                android:listSelector="@null"
+                android:numColumns="2"
+                android:scrollbars="none"
+                android:stretchMode="columnWidth" />
+
+            <RelativeLayout
+                android:id="@+id/car_bar_layout"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_marginTop="-50dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/head_bottom_bar"
+                    android:layout_width="3dp"
+                    android:layout_height="16dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="16dp"
+                    android:background="@color/orange_goods_price" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="6dp"
+                    android:layout_toRightOf="@id/head_bottom_bar"
+                    android:text="汽车精选"
+                    android:textColor="@color/black_goods_titile"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/car_bottom_bar_qianjin"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16dp"
+                    android:src="@drawable/common_icon_qianjin" />
+
+                <TextView
+                    android:id="@+id/car_bar_gengduo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@id/car_bottom_bar_qianjin"
+                    android:paddingRight="6dp"
+                    android:text="更多产品"
+                    android:textColor="@color/black_goods_titile"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+
+            <com.ksfc.newfarmer.widget.GridViewWithHeaderAndFooter
+                android:id="@+id/qiche_gv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:columnWidth="90dp"
+                android:gravity="center"
+                android:listSelector="@null"
+                android:numColumns="2"
+                android:scrollbars="none"
+                android:stretchMode="columnWidth" />
+        </LinearLayout>
+    </com.handmark.pulltorefresh.library.PullToRefreshScrollView>
+
+</LinearLayout>

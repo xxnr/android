@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/order_detail_rl"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/default_act_bg">
+
+    <include layout="@layout/title_lay" />
+
+
+    <ListView
+        android:id="@+id/order_shangpin_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/topay_ll"
+        android:layout_below="@+id/titleview"
+        android:divider="@drawable/line_chang"
+        android:dividerHeight="1px"
+        android:scrollbars="none" />
+
+    <LinearLayout
+        android:id="@+id/topay_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+
+        <include layout="@layout/line_lay" />
+
+        <RelativeLayout
+            android:id="@+id/go_to_pay_rel"
+            android:layout_width="match_parent"
+            android:layout_height="49dp"
+            android:background="@color/white"
+            android:visibility="gone">
+
+            <Button
+                android:id="@+id/go_to_pay"
+                android:layout_width="90dp"
+                android:layout_height="30dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="16dp"
+                android:background="@drawable/login_roate"
+                android:text="去付款"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
+        </RelativeLayout>
+
+        <include layout="@layout/line_lay" />
+
+    </LinearLayout>
+</RelativeLayout>

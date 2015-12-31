@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/default_act_bg"
+    android:orientation="vertical">
+
+    <include layout="@layout/title_lay" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="12dp" />
+
+    <include layout="@layout/line_lay" />
+
+    <EditText
+        android:id="@+id/et_modify"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@android:color/white"
+        android:hint="请输入您真实姓名"
+        android:maxLength="12"
+        android:paddingLeft="10dp"
+        android:singleLine="true" />
+
+    <include layout="@layout/line_lay" />
+
+
+
+    <TextView
+        android:id="@+id/name_submit_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="40dp"
+        android:background="#e0e0e0"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="保存"
+        android:textColor="@color/white" />
+
+</LinearLayout>

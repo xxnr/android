@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/default_act_bg">
+
+    <include layout="@layout/title_lay" />
+
+    <FrameLayout
+        android:id="@+id/newframentfragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/radioGroup_invite"
+        android:layout_below="@+id/titleview" />
+
+    <RadioGroup
+        android:id="@+id/radioGroup_invite"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/tab_selector_invite"
+            android:button="@null"
+            android:drawableLeft="@drawable/tab_selsect_button_invite1"
+            android:drawablePadding="10dp"
+            android:paddingLeft="30dp"
+            android:text="我的客户"
+            android:textColor="@color/tab_selector_invite_textcolor"
+            android:textSize="16sp" />
+
+        <RadioButton
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/tab_selector_invite"
+            android:button="@null"
+            android:drawableLeft="@drawable/tab_selsect_button_invite2"
+            android:drawablePadding="9dp"
+            android:paddingLeft="30dp"
+            android:text="我的新农代表"
+            android:textColor="@color/tab_selector_invite_textcolor"
+            android:textSize="16sp" />
+    </RadioGroup>
+
+</RelativeLayout>

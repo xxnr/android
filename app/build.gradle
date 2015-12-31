@@ -1,0 +1,58 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion "20"
+
+    defaultConfig {
+        applicationId "com.ksfc.newfarmer"
+        minSdkVersion 14
+        targetSdkVersion 19
+
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+
+    packagingOptions { // 打包配置
+        exclude 'META-INF/LICENSE' // 排除一些文件
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+    }
+    //这个是解决lint报错的代码
+    lintOptions {
+        abortOnError false
+    }
+}
+
+
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile files('libs/alipaysdk.jar')
+    compile files('libs/alipaysecsdk.jar')
+    compile files('libs/alipayutdid.jar')
+    compile files('libs/fastjson-1.1.43.android.jar')
+    compile files('libs/httpmime-4.1.1.jar')
+    compile files('libs/locSDK_4.2.jar')
+    compile files('libs/nineoldandroids-2.4.0.jar')
+    compile files('libs/picasso-2.4.0.jar')
+    compile files('libs/pinyin4j-2.5.0.jar')
+    compile files('libs/umeng-analytics-v5.2.4.jar')
+    compile files('libs/universal-image-loader-1.9.1-SNAPSHOT-with-sources.jar')
+    compile files('libs/UPPayAssistEx.jar')
+    compile files('libs/UPPayPluginExStd.jar')
+    compile files('libs/xUtils-2.6.14.jar')
+    compile 'com.android.support:support-v4:22.2.0'
+    compile 'com.android.support:design:22.2.0'
+    compile project(':PhotoView')
+    compile 'com.google.code.gson:gson:2.5'
+    compile project(':PullToRefresh')
+}

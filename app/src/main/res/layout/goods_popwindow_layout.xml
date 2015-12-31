@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/default_act_bg"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/popwindow_text1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="30dp"
+        android:text="品牌"
+        android:textColor="@color/black"
+        android:textSize="14sp" />
+
+    <include layout="@layout/line_lay"/>
+
+    <com.ksfc.newfarmer.widget.GridViewWithHeaderAndFooter
+        android:id="@+id/brand_gv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:gravity="center"
+        android:horizontalSpacing="20dp"
+        android:listSelector="@null"
+        android:numColumns="3"
+        android:scrollbars="none"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="15dp" >
+    </com.ksfc.newfarmer.widget.GridViewWithHeaderAndFooter>
+
+    <TextView
+        android:id="@+id/popwindow_text2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="20dp"
+        android:text="价格"
+        android:textColor="@color/black"
+        android:textSize="14sp" />
+
+    <include layout="@layout/line_lay"/>
+
+    <com.ksfc.newfarmer.widget.GridViewWithHeaderAndFooter
+        android:id="@+id/price_gv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:gravity="center"
+        android:horizontalSpacing="20dp"
+        android:listSelector="@null"
+        android:numColumns="3"
+        android:scrollbars="none"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="15dp" >
+    </com.ksfc.newfarmer.widget.GridViewWithHeaderAndFooter>
+    
+    
+    <RelativeLayout 
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" 
+        android:layout_marginBottom="20dp"
+        
+        >
+
+        <Button
+             android:id="@+id/shuaixuan_icon_reset"
+            android:layout_width="91dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:background="@drawable/btn_selector_greentran_green_round"
+            android:gravity="center"
+            android:text="重置"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:textColor="@color/shop_car_text_selector"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/shuaixuan_icon_sure"
+            android:layout_width="91dp"
+            android:layout_height="30dp"
+             android:layout_margin="10dp"
+            android:layout_gravity="center"
+            android:background="@drawable/login_roateup"
+            android:gravity="center"
+            android:text="确定"
+            android:layout_weight="1"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <include layout="@layout/title_lay" />
+
+    <LinearLayout
+        android:id="@+id/goods_shanxuan_lin"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:id="@+id/goods_zonghe_rel"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/goods_zonghe_rel_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="综合"
+                android:textColor="@color/orange_goods_price"
+                android:textSize="16sp" />
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:background="@color/gray" />
+
+        <RelativeLayout
+            android:id="@+id/goods_jiage_rel"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/goods_jiage_rel_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="价格"
+                android:textColor="@color/black_goods_titile"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:id="@+id/goods_jiage_rel_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="20dp"
+                android:src="@drawable/price_order_up"
+                android:visibility="gone" />
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:background="@color/gray" />
+
+        <RelativeLayout
+            android:id="@+id/goods_shaixuan_rel"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/goods_shaixuan_rel_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="筛选"
+                android:textColor="@color/black_goods_titile"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:id="@+id/goods_shaixuan_rel_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="20dp"
+                android:src="@drawable/shaixuan_gary" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/goods_bar_separatrix"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/gray" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/goods_none_view_rel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/good_list_none"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="72dp"
+                android:background="@drawable/good_list_none" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/good_list_none"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="30dp"
+                android:text="抱歉，没有找到合适的商品"
+                android:textColor="@color/deep_gray"
+                android:textSize="16sp" />
+
+        </RelativeLayout>
+
+        <com.handmark.pulltorefresh.library.PullToRefreshListView
+            xmlns:ptr="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/information_listView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@drawable/line_chang"
+            android:paddingTop="6dp"
+            android:scrollbars="none"
+            ptr:ptrAnimationStyle="rotate"
+            ptr:ptrDrawable="@drawable/loader"
+            ptr:ptrHeaderBackground="@color/re_flash"
+            ptr:ptrListViewExtrasEnabled="false"
+            ptr:ptrScrollingWhileRefreshingEnabled="true" />
+
+        <ImageView
+            android:id="@+id/return_top"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="40dp"
+            android:layout_marginRight="10dp"
+            android:clickable="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/return_top"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+
+
+</LinearLayout>

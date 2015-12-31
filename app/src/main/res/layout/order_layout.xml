@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/order_detail_rl"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/default_act_bg"
+    android:orientation="vertical">
+
+    <include layout="@layout/title_lay" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/topay_ll"
+        android:layout_below="@+id/titleview"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical">
+
+        <include layout="@layout/line_lay" />
+
+        <ListView
+            android:id="@+id/order_shangpin_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@null"
+            android:dividerHeight="1dp"
+            android:scrollbars="none" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/topay_ll"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <include layout="@layout/line_lay" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2">
+
+                <LinearLayout
+                    android:id="@+id/goods_car_price_lin"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:gravity="right|center_vertical">
+
+                    <TextView
+                        android:id="@+id/ordering_fenshu"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="总计："
+                        android:textColor="@color/black_goods_titile"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/order_sum_pri"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="￥0"
+                        android:textColor="@color/orange_goods_price"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ordering_go_bt"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/btn_selector_orange_deep"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/ordering_go_bt_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="提交订单"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

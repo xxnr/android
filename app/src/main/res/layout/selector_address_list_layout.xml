@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/default_act_bg"
+    android:orientation="vertical">
+
+    <include layout="@layout/title_lay" />
+
+
+    <LinearLayout
+        android:id="@+id/select_address_title_ll"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/select_address_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
+                android:text="重庆"
+                android:textColor="@color/deep_gray"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
+        <include layout="@layout/line_lay" />
+
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/select_address_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@drawable/line_chang"
+        android:dividerHeight="1px"
+        android:listSelector="@color/transparent"
+        android:padding="12dp"
+        android:scrollbars="none" />
+
+</LinearLayout>

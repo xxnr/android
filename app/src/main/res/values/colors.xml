@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="default_font_categary_color">#354984</color>
+    <color name="ziti">#9C9C9C</color>
+    <color name="shenlv">#0E7718</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="transparent">#00000000</color>
+    <color name="back_press_bg">#33000000</color>
+    <color name="pos_selected_color">#7ABD5E</color>
+    <color name="pos_select_color">#9E9E9E</color>
+    <color name="title_background_color">#F2303B</color>
+    <color name="content_background_color">#F6F6F6</color>
+    <color name="title_text_color">#FFFFFF</color>
+    <color name="default_act_bg1">#EDEDED</color>
+    <!-- activity的背景颜色 -->
+    <color name="default_act_bg">#fafafa</color>
+    <!-- 分割线的颜色 -->
+    <color name="group_seprator">#DEDEDE</color>
+    <!-- 按钮的字体颜色 -->
+    <color name="button_text_color">#FFFFFF</color>
+    <!-- 红色 -->
+    <color name="red">#FF0000</color>
+    <color name="loginback">#f4f4f4</color>
+    <!-- 我的余额 -->
+    <color name="moneyColor">#FFB401</color>
+    <!-- listView的点击色 -->
+    <color name="list_bg">#f8f8f8</color>
+    <!-- 雪白色 -->
+    <color name="floralwhite">#FFFAF0</color>
+    <!-- 灰色 -->
+    <color name="gray">#c7c7c7</color>
+    <!-- 绿色 -->
+    <color name="green">#00b38a</color>
+    <!-- 半透绿色 -->
+    <color name="half_green">#2000b38a</color>
+    <!-- 浅绿色 -->
+    <color name="qianlv">#00ffc3</color>
+    <color name="ordering_cat">#ACAAAB</color>
+    <color name="btn_lv_check">#66d1b9</color>
+
+    <!-- 待评价 -->
+    <color name="orange_goods_price">#ff4e00</color>
+    <color name="black_goods_titile">#323232</color>
+    <color name="main_index_gary">#646464</color>
+    <color name="half_transparent">#50000000</color>
+    <color name="bg_gary">#f2f2f2</color>
+    <color name="gary_line">#e2e2e2</color>
+    <color name="order_bg">#fffaf6</color>
+    <color name="deep_gray">#909090</color>
+
+    <color name="re_flash">#fafafa</color>
+    <color name="invite_bg">#f0f0f0</color>
+    <color name="orange">#fe9b00</color>
+    <color name="deep_orange">#fec366</color>
+
+    <color name="icon_alert">#fd6161</color>
+</resources>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#eeeeee"
+    android:orientation="vertical">
+
+    <TabHost
+        android:id="@android:id/tabhost"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:id="@android:id/tabcontent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.82"/>
+
+            <TabWidget
+                android:id="@android:id/tabs"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/gray" />
+
+            <RadioGroup
+                android:id="@+id/radiogroup"
+                android:layout_width="fill_parent"
+                android:layout_height="55dp"
+                android:background="@color/white"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rb_homepage"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:button="@null"
+                    android:checked="true"
+                    android:drawablePadding="3dp"
+                    android:drawableTop="@drawable/tab_selector_homepage"
+                    android:gravity="center"
+                    android:padding="4dp"
+                    android:text="首页"
+                    android:textColor="@color/tab_selector_bar_text"
+                    android:textSize="16sp" />
+
+                <RadioButton
+                    android:id="@+id/rb_indent"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:button="@null"
+                    android:drawablePadding="3dp"
+                    android:drawableTop="@drawable/tab_selector_shopkeeper"
+                    android:gravity="center"
+                    android:padding="4dp"
+                    android:text="资讯"
+                    android:textColor="@color/tab_selector_bar_text"
+                    android:textSize="16sp" />
+
+                <RadioButton
+                    android:id="@+id/rb_product"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:button="@null"
+                    android:drawablePadding="3dp"
+                    android:drawableTop="@drawable/tab_selector_cart"
+                    android:gravity="center"
+                    android:padding="4dp"
+                    android:text="购物车"
+                    android:textColor="@color/tab_selector_bar_text"
+                    android:textSize="16sp" />
+
+                <RadioButton
+                    android:id="@+id/rb_shopkeeper"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:button="@null"
+                    android:drawablePadding="3dp"
+                    android:drawableTop="@drawable/tab_selector_product"
+                    android:gravity="center"
+                    android:padding="4dp"
+                    android:text="我的"
+                    android:textColor="@color/tab_selector_bar_text"
+                    android:textSize="16sp" />
+            </RadioGroup>
+        </LinearLayout>
+    </TabHost>
+
+</LinearLayout>

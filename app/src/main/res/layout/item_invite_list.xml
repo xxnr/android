@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/my_inviter_fragment_rel"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:background="@drawable/list_bg_selector"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+        <TextView
+            android:id="@+id/my_inviter_nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:background="@drawable/gethaoyouweishezhinicheng"
+            android:gravity="center"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:singleLine="true"
+            android:text="该好友未填姓名"
+            android:textColor="@color/main_index_gary"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/my_inviter_nickname_remind_dot"
+            android:layout_alignTop="@+id/my_inviter_nickname"
+            android:layout_alignRight="@+id/my_inviter_nickname"
+            android:layout_marginTop="-5dp"
+            android:layout_marginRight="-5dp"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:background="@drawable/dot_red" />
+
+        <TextView
+            android:id="@+id/my_inviter_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            android:text="15201532357"
+            android:textColor="@color/green"
+            android:textSize="16sp" />
+
+    </RelativeLayout>
+</RelativeLayout>

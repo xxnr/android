@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/default_act_bg"
+    android:orientation="vertical">
+
+    <include layout="@layout/title_lay" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="10dp" />
+
+    <include layout="@layout/line_lay" />
+
+    <LinearLayout
+        android:id="@+id/choice_city_layout"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:text="地区："
+            android:textColor="@color/black_goods_titile"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/choice_city_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:hint="请选择地区"
+            android:textColor="@color/black_goods_titile"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <include layout="@layout/line_lay" />
+
+    <LinearLayout
+        android:id="@+id/choice_town_layout"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:text="街道："
+            android:textColor="@color/black_goods_titile"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/choice_town_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:hint="请选择街道"
+            android:textColor="@color/black_goods_titile"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <include layout="@layout/line_lay" />
+
+
+    <TextView
+        android:id="@+id/name_submit_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="30dp"
+        android:background="#e0e0e0"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="保存"
+        android:textColor="@color/white" />
+
+</LinearLayout>

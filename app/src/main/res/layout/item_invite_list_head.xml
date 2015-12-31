@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/invite_bg"
+    android:orientation="vertical" >
+
+    <ImageView
+        android:id="@+id/item_invite_list_head_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:src="@drawable/head_invite" />
+
+    <LinearLayout
+        android:id="@+id/item_invite_list_head_lin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/item_invite_list_head_image"
+        android:gravity="center"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="已邀请 "
+            android:textSize="16sp"
+            android:textColor="@color/main_index_gary" />
+
+        <TextView
+            android:id="@+id/item_invite_list_head_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="1dp"
+            android:layout_marginRight="3dp"
+            android:text="5"
+            android:textColor="@color/green"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="位好友"
+            android:textSize="16sp"
+            android:textColor="@color/main_index_gary" />
+    </LinearLayout>
+
+</RelativeLayout>

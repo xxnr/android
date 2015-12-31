@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <include layout="@layout/title_lay" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:text="完善个人资料可以获得"
+            android:textColor="@color/black_goods_titile"
+            android:textSize="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="100"
+            android:textColor="@color/orange_goods_price"
+            android:textSize="18dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="积分哟"
+            android:textColor="@color/black_goods_titile"
+            android:textSize="16dp" />
+
+    </LinearLayout>
+
+    <include layout="@layout/line_lay" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:text="姓名："
+            android:textColor="@color/black_goods_titile"
+            android:textSize="16sp" />
+
+
+        <EditText
+            android:id="@+id/name_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:background="@null"
+            android:ellipsize="end"
+            android:hint="请输入您的真实姓名"
+            android:maxLength="12"
+            android:singleLine="true"
+            android:textColor="@color/black_goods_titile"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <include layout="@layout/line_lay" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:text="性别："
+            android:textColor="@color/black_goods_titile"
+            android:textSize="16sp" />
+
+
+        <CheckBox
+            android:id="@+id/btn_check_item_item"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/selector_check_box_circle"
+            android:button="@null" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/boy_icon" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="男"
+            android:textColor="@color/black_goods_titile"
+            android:textSize="18sp" />
+
+
+        <CheckBox
+            android:id="@+id/btn_check_item_item1"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginLeft="40dp"
+            android:background="@drawable/selector_check_box_circle"
+            android:button="@null" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/girl_icon" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="女"
+            android:textColor="@color/black_goods_titile"
+            android:textSize="18sp" />
+
+
+    </LinearLayout>
+
+    <include layout="@layout/line_lay" />
+
+    <LinearLayout
+        android:id="@+id/choice_city_layout"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:text="地区："
+            android:textColor="@color/black_goods_titile"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/choice_city_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:hint="请选择地区"
+            android:textColor="@color/black_goods_titile"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <include layout="@layout/line_lay" />
+
+    <LinearLayout
+        android:id="@+id/choice_town_layout"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:text="街道："
+            android:textColor="@color/black_goods_titile"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/choice_town_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:hint="请选择街道"
+            android:textColor="@color/black_goods_titile"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <include layout="@layout/line_lay" />
+
+    <LinearLayout
+        android:id="@+id/choose_type_ll"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:text="类型："
+            android:textColor="@color/black_goods_titile"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/choice_type_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:hint="请选择类型"
+            android:textColor="@color/black_goods_titile"
+            android:textSize="16sp" />
+
+
+    </LinearLayout>
+
+    <include layout="@layout/line_lay" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/choice_cancel"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_skip"
+            android:gravity="center">
+
+            <TextView
+                android:textColor="#c0c0c0"
+                android:layout_width="wrap_content"
+                android:textSize="18sp"
+                android:layout_height="wrap_content"
+                android:text="跳过" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2">
+
+            <TextView
+                android:id="@+id/choice_compelet"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:background="@drawable/login_roate"
+                android:gravity="center"
+                android:padding="10dp"
+                android:textSize="18sp"
+                android:text="保存"
+                android:textColor="@color/white" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

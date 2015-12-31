@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.ksfc.newfarmer"
+    android:versionCode="8"
+    android:versionName="2.1.4">
+    <!-- 拨打电话的权限 -->
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
+    <!--友盟推送权限 必选 -->
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <!--【友盟推送权限 必选】用以设置前台是否显示通知-->
+    <uses-permission android:name="android.permission.GET_TASKS" />
+
+
+    <application
+        android:name="com.ksfc.newfarmer.RndApplication"
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@android:style/Theme.NoTitleBar">
+
+        <activity
+            android:name="com.ksfc.newfarmer.SplashActivity"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- 主界面 -->
+        <activity
+            android:name=".MainActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <!-- 首界面 -->
+        <activity android:name=".activitys.HomepageActivity" />
+        <!-- 引导页 -->
+        <activity android:name=".GuideActivity" />
+        <!-- 我的订单详情 -->
+        <activity android:name=".activitys.MyOrderDetailActivity" />
+        <!-- 我的 -->
+        <activity android:name=".activitys.MineActivity" />
+        <!-- 签到成功 -->
+        <activity
+            android:name=".activitys.QiandaoActivity"
+            android:theme="@style/Theme.Transparent" />
+        <!-- 商品详情 -->
+        <activity
+            android:name=".activitys.ShangpinDetailActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <!-- 商品详情的大图 -->
+        <activity android:name=".activitys.BigImageActivity" />
+        <!-- 用户协议 -->
+        <activity android:name=".activitys.AgreeMentActivity" />
+        <!-- 我的账户 -->
+        <activity android:name=".activitys.MyaccountActivity" />
+        <!-- 输入姓名 -->
+        <activity android:name=".activitys.ChooseNameActivity" />
+        <!-- 选择照片 -->
+        <activity android:name=".ChoicePicActivity" />
+        <!-- 地址管理 -->
+        <activity android:name=".activitys.AddressmanageActivity" />
+        <!-- 地址选择列表 -->
+        <activity android:name=".activitys.SelectAddressActivity" />
+        <!-- 选择收货地址 -->
+        <activity android:name=".activitys.ChooseAddressActivity" />
+        <!-- 登录 -->
+        <activity android:name=".activitys.LoginActivity" />
+        <!-- 注册 -->
+        <activity android:name=".activitys.RegisterActivity" />
+        <!-- 找回密码 -->
+        <activity android:name=".activitys.RetrievePasswordActivity" />
+        <!-- 支付方式 -->
+        <activity android:name=".activitys.PaywayActivity" />
+        <!-- 我的积分 -->
+        <activity android:name=".activitys.MyIntegralActivity" />
+        <!-- 订单成功 -->
+        <activity android:name=".activitys.OrderSuccessActivity" />
+        <!-- 系统设置 -->
+        <activity android:name=".activitys.SettingActivity" />
+        <!-- 待付款 -->
+        <activity android:name=".activitys.WaitingPayActivity" />
+        <!-- 订单信息 -->
+        <activity android:name=".activitys.OrderDetailActivity" />
+        <!-- 修改密码 -->
+        <activity android:name=".activitys.ChangePasswordActivity" />
+        <!-- 轮播 -->
+        <activity android:name=".activitys.LunboActivity" />
+        <!-- 新增地址 -->
+        <activity android:name=".activitys.ChoiceActivity" />
+        <!-- 购物车 -->
+        <activity android:name=".activitys.ShoppingCartActivity1" />
+        <!-- 省份-->
+        <activity android:name=".activitys.CityList" />
+        <!-- 修改地址 -->
+        <activity android:name=".activitys.UpdateAddressActivity" />
+        <!-- 新农资讯 -->
+        <activity android:name=".activitys.NewFarmerInfomation" />
+        <!-- 文章详情 -->
+        <activity android:name=".activitys.ArticleActivity" />
+        <!-- 商品类目页 -->
+        <activity android:name=".activitys.ShangpinListActivity" />
+        <!-- 完善用户信息页 -->
+        <activity android:name=".activitys.ImprovePersonActivity" />
+        <!-- 修改所在地区 -->
+        <activity android:name=".activitys.ChoiceHomeAddress" />
+        <!-- 修改真实姓名 -->
+        <activity android:name=".activitys.ChoiceTrueNameActivity" />
+        <!-- 选择用户类型 -->
+        <activity android:name=".activitys.SelectUserTypeActivity" />
+        <!-- 客户订单 -->
+        <activity android:name=".activitys.ConsumerOrderActivity" />
+        <!-- 关于我们 -->
+        <activity android:name=".activitys.AboutUsActivity" />
+        AboutUsActivity
+        <!-- 新农邀请 -->
+        <activity
+            android:name=".activitys.NewFramerInvite"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <!-- 支付宝-->
+        <activity
+            android:name="com.alipay.sdk.app.H5PayActivity"
+            android:configChanges="orientation|keyboardHidden|navigation"
+            android:exported="false"
+            android:screenOrientation="behind" />
+
+        <!-- 银联 -->
+        <activity
+            android:name="com.unionpay.uppay.PayActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:excludeFromRecents="true"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+
+
+        <!-- umeng appkey   android:value="564d588ce0f55a25e9003ec7"-->
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="564d588ce0f55a25e9003ec7" />
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="Wandoujia" />
+        <meta-data
+            android:name="UMENG_MESSAGE_SECRET"
+            android:value="03dd5a49bb79a65290b928d06d4a5cef" />
+
+
+        <!-- 以下是友盟推送的广播-->
+
+        <!-- 监听通知点击或者忽略处理的广播 -->
+        <receiver
+            android:name="com.umeng.message.NotificationProxyBroadcastReceiver"
+            android:exported="false" />
+
+        <!-- 监听开机运行、网络连接变化、卸载的广播 -->
+        <receiver
+            android:name="com.umeng.message.SystemReceiver"
+            android:process=":push">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
+
+        <!-- 监听消息到达的广播 -->
+        <receiver
+            android:name="com.umeng.message.MessageReceiver"
+            android:exported="false"
+            android:process=":push">
+            <intent-filter>
+                <action android:name="org.agoo.android.intent.action.RECEIVE" />
+            </intent-filter>
+        </receiver>
+
+        <!-- 监听宿主选举的广播 -->
+        <receiver
+            android:name="com.umeng.message.ElectionReceiver"
+            android:process=":push">
+            <intent-filter>
+                <action android:name="org.agoo.android.intent.action.ELECTION_RESULT_V4" />
+                <category android:name="umeng" />
+            </intent-filter>
+        </receiver>
+
+        <!-- 监听注册的广播 -->
+        <!-- 【应用包名】字符串需要替换成本应用的应用包名 -->
+        <receiver
+            android:name="com.umeng.message.RegistrationReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.ksfc.newfarmer.intent.action.COMMAND" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name="com.umeng.message.UmengMessageBootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+
+        <!--  可以根据需要自行设置 android:label 中的服务名 ： -->
+        <!-- Umeng的长连服务，用来建立推送的长连接的 -->
+        <!-- 【应用包名】字符串需要替换成本应用的应用包名 -->
+        <service
+            android:name="com.umeng.message.UmengService"
+            android:exported="true"
+            android:label="PushService"
+            android:process=":push">
+            <intent-filter>
+                <action android:name="com.ksfc.newfarmer.intent.action.START" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.ksfc.newfarmer.intent.action.COCKROACH" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.agoo.android.intent.action.PING_V4" />
+                <category android:name="umeng" />
+            </intent-filter>
+        </service>
+
+        <!-- Umeng的消息接收服务 -->
+        <service
+            android:name="com.umeng.message.UmengIntentService"
+            android:process=":push" />
+
+        <!-- Umeng的消息路由服务 -->
+        <service
+            android:name="com.umeng.message.UmengMessageIntentReceiverService"
+            android:exported="true"
+            android:process=":push">
+            <intent-filter>
+                <action android:name="org.android.agoo.client.MessageReceiverService" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.android.agoo.client.ElectionReceiverService" />
+            </intent-filter>
+        </service>
+
+        <!-- v2.4.1添加的Service，Umeng的消息接收后的处理服务 -->
+        <service
+            android:name="com.umeng.message.UmengMessageCallbackHandlerService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.umeng.messge.registercallback.action" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.umeng.message.unregistercallback.action" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.umeng.message.message.handler.action" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.umeng.message.autoupdate.handler.action" />
+            </intent-filter>
+        </service>
+
+        <!-- V1.3.0添加的service，负责下载通知的资源 -->
+        <service android:name="com.umeng.message.UmengDownloadResourceService" />
+        <!-- 版本更新-->
+        <service
+            android:name="com.umeng.update.net.DownloadingService"
+            android:process=":DownloadingService" />
+        <activity
+            android:name="com.umeng.update.UpdateDialogActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+    </application>
+
+</manifest>

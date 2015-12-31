@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/default_act_bg">
+
+    <include layout="@layout/title_lay" />
+
+
+    <com.handmark.pulltorefresh.library.PullToRefreshListView xmlns:ptr="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/shopcart_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/topay_ll"
+        android:layout_below="@+id/titleview"
+        android:background="@color/default_act_bg"
+        android:divider="@null"
+        android:dividerHeight="10dp"
+        android:scrollbars="none"
+        ptr:ptrAnimationStyle="rotate"
+        ptr:ptrDrawable="@drawable/loader"
+        ptr:ptrHeaderBackground="@color/re_flash"
+        ptr:ptrScrollingWhileRefreshingEnabled="true"
+        ptr:ptrListViewExtrasEnabled="false"
+        />
+
+
+    <RelativeLayout
+        android:id="@+id/null_shop_cart_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/titleview"
+        android:layout_centerInParent="true"
+        android:visibility="visible">
+
+        <ImageView
+            android:id="@+id/myself_userImg_1"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="90dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/null_shopping" />
+
+        <TextView
+            android:id="@+id/shop_text1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/myself_userImg_1"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="40dp"
+            android:text="您的购物车还是空空的哦" />
+
+        <TextView
+            android:id="@+id/shop_text2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/shop_text1"
+            android:layout_below="@id/shop_text1"
+            android:layout_centerHorizontal="true"
+            android:text="赶快去挑选心仪的商品吧~" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/shop_text2"
+            android:layout_marginTop="30dp"
+            android:gravity="center_horizontal">
+
+            <Button
+                android:id="@+id/my_login_sure"
+                android:layout_width="80dp"
+                android:layout_height="30dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/btn_selector_greentran_green_round"
+                android:gravity="center"
+                android:text="去买化肥"
+                android:textColor="@color/shop_car_text_selector"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/my_login_cancel"
+                android:layout_width="80dp"
+                android:layout_height="30dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/btn_selector_greentran_green_round"
+                android:gravity="center"
+                android:text="去买汽车"
+                android:textColor="@color/shop_car_text_selector"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/topay_ll"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <include layout="@layout/line_lay"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2">
+
+                <CheckBox
+                    android:id="@+id/btn_check_all"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="12dp"
+                    android:background="@drawable/selector_check_box_circle"
+                    android:button="@null" />
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:text="全选"
+                    android:textColor="@color/black_goods_titile"
+                    android:textSize="16sp" />
+
+                <LinearLayout
+                    android:id="@+id/goods_car_price_lin"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:gravity="right|center_vertical">
+
+                    <TextView
+                        android:id="@+id/ordering_fenshu"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="合计："
+                        android:textColor="@color/black_goods_titile"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/shopcart_sum_pri"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="￥0"
+                        android:textColor="@color/orange_goods_price"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ordering_go_bt"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/btn_selector_orange_deep"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/go_to_pay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="去结算"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

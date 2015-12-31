@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/default_act_bg"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:id="@+id/contact_ll"
+        android:layout_width="match_parent"
+        android:layout_height="74dp"
+        android:background="@color/default_act_bg"
+        android:orientation="vertical"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp">
+
+        <include layout="@layout/line_lay" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:gravity="bottom">
+
+            <TextView
+                android:id="@+id/my_order_detail_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:text=""
+                android:textColor="@color/black_goods_titile"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:gravity="top">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:text="交易状态："
+                android:textColor="@color/black_goods_titile"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/pay_state"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:text=""
+                android:textColor="@color/green"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <include layout="@layout/line_lay" />
+    </LinearLayout>
+
+    <include layout="@layout/line_lay" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/order_bg"
+        android:orientation="vertical">
+
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="@drawable/address_line" />
+
+        <RelativeLayout
+            android:id="@+id/address_shouhuo_ll"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+
+            <TextView
+                android:id="@+id/order_detail_name_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="15dp"
+                android:text="陈大明  13800000000"
+                android:textColor="@color/black_goods_titile"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:layout_below="@+id/order_detail_name_tv"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:background="@drawable/address_location" />
+
+                <TextView
+                    android:id="@+id/order_detail_address_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="52dp"
+                    android:maxLength="50"
+                    android:maxLines="3"
+                    android:text="河南省 郑州市 郑东新区 "
+                    android:textColor="@color/deep_gray"
+                    android:textSize="15sp" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="@drawable/address_line" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="10dp" />
+
+    <include layout="@layout/line_lay"/>
+
+</LinearLayout>

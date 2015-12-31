@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/round_line_gary_write_1px"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:background="@drawable/round_line_gary_radius"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp">
+
+            <TextView
+                android:id="@+id/address_name_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                android:text=""
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/address_phone_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_margin="12dp"
+                android:text=""
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/address_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/address_name_tv"
+                android:layout_marginLeft="12dp"
+                android:singleLine="true"
+                android:text=""
+                android:textColor="@color/main_index_gary"
+                android:textSize="16sp" />
+        </RelativeLayout>
+
+        <include layout="@layout/line_lay" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+
+            <CheckBox
+                android:id="@+id/btn_check_item"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="12dp"
+                android:background="@drawable/selector_check_box_circle"
+                android:button="@null" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@+id/btn_check_item"
+                android:text="设为默认地址"
+                android:textColor="@color/black_goods_titile"
+                android:textSize="16dp" />
+
+
+            <Button
+                android:id="@+id/edit_address_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="20dp"
+                android:layout_toLeftOf="@+id/delete_address_img"
+                android:background="@null"
+                android:drawableLeft="@drawable/address_selector_edit"
+                android:drawablePadding="3dp"
+                android:text="编辑"
+                android:textColor="@color/tab_selector_bar_text"
+                android:textSize="16dp" />
+
+            <Button
+                android:id="@+id/delete_address_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="5dp"
+                android:background="@null"
+                android:drawableLeft="@drawable/address_selector_delete"
+                android:drawablePadding="3dp"
+                android:textColor="@color/tab_selector_bar_text"
+                android:text="删除"
+                android:textSize="16dp" />
+        </RelativeLayout>
+    </LinearLayout>
+</LinearLayout>
+
+

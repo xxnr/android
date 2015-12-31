@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/default_act_bg"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:gravity="center_vertical"
+        android:background="@color/invite_bg"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/consumer_item_orderTime"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_weight="1"
+            android:text="下单时间：2015-11-15 08:43:12"
+            android:textColor="@color/black_goods_titile"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/consumer_item_payType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="16dp"
+            android:text="待付款"
+            android:textColor="@color/orange"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <include layout="@layout/line_lay"/>
+
+    <ListView
+        android:scrollbars="none"
+        android:id="@+id/consumer_item_listView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@drawable/line_chang"
+        android:dividerHeight="1px" />
+
+    <include layout="@layout/line_lay"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/white">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/consumer_item_orderPrice"
+            android:text="订单金额："
+            android:textColor="@color/black_goods_titile"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/consumer_item_orderPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            android:text="¥3999.00"
+            android:textColor="@color/orange_goods_price"
+            android:textSize="18dp" />
+
+    </RelativeLayout>
+
+    <include layout="@layout/line_lay"/>
+
+
+</LinearLayout>
