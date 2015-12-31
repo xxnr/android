@@ -4,3 +4,4 @@ build
 gen
 app/build
 local.properties
+*.apk
