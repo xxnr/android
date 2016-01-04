@@ -1,14 +1,11 @@
 package com.ksfc.newfarmer.activitys;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSON;
 import com.google.gson.Gson;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
@@ -20,6 +17,7 @@ import com.ksfc.newfarmer.protocol.RequestParams;
 import com.ksfc.newfarmer.protocol.beans.LoginResult;
 import com.ksfc.newfarmer.protocol.beans.TownList;
 import com.ksfc.newfarmer.utils.IntentUtil;
+import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -32,7 +30,6 @@ import net.yangentao.util.msg.MsgCenter;
 
 import org.apache.http.entity.StringEntity;
 
-import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,22 +38,22 @@ import java.util.Map;
  * Created by CAI on 2015/12/10.
  */
 public class ChoiceHomeAddress extends BaseActivity {
-    private final int cityrequestCode = 1;//省市区
-    private final int townrequestCode = 2;//乡镇
+    private final int cityRequestCode = 1;//省市区
+    private final int townRequestCode = 2;//乡镇
 
     private TextView choice_city_text;
     private TextView choice_town_text;
 
+    private String cityareaid="";
     private String queueid = "";
     private String buildid = "";
+    private String townid="";
     private String city;
-    private String cityareaid;
     private String town;
-    private String townid;
+
     private TextView name_submit_tv;
 
-    private Map<String, String> map = new HashMap<>();
-    private String jsonStr;
+
     private LoginResult.UserInfo me;
 
     @Override
@@ -69,7 +66,6 @@ public class ChoiceHomeAddress extends BaseActivity {
         setTitle("修改所在地区");
         me = Store.User.queryMe();
         initView();
-
         setData();
     }
 
@@ -96,7 +92,6 @@ public class ChoiceHomeAddress extends BaseActivity {
         city = me.addressCity;
         town = me.addressTown;
 
-
         if (StringUtil.checkStr(buildid)||StringUtil.checkStr(queueid)){
             //预加载乡镇
             RequestParams params = new RequestParams();
@@ -115,7 +110,7 @@ public class ChoiceHomeAddress extends BaseActivity {
                 Bundle bundle1 = new Bundle();
                 bundle1.putInt("tag", 0);
                 IntentUtil.startActivityForResult(this, SelectAddressActivity.class,
-                        cityrequestCode, bundle1);
+                        cityRequestCode, bundle1);
                 break;
             case R.id.choice_town_layout:
                 Bundle bundle = new Bundle();
@@ -123,7 +118,7 @@ public class ChoiceHomeAddress extends BaseActivity {
                 bundle.putString("queueid", queueid);
                 bundle.putString("buildid", buildid);
                 IntentUtil.startActivityForResult(this, SelectAddressActivity.class,
-                        townrequestCode, bundle);
+                        townRequestCode, bundle);
                 break;
 
             case R.id.name_submit_tv:
@@ -131,16 +126,18 @@ public class ChoiceHomeAddress extends BaseActivity {
                 if (!StringUtil.empty(choice_town_text.getText().toString().trim())
                         && !StringUtil.empty(choice_city_text.getText().toString().trim())) {
                     showProgressDialog("正在保存中...");
+
+                    Map<String, String> map = new HashMap<>();
                     map.put("provinceId", cityareaid);
                     map.put("cityId", queueid);
                     map.put("countyId", buildid);
                     map.put("townId", townid);
                     Gson gson = new Gson();
-                    Map<String, Object> map1 = new HashMap();
+                    Map<String, Object> map1 = new HashMap<>();
                     map1.put("address", map);
                     map1.put("userId", Store.User.queryMe().userid);
                     map1.put("token", Store.User.queryMe().token);
-                    jsonStr = gson.toJson(map1);
+                    String jsonStr = gson.toJson(map1);
                     upAddress(jsonStr);
                 } else {
                     showToast("地址不能为空");
@@ -157,7 +154,7 @@ public class ChoiceHomeAddress extends BaseActivity {
     protected void onActivityResult(int arg0, int arg1, Intent arg2) {
         if (arg1 == RESULT_OK) {
             switch (arg0) {
-                case cityrequestCode:
+                case cityRequestCode:
                     city = arg2.getExtras().getString("city");
                     cityareaid = arg2.getExtras().getString("cityareaid");
                     queueid = arg2.getExtras().getString("queueid");
@@ -166,16 +163,18 @@ public class ChoiceHomeAddress extends BaseActivity {
                     choice_town_text.setText("");
                     townid = "";
                     town = "";
-                    //预加载乡镇
-                    RequestParams params = new RequestParams();
-                    params.put("countyId", buildid);
-                    params.put("cityId", queueid);
-                    execApi(ApiType.QUERYTOWNID, params);
-                    showProgressDialog();
+                    if (StringUtil.checkStr(buildid)||StringUtil.checkStr(queueid)){
+                        //预加载乡镇
+                        RequestParams params = new RequestParams();
+                        params.put("countyId", buildid);
+                        params.put("cityId", queueid);
+                        execApi(ApiType.QUERYTOWNID, params);
+                        showProgressDialog();
+                    }
                     name_submit_tv.setBackgroundColor(getResources().getColor(R.color.green));
                     name_submit_tv.setClickable(true);
                     break;
-                case townrequestCode:
+                case townRequestCode:
                     town = arg2.getExtras().getString("town");
                     townid = arg2.getExtras().getString("townid");
                     choice_town_text.setText(town);
@@ -190,31 +189,15 @@ public class ChoiceHomeAddress extends BaseActivity {
 
     @Override
     public void onResponsed(Request req) {
-        if (ApiType.SAVE_MYUSER == req.getApi()) {
-            disMissDialog();
-            LoginResult.UserInfo queryMe = Store.User.queryMe();
-            if (req.getData().getStatus().equals("1000")) {
-                queryMe.addressCity = city;
-                queryMe.addressTown = town;
-                queryMe.provinceid = cityareaid;
-                queryMe.cityid = queueid;
-                queryMe.countyid = buildid;
-                queryMe.townid = townid;
-                Store.User.saveMe(queryMe);
-                showToast("保存成功！");
-                Intent intent = new Intent();
-                intent.putExtra("str", city + town);
-                setResult(0x13, intent);
-                MsgCenter.fireNull(MsgID.UPDATE_USER, "update");
-            }
-            finish();
-        } else if (req.getApi() == ApiType.QUERYTOWNID) {
+        disMissDialog();
+        if (req.getApi() == ApiType.QUERYTOWNID) {
             TownList add = (TownList) req.getData();
             if (add.datas != null) {
                 if (add.datas.rows.size() == 0) {
                     townid = "";
                     town = "";
                     choice_town_text.setText("暂无街道");
+
                     findViewById(R.id.choice_town_layout).setOnClickListener(null);
                     findViewById(R.id.choice_town_layout).setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -224,6 +207,7 @@ public class ChoiceHomeAddress extends BaseActivity {
                     });
                 } else {
                     choice_town_text.setText(town);
+
                     findViewById(R.id.choice_town_layout).setOnClickListener(null);
                     setViewClick(R.id.choice_town_layout);
                 }
@@ -237,7 +221,7 @@ public class ChoiceHomeAddress extends BaseActivity {
     private void upAddress(String value) {
         com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
         try {
-            Log.d("ChoiceHomeAddress", value);
+            RndLog.d(TAG, value);
             StringEntity entity = new StringEntity(value);
             params.setBodyEntity(entity);
             params.setContentType("application/json");
@@ -255,22 +239,22 @@ public class ChoiceHomeAddress extends BaseActivity {
                     @Override
                     public void onSuccess(ResponseInfo<String> arg0) {
 
-                        if (arg0.result.toString().contains("1000")) {
+                        if (arg0.result.contains("1000")) {
                             LoginResult.UserInfo queryMe = Store.User.queryMe();
-                            queryMe.addressCity = city;
-                            queryMe.addressTown = town;
-                            queryMe.provinceid = cityareaid;
-                            queryMe.cityid = queueid;
-                            queryMe.countyid = buildid;
-                            queryMe.townid = townid;
-                            Store.User.saveMe(queryMe);
+                            if (queryMe != null) {
+                                queryMe.addressCity = city;
+                                queryMe.addressTown = town;
+                                queryMe.provinceid = cityareaid;
+                                queryMe.cityid = queueid;
+                                queryMe.countyid = buildid;
+                                queryMe.townid = townid;
+                                Store.User.saveMe(queryMe);
+                            }
                             showToast("保存成功！");
-
                             Intent intent = new Intent();
                             intent.putExtra("str", city + town);
                             setResult(0x13, intent);
                             MsgCenter.fireNull(MsgID.UPDATE_USER, "update");
-
                             finish();
                         }
 

@@ -15,10 +15,8 @@ import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -37,8 +35,8 @@ import net.yangentao.util.msg.MsgCenter;
 public class ChoiceActivity extends BaseActivity {
 
 
-    private final int cityrequestCode = 1;//省市区
-    private final int townrequestCode = 2;//乡镇
+    private final int cityRequestCode = 1;//省市区
+    private final int townRequestCode = 2;//乡镇
 
     private String city = "";
     private String room = "";
@@ -46,17 +44,17 @@ public class ChoiceActivity extends BaseActivity {
 
     private TextView choice_town_text;
     private TextView choice_city_text;
-    private EditText room_edit, shouhuo_name, shouhuo_tel, zipCode_text;
+    private EditText room_edit, receipt_name, receipt_phone, zipCode_text;//详细地址 收货人 收货电话 邮编
 
-    private String cityareaid = "";
-    private String queueid = "";
-    private String buildid = "";
-    private String zipCode = "";
-    private String townid = "";
+    private String cityareaid = "";//省 id
+    private String queueid = "";//市 id
+    private String buildid = "";//县 id
+    private String zipCode = "";//邮编 id
+    private String townid = "";//乡镇 id
 
-    private CheckBox default_address;
+    private CheckBox default_address;//是否是默认地址
 
-    private int count = -1;
+    private int count = -1;//之前是否有地址
 
     @Override
     public int getLayout() {
@@ -68,6 +66,7 @@ public class ChoiceActivity extends BaseActivity {
         setTitle("新增收货地址");
         initView();
         count = getIntent().getExtras().getInt("addressCount");
+        //如果新加地址是第一个 ，默认选中默认
         if (count == 0) {
             default_address.setChecked(true);
         } else {
@@ -82,7 +81,7 @@ public class ChoiceActivity extends BaseActivity {
         room_edit = (EditText) findViewById(R.id.choice_detail_room_edit);
         zipCode_text = (EditText) findViewById(R.id.choice_zipCode_edit);
 
-        // 完成框
+        // room_edit加一个完成按钮
         room_edit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -92,14 +91,12 @@ public class ChoiceActivity extends BaseActivity {
             }
         });
 
-        shouhuo_tel = (EditText) findViewById(R.id.shouhuo_tel);
-        shouhuo_name = (EditText) findViewById(R.id.shouhuo_name);
+        receipt_phone = (EditText) findViewById(R.id.shouhuo_tel);
+        receipt_name = (EditText) findViewById(R.id.shouhuo_name);
         default_address = (CheckBox) findViewById(R.id.default_address);
 
         setViewClick(R.id.choice_city_layout);
         setViewClick(R.id.choice_town_layout);
-
-
         setViewClick(R.id.choice_compelet);
         setViewClick(R.id.choice_detail_room_edit);
     }
@@ -112,7 +109,7 @@ public class ChoiceActivity extends BaseActivity {
                 Bundle bundle1 = new Bundle();
                 bundle1.putInt("tag", 0);
                 IntentUtil.startActivityForResult(this, SelectAddressActivity.class,
-                        cityrequestCode, bundle1);
+                        cityRequestCode, bundle1);
                 break;
             case R.id.choice_town_layout:
                 if (TextUtils.isEmpty(choice_city_text.getText().toString())) {
@@ -123,7 +120,7 @@ public class ChoiceActivity extends BaseActivity {
                     bundle.putString("queueid", queueid);
                     bundle.putString("buildid", buildid);
                     IntentUtil.startActivityForResult(this, SelectAddressActivity.class,
-                            townrequestCode, bundle);
+                            townRequestCode, bundle);
                 }
                 break;
 
@@ -131,16 +128,16 @@ public class ChoiceActivity extends BaseActivity {
             case R.id.choice_compelet:
                 room = room_edit.getEditableText().toString().trim();
 
-                if (StringUtil.empty(shouhuo_name.getEditableText().toString()
+                if (StringUtil.empty(receipt_name.getEditableText().toString()
                         .trim())) {
                     showToast("请输入收货人姓名");
                     return;
                 }
-                if (TextUtils.isEmpty(shouhuo_tel.getText().toString().trim())) {
+                if (TextUtils.isEmpty(receipt_phone.getText().toString().trim())) {
                     showToast("请输入手机号码");
                     return;
                 }
-                if (!isMobileNum(shouhuo_tel.getText().toString().trim())) {
+                if (!isMobileNum(receipt_phone.getText().toString().trim())) {
                     showToast("请输入正确的手机号码");
                     return;
                 }
@@ -181,9 +178,9 @@ public class ChoiceActivity extends BaseActivity {
                 } else {
                     params.put("type", 2);
                 }
-                params.put("receiptPeople", shouhuo_name.getEditableText()
+                params.put("receiptPeople", receipt_name.getEditableText()
                         .toString().trim());
-                params.put("receiptPhone", shouhuo_tel.getEditableText().toString()
+                params.put("receiptPhone", receipt_phone.getEditableText().toString()
                         .trim());
                 execApi(ApiType.SAVE_ADDRESS, params);
                 break;
@@ -198,7 +195,7 @@ public class ChoiceActivity extends BaseActivity {
         // TODO Auto-generated method stub
         if (arg1 == RESULT_OK) {
             switch (arg0) {
-                case cityrequestCode:
+                case cityRequestCode:
                     city = arg2.getExtras().getString("city");
                     cityareaid = arg2.getExtras().getString("cityareaid");
                     queueid = arg2.getExtras().getString("queueid");
@@ -208,7 +205,7 @@ public class ChoiceActivity extends BaseActivity {
                     town="";
                     townid="";
                     break;
-                case townrequestCode:
+                case townRequestCode:
                     town = arg2.getExtras().getString("town");
                     townid = arg2.getExtras().getString("townid");
                     choice_town_text.setText(town);
@@ -235,8 +232,8 @@ public class ChoiceActivity extends BaseActivity {
                     queryMe.defaultAddress = addr;
                     Store.User.saveMe(queryMe);
                 }
-                finish();
                 showToast("成功新增了地址");
+                finish();
             } else {
                 showToast("新增地址失败");
             }

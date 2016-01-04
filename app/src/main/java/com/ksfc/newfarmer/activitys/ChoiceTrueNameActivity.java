@@ -27,7 +27,6 @@ import net.yangentao.util.msg.MsgCenter;
  */
 public class ChoiceTrueNameActivity extends BaseActivity {
     private EditText et_modify;
-    private LoginResult.UserInfo me;
     private String str;
     private TextView name_submit_tv;
 
@@ -39,17 +38,23 @@ public class ChoiceTrueNameActivity extends BaseActivity {
 
     @Override
     public void OnActCreate(Bundle savedInstanceState) {
-        me = Store.User.queryMe();
+
         setTitle("修改姓名");
-        setViewClick(R.id.name_submit_tv);
-        et_modify = (EditText) findViewById(R.id.et_modify);
+
         name_submit_tv = (TextView) findViewById(R.id.name_submit_tv);
         name_submit_tv.setClickable(false);
-        et_modify.setText(me.name);
+
+        et_modify = (EditText) findViewById(R.id.et_modify);
+        LoginResult.UserInfo me = Store.User.queryMe();
+        if (me != null) {
+            et_modify.setText(me.name);
+        }
+        //设置最对输的字数
         et_modify.addTextChangedListener(new MaxLengthWatcher(12, et_modify, ChoiceTrueNameActivity.this));
         // 光标移到最后
         Editable eText = et_modify.getText();
         Selection.setSelection(eText, eText.length());
+        //如果文字改变 可以保存
         et_modify.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -67,6 +72,7 @@ public class ChoiceTrueNameActivity extends BaseActivity {
 
             }
         });
+        setViewClick(R.id.name_submit_tv);
     }
 
     @Override
@@ -95,8 +101,10 @@ public class ChoiceTrueNameActivity extends BaseActivity {
     public void onResponsed(Request req) {
         if (ApiType.SAVE_MYUSER == req.getApi()) {
             LoginResult.UserInfo queryMe = Store.User.queryMe();
-            queryMe.name = str;
-            Store.User.saveMe(queryMe);
+            if (queryMe != null) {
+                queryMe.name = str;
+                Store.User.saveMe(queryMe);
+            }
             showToast("保存成功！");
             //保存用户
             Intent intent = new Intent();

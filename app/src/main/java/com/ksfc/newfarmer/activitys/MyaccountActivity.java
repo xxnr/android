@@ -243,8 +243,7 @@ public class MyaccountActivity extends BaseActivity {
                                         @Override
                                         public void onClick(DialogInterface dialog,
                                                             int which) {
-                                            Store.User.removeMe();
-                                            SPUtils.clear(getApplicationContext());
+                                            exitLogin();
                                             showToast("您已退出登录");
                                             startActivity(new Intent(MyaccountActivity.this, MainActivity.class));
                                             finish();
@@ -411,9 +410,7 @@ public class MyaccountActivity extends BaseActivity {
                 userType = "其他";
                 break;
         }
-
         return userType;
-
     }
 
 

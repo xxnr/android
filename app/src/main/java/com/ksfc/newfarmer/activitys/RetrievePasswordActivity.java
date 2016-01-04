@@ -47,14 +47,6 @@ public class RetrievePasswordActivity extends BaseActivity {
 		setViewClick(R.id.backgetVerificationCode);
 		setViewClick(R.id.backdengLubutton);
 		setTitle("忘记密码");
-		setLeftClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				finish();
-			}
-		});
 	}
 
 	@Override

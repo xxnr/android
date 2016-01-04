@@ -27,8 +27,6 @@ public class OrderSuccessActivity extends BaseActivity {
 		setTitle("订单成功");
 		orderId = (String) getIntent().getSerializableExtra("orderId");
 		paymentId = (String) getIntent().getSerializableExtra("orderNo");
-		// orderId = savedInstanceState.getString("orderId");
-		// paymentId = savedInstanceState.getString("orderNo");
 		setViewClick(R.id.contact_tv);
 		setViewClick(R.id.check_order_tv);
 	}

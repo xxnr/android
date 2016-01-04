@@ -49,17 +49,17 @@ public class StringUtil {
     public static String checkBufferStrWithSpace(String str1, String str2, String str3, String str4,String str5) {
         StringBuilder buffer = new StringBuilder();
         if (StringUtil.checkStr(str1)) {
-            buffer.append(str1+" ");
+            buffer.append(str1).append(" ");
         }
         if (StringUtil.checkStr(str2)) {
-            buffer.append(str2+" ");
+            buffer.append(str2).append(" ");
         }
         if (StringUtil.checkStr(str3)) {
-            buffer.append(str3+" ");
+            buffer.append(str3).append(" ");
         }
         if (StringUtil.checkStr(str4)) {
             if (!str4.equals("undefined")){
-                buffer.append(str4+" ");
+                buffer.append(str4).append(" ");
             }
         }
         if (StringUtil.checkStr(str5)) {

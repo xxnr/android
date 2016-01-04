@@ -55,7 +55,7 @@ public class SelectUserTypeActivity extends BaseActivity implements AdapterView.
     private List<String> list_value;
 
     private String select = "";
-    private boolean flag;
+    private boolean flag;//判断 是否是从完善资料页启动此activity 是否在保存的时候执行api
 
     @Override
     public int getLayout() {
@@ -72,7 +72,7 @@ public class SelectUserTypeActivity extends BaseActivity implements AdapterView.
         getData();
     }
 
-    //加载乡镇
+    //加载用户类型
     private void getData() {
 
         HttpUtils http = new HttpUtils();
@@ -136,7 +136,7 @@ public class SelectUserTypeActivity extends BaseActivity implements AdapterView.
             params.put("userId", Store.User.queryMe().userid);
             params.put("type", list_key.get(position));
             execApi(ApiType.SAVE_MYUSER, params);
-        }else {
+        } else {
             finish();
         }
 

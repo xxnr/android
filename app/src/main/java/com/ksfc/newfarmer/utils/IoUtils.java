@@ -144,7 +144,7 @@ public class IoUtils {
 	/**
 	 * 将图片压缩到500k以下
 	 * 
-	 * @param path
+	 * @param image
 	 */
 	public static Bitmap compressImageFifty(Bitmap image) {
 		return null;

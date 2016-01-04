@@ -12,6 +12,7 @@ import com.ksfc.newfarmer.protocol.ResponseResult;
 import com.ksfc.newfarmer.protocol.beans.MyInviteResult;
 import com.ksfc.newfarmer.protocol.beans.PersonalData;
 import com.ksfc.newfarmer.protocol.beans.PersonalData.Data;
+import com.ksfc.newfarmer.utils.Utils;
 import com.ksfc.newfarmer.widget.CustomDialog;
 
 import android.content.DialogInterface;
@@ -76,7 +77,7 @@ public class MyInviter extends BaseFragment implements OnClickListener {
 				return;
 			}
 
-			if (!isMobileNum(phoneNumber)) {
+			if (!Utils.isMobileNum(phoneNumber)) {
 				showToast("您输入 的手机号码格式不正确");
 				return;
 			}
@@ -95,13 +96,6 @@ public class MyInviter extends BaseFragment implements OnClickListener {
 
 	}
 
-	// 判断是否是手机号
-	public boolean isMobileNum(String mobiles) {
-		Pattern p = Pattern
-				.compile("^[1]([0-8]{1}[0-9]{1}|59|58|88|89)[0-9]{8}");
-		Matcher m = p.matcher(mobiles);
-		return m.matches();
-	}
 
 	@Override
 	public void onResponsed(Request req) {

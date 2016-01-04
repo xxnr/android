@@ -17,10 +17,10 @@ import com.ksfc.newfarmer.fragment.MyDetailFragment;
  * 项目名称：newFarmer 类名称：FragmentPagerAdapter1 类描述： 创建人：王蕾 创建时间：2015-5-30 下午9:52:59
  * 修改备注：
  */
-public class FragmentPagerAdapter1 extends FragmentPagerAdapter {
+public class MyFragmentPagerAdapter extends FragmentPagerAdapter {
     private ArrayList<String> titles;
 
-    public FragmentPagerAdapter1(FragmentManager fm, ArrayList<String> titles) {
+    public MyFragmentPagerAdapter(FragmentManager fm, ArrayList<String> titles) {
         super(fm);
         this.titles = titles;
     }

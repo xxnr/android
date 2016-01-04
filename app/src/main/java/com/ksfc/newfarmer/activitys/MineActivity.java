@@ -365,44 +365,48 @@ public class MineActivity extends BaseActivity {
     //存储个人信息到本地
     public void saveMe(Data user) {
         LoginResult.UserInfo me = Store.User.queryMe();
-        me.photo = user.getImageUrl();
+        if (me != null) {
+            me.photo = user.getImageUrl();
+            if (user.defaultAddress != null) {
+                me.defaultAddress = user.defaultAddress.country.replace("undefined", "") + user.defaultAddress.address;
+            } else {
+                me.defaultAddress = "";
+            }
+            if (user.address != null) {
+                String province = "";
+                String city = "";
+                String county = "";
+                String town = "";
+                String address = "";
+                if (user.address.province != null) {
+                    province = user.address.province.name;
+                    me.provinceid = user.address.province.id;
+                }
+                if (user.address.city != null) {
+                    city = user.address.city.name;
+                    me.cityid = user.address.city.id;
+                }
+                if (user.address.county != null) {
+                    county = user.address.county.name;
+                    me.countyid = user.address.county.id;
+                }
+                if (user.address.town != null) {
+                    town = user.address.town.name;
+                    me.townid = user.address.town.id;
+                }
+                address = StringUtil.checkBufferStr
+                        (province, city, county, "");
+                me.addressCity = address;
+                me.addressTown = town;
+            }
+            me.sex = user.sex;
+            me.nickname = user.nickname;
+            me.name = user.name;
+            me.phone = user.phone;
+            me.userType = user.userType;
+            Store.User.saveMe(me);
+        }
 
-        if (user.defaultAddress != null) {
-            me.defaultAddress = user.defaultAddress.country.replace("undefined", "") + user.defaultAddress.address;
-        }
-        if (user.address != null) {
-            String province = "";
-            String city = "";
-            String county = "";
-            String town = "";
-            String address = "";
-            if (user.address.province != null) {
-                province = user.address.province.name;
-                me.provinceid = user.address.province.id;
-            }
-            if (user.address.city != null) {
-                city = user.address.city.name;
-                me.cityid = user.address.city.id;
-            }
-            if (user.address.county != null) {
-                county = user.address.county.name;
-                me.countyid = user.address.county.id;
-            }
-            if (user.address.town != null) {
-                town = user.address.town.name;
-                me.townid = user.address.town.id;
-            }
-            address = StringUtil.checkBufferStr
-                    (province, city, county, "");
-            me.addressCity = address;
-            me.addressTown = town;
-        }
-        me.sex = user.sex;
-        me.nickname = user.nickname;
-        me.name = user.name;
-        me.phone = user.phone;
-        me.userType = user.userType;
-        Store.User.saveMe(me);
     }
 
 

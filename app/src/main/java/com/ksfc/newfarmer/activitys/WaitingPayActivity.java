@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
-import com.ksfc.newfarmer.adapter.FragmentPagerAdapter1;
+import com.ksfc.newfarmer.adapter.MyFragmentPagerAdapter;
 import com.ksfc.newfarmer.protocol.Request;
 
 import android.os.Bundle;
@@ -23,8 +23,8 @@ import android.view.View;
 public class WaitingPayActivity extends BaseActivity {
     private ViewPager viewPager;
     private FragmentManager fragmentManager;
-    private ArrayList<String> titleList = new ArrayList<>();
     private TabLayout mTabLayout;
+    private ArrayList<String> titleList = new ArrayList<>();
     private int select; //我的新农人中选中的入口
 
     @Override
@@ -44,7 +44,7 @@ public class WaitingPayActivity extends BaseActivity {
         mTabLayout = (TabLayout) findViewById(R.id.tabs);
         initTabs();
         fragmentManager = getSupportFragmentManager();
-        viewPager.setAdapter(new FragmentPagerAdapter1(fragmentManager, titleList));
+        viewPager.setAdapter(new MyFragmentPagerAdapter(fragmentManager, titleList));
         mTabLayout.setupWithViewPager(viewPager);//设置联动
         viewPager.setCurrentItem(select);//设置当前viewpager选中的item
         viewPager.setOffscreenPageLimit(1);//每次加载的item数量

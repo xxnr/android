@@ -8,6 +8,7 @@ import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.protocol.Request;
+import com.ksfc.newfarmer.utils.RndLog;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.picasso.Picasso;
 
@@ -18,7 +19,6 @@ import uk.co.senab.photoview.PhotoViewAttacher;
  * Created by CAI on 2015/12/7.
  */
 public class BigImageActivity extends BaseActivity {
-    private PhotoView photoView;
 
     @Override
     public int getLayout() {
@@ -27,11 +27,14 @@ public class BigImageActivity extends BaseActivity {
 
     @Override
     public void OnActCreate(Bundle savedInstanceState) {
-        photoView = ((PhotoView) findViewById(R.id.photoView));
+        //可以自由放大缩小图片的控键
+        PhotoView photoView = ((PhotoView) findViewById(R.id.photoView));
         String imageUrl = getIntent().getStringExtra("image");
         if (!TextUtils.isEmpty(imageUrl)) {
+            RndLog.d(TAG,imageUrl);
             ImageLoader.getInstance().displayImage(MsgID.IP + imageUrl, photoView);
         }
+        //图片点击监听
         photoView.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
             @Override
             public void onPhotoTap(View view, float x, float y) {

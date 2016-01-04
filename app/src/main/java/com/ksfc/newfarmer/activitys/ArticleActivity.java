@@ -10,6 +10,8 @@ import android.webkit.WebViewClient;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.protocol.Request;
+import com.ksfc.newfarmer.utils.RndLog;
+import com.ksfc.newfarmer.utils.StringUtil;
 
 @SuppressLint("SetJavaScriptEnabled")
 public class ArticleActivity extends BaseActivity {
@@ -23,11 +25,11 @@ public class ArticleActivity extends BaseActivity {
 	@Override
 	public void OnActCreate(Bundle savedInstanceState) {
 		setTitle("资讯详情");
-
 		String url = getIntent().getStringExtra("articleUrl");
 		WebView web = (WebView) findViewById(R.id.webView);
-
-		web.loadUrl(url);
+		// 允许运行js脚本
+		web.getSettings().setJavaScriptEnabled(true);
+		// 如果web内出现链接 依旧由当前webVIew加载
 		web.setWebViewClient(new WebViewClient() {
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -35,19 +37,20 @@ public class ArticleActivity extends BaseActivity {
 				return true;
 			}
 		});
-		// 允许运行js脚本
-		web.getSettings().setJavaScriptEnabled(true);
+		if (StringUtil.checkStr(url)){
+			RndLog.d(TAG,url);
+			web.loadUrl(url);
+		}
+
 	}
 
 	@Override
 	public void OnViewClick(View v) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void onResponsed(Request req) {
-		// TODO Auto-generated method stub
 
 	}
 

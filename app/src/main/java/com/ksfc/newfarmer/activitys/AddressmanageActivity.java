@@ -37,13 +37,16 @@ import android.widget.TextView;
 
 import net.yangentao.util.msg.MsgCenter;
 
+/**
+ * 地址管理页
+ */
 public class AddressmanageActivity extends BaseActivity {
     private ListView address_list;
-    HashMap<String, Integer> map = new HashMap<String, Integer>();
+    HashMap<String, Integer> map = new HashMap<String, Integer>();//创建一个map集合用于存放  是否是默认地址
     private final int reqestcode = 1;
     private addressAdapter adapter;
     private List<AddressList.Address> rows;
-    private List<AddressList.Address> addlist;
+    private List<AddressList.Address> addList;
     private AddressList.Address selectedAddress;
     private RelativeLayout none_address_rel;
 
@@ -65,7 +68,7 @@ public class AddressmanageActivity extends BaseActivity {
 
     private void initView() {
 
-        addlist = new ArrayList<>();
+        addList = new ArrayList<>();
         address_list = (ListView) findViewById(R.id.address_list);
         none_address_rel = (RelativeLayout) findViewById(R.id.none_address_rel);
 
@@ -102,7 +105,7 @@ public class AddressmanageActivity extends BaseActivity {
 
     //获得地址列表
     private void initData() {
-        addlist.clear();
+        addList.clear();
         getAddressList();
     }
 
@@ -138,12 +141,12 @@ public class AddressmanageActivity extends BaseActivity {
                 }
             }
             if (rows != null && rows.size() > 0) {
-                addlist.addAll(rows);
+                addList.addAll(rows);
                 none_address_rel.setVisibility(View.GONE);
                 addressCount = -1;
                 selectedAddress = rows.get(0);
             } else {
-                addlist.clear();
+                addList.clear();
                 none_address_rel.setVisibility(View.VISIBLE);
                 showToast("请先新增地址");
                 addressCount = 0;
@@ -154,7 +157,7 @@ public class AddressmanageActivity extends BaseActivity {
             ResponseResult data = (ResponseResult) req.getData();
             if ("1000".equals(data.getStatus())) {
                 showToast("删除成功！");
-                addlist.clear();
+                addList.clear();
                 getAddressList();
                 adapter.notifyDataSetChanged();
 
@@ -163,7 +166,7 @@ public class AddressmanageActivity extends BaseActivity {
             ResponseResult data = (ResponseResult) req.getData();
             if ("1000".equals(data.getStatus())) {
                 showToast("更改默认地址成功");
-                addlist.clear();
+                addList.clear();
                 getAddressList();
                 adapter.notifyDataSetChanged();
             }
@@ -183,10 +186,10 @@ public class AddressmanageActivity extends BaseActivity {
         @Override
         public int getCount() {
 
-            if (addlist == null)
+            if (addList == null)
                 return 0;
 
-            return addlist.size();
+            return addList.size();
         }
 
         @Override
@@ -211,6 +214,7 @@ public class AddressmanageActivity extends BaseActivity {
                 holder.address_tv = (TextView) convertView
                         .findViewById(R.id.address_tv);
                 holder.btn_check_item = (CheckBox) convertView.findViewById(R.id.btn_check_item);
+                //设置控件点击区域扩大
                 ExpandViewTouch.expandViewTouchDelegate(holder.btn_check_item, 100, 100, 100, 100);
                 holder.edit_address_img = (Button) convertView
                         .findViewById(R.id.edit_address_img);
@@ -225,24 +229,26 @@ public class AddressmanageActivity extends BaseActivity {
                 holder = (ViewHolder) convertView.getTag();
             }
             holder.address_tv.setText(StringUtil.checkBufferStrWithSpace
-                    (addlist.get(position).areaName,
-                            addlist.get(position).cityName,
-                            addlist.get(position).countyName,
-                            addlist.get(position).townName,
-                            addlist.get(position).address));
-            holder.address_name_tv.setText(addlist.get(position).receiptPeople);
-            holder.address_phone_tv.setText(addlist.get(position).receiptPhone);
+                    (addList.get(position).areaName,
+                            addList.get(position).cityName,
+                            addList.get(position).countyName,
+                            addList.get(position).townName,
+                            addList.get(position).address));
+            holder.address_name_tv.setText(addList.get(position).receiptPeople);
+            holder.address_phone_tv.setText(addList.get(position).receiptPhone);
+
+            //编辑地址
             holder.edit_address_img.setOnClickListener(new OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(AddressmanageActivity.this,
                             UpdateAddressActivity.class);
-                    intent.putExtra("address", addlist.get(position));
+                    intent.putExtra("address", addList.get(position));
                     startActivity(intent);
                 }
             });
-
+            //删除地址
             holder.delete_address_img.setOnClickListener(new OnClickListener() {
 
                 @Override
@@ -262,8 +268,7 @@ public class AddressmanageActivity extends BaseActivity {
                                         @Override
                                         public void onClick(DialogInterface dialog,
                                                             int which) {
-                                            if (addlist.get(position).type.equals("1")) {
-
+                                            if (addList.get(position).type.equals("1")) {
                                                 UserInfo queryMe = Store.User.queryMe();
                                                 queryMe.defaultAddress = "";
                                                 Store.User.saveMe(queryMe);
@@ -273,8 +278,8 @@ public class AddressmanageActivity extends BaseActivity {
                                             }
                                             showProgressDialog();
                                             RequestParams params = new RequestParams();
-                                            params.put("userId", addlist.get(position).userId);
-                                            params.put("addressId", addlist.get(position).addressId);
+                                            params.put("userId", addList.get(position).userId);
+                                            params.put("addressId", addList.get(position).addressId);
                                             execApi(ApiType.DELETE_ADDRESS, params);
                                             dialog.dismiss();
                                         }
@@ -306,7 +311,7 @@ public class AddressmanageActivity extends BaseActivity {
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     showProgressDialog();
 
-                    Address address = addlist.get(position);
+                    Address address = addList.get(position);
 
                     RequestParams params = new RequestParams();
                     params.put("userId", Store.User.queryMe().userid);

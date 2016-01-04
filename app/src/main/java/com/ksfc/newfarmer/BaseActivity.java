@@ -453,8 +453,7 @@ public abstract class BaseActivity extends FragmentActivity implements
 
     // 调用此方法 去登录页面
     public void tokenToLogin() {
-        Store.User.removeMe();
-        SPUtils.clear(getApplicationContext());
+        exitLogin();
         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         App.getApp().exit();
@@ -500,6 +499,11 @@ public abstract class BaseActivity extends FragmentActivity implements
             return false;
         }
         return true;
+    }
+
+    public void exitLogin(){
+        Store.User.removeMe();
+        SPUtils.clear(getApplicationContext());
     }
 
     /**

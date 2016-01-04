@@ -7,6 +7,7 @@ import android.widget.TextView;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.protocol.Request;
+import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.StringUtil;
 
 /**
@@ -26,7 +27,8 @@ public class AboutUsActivity extends BaseActivity {
         TextView version = (TextView) findViewById(R.id.about_us_version);
         Bundle bundle = getIntent().getExtras();
         String versionName = bundle.getString("versionName");
-        if (StringUtil.checkStr(versionName)){
+        if (StringUtil.checkStr(versionName)) {
+            RndLog.d(TAG, versionName);
             version.setText("V" + versionName);
         }
     }

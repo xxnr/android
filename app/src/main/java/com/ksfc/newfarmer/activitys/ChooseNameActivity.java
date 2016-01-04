@@ -27,7 +27,6 @@ import android.widget.TextView;
 
 public class ChooseNameActivity extends BaseActivity {
     private EditText et_modify;
-    private UserInfo me;
     private String str;
     private TextView name_submit_tv;
 
@@ -38,17 +37,23 @@ public class ChooseNameActivity extends BaseActivity {
 
     @Override
     public void OnActCreate(Bundle savedInstanceState) {
-        me = Store.User.queryMe();
+
         setTitle("我的昵称");
         setViewClick(R.id.name_submit_tv);
-        et_modify = (EditText) findViewById(R.id.et_modify);
+
         name_submit_tv = (TextView) findViewById(R.id.name_submit_tv);
         name_submit_tv.setClickable(false);
-        et_modify.setText(me.nickname);
+
+        et_modify = (EditText) findViewById(R.id.et_modify);
+        UserInfo me = Store.User.queryMe();
+        if (me != null) {
+            et_modify.setText(me.nickname);
+        }
         et_modify.addTextChangedListener(new MaxLengthWatcher(12, et_modify, ChooseNameActivity.this));
         // 光标移到最后
         Editable eText = et_modify.getText();
         Selection.setSelection(eText, eText.length());
+        //设置字数限制
         et_modify.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -81,7 +86,6 @@ public class ChooseNameActivity extends BaseActivity {
                     params.put("userId", Store.User.queryMe().userid);
                     params.put("nickName", str);
                     execApi(ApiType.SAVE_MYUSER, params);
-
                 }
 
                 break;
@@ -95,8 +99,10 @@ public class ChooseNameActivity extends BaseActivity {
     public void onResponsed(Request req) {
         if (ApiType.SAVE_MYUSER == req.getApi()) {
             UserInfo queryMe = Store.User.queryMe();
-            queryMe.nickname = str;
-            Store.User.saveMe(queryMe);
+            if (queryMe != null) {
+                queryMe.nickname = str;
+                Store.User.saveMe(queryMe);
+            }
             showToast("保存成功！");
             //保存用户
             Intent intent = new Intent();
