@@ -1,135 +1,149 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/shangpin_detail_ll"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    android:id="@+id/shangpin_detail_ll"
-    android:orientation="vertical">
-
-
-
-    <include layout="@layout/title_lay" />
-
-    <com.ksfc.newfarmer.widget.VerticalViewPager
-        android:id="@+id/viewPager_vertical"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:scrollbars="none" />
+    android:background="@color/white">
 
     <LinearLayout
-        android:id="@+id/shangpin_detail_bottom"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/line_chang" />
+        <include layout="@layout/title_lay" />
 
-        <TextView
-            android:id="@+id/jingqingqidai_bar"
+        <com.ksfc.newfarmer.widget.VerticalViewPager
+            android:id="@+id/viewPager_vertical"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:background="@color/bg_gary"
-            android:gravity="center"
-            android:text="敬请期待"
-            android:textColor="@color/black"
-            android:textSize="18sp"
-            android:visibility="gone" />
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:scrollbars="none" />
 
         <LinearLayout
-            android:id="@+id/shangpin_detail_bottom_bar"
+            android:id="@+id/shangpin_detail_bottom"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/line_chang" />
+
+            <TextView
+                android:id="@+id/jingqingqidai_bar"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@color/bg_gary"
+                android:gravity="center"
+                android:text="敬请期待"
+                android:textColor="@color/deep_gray"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
 
             <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center">
-
+                android:id="@+id/shangpin_detail_bottom_bar"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:orientation="horizontal">
 
                 <LinearLayout
-                    android:focusable="true"
-                    android:focusableInTouchMode="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center">
 
-                    <ImageView
-                        android:id="@+id/discount_jian"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_gravity="center_vertical"
-                        android:background="@drawable/selector_jian"
-                        android:scaleType="centerCrop" />
 
-                    <EditText
-                        android:id="@+id/discount_geshu"
-                        android:layout_width="40dp"
-                        android:layout_height="24dp"
-                        android:inputType="number"
-                        android:ellipsize="end"
-                        android:layout_gravity="center_vertical"
-                        android:background="@drawable/round_line_gary_write_1px"
-                        android:gravity="center"
-                        android:maxLength="4"
-                        android:text="1"
-                        android:textColor="@color/main_index_gary"
-                        android:textSize="14sp" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        android:orientation="horizontal">
 
-                    <ImageView
-                        android:id="@+id/discount_jia"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_gravity="center_vertical"
-                        android:background="@drawable/selector_jia"
-                        android:scaleType="centerCrop" />
+                        <ImageView
+                            android:id="@+id/discount_jian"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center_vertical"
+                            android:background="@drawable/selector_jian"
+                            android:scaleType="centerCrop" />
+
+                        <EditText
+                            android:id="@+id/discount_geshu"
+                            android:layout_width="40dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center_vertical"
+                            android:background="@drawable/round_line_gary_write_1px"
+                            android:ellipsize="end"
+                            android:gravity="center"
+                            android:inputType="number"
+                            android:maxLength="4"
+                            android:text="1"
+                            android:textColor="@color/main_index_gary"
+                            android:textSize="14sp" />
+
+                        <ImageView
+                            android:id="@+id/discount_jia"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center_vertical"
+                            android:background="@drawable/selector_jia"
+                            android:scaleType="centerCrop" />
+
+                    </LinearLayout>
+
 
                 </LinearLayout>
 
-
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="1px"
-                android:layout_height="match_parent"
-                android:background="@color/gary_line" />
-
-            <LinearLayout
-                android:id="@+id/buy_now"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center">
-
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="立即购买"
-                    android:textColor="@color/deep_orange"
-                    android:textSize="18sp" />
+                    android:layout_width="1px"
+                    android:layout_height="match_parent"
+                    android:background="@color/gary_line" />
+
+                <LinearLayout
+                    android:id="@+id/buy_now"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="立即购买"
+                        android:textColor="@color/deep_orange"
+                        android:textSize="18sp" />
 
 
-            </LinearLayout>
+                </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/add_to_shopcart"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/btn_selector_orange_deep"
-                android:gravity="center">
+                <LinearLayout
+                    android:id="@+id/add_to_shopcart"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/btn_selector_orange_deep"
+                    android:gravity="center">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="加入购物车"
-                    android:textColor="@color/white" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="加入购物车"
+                        android:textColor="@color/white" />
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/shangpin_detail_bg"
+        android:orientation="horizontal"
+        android:background="#90000000"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+
+</RelativeLayout>

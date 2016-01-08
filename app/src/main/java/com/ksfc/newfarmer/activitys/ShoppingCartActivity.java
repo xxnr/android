@@ -45,7 +45,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -71,7 +70,7 @@ public class ShoppingCartActivity extends BaseActivity {
     private LinearLayout goods_bar_ll;   //商品下方bar
 
     private double price; // 总价
-    private static int num=0; // 选中的商品数
+    private static int num = 0; // 选中的商品数
     private int total = 0;
     private HashMap<String, Boolean> inCartMap = new HashMap<String, Boolean>();// 用于存放选中的项
     private HashMap<String, Boolean> inShopMap = new HashMap<String, Boolean>();// 用于店铺选中的项
@@ -350,7 +349,6 @@ public class ShoppingCartActivity extends BaseActivity {
 
         static class Category {
             String title;
-            boolean flag = false;//是否全部取消店铺下的商品选中状态 区分主被动
             List<Goods> goods;
         }
 
@@ -502,7 +500,6 @@ public class ShoppingCartActivity extends BaseActivity {
                 Intent intent = new Intent(ShoppingCartActivity.this,
                         ShangpinListActivity.class);
                 intent.putExtra("goods", "huafei");
-
                 startActivity(intent);
 
                 break;
@@ -547,9 +544,8 @@ public class ShoppingCartActivity extends BaseActivity {
             //保存到本地此购物车的Id
             SPUtils.put(ShoppingCartActivity.this, "shopCartId",
                     res.datas.shopCartId);
-
+            //转移到实体类中
             for (int i = 0; i < rows.size(); i++) {
-
                 Category c = new Category();
                 c.title = rows.get(i).brandName;
                 c.goods = new ArrayList<Goods>();
@@ -614,7 +610,6 @@ public class ShoppingCartActivity extends BaseActivity {
                 hideRight();
                 return;
             }
-            total_count = 0;
             total_count = res.datas.totalCount;
             total = res.datas.total;
             setTitle("购物车" + "(" + total_count + ")");
@@ -624,6 +619,7 @@ public class ShoppingCartActivity extends BaseActivity {
             if (data != null && data.category.size() > 0) {
                 data.category.clear();
             }
+            // 转义到自定义的实体类中
             for (int i = 0; i < rows.size(); i++) {
                 Category c = new Category();
                 c.title = rows.get(i).brandName;
@@ -699,7 +695,7 @@ public class ShoppingCartActivity extends BaseActivity {
                         .inflate(R.layout.shopcart_list_item, null);
                 convertView.setTag(new ViewHolder(convertView));
             }
-            ViewHolder holder = (ViewHolder) convertView.getTag();
+            final ViewHolder holder = (ViewHolder) convertView.getTag();
             holder.car_name.setText(data.category.get(position).title);
             carAdapter = new carAdapter(data.category.get(position).goods, data.category.get(position));
             //设置其是否选中
@@ -709,35 +705,44 @@ public class ShoppingCartActivity extends BaseActivity {
             } else {
                 holder.shop_checkBox.setChecked(false);
             }
+
             //通过店铺全选店铺下的商品
-            holder.shop_checkBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+            holder.shop_checkBox.setOnClickListener(new OnClickListener() {
                 @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (isChecked) {
+                public void onClick(View v) {
+                    boolean checked = holder.shop_checkBox.isChecked();
+                    if (checked) {
                         inShopMap.put(data.category.get(position).title, true);
+                        if (inShopMap.size() == data.category.size()) {
+                            // 如果所有店铺都被选中，则点亮全选按钮
+                            mBtnCheckAll.setChecked(true);
+                        }
+                        //选中店铺下的全部商品
                         for (int i = 0; i < data.category.get(position).goods.size(); i++) {
                             inCartMap.put(data.category.get(position).goods.get(i).id, true);
                         }
                     } else {
 
-                        if (!data.category.get(position).flag) {
-                            inShopMap.remove(data.category.get(position).title);
-                            for (int i = 0; i < data.category.get(position).goods.size(); i++) {
-                                inCartMap.remove(data.category.get(position).goods.get(i).id);
-                            }
-                        } else {
-                            inShopMap.remove(data.category.get(position).title);
-                            data.category.get(position).flag = false;
+                        if (inShopMap.size() == data.category.size()) {
+                            // 如果所有店铺都被选中，则取消全选按钮
+                            mBtnCheckAll
+                                    .setOnCheckedChangeListener(null);
+                            mBtnCheckAll.setChecked(false);
+                            mBtnCheckAll
+                                    .setOnCheckedChangeListener(checkAllListener);
                         }
-
+                        inShopMap.remove(data.category.get(position).title);
+                        for (int i = 0; i < data.category.get(position).goods.size(); i++) {
+                            inCartMap.remove(data.category.get(position).goods.get(i).id);
+                        }
                     }
-
                     //更新状态
                     notifyDataSetChanged();
                     notifyCheckedChanged();
                     notifyNumChanged();
                 }
             });
+
             holder.car_list.setAdapter(carAdapter);
             WidgetUtil.setListViewHeightBasedOnChildren(holder.car_list);
             return convertView;
@@ -863,7 +868,6 @@ public class ShoppingCartActivity extends BaseActivity {
             } else {
                 holder.checkBox_item.setChecked(false);
             }
-
             //是否选中
             holder.checkBox_item.setOnCheckedChangeListener(new OnCheckedChangeListener() {
                 @Override
@@ -874,7 +878,6 @@ public class ShoppingCartActivity extends BaseActivity {
                         if (inCartMap.size() == total) {
                             mBtnCheckAll.setChecked(true);
                         }
-
                         // 如果一个店铺内的所有项都被选中 ，则点亮店铺按钮
                         int count = 0;
                         for (int i = 0; i < goodsList.size(); i++) {
@@ -889,7 +892,6 @@ public class ShoppingCartActivity extends BaseActivity {
                         }
 
                     } else {
-
                         // 如果之前是全选状态，则取消全选状态
                         if (inCartMap.size() == total) {
                             mBtnCheckAll
@@ -898,7 +900,6 @@ public class ShoppingCartActivity extends BaseActivity {
                             mBtnCheckAll
                                     .setOnCheckedChangeListener(checkAllListener);
                         }
-
                         // 如果一个店铺内的所有项都被选中 ，则点亮店铺按钮
                         int count = 0;
                         for (int i = 0; i < goodsList.size(); i++) {
@@ -909,30 +910,14 @@ public class ShoppingCartActivity extends BaseActivity {
                         }
                         if (count == goodsList.size()) {
                             inShopMap.remove(category.title);
-                            category.flag = true;
                             adapter.notifyDataSetChanged();
                         }
                         inCartMap.remove(goodsList.get(position).id);
                     }
-
-
-                    // 如果一个店铺内的所有项都被选中 ，则点亮店铺按钮
-                    int count = 0;
-                    for (int i = 0; i < goodsList.size(); i++) {
-                        Boolean aBoolean = inCartMap.get(goodsList.get(i).id);
-                        if (aBoolean != null && aBoolean) {
-                            count++;
-                        }
-                    }
-                    if (count == goodsList.size()) {
-                        inShopMap.put(category.title, true);
-                    } else {
-                        inShopMap.remove(category.title);
-                    }
                     notifyCheckedChanged();
-
-
                 }
+
+
             });
 
             //修改商品数量
@@ -1089,7 +1074,6 @@ public class ShoppingCartActivity extends BaseActivity {
                 }
             });
             //点击 商品图片 或者 标题所在的布局 去商品详情
-
             holder.ordering_item_img.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -1105,7 +1089,6 @@ public class ShoppingCartActivity extends BaseActivity {
                     Intent intent = new Intent(ShoppingCartActivity.this, ShangpinDetailActivity.class);
                     intent.putExtra("goodId", goodsList.get(position).id);
                     startActivity(intent);
-
                 }
             });
             return convertView;

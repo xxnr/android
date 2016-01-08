@@ -293,8 +293,6 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
                 }
             } else {
                 showToast("没有数据了");
-                if (page1 == 1) {
-                }
             }
             disMissDialog();
         } else if (req.getApi() == ApiType.GET_NYC) {

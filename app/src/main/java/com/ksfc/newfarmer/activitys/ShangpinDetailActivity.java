@@ -19,9 +19,15 @@ import com.ksfc.newfarmer.widget.CustomDialog;
 import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.widget.VerticalViewPager;
 
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.view.Gravity;
+import android.view.ViewGroup.LayoutParams;
+
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.Selection;
 import android.text.TextUtils;
@@ -30,6 +36,8 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObserver.OnGlobalLayoutListener {
@@ -44,7 +52,9 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
     private VerticalViewPager viewPager;
 
     private boolean toast_flag = true;//true的时候提示 添加购物车成功  false 为不提示
-    private LinearLayout toSoft_ll;
+    private RelativeLayout toSoft_ll;//软件盘所在的布局
+    private PopupWindow popupWindow;
+    private LinearLayout shangpin_detail_bg;
 
 
     @Override
@@ -61,8 +71,6 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
         initView();
         dao = new ShoppingDao(ShangpinDetailActivity.this);
         getData();
-
-
     }
 
     private void getData() {
@@ -80,8 +88,14 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
     private void initView() {
         discount_geshu = (EditText) findViewById(R.id.discount_geshu);
         viewPager = (VerticalViewPager) findViewById(R.id.viewPager_vertical);
+        //预售时显示
         jinqingqidai_bar = ((TextView) findViewById(R.id.jingqingqidai_bar));
         shangpin_detail_bottom_bar = ((LinearLayout) findViewById(R.id.shangpin_detail_bottom_bar));
+        //popWindow弹出的时候用于遮挡背景
+        shangpin_detail_bg=((LinearLayout) findViewById(R.id.shangpin_detail_bg));
+        //判断键盘的收起
+        toSoft_ll = ((RelativeLayout) findViewById(R.id.shangpin_detail_ll));
+        toSoft_ll.getViewTreeObserver().addOnGlobalLayoutListener(this);
 
         setRightImage(R.drawable.goods_shopping_cart_icon);
         setRightViewListener(new View.OnClickListener() {
@@ -115,11 +129,6 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
                 }
             }
         });
-
-
-        //判断键盘的收起
-        toSoft_ll = ((LinearLayout) findViewById(R.id.shangpin_detail_ll));
-        toSoft_ll.getViewTreeObserver().addOnGlobalLayoutListener(this);
 
     }
 
@@ -210,11 +219,64 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
                     dialog.show();
                 }
                 break;
+
+            case R.id.product_attribute_rel:
+                //弹出popWindow筛选规格
+                showPopUp(v);
+                break;
             default:
                 break;
         }
 
     }
+    /**
+     * 创建PopupWindow
+     */
+    private void initPopuptWindow() {
+        // 获取自定义布局文件activity_popupWindow.xml的视图
+        View popupWindow_view = getLayoutInflater().inflate(
+                R.layout.pop_layout_goods_detail, null, false);
+        // 创建PopupWindow实例,200,LayoutParams.MATCH_PARENT分别是宽度和高度
+        popupWindow = new PopupWindow(popupWindow_view,
+                LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, true);
+        // 设置动画效果
+        popupWindow.setAnimationStyle(R.style.popWindow_anim_style);
+        popupWindow.setFocusable(true);
+        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                setBackgroundBlack(shangpin_detail_bg, 1);
+            }
+        });
+
+    }
+
+    //显示popWindow
+    private void showPopUp(View parent) {
+        if (null != popupWindow) {
+            popupWindow.dismiss();
+        } else {
+            initPopuptWindow();
+        }
+        popupWindow.showAtLocation(parent, Gravity.BOTTOM, 0, 0);
+        setBackgroundBlack(shangpin_detail_bg, 0);
+    }
+
+    /** 控制背景变暗 0变暗 1变亮 */
+    public void setBackgroundBlack(View view, int what) {
+        switch (what) {
+            case 0:
+                view.setVisibility(View.VISIBLE);
+                break;
+            case 1:
+                view.setVisibility(View.GONE);
+                break;
+        }
+    }
+
+
+
 
     private void addToCar() {//加入购物车
         if (!TextUtils.isEmpty(discount_geshu.getText().toString().trim()) && !discount_geshu.getText().toString().trim().equals("0")) {
@@ -279,11 +341,11 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
             GetGoodsDetail data = (GetGoodsDetail) req.getData();
             detail = data.datas;
             if (!TextUtils.isEmpty(detail.app_body_url)) {
-                GoodsDetailAdapter adapter = new GoodsDetailAdapter(2, detail, this);
+                GoodsDetailAdapter adapter = new GoodsDetailAdapter(getSupportFragmentManager(), 2, detail);
                 viewPager.setAdapter(adapter);
                 viewPager.setOffscreenPageLimit(0);
             } else {
-                GoodsDetailAdapter adapter = new GoodsDetailAdapter(1, detail, this);
+                GoodsDetailAdapter adapter = new GoodsDetailAdapter(getSupportFragmentManager(), 1, detail);
                 viewPager.setAdapter(adapter);
             }
             if (detail.presale) {
@@ -297,6 +359,15 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
             setViewClick(R.id.discount_jian);
             setViewClick(R.id.discount_jia);
             setViewClick(R.id.buy_now);
+
+            Fragment fragment = getSupportFragmentManager().getFragments().get(0);
+            if (fragment != null) {
+                View view = fragment.getView().findViewById(R.id.product_attribute_rel);
+                if (view != null) {
+                    view.setOnClickListener(this);
+                }
+            }
+
         } else if (req.getApi() == ApiType.ADDTOCART) {
             disMissDialog();
             addtoCart data = (addtoCart) req.getData();
@@ -307,11 +378,11 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
             }
         }
     }
+
     //监听软键盘收起时，如果输入框为“”，变为1
     @Override
     public void onGlobalLayout() {
         int heightDiff = toSoft_ll.getRootView().getHeight() - toSoft_ll.getHeight();
-
         if (heightDiff > 100) {
             RndLog.v(TAG, "键盘弹出状态");
         } else {

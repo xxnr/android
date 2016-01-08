@@ -8,98 +8,50 @@
         android:id="@+id/scrollView_goods_detail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="none"
-        >
+        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/good_img"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="360dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/mine_bg" />
+                android:layout_height="360dp">
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/line_chang" />
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/goods_detail_top_viewpager"
+                    android:layout_width="match_parent"
+                    android:layout_height="360dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/half_transparent" />
+            </RelativeLayout>
 
             <LinearLayout
+
                 android:layout_width="match_parent"
-                android:layout_height="60dp">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/good_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
-                    android:text="中化好苗子有机肥（NPK>=5%,）"
-                    android:textColor="@color/black_goods_titile"
-                    android:textSize="16sp" />
-            </LinearLayout>
+                    android:layout_marginTop="11dp"
+                    android:text="中化好苗子有机肥"
+                    android:textColor="@color/black"
+                    android:textSize="18sp" />
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/line_chang" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="40dp">
-
-                <TextView
-                    android:id="@+id/product_description"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:text="海藻多糖尿素好 缓释长效流失少"
-                    android:textColor="@color/green"
-                    android:textSize="14sp" />
-            </RelativeLayout>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:background="@color/bg_gary"
-                android:gravity="center_vertical"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:visibility="gone">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="16dp"
-                        android:text="市场价： "
-                        android:textColor="@color/black_goods_titile"
-                        android:textSize="12sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="¥1340"
-                        android:textColor="@color/main_index_gary"
-                        android:textSize="12sp" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
+                    android:layout_marginTop="10dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -116,8 +68,7 @@
                         android:id="@+id/product_price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:text="¥1120"
+                        android:text=""
                         android:textColor="@color/orange_goods_price"
                         android:textSize="20sp" />
 
@@ -137,7 +88,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
-                        android:text="定金: "
+                        android:text="预付定金: "
                         android:textColor="@color/black"
                         android:textSize="16sp"
                         android:visibility="gone" />
@@ -150,9 +101,51 @@
                         android:textColor="@color/orange_goods_price"
                         android:textSize="20sp" />
                 </LinearLayout>
-
-
             </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="14dp"
+                android:background="@color/bg_gary">
+
+                <TextView
+                    android:id="@+id/product_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="海藻多糖尿素好 缓释长效流失少"
+                    android:textColor="@color/green"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/product_attribute_rel"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="12dp"
+                android:background="@color/bg_gary">
+
+                <TextView
+                    android:id="@+id/product_attribute"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="16dp"
+                    android:text="请选择商品属性"
+                    android:textColor="@color/black_goods_titile"
+                    android:textSize="14sp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="25dp"
+                    android:background="@drawable/common_icon_qianjin" />
+
+            </RelativeLayout>
+
 
             <RelativeLayout
                 android:id="@+id/goods_detail_detail"

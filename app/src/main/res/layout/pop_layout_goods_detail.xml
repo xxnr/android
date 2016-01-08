@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/transparent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="480dp"
+        android:layout_marginTop="16dp"
+        android:background="@color/white">
+
+        <RelativeLayout
+            android:id="@+id/pop_layout_rel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/pop_image_false"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="-16dp" />
+
+            <TextView
+                android:id="@+id/pop_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="13dp"
+                android:layout_marginTop="10dp"
+                android:layout_toRightOf="@id/pop_image_false"
+                android:text="中化美农第3代缓控释肥"
+                android:textColor="@color/black_goods_titile"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/pop_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/pop_title"
+                android:layout_marginLeft="13dp"
+                android:layout_marginTop="22dp"
+                android:layout_toRightOf="@+id/pop_image_false"
+                android:text="¥1120"
+                android:textColor="@color/orange_goods_price"
+                android:textSize="20sp" />
+
+            <ImageView
+                android:id="@+id/pop_close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_margin="10dp"
+                android:background="@drawable/close_icon" />
+
+        </RelativeLayout>
+
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/shangpin_detail_bottom"
+            android:layout_below="@+id/pop_layout_rel"
+            android:layout_marginTop="46dp"
+            android:background="@color/default_act_bg"></ScrollView>
+
+
+        <LinearLayout
+            android:id="@+id/shangpin_detail_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical">
+
+            <include layout="@layout/line_lay" />
+
+            <TextView
+                android:id="@+id/jingqingqidai_bar"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@color/bg_gary"
+                android:gravity="center"
+                android:text="敬请期待"
+                android:textColor="@color/deep_gray"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/shangpin_detail_bottom_bar"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="1px"
+                    android:layout_height="match_parent"
+                    android:background="@color/gary_line" />
+
+                <LinearLayout
+                    android:id="@+id/buy_now"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="立即购买"
+                        android:textColor="@color/deep_orange"
+                        android:textSize="18sp" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/add_to_shopcart"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/btn_selector_orange_deep"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="加入购物车"
+                        android:textColor="@color/white" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginLeft="16dp"
+        android:background="@drawable/round_line_gary_radius"
+        android:padding="1px">
+
+        <com.ksfc.newfarmer.widget.XCRoundRectImageView
+            android:id="@+id/pop_image"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/car_test" />
+    </RelativeLayout>
+
+
+</FrameLayout>

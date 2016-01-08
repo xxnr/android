@@ -40,9 +40,16 @@
                     android:layout_width="80dp"
                     android:layout_height="2dp"
                     android:background="@color/green"
-                    android:visibility="gone" />
+                    android:visibility="invisible" />
 
             </LinearLayout>
+
+            <TextView
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="1dp"
+                android:background="@color/deep1_gray"
+                android:layout_height="match_parent" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -66,9 +73,16 @@
                     android:layout_width="80dp"
                     android:layout_height="2dp"
                     android:background="@color/green"
-                    android:visibility="gone" />
+                    android:visibility="invisible" />
 
             </LinearLayout>
+
+            <TextView
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="1dp"
+                android:background="@color/deep1_gray"
+                android:layout_height="match_parent" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -92,12 +106,14 @@
                     android:layout_width="80dp"
                     android:layout_height="2dp"
                     android:background="@color/green"
-                    android:visibility="gone" />
+                    android:visibility="invisible" />
 
             </LinearLayout>
 
 
         </LinearLayout>
+
+        <include layout="@layout/line_lay"/>
 
 
     </LinearLayout>

@@ -29,6 +29,7 @@ import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.beans.InformationResult;
 import com.ksfc.newfarmer.protocol.beans.InformationResult.DatasEntity.ItemsEntity;
+import com.ksfc.newfarmer.utils.DateFormatUtils;
 import com.ksfc.newfarmer.utils.PullToRefreshUtils;
 import com.ksfc.newfarmer.utils.ScreenUtil;
 import com.ksfc.newfarmer.widget.PullToRefreshView;
@@ -231,7 +232,8 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
                         holder.image_iv);
             }
             holder.title_tv.setText(items.get(position).getTitle());
-            String time = items.get(position).getDatecreated().substring(0, 10);
+            //格式化时间
+            String time = DateFormatUtils.convertTime(items.get(position).getDatecreated());
             holder.time_tv.setText(time);
             return convertView;
         }

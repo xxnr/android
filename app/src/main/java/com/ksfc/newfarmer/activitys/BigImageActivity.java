@@ -1,24 +1,35 @@
 package com.ksfc.newfarmer.activitys;
 
 import android.os.Bundle;
-import android.text.TextUtils;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
+import com.ksfc.newfarmer.fragment.BigImageFragment;
 import com.ksfc.newfarmer.protocol.Request;
-import com.ksfc.newfarmer.utils.RndLog;
+import com.ksfc.newfarmer.protocol.beans.GetGoodsDetail;
+import com.ksfc.newfarmer.utils.StringUtil;
+import com.ksfc.newfarmer.widget.HackyViewPager;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 import uk.co.senab.photoview.PhotoView;
-import uk.co.senab.photoview.PhotoViewAttacher;
 
 /**
  * Created by CAI on 2015/12/7.
  */
 public class BigImageActivity extends BaseActivity {
+    private List<ImageView> dots;
 
     @Override
     public int getLayout() {
@@ -27,35 +38,48 @@ public class BigImageActivity extends BaseActivity {
 
     @Override
     public void OnActCreate(Bundle savedInstanceState) {
-        //可以自由放大缩小图片的控键
-        PhotoView photoView = ((PhotoView) findViewById(R.id.photoView));
-        String imageUrl = getIntent().getStringExtra("image");
-        if (!TextUtils.isEmpty(imageUrl)) {
-            RndLog.d(TAG,imageUrl);
-            ImageLoader.getInstance().displayImage(MsgID.IP + imageUrl, photoView);
+
+        HackyViewPager viewPager = ((HackyViewPager) findViewById(R.id.viewPager_big_image));
+        GetGoodsDetail.GoodsDetail detail = (GetGoodsDetail.GoodsDetail) getIntent().getSerializableExtra("detail");
+        int position = getIntent().getIntExtra("position", 0);
+        if (detail != null && detail.pictures != null) {
+            MyPagerAdapter myPagerAdapter = new MyPagerAdapter(getSupportFragmentManager(), detail.pictures);
+            viewPager.setAdapter(myPagerAdapter);
+            viewPager.setCurrentItem(position);
         }
-        //图片点击监听
-        photoView.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
-            @Override
-            public void onPhotoTap(View view, float x, float y) {
-                finish();
-            }
-        });
-        setViewClick(R.id.image_activity_back);
     }
 
     @Override
     public void OnViewClick(View v) {
 
-        switch (v.getId()) {
-            case R.id.image_activity_back:
-                finish();
-                break;
-        }
     }
 
     @Override
     public void onResponsed(Request req) {
 
+    }
+
+    class MyPagerAdapter extends FragmentPagerAdapter {
+
+        private List<GetGoodsDetail.GoodsDetail.Pictures> pictures;
+
+        public MyPagerAdapter(FragmentManager fm, List<GetGoodsDetail.GoodsDetail.Pictures> pictures) {
+            super(fm);
+            this.pictures = pictures;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            BigImageFragment fragment = new BigImageFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString("picture", pictures.get(position).originalUrl);
+            fragment.setArguments(bundle);
+            return fragment;
+        }
+
+        @Override
+        public int getCount() {
+            return pictures.size();
+        }
     }
 }

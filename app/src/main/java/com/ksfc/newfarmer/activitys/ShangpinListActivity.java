@@ -6,20 +6,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AbsListView;
@@ -28,17 +22,14 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.handmark.pulltorefresh.library.ILoadingLayout;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.ksfc.newfarmer.BaseActivity;
-import com.ksfc.newfarmer.MainActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.db.Store;
@@ -56,9 +47,7 @@ import com.ksfc.newfarmer.utils.ImageLoaderUtils;
 import com.ksfc.newfarmer.utils.PullToRefreshUtils;
 import com.ksfc.newfarmer.utils.ScreenUtil;
 import com.ksfc.newfarmer.widget.GridViewWithHeaderAndFooter;
-import com.ksfc.newfarmer.widget.PullToRefreshView;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.squareup.picasso.Picasso;
 
 public class ShangpinListActivity extends BaseActivity implements OnItemClickListener, PullToRefreshBase.OnRefreshListener2, AbsListView.OnScrollListener {
 
@@ -76,7 +65,7 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
 
     // 声明PopupWindow对象的引用
     private PopupWindow popupWindow;
-
+    //分割线
     private TextView goods_bar_separatrix;
 
     private GridViewWithHeaderAndFooter banrds_gv;
@@ -122,13 +111,12 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
         if (goods_flag.equals("huafei")) {
             setTitle("化肥");
             classId = "531680A5";
-
         } else if (goods_flag.equals("qiche")) {
             setTitle("汽车");
             classId = "6C7D8F66";
         }
+        //未登录时，加入购物车
         dao = new ShoppingDao(ShangpinListActivity.this);
-
         initView();
         getData();
     }
@@ -137,9 +125,11 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
         listView = (PullToRefreshListView) findViewById(R.id.information_listView);
         listView.setOnRefreshListener(this);
         listView.setMode(PullToRefreshBase.Mode.BOTH);
+        //监听滚动 控制return top 按钮
         listView.setOnScrollListener(this);
         //设置刷新的文字
         PullToRefreshUtils.setFreshText(listView);
+        //没有商品时的layout
         goods_none_view_rel = (RelativeLayout) findViewById(R.id.goods_none_view_rel);
         // 去顶部
         return_top = (ImageView) findViewById(R.id.return_top);
@@ -162,7 +152,6 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
     }
 
     private void getData() {
-
         showProgressDialog();
         RequestParams params = new RequestParams();
         params.put("page", page);
@@ -181,18 +170,20 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
 
     }
 
-    private void getHuafeiBrandsData() {
+    //获得筛选类型
+    private void getBrandsData() {
 
-        RequestParams params = new RequestParams();
-        execApi(ApiType.GET_ATTRIBUTENAME.setMethod(RequestMethod.GET).setOpt(
-                "/api/v2.0/products/brands" + "?category=" + "化肥"), params);
-    }
+        if (goods_flag.equals("huafei")) {
+            RequestParams params = new RequestParams();
+            execApi(ApiType.GET_ATTRIBUTENAME.setMethod(RequestMethod.GET).setOpt(
+                    "/api/v2.0/products/brands" + "?category=" + "化肥"), params);
+        } else {
+            RequestParams params = new RequestParams();
+            execApi(ApiType.GET_ATTRIBUTENAME.setMethod(RequestMethod.GET).setOpt(
+                    "/api/v2.0/products/models" + "?category=" + "汽车"), params);
+        }
 
-    private void getqicheBrandsData() {
 
-        RequestParams params = new RequestParams();
-        execApi(ApiType.GET_ATTRIBUTENAME.setMethod(RequestMethod.GET).setOpt(
-                "/api/v2.0/products/models" + "?category=" + "汽车"), params);
     }
 
     @Override
@@ -203,13 +194,11 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
                 listView.getRefreshableView().setSelection(0);
                 break;
             case R.id.goods_shaixuan_rel:
-                if (goods_flag.equals("huafei")) {
-                    getHuafeiBrandsData();
+                if (popupWindow!=null&&popupWindow.isShowing()){
+                    popupWindow.dismiss();
+                }else {
                     getPopupWindow();
-                    popupWindow.showAsDropDown(goods_bar_separatrix);
-                } else if (goods_flag.equals("qiche")) {
-                    getqicheBrandsData();
-                    getPopupWindow();
+                    getBrandsData();
                     popupWindow.showAsDropDown(goods_bar_separatrix);
                 }
                 break;
@@ -256,10 +245,8 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
                 LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, true);
         // 设置动画效果
         popupWindow.setAnimationStyle(R.style.AnimTop2);
-        BitmapDrawable drawable = new BitmapDrawable();
-        popupWindow.setBackgroundDrawable(drawable);
+        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         popupWindow.setFocusable(true);
-
         // 初始化popWindow中的两个gridView
         banrds_gv = (GridViewWithHeaderAndFooter) popupWindow_view
                 .findViewById(R.id.brand_gv);
@@ -312,9 +299,8 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
     // 得到筛选框中筛选的结果
     private void getShuaixuan_value() {
         int pri_position = 0;
-
+        //化肥还是汽车
         if (goods_flag.equals("huafei")) {
-
             for (int i = 0, j = banrds_gv.getCount(); i < j; i++) {
                 View child = banrds_gv.getChildAt(i);
                 RadioButton rdoBtn = (RadioButton) child
@@ -454,7 +440,6 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
     private void getPopupWindow() {
         if (null != popupWindow) {
             popupWindow.dismiss();
-            return;
         } else {
             initPopuptWindow();
         }
@@ -463,10 +448,11 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
     @Override
     public void onResponsed(Request req) {
         listView.onRefreshComplete();
+        disMissDialog();
         if (req.getApi() == ApiType.GET_NYC
                 || req.getApi() == ApiType.GET_HUAFEI) {
             GetGoodsData goodsData = (GetGoodsData) req.getData();
-            if ("1000" .equals(goodsData.getStatus())) {
+            if ("1000".equals(goodsData.getStatus())) {
                 List<SingleGood> list = goodsData.datas.rows;
                 if (list.size() > 0) {
                     goods_none_view_rel.setVisibility(View.GONE);
@@ -492,17 +478,15 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
                     }
                     goodsListAdapter.notifyDataSetChanged();
                 }
-                disMissDialog();
             }
         } else if (req.getApi() == ApiType.ADDTOCART) {
             addtoCart data = (addtoCart) req.getData();
-            if ("1000" .equals(data.getStatus())) {
+            if ("1000".equals(data.getStatus())) {
                 showToast("添加购物车成功");
             }
         } else if (req.getApi() == ApiType.GET_ATTRIBUTENAME) {
             BrandsShaixuan data = (BrandsShaixuan) req.getData();
             if (data.getStatus().equals("1000")) {
-
                 brands = data.datas;
                 Datas datas = new Datas();
                 datas.name = "全部";
@@ -708,7 +692,7 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
         }
 
     }
-
+    //popWindow中的品牌
     class bransAdapter extends BaseAdapter {
         private List<Datas> list;
         // 用于记录每个RadioButton的状态，并保证只可选一个
@@ -766,15 +750,9 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
                         }
                     });
 
-            boolean res = false;
-
-            if (states.get(String.valueOf(position)) == null
-                    || states.get(String.valueOf(position)) == false) {
-                res = false;
-                states.put(String.valueOf(position), false);
-            } else {
-                res = true;
-            }
+            boolean res ;
+            res = !(states.get(String.valueOf(position)) == null
+                    || !states.get(String.valueOf(position)));
 
             holder.brands_name_tv.setChecked(res);
 
@@ -792,7 +770,7 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
         }
 
     }
-
+    //popWindow中的价格
     class priceAdapter extends BaseAdapter {
         private List<String> list;
         // 用于记录每个RadioButton的状态，并保证只可选一个
@@ -850,15 +828,10 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
                         }
                     });
 
-            boolean res = false;
-
-            if (states.get(String.valueOf(position)) == null
-                    || states.get(String.valueOf(position)) == false) {
-                res = false;
-                states.put(String.valueOf(position), false);
-            } else {
-                res = true;
-            }
+            boolean res;
+            //再次点击进入后
+            res = !(states.get(String.valueOf(position)) == null
+                    || !states.get(String.valueOf(position)));
 
             holder.brands_name_tv.setChecked(res);
 

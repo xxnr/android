@@ -74,7 +74,8 @@ public class SettingActivity extends BaseActivity implements CompoundButton.OnCh
         setViewClick(R.id.about_us);
         //是否推送
         checkBox = (CustomCheckBox) findViewById(R.id.push_switch);
-        checkBox.setChecked(true);
+        PushAgent mPushAgent = PushAgent.getInstance(getApplicationContext());
+        checkBox.setChecked(mPushAgent.isEnabled());
         checkBox.setOnCheckedChangeListener(this);
 
         //版本号

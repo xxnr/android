@@ -38,7 +38,7 @@
                 android:id="@+id/payWay_order_id"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="201509221303324"
+                android:text=""
                 android:textColor="@color/black_goods_titile"
                 android:textSize="18sp" />
 
@@ -63,7 +63,7 @@
                 android:id="@+id/payway_sumPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="400000元"
+                android:text=""
                 android:textColor="@color/orange_goods_price"
                 android:textSize="18sp" />
         </LinearLayout>
