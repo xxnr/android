@@ -86,8 +86,17 @@
                 android:maxLines="2"
                 android:text=""
                 android:textColor="@color/black_goods_titile"
-                android:textSize="14sp" />
+                android:textSize="16sp" />
 
+            <TextView
+                android:id="@+id/ordering_item_attr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/ordering_item_name"
+                android:layout_marginTop="7dp"
+                android:textColor="@color/deep_gray"
+                android:text=""
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/ordering_now_pri"
@@ -96,6 +105,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginTop="105dp"
                 android:textColor="@color/orange_goods_price"
+                android:text=""
                 android:textSize="15sp" />
         </RelativeLayout>
     </LinearLayout>
@@ -122,7 +132,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="38dp"
-                android:text="阶段一：定金："
+                android:text="阶段一：订金"
                 android:textColor="@color/black_goods_titile"
                 android:textSize="14sp" />
 
@@ -155,7 +165,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="38dp"
-                android:text="阶段二：尾款："
+                android:text="阶段二：尾款"
                 android:textColor="@color/black_goods_titile"
                 android:textSize="14sp" />
 

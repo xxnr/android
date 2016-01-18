@@ -8,7 +8,7 @@ import java.util.List;
 public class GetGoodsDetail extends ResponseResult implements Serializable {
     public GoodsDetail datas;
 
-    public class GoodsDetail implements Serializable {
+    public  static class GoodsDetail implements Serializable {
 
         public Boolean istop;
         public String deposit;
@@ -36,7 +36,7 @@ public class GetGoodsDetail extends ResponseResult implements Serializable {
         public String app_body_url;
         public List<Pictures> pictures;
 
-        public class Pictures implements Serializable {
+        public static class Pictures implements Serializable {
 
             public String imgUrl;
             public String originalUrl;
@@ -46,17 +46,17 @@ public class GetGoodsDetail extends ResponseResult implements Serializable {
 
         public SKUPrice SKUPrice;
 
-        public class SKUPrice implements Serializable {
+        public static class SKUPrice implements Serializable {
 
             public String min;
-            public int max;
+            public String max;
 
 
         }
 
-        public List<SKUAdditions> SKUAdditions;
+        public List<SKUAdditions> SKUAdditions;//附加选项
 
-        public class SKUAdditions implements Serializable {
+        public static class SKUAdditions implements Serializable {
 
             public String ref;
             public String price;
@@ -65,9 +65,9 @@ public class GetGoodsDetail extends ResponseResult implements Serializable {
 
         }
 
-        public List<SKUAttributes> SKUAttributes;
+        public List<SKUAttributes> SKUAttributes;//商品下的sku属性
 
-        public class SKUAttributes implements Serializable {
+        public  static class SKUAttributes implements Serializable {
 
             public String _id;
             public String name;
@@ -76,23 +76,20 @@ public class GetGoodsDetail extends ResponseResult implements Serializable {
 
         public Brand brand;
 
-        public class Brand implements Serializable {
+        public  static class Brand implements Serializable {
 
             public String _id;
             public String name;
             public String __v;
         }
 
-        public List<Attributes> attributes;
+        public List<Attributes> attributes;//商品分类属性
 
-        public class Attributes implements Serializable {
-
+        public static class Attributes implements Serializable {
             public String ref;
             public String _id;
             public String name;
             public String value;
-
-
         }
 
 

@@ -2,64 +2,44 @@ package com.ksfc.newfarmer.activitys;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
+import com.google.gson.Gson;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.RndApplication;
 
 import com.ksfc.newfarmer.db.Store;
-import com.ksfc.newfarmer.db.dao.ShoppingDao;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
 import com.ksfc.newfarmer.protocol.beans.AddOrderResult;
 import com.ksfc.newfarmer.protocol.beans.AddressList;
+import com.ksfc.newfarmer.protocol.beans.GetGoodsDetail;
 import com.ksfc.newfarmer.protocol.beans.GetshopCart;
 import com.ksfc.newfarmer.protocol.beans.AddressList.Address;
-import com.ksfc.newfarmer.protocol.beans.GetshopCart.Goods;
 import com.ksfc.newfarmer.protocol.beans.GetshopCart.shopCart;
 
-import com.ksfc.newfarmer.protocol.beans.SureOrder.OrderSubList;
-import com.ksfc.newfarmer.protocol.beans.SureOrderResult;
-import com.ksfc.newfarmer.protocol.beans.SureOrderResult.Datas;
-import com.ksfc.newfarmer.protocol.beans.SureOrderResult.Rows;
-import com.ksfc.newfarmer.protocol.beans.WaitingPay.Orders;
-import com.ksfc.newfarmer.utils.IntentUtil;
+
 import com.ksfc.newfarmer.utils.SPUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
 
 import com.ksfc.newfarmer.widget.WidgetUtil;
-import com.ksfc.newfarmer.widget.wheel.AbstractWheelTextAdapter;
-import com.ksfc.newfarmer.widget.wheel.WheelView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Paint;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -67,22 +47,19 @@ import net.yangentao.util.app.App;
 import net.yangentao.util.msg.MsgCenter;
 import net.yangentao.util.msg.MsgListener;
 
-import org.json.JSONObject;
-
 public class OrderDetailActivity extends BaseActivity {
 
     private TextView goods_sum_price, name_phone_tv, order_detail_address_tv;
     private ListView order_shangpin_list;
-    private String price_sum;
     private List<Address> rows;
     Data data = null;
     private orderListAdapter adapter;
     private View head_layout;
     private View head_layout_none;
-    private String jsonStr;
     private TextView ordering_go_bt_tv;
 
 
+    //本地构造的实体类
     static class Data {
         List<Category> category;
 
@@ -93,16 +70,17 @@ public class OrderDetailActivity extends BaseActivity {
 
         static class Goods {
             String id;
+            String SKUId;
             String name;
             String pic;
             int num;
-            float yuangjia;
+            String attr;
             float xianjia;
-            float jifen;
             float dingjin;
         }
     }
 
+    //当前地址
     private static Address selectedAddress = new Address();
 
     @Override
@@ -115,7 +93,7 @@ public class OrderDetailActivity extends BaseActivity {
         App.getApp().addActivity(this);
         RndApplication.tempDestroyActivityList.add(OrderDetailActivity.this);
         data = new Data();
-        data.category = new ArrayList<Data.Category>();
+        data.category = new ArrayList<>();
         setTitle("提交订单");
         initView();
     }
@@ -171,23 +149,35 @@ public class OrderDetailActivity extends BaseActivity {
         int flags = intent.getFlags();
         if (flags == 1) {
             String count = intent.getStringExtra("count");
-            String goodsId = intent.getStringExtra("goodId");
-            List<Map<String, String>> goodsList = new ArrayList<Map<String, String>>();
-            Map<String, String> map = new HashMap<String, String>();
-            map.put("productId", goodsId);
+            String SKUId = intent.getStringExtra("SKUId");
+            List<GetGoodsDetail.GoodsDetail.SKUAdditions> skuAdditions =
+                    (List<GetGoodsDetail.GoodsDetail.SKUAdditions>) intent.getSerializableExtra("additions");
+            List<Map<String, Object>> goodsList = new ArrayList<>();
+            Map<String, Object> map = new HashMap<>();
+            map.put("_id", SKUId);
             map.put("count", count);
+            map.put("additions", skuAdditions);
             goodsList.add(map);
-            jsonStr = JSONArray.toJSONString(goodsList);
+
+            Gson gson = new Gson();
+            Map<String, Object> map1 = new HashMap<>();
+            map1.put("SKUs", goodsList);
+            String jsonString = gson.toJson(map1);
+
             RequestParams params = new RequestParams();
-            params.put("products", jsonStr);
-            execApi(ApiType.GET_LOCAL_SHOPCART_LIST, params);
+            params.put("JSON", jsonString);
+            execApi(ApiType.GET_LOCAL_SHOPCART_LIST.setMethod(ApiType.RequestMethod.POSTJSON), params);
         } else if (flags == 2) {
-            List<Map<String, String>> goodsList = (List<Map<String, String>>) intent.getSerializableExtra("goodsList");
-            jsonStr = JSONArray.toJSONString(goodsList);
+            List<Map<String, Object>> goodsList = (List<Map<String, Object>>) intent.getSerializableExtra("goodsList");
+            Gson gson = new Gson();
+            Map<String, Object> map1 = new HashMap<>();
+            map1.put("SKUs", goodsList);
+            String jsonString = gson.toJson(map1);
             RequestParams params = new RequestParams();
-            params.put("products", jsonStr);
-            execApi(ApiType.GET_LOCAL_SHOPCART_LIST, params);
+            params.put("JSON", jsonString);
+            execApi(ApiType.GET_LOCAL_SHOPCART_LIST.setMethod(ApiType.RequestMethod.POSTJSON), params);
         }
+        showProgressDialog();
     }
 
     @Override
@@ -205,16 +195,46 @@ public class OrderDetailActivity extends BaseActivity {
                     showToast("收货地址不能为空");
                     return;
                 }
-                // add order:
-                String jsonStr_new = jsonStr.replaceAll("productId", "id");
-                showProgressDialog();
-                RequestParams params = new RequestParams();
-                params.put("userId", Store.User.queryMe().userid);
-                params.put("addressId", selectedAddress.addressId);
-                params.put("shopCartId", (String) SPUtils.get(OrderDetailActivity.this,
-                        "shopCartId", ""));
-                params.put("products", jsonStr_new);
-                execApi(ApiType.ADD_ORDER, params);
+                // 确认订单:
+                Intent intent = getIntent();
+                int flags = intent.getFlags();
+                if (flags == 1) {
+                    String count = intent.getStringExtra("count");
+                    String SKUId = intent.getStringExtra("SKUId");
+
+                    List<GetGoodsDetail.GoodsDetail.SKUAdditions> skuAdditions =
+                            (List<GetGoodsDetail.GoodsDetail.SKUAdditions>) intent.getSerializableExtra("additions");
+                    List<Map<String, Object>> goodsList = new ArrayList<>();
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("_id", SKUId);
+                    map.put("count", count);
+                    map.put("additions", skuAdditions);
+                    goodsList.add(map);
+                    Gson gson = new Gson();
+                    Map<String, Object> map1 = new HashMap<>();
+                    map1.put("SKUs", goodsList);
+                    map1.put("shopCartId", SPUtils.get(OrderDetailActivity.this,
+                            "shopCartId", ""));
+                    map1.put("addressId", selectedAddress.addressId);
+                    map1.put("token", Store.User.queryMe().token);
+                    String jsonString = gson.toJson(map1);
+                    RequestParams params = new RequestParams();
+                    params.put("JSON", jsonString);
+                    execApi(ApiType.ADD_ORDER.setMethod(ApiType.RequestMethod.POSTJSON), params);
+                } else if (flags == 2) {
+                    List<Map<String, String>> goodsList = (List<Map<String, String>>) intent.getSerializableExtra("goodsList");
+                    Gson gson = new Gson();
+                    Map<String, Object> map1 = new HashMap<>();
+                    map1.put("SKUs", goodsList);
+                    map1.put("shopCartId", SPUtils.get(OrderDetailActivity.this,
+                            "shopCartId", ""));
+                    map1.put("addressId", selectedAddress.addressId);
+                    map1.put("token", Store.User.queryMe().token);
+                    String jsonString = gson.toJson(map1);
+                    RequestParams params = new RequestParams();
+                    params.put("JSON", jsonString);
+                    execApi(ApiType.ADD_ORDER.setMethod(ApiType.RequestMethod.POSTJSON), params);
+                }
                 break;
             default:
                 break;
@@ -297,10 +317,10 @@ public class OrderDetailActivity extends BaseActivity {
                         .inflate(R.layout.order_list_item, null);
                 convertView.setTag(new ViewHolder(convertView));
             }
-
-
             ViewHolder holder = (ViewHolder) convertView.getTag();
-            holder.car_name.setText(data.category.get(position).title);
+            if (StringUtil.checkStr(data.category.get(position).title)) {
+                holder.car_name.setText(data.category.get(position).title);
+            }
             getSmallPrice(position, holder.small_price_tv);
             carAdapter carAdapter = new carAdapter(data.category.get(position).goods);
             holder.car_list.setAdapter(carAdapter);
@@ -352,7 +372,7 @@ public class OrderDetailActivity extends BaseActivity {
             private LinearLayout goods_car_bar;
             private ImageView ordering_item_img;
             private TextView ordering_now_pri, ordering_item_name, goods_car_deposit,
-                    goods_car_weikuan, ordering_item_geshu;
+                    goods_car_weikuan, ordering_item_geshu, ordering_item_attr;
 
             public ViewHolder(View convertView) {
                 goods_car_bar = (LinearLayout) convertView.findViewById(R.id.goods_car_item_bar);
@@ -360,6 +380,8 @@ public class OrderDetailActivity extends BaseActivity {
                         .findViewById(R.id.ordering_item_img);
                 ordering_item_geshu = (TextView) convertView//商品个数
                         .findViewById(R.id.ordering_item_geshu);
+                ordering_item_attr = (TextView) convertView   //商品sku
+                        .findViewById(R.id.ordering_item_attr);
                 ordering_now_pri = (TextView) convertView//商品价格
                         .findViewById(R.id.ordering_now_pri);
                 ordering_item_name = (TextView) convertView//商品名
@@ -383,7 +405,12 @@ public class OrderDetailActivity extends BaseActivity {
             ImageLoader.getInstance().displayImage(
                     MsgID.IP + goodsList.get(position).pic, holder.ordering_item_img);
             holder.ordering_item_geshu.setText("X " + goodsList.get(position).num + "");
-            holder.ordering_item_name.setText(goodsList.get(position).name);
+            if (StringUtil.checkStr(goodsList.get(position).name)) {
+                holder.ordering_item_name.setText(goodsList.get(position).name);
+            }
+            if (StringUtil.checkStr(goodsList.get(position).attr)) {
+                holder.ordering_item_attr.setText(goodsList.get(position).attr);
+            }
             if (goodsList.get(position).dingjin == 0) {
                 holder.ordering_now_pri.setTextColor(getResources().getColor(R.color.orange_goods_price));
                 holder.goods_car_bar.setVisibility(View.GONE);
@@ -405,18 +432,27 @@ public class OrderDetailActivity extends BaseActivity {
 
     @Override
     public void onResponsed(Request req) {
+        disMissDialog();
         if (req.getApi() == ApiType.ADD_ORDER) {
             AddOrderResult data = (AddOrderResult) req.getData();
-            Orders order = new Orders();
-            //自己计算的总价
-            price_sum = StringUtil.toTwoString(getTotalPrice() + "");
-            order.orderId = data.id;
-            order.orderNo = data.paymentId;
-            order.deposit = data.deposit;
-            Intent intent = new Intent(OrderDetailActivity.this,
-                    PaywayActivity.class);
-            intent.putExtra("orderInfo", order);
-            startActivity(intent);
+            if (data.getStatus().equals("1000")) {
+                if (data.orders != null && !data.orders.isEmpty()) {
+                    if (data.orders.size() > 1) {
+                        Intent intent = new Intent(OrderDetailActivity.this,
+                                SelectPayOrderActivity.class);
+                        intent.putExtra("orderInfo", (Serializable) data.orders);
+                        startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(OrderDetailActivity.this,
+                                PaywayActivity.class);
+                        if (StringUtil.checkStr(data.orders.get(0).id)) {
+                            intent.putExtra("orderId", data.orders.get(0).id);
+                            startActivity(intent);
+                        }
+                    }
+                }
+            }
+
         } else if (ApiType.ADDRESS_LIST == req.getApi()) {// 添加地址
             AddressList data = (AddressList) req.getData();
             rows = data.datas.rows;
@@ -457,31 +493,52 @@ public class OrderDetailActivity extends BaseActivity {
             for (int i = 0; i < rows.size(); i++) {
                 Data.Category c = new Data.Category();
                 c.title = rows.get(i).brandName;
-                c.goods = new ArrayList<Data.Goods>();
-                for (int j = 0; j < rows.get(i).goodsList.size(); j++) {
+                c.goods = new ArrayList<>();
+                for (int j = 0; j < rows.get(i).SKUList.size(); j++) {
+                    //商品的属性 id SKUId productName num imageUrl
                     Data.Goods goods = new Data.Goods();
-                    goods.id = rows.get(i).goodsList.get(j).goodsId;
-                    goods.name = rows.get(i).goodsList.get(j).goodsName;
+                    goods.id = rows.get(i).SKUList.get(j).goodsId;
+                    goods.SKUId = rows.get(i).SKUList.get(j)._id;//SKUId
+                    goods.name = rows.get(i).SKUList.get(j).productName;
                     goods.num = Integer
-                            .parseInt(rows.get(i).goodsList.get(j).goodsCount);
-                    goods.pic = rows.get(i).goodsList.get(j).imgUrl;
+                            .parseInt(rows.get(i).SKUList.get(j).count);
+                    goods.pic = rows.get(i).SKUList.get(j).imgUrl;
+                    //价格
                     if (StringUtil
-                            .empty(rows.get(i).goodsList.get(j).unitPrice)) {
+                            .empty(rows.get(i).SKUList.get(j).price)) {
                         goods.xianjia = 0;
                     } else {
-                        goods.xianjia = Float.parseFloat(rows.get(i).goodsList
-                                .get(j).unitPrice);
+                        goods.xianjia = Float.parseFloat(rows.get(i).SKUList
+                                .get(j).price);
                     }
-                    if (StringUtil.empty(rows.get(i).goodsList.get(j).deposit)) {
+                    //订金
+                    if (StringUtil.empty(rows.get(i).SKUList.get(j).deposit)) {
                         goods.dingjin = 0;
                     } else {
-                        goods.dingjin = Float.parseFloat(rows.get(i).goodsList
+                        goods.dingjin = Float.parseFloat(rows.get(i).SKUList
                                 .get(j).deposit);
                     }
-                    goods.yuangjia = Float.parseFloat(rows.get(i).goodsList
-                            .get(j).originalPrice);
-                    goods.jifen = Float
-                            .parseFloat(rows.get(i).goodsList.get(j).point);
+                    //Sku属性
+                    StringBuilder stringBuilder = new StringBuilder();
+                    if (rows.get(i).SKUList.get(j).attributes != null && !rows.get(i).SKUList.get(j).attributes.isEmpty()) {
+                        for (int k = 0; k < rows.get(i).SKUList.get(j).attributes.size(); k++) {
+                            if (StringUtil.checkStr(rows.get(i).SKUList.get(j).attributes.get(k).name)
+                                    && StringUtil.checkStr(rows.get(i).SKUList.get(j).attributes.get(k).value)) {
+                                stringBuilder.append(rows.get(i).SKUList.get(j).attributes.get(k).name + ":")
+                                        .append(rows.get(i).SKUList.get(j).attributes.get(k).value + ";");
+                            }
+                        }
+                    }
+                    //附加选项
+                    if (rows.get(i).SKUList.get(j).additions != null && !rows.get(i).SKUList.get(j).additions.isEmpty()) {
+                        stringBuilder.append("附加选项:");
+                        for (int k = 0; k < rows.get(i).SKUList.get(j).additions.size(); k++) {
+                            if (StringUtil.checkStr(rows.get(i).SKUList.get(j).additions.get(k).name)) {
+                                stringBuilder.append(rows.get(i).SKUList.get(j).additions.get(k).name + ";");
+                            }
+                        }
+                    }
+                    goods.attr = stringBuilder.toString().substring(0, stringBuilder.toString().length() - 1);
                     c.goods.add(goods);
                 }
                 data.category.add(c);

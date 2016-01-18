@@ -3,6 +3,7 @@ package com.ksfc.newfarmer.protocol;
 import com.ksfc.newfarmer.protocol.beans.AboutUsResult;
 import com.ksfc.newfarmer.protocol.beans.AddOrderResult;
 import com.ksfc.newfarmer.protocol.beans.AddressList;
+import com.ksfc.newfarmer.protocol.beans.AlipayResult;
 import com.ksfc.newfarmer.protocol.beans.BannerResult;
 import com.ksfc.newfarmer.protocol.beans.BrandsShaixuan;
 import com.ksfc.newfarmer.protocol.beans.BuildingList;
@@ -32,6 +33,7 @@ import com.ksfc.newfarmer.protocol.beans.PointResult;
 import com.ksfc.newfarmer.protocol.beans.ProFileResult;
 import com.ksfc.newfarmer.protocol.beans.PublicKeyResult;
 import com.ksfc.newfarmer.protocol.beans.QueueList;
+import com.ksfc.newfarmer.protocol.beans.RemainGoodsAttr;
 import com.ksfc.newfarmer.protocol.beans.SaveAdressList;
 import com.ksfc.newfarmer.protocol.beans.SureOrderResult;
 import com.ksfc.newfarmer.protocol.beans.TownList;
@@ -52,13 +54,17 @@ public enum ApiType {
      */
     GET_UNI("/unionpay ", UnipayResult.class),
     /**
+     * 支付宝
+     */
+    GET_ALI("/alipay", AlipayResult.class),
+    /**
      * 汽车
      */
-    GET_NYC("/api/v2.0/product/getProductsListPage", GetGoodsData.class),
+    GET_NYC("/api/v2.1/product/getProductsListPage", GetGoodsData.class),
     /**
      * 化肥
      */
-    GET_HUAFEI("/api/v2.0/product/getProductsListPage", GetGoodsData.class),
+    GET_HUAFEI("/api/v2.1/product/getProductsListPage", GetGoodsData.class),
     /**
      * 订单评价详情
      */
@@ -133,25 +139,25 @@ public enum ApiType {
      */
     REGISTER("/api/v2.0/user/register", LoginResult.class),
     /**
-     * 登陆
+     * 登陆GF
      */
     LOGIN("/api/v2.0/user/login", LoginResult.class),
-    /**
-     * 首页获取列表
-     */
-    GET_GOOSLIST("/app/goods/getGoodsList", GetGoodsData.class),
     /**
      * 商品详情
      */
     GET_GOOD_DETAIL("/api/v2.0/product/getAppProductDetails", GetGoodsDetail.class),
     /**
+     * 根据所选SKU属性获取价格区间和剩余可选SKU
+     */
+    GET_GOOD_ATTR("/api/v2.1/SKU/attributes_and_price/query", RemainGoodsAttr.class),
+    /**
      * 获取购物车信息
      */
-    GET_SHOPCART_LIST("/api/v2.0/shopCart/getShopCartList", GetshopCart.class),
+    GET_SHOPCART_LIST("/api/v2.1/cart/getShoppingCart", GetshopCart.class),
     /**
      * 获取本地购物车信息
      */
-    GET_LOCAL_SHOPCART_LIST("/api/v2.0/getShoppingCartOffline",
+    GET_LOCAL_SHOPCART_LIST("/api/v2.1/cart/getShoppingCartOffline",
             GetshopCart.class),
     /**
      * 省列表接口
@@ -199,7 +205,7 @@ public enum ApiType {
     /**
      * 购物车修改数目
      */
-    CHANGE_NUM("/api/v2.0/shopCart/changeNum", ChangeNum.class),
+    CHANGE_NUM("/api/v2.1/cart/changeNum", ChangeNum.class),
     /**
      * 修改个人信息
      */
@@ -211,11 +217,11 @@ public enum ApiType {
     /**
      * 首页添加到购物车
      */
-    ADDTOCART("/api/v2.0/shopCart/addToCart", addtoCart.class),
+    ADDTOCART("/api/v2.1/cart/addToCart", addtoCart.class),
     /**
-     * 预生成订单
+     * 生成订单
      */
-    ADD_ORDER("/api/v2.0/order/addOrder", AddOrderResult.class),
+    ADD_ORDER("/api/v2.1/order/addOrder", AddOrderResult.class),
     /**
      * 获取个人信息
      */
@@ -295,7 +301,7 @@ public enum ApiType {
 
     TEST("", ResponseResult.class);
 
-//     private static String server_url = "http://api.xinxinnongren.com";
+    //     private static String server_url = "http://api.xinxinnongren.com";
     private static String server_url = "http://101.200.194.203";
     // private static String server_url = "http://192.168.1.15";
 

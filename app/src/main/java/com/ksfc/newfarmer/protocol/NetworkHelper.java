@@ -52,264 +52,264 @@ import com.alibaba.fastjson.JSON;
 import com.ksfc.newfarmer.utils.RndLog;
 
 /**
- *
  * 连接网络的帮助类
  *
  * @author wqz
- *
  */
 public class NetworkHelper {
 
-	public static final String Post_Entity_Json_Data = "post-json-data";
-	public static final String Post_Entity_FILE_Data = "post-file-data";
+    public static final String Post_Entity_Json_Data = "post-json-data";
+    public static final String Post_Entity_FILE_Data = "post-file-data";
 
-	// ===========================================================
-	// Constants
-	// ===========================================================
-	private static final String TAG = "NetworkHelper";
+    // ===========================================================
+    // Constants
+    // ===========================================================
+    private static final String TAG = "NetworkHelper";
 
-	private static final int SO_TIMEOUT = 50000;
+    private static final int SO_TIMEOUT = 50000;
 
-	private static final int CONNECTION_TIMEOUT = 10000;
+    private static final int CONNECTION_TIMEOUT = 10000;
 
-	// private HttpClient httpClient;
+    // private HttpClient httpClient;
 
-	public HttpResponse performGet(String url, HashMap<String, String> urlParams)
-			throws NetworkException {
+    public HttpResponse performGet(String url, HashMap<String, String> urlParams)
+            throws NetworkException {
 
-		RndLog.d(TAG, "performGet. url=" + url);
+        RndLog.d(TAG, "performGet. url=" + url);
 
-		final HttpClient client = getHttpClient();
-		HttpGet httpGet = new HttpGet(url);
-		// httpGet.setHeader("Accept-Encoding", "gzip");
-		if (urlParams != null && !urlParams.isEmpty()) {
-			for (String key : urlParams.keySet()) {
-				httpGet.addHeader(key, urlParams.get(key));
+        final HttpClient client = getHttpClient();
+        HttpGet httpGet = new HttpGet(url);
+        // httpGet.setHeader("Accept-Encoding", "gzip");
+        if (urlParams != null && !urlParams.isEmpty()) {
+            for (String key : urlParams.keySet()) {
+                httpGet.addHeader(key, urlParams.get(key));
 
-				RndLog.d(TAG, key + " = " + urlParams.get(key));
-			}
+                RndLog.d(TAG, key + " = " + urlParams.get(key));
+            }
 
-		}
+        }
 
-		return execute(client, httpGet);
-	}
+        return execute(client, httpGet);
+    }
 
-	//post请求
+    //post请求
 
-	public HttpResponse performPost(String url,
-			HashMap<String, String> urlParams) throws NetworkException {
-		RndLog.d(TAG, "performPost. url=" + url);
-		// HttpParams httpParams = new BasicHttpParams();
-		// HttpConnectionParams.setConnectionTimeout(httpParams,
-		// CONNECTION_TIMEOUT);
-		// HttpConnectionParams.setSoTimeout(httpParams, SO_TIMEOUT);
-		// final DefaultHttpClient client = new DefaultHttpClient();
-		// String api = url.split("/")[url.split("/").length - 1];
-		final HttpClient client = getHttpClient();
-		HttpPost post = new HttpPost(url);
-		// post.setHeader("Accept-Encoding", "gzip");
-		// RndLog.d(TAG, "https has be gziped!");
-		ArrayList<NameValuePair> nvps = null;
-
-		if (urlParams != null && !urlParams.isEmpty()) {
-			nvps = new ArrayList<NameValuePair>();
-			for (String key : urlParams.keySet()) {
-				String value = urlParams.get(key);
-				RndLog.d(TAG, "performPost. parameter[" + key + "=" + value
-						+ "]");
-				nvps.add(new BasicNameValuePair(key, value));
-			}
-		}
-
-		try {
-			post.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
-		} catch (Exception e) {
-			RndLog.e(TAG, "performPost. ", e);
-		}
-		return execute(client, post);
-	}
-
-	/**
-	 * 上传文件
-	 *
-	 * @param url
-	 * @param urlParams
-	 * @return
-	 * @throws NetworkException
-	 */
-	public HttpResponse postFile(String url, HashMap<String, String> urlParams)
-			throws NetworkException {
-		RndLog.d(TAG, "postFile url=" + url);
-		final HttpClient client = getHttpClient();
-		HttpPost post = new HttpPost(url);
-		post.setHeader("Accept-Encoding", "gzip");
-		RndLog.d(TAG, "https has be gziped!");
-
-		// 利用httpmime上传
-		MultipartEntity reqEntity = new MultipartEntity();
-
-		if (urlParams != null && !urlParams.isEmpty()) {
-			for (String key : urlParams.keySet()) {
-				String value = urlParams.get(key);
-				RndLog.d(TAG, "performPost. parameter[" + key + "=" + value
-						+ "]");
-				if (key.startsWith(Post_Entity_FILE_Data)) {
-					// 文件数据
-					String fileKey = key.substring(Post_Entity_FILE_Data
-							.length());
-					FileBody fileBody = new FileBody(new File(value));
-					reqEntity.addPart(fileKey, fileBody);
-				} else {
-					// 文本数据
-					try {
-
-						StringBody sb = new StringBody(value,
-								Charset.forName("UTF-8"));
-						reqEntity.addPart(key, sb);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		}
-		post.setEntity(reqEntity);
-		return execute(client, post);
-	}
-
-	public HttpResponse postBody(String url, HashMap<String, String> urlParams)
-			throws NetworkException, UnsupportedEncodingException {
+    public HttpResponse performPost(String url,
+                                    HashMap<String, String> urlParams) throws NetworkException {
         RndLog.d(TAG, "performPost. url=" + url);
+        // HttpParams httpParams = new BasicHttpParams();
+        // HttpConnectionParams.setConnectionTimeout(httpParams,
+        // CONNECTION_TIMEOUT);
+        // HttpConnectionParams.setSoTimeout(httpParams, SO_TIMEOUT);
+        // final DefaultHttpClient client = new DefaultHttpClient();
+        // String api = url.split("/")[url.split("/").length - 1];
+        final HttpClient client = getHttpClient();
+        HttpPost post = new HttpPost(url);
+        // post.setHeader("Accept-Encoding", "gzip");
+        // RndLog.d(TAG, "https has be gziped!");
+        ArrayList<NameValuePair> nvps = null;
+
+        if (urlParams != null && !urlParams.isEmpty()) {
+            nvps = new ArrayList<NameValuePair>();
+            for (String key : urlParams.keySet()) {
+                String value = urlParams.get(key);
+                RndLog.d(TAG, "performPost. parameter[" + key + "=" + value
+                        + "]");
+                nvps.add(new BasicNameValuePair(key, value));
+            }
+        }
+
+        try {
+            post.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
+        } catch (Exception e) {
+            RndLog.e(TAG, "performPost. ", e);
+        }
+        return execute(client, post);
+    }
+
+    /**
+     * 上传文件
+     *
+     * @param url
+     * @param urlParams
+     * @return
+     * @throws NetworkException
+     */
+    public HttpResponse postFile(String url, HashMap<String, String> urlParams)
+            throws NetworkException {
+        RndLog.d(TAG, "postFile url=" + url);
         final HttpClient client = getHttpClient();
         HttpPost post = new HttpPost(url);
         post.setHeader("Accept-Encoding", "gzip");
         RndLog.d(TAG, "https has be gziped!");
+
+        // 利用httpmime上传
+        MultipartEntity reqEntity = new MultipartEntity();
 
         if (urlParams != null && !urlParams.isEmpty()) {
             for (String key : urlParams.keySet()) {
                 String value = urlParams.get(key);
                 RndLog.d(TAG, "performPost. parameter[" + key + "=" + value
                         + "]");
-                if (key.equals(Post_Entity_Json_Data)) {
-                    StringEntity entity = new StringEntity(value);
-                    post.setEntity(entity);
-                    post.setHeader("Content-Type", "application/json");
+                if (key.startsWith(Post_Entity_FILE_Data)) {
+                    // 文件数据
+                    String fileKey = key.substring(Post_Entity_FILE_Data
+                            .length());
+                    FileBody fileBody = new FileBody(new File(value));
+                    reqEntity.addPart(fileKey, fileBody);
                 } else {
-                    post.setHeader(key, value);
+                    // 文本数据
+                    try {
+
+                        StringBody sb = new StringBody(value,
+                                Charset.forName("UTF-8"));
+                        reqEntity.addPart(key, sb);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
+        post.setEntity(reqEntity);
         return execute(client, post);
-	}
+    }
 
-	private HttpResponse execute(HttpClient client, HttpRequestBase method)
-			throws NetworkException {
-		try {
-			RndLog.e(TAG, "execute, ");
-			return client.execute(method);
-		} catch (Exception e) {
-			// RndLog.e(TAG, "execute. " + e.getMessage());
-			e.printStackTrace();
-			throw new NetworkException(e);
-		}
-	}
+    /**
+     * postJson
+     * @param url
+     * @param urlParams
+     * @return
+     * @throws NetworkException
+     * @throws UnsupportedEncodingException
+     */
+    public HttpResponse postBody(String url, HashMap<String, String> urlParams)
+            throws NetworkException, UnsupportedEncodingException {
+        RndLog.d(TAG, "postBody. url=" + url);
+        final HttpClient client = getHttpClient();
+        HttpPost post = new HttpPost(url);
+        post.setHeader("Accept-Encoding", "gzip");
+        RndLog.d(TAG, "https has be gziped!");
 
-	private HttpClient getHttpClient() {
+        if (urlParams != null && !urlParams.isEmpty()) {
+            String value = urlParams.get("JSON");
+            RndLog.d(TAG, "postBody. parameter[" + value + "]");
+            StringEntity entity = new StringEntity(value,"UTF-8");
+            entity.setContentEncoding("UTF-8");
+            entity.setContentType("application/json");
+            post.setEntity(entity);
+        }
+        return execute(client, post);
+    }
 
-		HttpClient httpClient = null;
+    private HttpResponse execute(HttpClient client, HttpRequestBase method)
+            throws NetworkException {
+        try {
+            RndLog.e(TAG, "execute, ");
+            return client.execute(method);
+        } catch (Exception e) {
+            // RndLog.e(TAG, "execute. " + e.getMessage());
+            e.printStackTrace();
+            throw new NetworkException(e);
+        }
+    }
 
-		if (httpClient == null) {
+    private HttpClient getHttpClient() {
 
-			// 初始化工�?
-			try {
-				KeyStore trustStore = KeyStore.getInstance(KeyStore
-						.getDefaultType());
-				trustStore.load(null, null);
-				SSLSocketFactory sf = new SSLSocketFactoryEx(trustStore);
-				// sf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-				// // 允许�?��主机的验�?
-				sf.setHostnameVerifier(SSLSocketFactory.STRICT_HOSTNAME_VERIFIER); // 允许�?��主机的验�?
+        HttpClient httpClient = null;
 
-				HttpParams params = new BasicHttpParams();
-				params.setParameter(ClientPNames.ALLOW_CIRCULAR_REDIRECTS, true);
-				HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
-				HttpProtocolParams.setContentCharset(params,
-						HTTP.DEFAULT_CONTENT_CHARSET);
-				HttpProtocolParams.setUseExpectContinue(params, true);
+        if (httpClient == null) {
 
-				// 设置连接管理器的超时
-				ConnManagerParams.setTimeout(params, 10000);
-				// 设置连接超时
-				HttpConnectionParams.setConnectionTimeout(params,
-						CONNECTION_TIMEOUT);
-				// 设置socket超时
-				HttpConnectionParams.setSoTimeout(params, SO_TIMEOUT);
+            // 初始化工�?
+            try {
+                KeyStore trustStore = KeyStore.getInstance(KeyStore
+                        .getDefaultType());
+                trustStore.load(null, null);
+                SSLSocketFactory sf = new SSLSocketFactoryEx(trustStore);
+                // sf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+                // // 允许�?��主机的验�?
+                sf.setHostnameVerifier(SSLSocketFactory.STRICT_HOSTNAME_VERIFIER); // 允许�?��主机的验�?
 
-				// 设置http https支持
-				SchemeRegistry schReg = new SchemeRegistry();
-				schReg.register(new Scheme("http", PlainSocketFactory
-						.getSocketFactory(), 80));
-				// schReg.register(new Scheme("https", sf, 443));
+                HttpParams params = new BasicHttpParams();
+                params.setParameter(ClientPNames.ALLOW_CIRCULAR_REDIRECTS, true);
+                HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+                HttpProtocolParams.setContentCharset(params,
+                        HTTP.DEFAULT_CONTENT_CHARSET);
+                HttpProtocolParams.setUseExpectContinue(params, true);
 
-				ClientConnectionManager conManager = new ThreadSafeClientConnManager(
-						params, schReg);
+                // 设置连接管理器的超时
+                ConnManagerParams.setTimeout(params, 10000);
+                // 设置连接超时
+                HttpConnectionParams.setConnectionTimeout(params,
+                        CONNECTION_TIMEOUT);
+                // 设置socket超时
+                HttpConnectionParams.setSoTimeout(params, SO_TIMEOUT);
 
-				httpClient = new DefaultHttpClient(conManager, params);
-			} catch (Exception e) {
-				e.printStackTrace();
-				return new DefaultHttpClient();
-			}
+                // 设置http https支持
+                SchemeRegistry schReg = new SchemeRegistry();
+                schReg.register(new Scheme("http", PlainSocketFactory
+                        .getSocketFactory(), 80));
+                // schReg.register(new Scheme("https", sf, 443));
 
-		}
-		return httpClient;
-	}
+                ClientConnectionManager conManager = new ThreadSafeClientConnManager(
+                        params, schReg);
 
-	class SSLSocketFactoryEx extends SSLSocketFactory {
+                httpClient = new DefaultHttpClient(conManager, params);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return new DefaultHttpClient();
+            }
 
-		SSLContext sslContext = SSLContext.getInstance("TLS");
+        }
+        return httpClient;
+    }
 
-		public SSLSocketFactoryEx(KeyStore truststore)
-				throws NoSuchAlgorithmException, KeyManagementException,
-				KeyStoreException, UnrecoverableKeyException {
-			super(truststore);
+    class SSLSocketFactoryEx extends SSLSocketFactory {
 
-			TrustManager tm = new X509TrustManager() {
+        SSLContext sslContext = SSLContext.getInstance("TLS");
 
-				@Override
-				public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-					return null;
-				}
+        public SSLSocketFactoryEx(KeyStore truststore)
+                throws NoSuchAlgorithmException, KeyManagementException,
+                KeyStoreException, UnrecoverableKeyException {
+            super(truststore);
 
-				@Override
-				public void checkClientTrusted(
-						java.security.cert.X509Certificate[] chain,
-						String authType)
-						throws java.security.cert.CertificateException {
+            TrustManager tm = new X509TrustManager() {
 
-				}
+                @Override
+                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                    return null;
+                }
 
-				@Override
-				public void checkServerTrusted(
-						java.security.cert.X509Certificate[] chain,
-						String authType)
-						throws java.security.cert.CertificateException {
+                @Override
+                public void checkClientTrusted(
+                        java.security.cert.X509Certificate[] chain,
+                        String authType)
+                        throws java.security.cert.CertificateException {
 
-				}
-			};
+                }
 
-			sslContext.init(null, new TrustManager[] { tm }, null);
-		}
+                @Override
+                public void checkServerTrusted(
+                        java.security.cert.X509Certificate[] chain,
+                        String authType)
+                        throws java.security.cert.CertificateException {
 
-		@Override
-		public Socket createSocket(Socket socket, String host, int port,
-				boolean autoClose) throws IOException, UnknownHostException {
-			return sslContext.getSocketFactory().createSocket(socket, host,
-					port, autoClose);
-		}
+                }
+            };
 
-		@Override
-		public Socket createSocket() throws IOException {
-			return sslContext.getSocketFactory().createSocket();
-		}
-	}
+            sslContext.init(null, new TrustManager[]{tm}, null);
+        }
+
+        @Override
+        public Socket createSocket(Socket socket, String host, int port,
+                                   boolean autoClose) throws IOException, UnknownHostException {
+            return sslContext.getSocketFactory().createSocket(socket, host,
+                    port, autoClose);
+        }
+
+        @Override
+        public Socket createSocket() throws IOException {
+            return sslContext.getSocketFactory().createSocket();
+        }
+    }
 
 }

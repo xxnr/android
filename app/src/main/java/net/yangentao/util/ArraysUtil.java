@@ -98,10 +98,10 @@ public class ArraysUtil {
 		return copy;
 	}
 
-	@SuppressWarnings("unchecked")
-	public static <T> T[] copyOfRange(T[] original, int from, int to) {
-		return copyOfRange(original, from, to, (Class<T[]>) original.getClass());
-	}
+//	@SuppressWarnings("unchecked")
+//	public static <T> T[] copyOfRange(T[] original, int from, int to) {
+//		return copyOfRange(original, from, to, (Class<T[]>) original.getClass());
+//	}
 
 	@SuppressWarnings("null")
 	public static <T> void reverse(List<T> list) {

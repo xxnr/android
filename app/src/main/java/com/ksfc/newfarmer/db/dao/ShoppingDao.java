@@ -18,7 +18,9 @@ public class ShoppingDao extends BaseDao {
 	public static String TABLE_NAME_SHOPPING = "shopping_" + uid;
 
 	public static final String COLUMN_ID = "id";
+	public static final String COLUMN_ADDITIONS = "additions";
 	public static final String COLUMN_PID = "pid";
+	public static final String COLUMN_SKUId = "SKUId";
 	public static final String COLUMN_TITLE = "title";
 	public static final String COLUMN_URL = "imageurl";
 	public static final String COLUMN_NUMBERS = "numbers";
@@ -53,7 +55,9 @@ public class ShoppingDao extends BaseDao {
 
 			values.put(COLUMN_ID, map.get("id"));
 			values.put(COLUMN_PID, map.get("pid"));
+			values.put(COLUMN_ADDITIONS, map.get("additions"));
 			values.put(COLUMN_TITLE, map.get("title"));
+			values.put(COLUMN_SKUId, map.get("SKUId"));
 			values.put(COLUMN_URL, map.get("imageurl"));
 			values.put(COLUMN_NUMBERS, map.get("numbers"));
 			values.put(COLUMN_TYPE, map.get("type"));
@@ -68,7 +72,9 @@ public class ShoppingDao extends BaseDao {
 			if (database.insert(TABLE_NAME_SHOPPING, null, values) > 0) {
 				RndLog.i(
 						TAG,
-						"插入数据的值为：" + map.get("id") + " " + map.get("title")
+						"插入数据的值为：" + map.get("id") + " " +map.get("SKUId")+
+								" " +map.get("additions")
+								+ map.get("title")
 								+ " " + map.get("imageurl") + " "
 								+ map.get("numbers") + " " + map.get("type")
 								+ " " + map.get("stars") + " "
@@ -94,6 +100,10 @@ public class ShoppingDao extends BaseDao {
 				String id = cursor.getString(cursor.getColumnIndex(COLUMN_PID));
 				String title = cursor.getString(cursor
 						.getColumnIndex(COLUMN_TITLE));
+				String SKUId = cursor.getString(cursor
+						.getColumnIndex(COLUMN_SKUId));
+				String additions = cursor.getString(cursor
+						.getColumnIndex(COLUMN_ADDITIONS));
 				String imageurl = cursor.getString(cursor
 						.getColumnIndex(COLUMN_URL));
 				String numbers = cursor.getString(cursor
@@ -115,6 +125,8 @@ public class ShoppingDao extends BaseDao {
 				String praises = cursor.getString(cursor
 						.getColumnIndex(COLUMN_PRAISES));
 				map.put("pid", id);
+				map.put("SKUId", SKUId);
+				map.put("additions", additions);
 				map.put("title", title);
 				map.put("imageurl", imageurl);
 				map.put("numbers", numbers);
@@ -143,8 +155,12 @@ public class ShoppingDao extends BaseDao {
 			while (cursor.moveToNext()) {
 				String pid = cursor
 						.getString(cursor.getColumnIndex(COLUMN_PID));
+				String SKUId = cursor.getString(cursor
+						.getColumnIndex(COLUMN_SKUId));
 				String title = cursor.getString(cursor
 						.getColumnIndex(COLUMN_TITLE));
+				String additions = cursor.getString(cursor
+						.getColumnIndex(COLUMN_ADDITIONS));
 				String imageurl = cursor.getString(cursor
 						.getColumnIndex(COLUMN_URL));
 				String numbers = cursor.getString(cursor
@@ -167,6 +183,8 @@ public class ShoppingDao extends BaseDao {
 						.getColumnIndex(COLUMN_PRAISES));
 				Map<String, String> map = new HashMap<String, String>();
 				map.put("pid", pid);
+				map.put("SKUId", SKUId);
+				map.put("additions", additions);
 				map.put("title", title);
 				map.put("imageurl", imageurl);
 				map.put("numbers", numbers);
@@ -185,12 +203,12 @@ public class ShoppingDao extends BaseDao {
 		return list;
 	}
 
-	public synchronized boolean updateShopping(String pid, String nums) {
+	public synchronized boolean updateShopping(String SkUId, String nums) {
 		if (isDBOpen()) {
 			ContentValues values = new ContentValues();
 			values.put(COLUMN_NUMBERS, nums);
-			if (database.update(TABLE_NAME_SHOPPING, values, COLUMN_PID
-					+ " = ?", new String[] { pid }) > 0) {
+			if (database.update(TABLE_NAME_SHOPPING, values, COLUMN_SKUId
+					+ " = ?", new String[] { SkUId }) > 0) {
 				RndLog.i(TAG, "呵呵，我将数量更新为：" + nums);
 				return true;
 			}
@@ -198,11 +216,11 @@ public class ShoppingDao extends BaseDao {
 		return false;
 	}
 
-	public synchronized boolean deleteShopping(String pid) {
+	public synchronized boolean deleteShopping(String SkUId) {
 		if (isDBOpen()) {
-			if (database.delete(TABLE_NAME_SHOPPING, COLUMN_PID + " = ?",
-					new String[] { pid }) > 0) {
-				RndLog.i(TAG, "呵呵，我已经将 ID = " + pid + " 的数据删除");
+			if (database.delete(TABLE_NAME_SHOPPING, COLUMN_SKUId + " = ?",
+					new String[] { SkUId }) > 0) {
+				RndLog.i(TAG, "呵呵，我已经将 ID = " + SkUId + " 的数据删除");
 				return true;
 			}
 			// String sql = "delete from "+TABLE_NAME_SHOPPING+

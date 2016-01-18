@@ -3,6 +3,7 @@
  */
 package com.ksfc.newfarmer.protocol.beans;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.ksfc.newfarmer.protocol.ResponseResult;
@@ -10,10 +11,10 @@ import com.ksfc.newfarmer.protocol.ResponseResult;
 /**
  * 项目名称：newFarmer 类名称：GetshopCart 类描述： 创建人：尚前琛 创建时间：2015-7-3 下午9:38:48 修改备注：
  */
-public class GetshopCart extends ResponseResult {
+public class GetshopCart extends ResponseResult implements Serializable{
     public ShopcartData datas;
 
-    public static class ShopcartData {
+    public static class ShopcartData implements Serializable {
         public int total;
         public String shopCartId;
         public int DiscountPrice;
@@ -23,19 +24,42 @@ public class GetshopCart extends ResponseResult {
         public int totalCount;
     }
 
-    public static class shopCart {
+    public static class shopCart implements Serializable{
         public String brandName;
-        public List<Goods> goodsList;
+        public List<SKU> SKUList;
     }
 
-    public static class Goods {
+    public static class SKU implements Serializable{
         public String goodsId;
-        public String goodsName;
-        public String goodsCount;
+        public String _id;
+        public String price;
         public String imgUrl;
-        public String originalPrice;
-        public String unitPrice;
+        public String productDesc;
         public String point;
+        public String name;
+        public String productName;
         public String deposit;
+        public String count;
+        public List<Attributes> attributes;
+        public List<Additions> additions;
+
+        public static class Attributes implements Serializable{
+            public String order;
+            public String value;
+            public String name;
+            public String ref;
+            public String _id;
+
+        }
+
+        public static class Additions implements Serializable {
+            public String _id;
+            public String category;
+            public String brand;
+            public String name;
+            public String price;
+            public String __v;
+
+        }
     }
 }

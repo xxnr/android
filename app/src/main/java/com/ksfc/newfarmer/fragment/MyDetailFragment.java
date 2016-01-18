@@ -50,7 +50,6 @@ public class MyDetailFragment extends BaseFragment implements View.OnClickListen
     private PullToRefreshListView waitingpay_lv;
     private int page = 1;
     private int TYPE;//订单类型 1:未付款 2:待发货 3: 已发货 4:已完成
-    private String typeValue = "";
     private OrderAdapter adapter;
     private List<WaitingPay.Orders> list;
     private RelativeLayout null_layout;
@@ -78,6 +77,7 @@ public class MyDetailFragment extends BaseFragment implements View.OnClickListen
 
     /**
      * 数据请求
+     *
      * @param page
      */
     @SuppressWarnings("unused")
@@ -207,33 +207,22 @@ public class MyDetailFragment extends BaseFragment implements View.OnClickListen
             ViewHolder holder = (ViewHolder) convertView.getTag();
             final WaitingPay.Orders order = rows.get(position);
             holder.order_id_tv.setText("订单号：" + order.orderId);
-            //判断支付状态
-            switch (order.typeValue) {
-                case 0:
-                    typeValue = "交易关闭";
-                    break;
-                case 1:
-                    typeValue = "待付款";
-                    break;
-                case 2:
-                    typeValue = "待发货";
-                    break;
-                case 3:
-                    typeValue = "已发货";
-                    break;
-                case 4:
-                    typeValue = "已完成";
-                    break;
-                default:
+
+            if (order.order != null) {
+                //订单状态
+                if (order.order.orderStatus != null) {
+                    if (StringUtil.checkStr(order.order.orderStatus.value)) {
+                        holder.pay_state_tv.setText(order.order.orderStatus.value);
+                    }
+                }
+
+                //订单合计金额
+                if (StringUtil.checkStr(order.order.totalPrice)) {
+                    holder.price_tv.setText("¥" + order.order.totalPrice);
+                }
             }
-            holder.pay_state_tv.setText(typeValue);
-            //支付类型
-            if (order.payType == 1) {
-                holder.pay_type_tv.setText("支付宝付款");
-            } else if (order.payType == 2) {
-                holder.pay_type_tv.setText("银联支付");
-            }
-            holder.price_tv.setText("¥" + order.deposit);
+
+
             //如果是待付款的订单，点击可以去支付
             if (order.typeValue == 1) {
                 holder.go_to_pay_rel.setVisibility(View.VISIBLE);
@@ -250,14 +239,19 @@ public class MyDetailFragment extends BaseFragment implements View.OnClickListen
                 holder.go_to_pay_rel.setVisibility(View.GONE);
                 holder.go_to_pay.setOnClickListener(null);
             }
-            ProductAdapter carAdapter = new ProductAdapter(order.products, order);
-            holder.my_order_list.setAdapter(carAdapter);
+            if (order.SKUs != null && !order.SKUs.isEmpty()) {
+                ProductAdapter carAdapter = new ProductAdapter(order, order.SKUs);
+                holder.my_order_list.setAdapter(carAdapter);
+            } else {
+                ProductAdapter carAdapter = new ProductAdapter(order.products, order);
+                holder.my_order_list.setAdapter(carAdapter);
+            }
             WidgetUtil.setListViewHeightBasedOnChildren(holder.my_order_list);
             return convertView;
         }
 
         class ViewHolder {
-            private TextView order_id_tv, pay_state_tv, pay_type_tv, price_tv;
+            private TextView order_id_tv, pay_state_tv, price_tv;
             private Button go_to_pay;
             private UnSwipeListView my_order_list;
             private RelativeLayout go_to_pay_rel;
@@ -265,7 +259,6 @@ public class MyDetailFragment extends BaseFragment implements View.OnClickListen
             ViewHolder(View convertView) {
                 order_id_tv = (TextView) convertView.findViewById(R.id.my_order_id);
                 pay_state_tv = (TextView) convertView.findViewById(R.id.my_order_pay_state);
-                pay_type_tv = (TextView) convertView.findViewById(R.id.my_order_pay_type);
                 price_tv = (TextView) convertView.findViewById(R.id.my_order_pay_price);
                 go_to_pay = (Button) convertView.findViewById(R.id.go_to_pay);
                 my_order_list = (UnSwipeListView) convertView.findViewById(R.id.my_order_list);
@@ -280,24 +273,37 @@ public class MyDetailFragment extends BaseFragment implements View.OnClickListen
     //内层的商品列表，已订单区分
     public class ProductAdapter extends BaseAdapter {
         private List<WaitingPay.Product> goodsList;
+        private List<WaitingPay.SKUS> SKUsList;
         private WaitingPay.Orders order;
+
+        public ProductAdapter(WaitingPay.Orders order, List<WaitingPay.SKUS> SKUsList) {
+            this.SKUsList = SKUsList;
+            this.order = order;
+        }
 
         public ProductAdapter(List<WaitingPay.Product> goodsList, WaitingPay.Orders order) {
             this.goodsList = goodsList;
             this.order = order;
-
         }
+
 
         @Override
         public int getCount() {
-            // TODO Auto-generated method stub
-            return goodsList.size() > 0 ? goodsList.size() : 0;
+            if (SKUsList != null && !SKUsList.isEmpty()) {
+                return SKUsList.size() > 0 ? SKUsList.size() : 0;
+            } else {
+                return goodsList.size() > 0 ? goodsList.size() : 0;
+            }
         }
 
         @Override
         public Object getItem(int position) {
             // TODO Auto-generated method stub
-            return goodsList.get(position);
+            if (SKUsList != null && !SKUsList.isEmpty()) {
+                return SKUsList.size();
+            } else {
+                return goodsList.size();
+            }
         }
 
         @Override
@@ -310,7 +316,7 @@ public class MyDetailFragment extends BaseFragment implements View.OnClickListen
             private LinearLayout goods_car_bar;
             private ImageView ordering_item_img;
             private TextView ordering_now_pri, ordering_item_name, goods_car_deposit,
-                    goods_car_weikuan, ordering_item_geshu;
+                    goods_car_weikuan, ordering_item_geshu, goods_car_attr;
 
             public ViewHolder(View convertView) {
                 goods_car_bar = (LinearLayout) convertView.findViewById(R.id.goods_car_item_bar);
@@ -326,6 +332,8 @@ public class MyDetailFragment extends BaseFragment implements View.OnClickListen
                         .findViewById(R.id.goods_car_item_bar_deposit);
                 goods_car_weikuan = (TextView) convertView//汽车尾款
                         .findViewById(R.id.goods_car_item_bar_weikuan);
+                goods_car_attr = (TextView) convertView//汽车尾款
+                        .findViewById(R.id.ordering_item_attr);
             }
         }
 
@@ -338,23 +346,106 @@ public class MyDetailFragment extends BaseFragment implements View.OnClickListen
                 convertView.setTag(new ViewHolder(convertView));
             }
             ViewHolder holder = (ViewHolder) convertView.getTag();
-            ImageLoader.getInstance().displayImage(
-                    MsgID.IP + goodsList.get(position).thumbnail, holder.ordering_item_img);
-            holder.ordering_item_geshu.setText("X " + goodsList.get(position).count + "");
-            holder.ordering_item_name.setText(goodsList.get(position).name);
-            if (goodsList.get(position).deposit == 0) {
-                holder.ordering_now_pri.setTextColor(getResources().getColor(R.color.orange_goods_price));
-                holder.goods_car_bar.setVisibility(View.GONE);
-            } else {
-                holder.ordering_now_pri.setTextColor(getResources().getColor(R.color.black_goods_titile));
-                holder.goods_car_bar.setVisibility(View.VISIBLE);
-                holder.goods_car_deposit.setText("¥" + StringUtil.toTwoString(goodsList
-                        .get(position).deposit + ""));
-                holder.goods_car_weikuan.setText("¥" + StringUtil.toTwoString(goodsList.get(position).price - goodsList
-                        .get(position).deposit + ""));
+
+            if (SKUsList != null && !SKUsList.isEmpty()) {//新订单
+                //商品图片
+                if (StringUtil.checkStr(SKUsList.get(position).thumbnail)) {
+                    ImageLoader.getInstance().displayImage(
+                            MsgID.IP + SKUsList.get(position).thumbnail, holder.ordering_item_img);
+                }
+                //商品个数
+                if (StringUtil.checkStr(SKUsList.get(position).count)) {
+                    holder.ordering_item_geshu.setText("X " + SKUsList.get(position).count + "");
+                }
+                //商品名
+                if (StringUtil.checkStr(SKUsList.get(position).productName)) {
+                    holder.ordering_item_name.setText(SKUsList.get(position).productName);
+                }
+
+                if (SKUsList.get(position).deposit == 0) {
+                    holder.ordering_now_pri.setTextColor(getResources().getColor(R.color.orange_goods_price));
+                    holder.goods_car_bar.setVisibility(View.GONE);
+                } else {
+                    holder.ordering_now_pri.setTextColor(getResources().getColor(R.color.black_goods_titile));
+                    holder.goods_car_bar.setVisibility(View.VISIBLE);
+                    String deposit = StringUtil.toTwoString(SKUsList
+                            .get(position).deposit + "");
+                    if (StringUtil.checkStr(deposit)) {
+                        holder.goods_car_deposit.setText("¥" + deposit);
+                    }
+                    String weiKuan = StringUtil.toTwoString(SKUsList.get(position).price - SKUsList
+                            .get(position).deposit + "");
+                    if (StringUtil.checkStr(weiKuan)) {
+                        holder.goods_car_weikuan.setText("¥" + weiKuan);
+                    }
+                }
+                holder.ordering_now_pri.setText("¥" + StringUtil.toTwoString(SKUsList
+                        .get(position).price + ""));
+
+                //Sku属性
+                StringBuilder stringBuilder = new StringBuilder();
+                if (SKUsList.get(position).attributes != null && !SKUsList.get(position).attributes.isEmpty()) {
+                    for (int k = 0; k < SKUsList.get(position).attributes.size(); k++) {
+                        if (StringUtil.checkStr(SKUsList.get(position).attributes.get(k).name)
+                                && StringUtil.checkStr(SKUsList.get(position).attributes.get(k).value)) {
+                            stringBuilder.append(SKUsList.get(position).attributes.get(k).name + ":")
+                                    .append(SKUsList.get(position).attributes.get(k).value + ";");
+                        }
+                    }
+                }
+                //附加选项
+                if (SKUsList.get(position).additions != null && !SKUsList.get(position).additions.isEmpty()) {
+                    stringBuilder.append("附加选项:");
+                    for (int k = 0; k < SKUsList.get(position).additions.size(); k++) {
+                        if (StringUtil.checkStr(SKUsList.get(position).additions.get(k).name)) {
+                            stringBuilder.append(SKUsList.get(position).additions.get(k).name + ";");
+                        }
+                    }
+                }
+                String car_attr = stringBuilder.toString().substring(0, stringBuilder.toString().length() - 1);
+                if (StringUtil.checkStr(car_attr)){
+                    holder.goods_car_attr.setText(car_attr);
+                }
+
+            } else {  //兼容老订单
+                //商品图片
+                if (StringUtil.checkStr(goodsList.get(position).thumbnail)) {
+                    ImageLoader.getInstance().displayImage(
+                            MsgID.IP + goodsList.get(position).thumbnail, holder.ordering_item_img);
+                }
+                //商品个数
+                if (StringUtil.checkStr(goodsList.get(position).count)) {
+                    holder.ordering_item_geshu.setText("X " + goodsList.get(position).count + "");
+                }
+                //商品名
+                if (StringUtil.checkStr(goodsList.get(position).name)) {
+                    holder.ordering_item_name.setText(goodsList.get(position).name);
+                }
+
+                if (goodsList.get(position).deposit == 0) {
+                    holder.ordering_now_pri.setTextColor(getResources().getColor(R.color.orange_goods_price));
+                    holder.goods_car_bar.setVisibility(View.GONE);
+                } else {
+                    holder.ordering_now_pri.setTextColor(getResources().getColor(R.color.black_goods_titile));
+                    holder.goods_car_bar.setVisibility(View.VISIBLE);
+                    String deposit = StringUtil.toTwoString(goodsList
+                            .get(position).deposit + "");
+                    if (StringUtil.checkStr(deposit)) {
+                        holder.goods_car_deposit.setText("¥" + deposit);
+                    }
+                    String weiKuan = StringUtil.toTwoString(goodsList.get(position).price - goodsList
+                            .get(position).deposit + "");
+                    if (StringUtil.checkStr(weiKuan)) {
+                        holder.goods_car_weikuan.setText("¥" + weiKuan);
+                    }
+                }
+
+                String now_pri = StringUtil.toTwoString(goodsList
+                        .get(position).price + "");
+                if (StringUtil.checkStr(now_pri)) {
+                    holder.ordering_now_pri.setText("¥" + now_pri);
+                }
             }
-            holder.ordering_now_pri.setText("¥" + StringUtil.toTwoString(goodsList
-                    .get(position).price + ""));
 
             //点击商品跳转到订单详情界面
             convertView.setOnClickListener(new View.OnClickListener() {
@@ -364,8 +455,6 @@ public class MyDetailFragment extends BaseFragment implements View.OnClickListen
                             MyOrderDetailActivity.class);
                     intent.putExtra("orderId",
                             order.orderId);
-                    intent.putExtra("orderNo",
-                            order.orderNo);
                     startActivity(intent);
                 }
             });

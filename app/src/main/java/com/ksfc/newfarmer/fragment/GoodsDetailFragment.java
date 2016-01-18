@@ -24,6 +24,7 @@ import com.ksfc.newfarmer.activitys.BigImageActivity;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.beans.GetGoodsDetail;
 import com.ksfc.newfarmer.utils.StringUtil;
+import com.ksfc.newfarmer.widget.CirclePageIndicator;
 import com.ksfc.newfarmer.widget.VerticalScrollView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -32,7 +33,7 @@ import java.util.List;
 /**
  * Created by CAI on 2016/1/7.
  */
-public class GoodsDetailFragment extends BaseFragment implements View.OnClickListener {
+public class GoodsDetailFragment extends BaseFragment implements View.OnClickListener, ViewPager.OnPageChangeListener {
     private GetGoodsDetail.GoodsDetail detail;
     private VerticalScrollView scrollView;
     private WebView web;
@@ -42,6 +43,7 @@ public class GoodsDetailFragment extends BaseFragment implements View.OnClickLis
     private TextView bar_guild_1;
     private TextView bar_guild_2;
     private TextView bar_guild_3;
+    private TextView current_count;
 
     @Override
     public View InItView() {
@@ -67,10 +69,10 @@ public class GoodsDetailFragment extends BaseFragment implements View.OnClickLis
                     }
                 });
             }
-
             ViewPager viewPager = (ViewPager) view.findViewById(R.id.goods_detail_top_viewpager);
             TextView good_xianjia = (TextView) view.findViewById(R.id.product_price);//xianjia:价格
-
+            CirclePageIndicator indicator = (CirclePageIndicator) view.findViewById(R.id.circlePageIndicator);//Viewpager的指示器Indicator
+            current_count = (TextView) view.findViewById(R.id.current_count);//当前Viewpager/item
             TextView good_name = (TextView) view.findViewById(R.id.good_name); //商品名
             TextView product_dingjing = (TextView) view.findViewById(R.id.product_dingjin_price);//定金
             TextView product_description = (TextView) view.findViewById(R.id.product_description);//描述
@@ -84,9 +86,12 @@ public class GoodsDetailFragment extends BaseFragment implements View.OnClickLis
             if (StringUtil.checkStr(detail.description)) {
                 product_description.setText(detail.description);
             }
-            if (detail.pictures!=null){
+            if (detail.pictures != null) {
                 MyPagerAdapter myPagerAdapter = new MyPagerAdapter(detail.pictures);
                 viewPager.setAdapter(myPagerAdapter);
+                viewPager.addOnPageChangeListener(this);
+                current_count.setText("1/" + detail.pictures.size());
+                indicator.setViewPager(viewPager);
             }
             //根据化肥还是汽车 隐藏吨
             if (detail.category.equals("化肥")) {
@@ -106,7 +111,10 @@ public class GoodsDetailFragment extends BaseFragment implements View.OnClickLis
                 product_newFarmer_price.setTextColor(Color.GRAY);
                 product_newFarmer_price.setText("即将上线");
             } else {
-                good_xianjia.setText("¥" + detail.price);
+                if (detail.SKUPrice!=null){
+                    if (StringUtil.checkStr(detail.SKUPrice.min)&&StringUtil.checkStr(detail.SKUPrice.max))
+                        good_xianjia.setText("¥" + detail.SKUPrice.min+"-"+detail.SKUPrice.max);
+                }
             }
             //是否有定金
             if (!detail.deposit.equals("0")) {
@@ -191,6 +199,26 @@ public class GoodsDetailFragment extends BaseFragment implements View.OnClickLis
         bar_guild_3.setVisibility(View.INVISIBLE);
     }
 
+    //当前是第几个item
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        if (current_count != null && detail.pictures != null) {
+            StringBuilder builder = new StringBuilder();
+            builder.append(position + 1).append("/").append(detail.pictures.size());
+            current_count.setText(builder);
+        }
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
+
 
     class MyPagerAdapter extends PagerAdapter {
 
@@ -214,7 +242,7 @@ public class GoodsDetailFragment extends BaseFragment implements View.OnClickLis
         @Override
         public Object instantiateItem(ViewGroup container, final int position) {
 
-            View view =inflater.inflate(R.layout.pic_layout,null);
+            View view = inflater.inflate(R.layout.pic_layout, null);
             ImageView imageView = (ImageView) view.findViewById(R.id.imageView);
             if (StringUtil.checkStr(pictures.get(position).imgUrl)) {
                 ImageLoader.getInstance().displayImage(MsgID.IP + pictures.get(position).imgUrl, imageView);
@@ -225,7 +253,7 @@ public class GoodsDetailFragment extends BaseFragment implements View.OnClickLis
                 public void onClick(View v) {
                     Intent intent = new Intent(getActivity(), BigImageActivity.class);
                     intent.putExtra("detail", detail);
-                    intent.putExtra("position",position);
+                    intent.putExtra("position", position);
                     getActivity().startActivity(intent);
                 }
             });

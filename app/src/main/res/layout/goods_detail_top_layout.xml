@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
@@ -25,10 +26,40 @@
                     android:layout_height="360dp" />
 
                 <TextView
+                    android:id="@+id/current_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/circlePageIndicator_rel"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginRight="16dp"
+                    android:background="@drawable/circle_icon_green"
+                    android:gravity="center"
+                    android:text=""
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
+
+
+                <RelativeLayout
+                    android:id="@+id/circlePageIndicator_rel"
                     android:layout_width="match_parent"
                     android:layout_height="30dp"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/half_transparent" />
+                    android:background="@color/half_transparent"
+                    android:orientation="horizontal">
+
+                    <com.ksfc.newfarmer.widget.CirclePageIndicator
+                        android:id="@+id/circlePageIndicator"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        app:centered="true"
+                        app:fillColor="@color/qianlv"
+                        app:pageColor="@color/white"
+                        app:radius="3dp"
+                        app:strokeColor="@color/transparent"
+                        app:strokeWidth="0dp" />
+                </RelativeLayout>
             </RelativeLayout>
 
             <LinearLayout
@@ -88,7 +119,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
-                        android:text="预付定金: "
+                        android:text="预付订金: "
                         android:textColor="@color/black"
                         android:textSize="16sp"
                         android:visibility="gone" />

@@ -11,6 +11,7 @@ import com.ksfc.newfarmer.utils.StringUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import uk.co.senab.photoview.PhotoView;
+import uk.co.senab.photoview.PhotoViewAttacher;
 
 /**
  * Created by CAI on 2016/1/8.
@@ -28,9 +29,9 @@ public class BigImageFragment extends BaseFragment {
         if (StringUtil.checkStr(picture)) {
             ImageLoader.getInstance().displayImage(MsgID.IP + picture, photoView);
         }
-        view.setOnClickListener(new View.OnClickListener() {
+        photoView.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
             @Override
-            public void onClick(View v) {
+            public void onPhotoTap(View view, float x, float y) {
                 getActivity().finish();
             }
         });

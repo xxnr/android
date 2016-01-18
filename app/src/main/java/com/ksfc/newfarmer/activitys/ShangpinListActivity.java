@@ -95,6 +95,7 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
     private TextView shaixuan_text;
     private ImageView shaixuan_image;
     private RelativeLayout goods_none_view_rel;
+    private TextView popwindow_text1 ;//如果是汽车展示车系，如果是化肥，展示品牌
 
     @Override
     public int getLayout() {
@@ -176,11 +177,11 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
         if (goods_flag.equals("huafei")) {
             RequestParams params = new RequestParams();
             execApi(ApiType.GET_ATTRIBUTENAME.setMethod(RequestMethod.GET).setOpt(
-                    "/api/v2.0/products/brands" + "?category=" + "化肥"), params);
+                    "/api/v2.0/products/brands" + "?category=" + "531680A5"), params);
         } else {
             RequestParams params = new RequestParams();
             execApi(ApiType.GET_ATTRIBUTENAME.setMethod(RequestMethod.GET).setOpt(
-                    "/api/v2.0/products/models" + "?category=" + "汽车"), params);
+                    "/api/v2.0/products/models" + "?category=" + "6C7D8F66"), params);
         }
 
 
@@ -252,7 +253,13 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
                 .findViewById(R.id.brand_gv);
         price_gv = (GridViewWithHeaderAndFooter) popupWindow_view
                 .findViewById(R.id.price_gv);
-
+        //如果是汽车展示车系，如果是化肥，展示品牌
+        popwindow_text1=(TextView)popupWindow_view.findViewById(R.id.popwindow_text1);
+        if (goods_flag.equals("huafei")) {
+            popwindow_text1.setText("品牌");
+        } else if (goods_flag.equals("qiche")) {
+            popwindow_text1.setText("车系");
+        }
         // // 点击其他地方消失
         // popupWindow_view.setOnTouchListener(new OnTouchListener() {
         //

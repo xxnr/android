@@ -194,27 +194,9 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
         setViewClick(R.id.car_bar_gengduo);
         setViewClick(R.id.car_bottom_bar_qianjin);
         initGv();
-        //addReceiver();
     }
 
-    /**
-     * 登录时，刷新首页
-     */
-    private void addReceiver() {
-        MsgCenter.addListener(new MsgListener() {
-            @Override
-            public void onMsg(Object sender, String msg, Object... args) {
-                // 再次请求接口 传递用户id
-                RequestParams params = new RequestParams();
-                if (isLogin()) {
-                    params.put("locationUserId", Store.User.queryMe().userid);
-                } else {
-                    params.put("locationUserId", "");
-                }
-                execApi(ApiType.GET_GOOSLIST, params);
-            }
-        }, MsgID.ISLOGIN);
-    }
+
 
     private void initQiandao() {
         if (isLogin()) {

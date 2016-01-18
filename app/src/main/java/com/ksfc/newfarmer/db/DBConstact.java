@@ -33,6 +33,8 @@ public class DBConstact {
 			"CREATE TABLE IF NOT EXISTS %s " + " ( " + ShoppingDao.COLUMN_ID
 					+ " INTEGER PRIMARY KEY AUTOINCREMENT, "
 					+ ShoppingDao.COLUMN_PID + " TEXT, "
+					+ ShoppingDao.COLUMN_SKUId + " TEXT, "
+					+ ShoppingDao.COLUMN_ADDITIONS + " TEXT, "
 					+ ShoppingDao.COLUMN_DESC + " TEXT, "
 					+ ShoppingDao.COLUMN_NUMBERS + " TEXT, "
 					+ ShoppingDao.COLUMN_PRAISES + " TEXT, "

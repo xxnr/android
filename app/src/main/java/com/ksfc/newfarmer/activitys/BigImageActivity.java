@@ -18,6 +18,7 @@ import com.ksfc.newfarmer.fragment.BigImageFragment;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.beans.GetGoodsDetail;
 import com.ksfc.newfarmer.utils.StringUtil;
+import com.ksfc.newfarmer.widget.CirclePageIndicator;
 import com.ksfc.newfarmer.widget.HackyViewPager;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -40,11 +41,13 @@ public class BigImageActivity extends BaseActivity {
     public void OnActCreate(Bundle savedInstanceState) {
 
         HackyViewPager viewPager = ((HackyViewPager) findViewById(R.id.viewPager_big_image));
+        CirclePageIndicator indicator=(CirclePageIndicator)findViewById(R.id.circlePageIndicator);
         GetGoodsDetail.GoodsDetail detail = (GetGoodsDetail.GoodsDetail) getIntent().getSerializableExtra("detail");
         int position = getIntent().getIntExtra("position", 0);
         if (detail != null && detail.pictures != null) {
             MyPagerAdapter myPagerAdapter = new MyPagerAdapter(getSupportFragmentManager(), detail.pictures);
             viewPager.setAdapter(myPagerAdapter);
+            indicator.setViewPager(viewPager);
             viewPager.setCurrentItem(position);
         }
     }
