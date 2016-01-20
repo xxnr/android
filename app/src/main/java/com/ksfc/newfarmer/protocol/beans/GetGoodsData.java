@@ -25,11 +25,11 @@ public class GetGoodsData extends ResponseResult {
 		public String allowScore;
 		public String unitPrice;
 		public String originalPrice;
-		public int goodsSellCount;
+		public String goodsSellCount;
 		public String awardPoint;
-		public int goodsSort;
+		public String goodsSort;
 		public String goodsName;
-		public int goodsGreatCount;
+		public String goodsGreatCount;
 		public String brandName;
 		public String brandId;
 		public int orderNum;// 添加购物车时的数量

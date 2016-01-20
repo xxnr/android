@@ -35,7 +35,7 @@
 
     <include layout="@layout/line_lay"/>
 
-    <ListView
+    <com.ksfc.newfarmer.widget.UnSwipeListView
         android:scrollbars="none"
         android:id="@+id/consumer_item_listView"
         android:layout_width="match_parent"

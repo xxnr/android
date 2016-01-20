@@ -9,10 +9,10 @@
     <LinearLayout
         android:id="@+id/contact_ll"
         android:layout_width="match_parent"
-        android:layout_height="74dp"
+        android:layout_height="88dp"
         android:background="@color/default_act_bg"
         android:orientation="vertical"
-        android:paddingBottom="10dp"
+        android:paddingBottom="12dp"
         android:paddingTop="10dp">
 
         <include layout="@layout/line_lay" />
@@ -29,9 +29,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
-                android:text=""
+                android:text="订单号："
                 android:textColor="@color/black_goods_titile"
-                android:textSize="14sp" />
+                android:textSize="16sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -45,18 +45,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
-                android:text="交易状态："
+                android:text="订单状态："
                 android:textColor="@color/black_goods_titile"
-                android:textSize="14sp" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/pay_state"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="12dp"
                 android:text=""
-                android:textColor="@color/green"
-                android:textSize="14sp" />
+                android:textColor="@color/orange"
+                android:textSize="16sp" />
         </LinearLayout>
 
         <include layout="@layout/line_lay" />
@@ -96,8 +95,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
                 android:layout_below="@+id/order_detail_name_tv"
+                android:layout_marginBottom="15dp"
                 android:layout_marginTop="10dp"
                 android:gravity="center_vertical">
 
@@ -133,6 +132,55 @@
         android:layout_width="match_parent"
         android:layout_height="10dp" />
 
-    <include layout="@layout/line_lay"/>
+    <include layout="@layout/line_lay" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/white">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="16dp"
+            android:text="支付信息"
+            android:textColor="@color/black_goods_titile"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <include layout="@layout/line_lay" />
+
+    <com.ksfc.newfarmer.widget.UnSwipeListView
+        android:id="@+id/pay_info_listView"
+        android:dividerHeight="0dp"
+        android:divider="@null"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/line_chang" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/invite_bg">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="16dp"
+            android:text="商品清单"
+            android:textColor="@color/black_goods_titile"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <include layout="@layout/line_lay" />
 </LinearLayout>

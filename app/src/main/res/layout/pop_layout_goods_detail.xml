@@ -29,11 +29,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="13dp"
                 android:layout_marginRight="52dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 android:layout_toRightOf="@id/pop_image_false"
                 android:ellipsize="end"
-                android:singleLine="true"
-                android:text="中化美农第3代缓控释肥"
+                android:maxLines="2"
+                android:text="和悦A30-1.5升手动挡-舒适配"
                 android:textColor="@color/black_goods_titile"
                 android:textSize="16sp" />
 
@@ -43,12 +43,12 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/pop_title"
                 android:layout_marginLeft="13dp"
-                android:layout_marginTop="22dp"
+                android:layout_marginTop="15dp"
                 android:layout_toRightOf="@+id/pop_image_false"
 
                 android:text="¥1120"
                 android:textColor="@color/orange_goods_price"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
 
             <ImageView
                 android:id="@+id/pop_close"
@@ -66,7 +66,7 @@
             android:layout_height="match_parent"
             android:layout_above="@+id/pop_detail_bottom"
             android:layout_below="@+id/pop_layout_rel"
-            android:layout_marginTop="46dp"
+            android:layout_marginTop="20dp"
             android:background="@color/default_act_bg"
             android:scrollbars="none">
 

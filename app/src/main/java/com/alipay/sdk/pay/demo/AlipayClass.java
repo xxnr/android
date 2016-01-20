@@ -41,6 +41,7 @@ public class AlipayClass extends FragmentActivity {
     public static final String RSA_PRIVATE = "MIICeAIBADANBgkqhkiG9w0BAQEFAASCAmIwggJeAgEAAoGBAP2cuJXfkcLYzf8ldCcppdOelA1P7U3tAxF+avSorHXBWpvmfcgAZtdTM9olsC/bief2/BsPXpbaWaIw3epiFyUsi76OMXhFl6tPUOivZ2NKM+x0PPi0YaJe1K+O9KmXTqr2UIgQ4kmwGrqN/vCmRrXZWg7+BSkFQ/cBCbgHfkZZAgMBAAECgYEAoT258bex0aLL3ZMvdRK6ln/0+z28z1WIJOAuGhz/gOKMvB/gCn+O4wnIJsLdcJ/w3uUdxgqQhfKPGFpfTPxOX5Ug/jDpp3BATpvqpzMVwsuOrP7B9X+KGB2tksksb0HpdbcOMfDWl096BylF4bE3Lq3vsuzrjk9RqgSokcBsV4ECQQD/iU0DWv/N4v6znpqMTmSQWms101vZJFkgoblJ3HU4iPa+6b2joF1Shj6ef0uOr3akQHqatte9eKB0/YTIskKJAkEA/hKGw51vIrGHhy+2/11adZf1MifYpwSwrYLMvpb+oH7ws1AzDt1e2Gn4X47QhFoPWGaWuZaviRrKIZgNasMxUQJBAPlAPrt4Jq33rUMdAFi9GoBngc2l1SBPwRQAS5CNFlXH2w5LRmv1PzIAudG2DsglxE7gifahRHyOzcxvgPaWUikCQQCShdaoS0vDY0R4pwDPJmQ7uuXSBf7A20iU2AEBzQyNPIfNsWuwn+PJxNtTKIaCPXnqDkfQQeF7nTKCyzC5qFXxAkAVh/2rl+kk+dvZYJWK6phERjAu9RB+r9Of+I8cMtpY6LzrrUxs4SpWyZNl8LbY0TBeTeG6PF+GFRmbRcdBczWx";
     // 支付宝公钥
     public static final String RSA_PUBLIC = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD9nLiV35HC2M3/JXQnKaXTnpQNT+1N7QMRfmr0qKx1wVqb5n3IAGbXUzPaJbAv24nn9vwbD16W2lmiMN3qYhclLIu+jjF4RZerT1Dor2djSjPsdDz4tGGiXtSvjvSpl06q9lCIEOJJsBq6jf7wpka12VoO/gUpBUP3AQm4B35GWQIDAQAB";
+    private final String price;//支付金额
     private String notifyUrl = ApiType.url + "dynamic/alipay/nofity.asp";
     private static final int SDK_PAY_FLAG = 1;
     private static final int SDK_CHECK_FLAG = 2;
@@ -62,7 +63,7 @@ public class AlipayClass extends FragmentActivity {
                         Intent intent = new Intent(activcty,
                                 OrderSuccessActivity.class);
                         intent.putExtra("orderId", orderId);
-                        intent.putExtra("orderNo", orderNo);
+                        intent.putExtra("price", price);
                         activcty.startActivity(intent);
                     } else {
                         // 判断resultStatus 为非“9000”则代表可能支付失败
@@ -98,7 +99,7 @@ public class AlipayClass extends FragmentActivity {
         super();
         this.activcty = activcty;
         String title = map.get("title");
-        String price = map.get("price");
+        price = map.get("price");
         orderNo = map.get("orderNo");
         orderId = map.get("orderId");
         pay(price, title, orderNo);

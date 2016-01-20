@@ -24,6 +24,7 @@ import com.ksfc.newfarmer.protocol.beans.InviteeResult;
 import com.ksfc.newfarmer.utils.DateFormatUtils;
 import com.ksfc.newfarmer.utils.PullToRefreshUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
+import com.ksfc.newfarmer.widget.UnSwipeListView;
 import com.ksfc.newfarmer.widget.WidgetUtil;
 
 import java.util.Collection;
@@ -221,6 +222,8 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
                     ProductsAdapter carAdapter = new ProductsAdapter(list.get(position).products);
                     holder.listView.setAdapter(carAdapter);
                     WidgetUtil.setListViewHeightBasedOnChildren(holder.listView);
+                }else {
+                    holder.listView.setAdapter(null);
                 }
             }
 
@@ -230,13 +233,13 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
 
         class ViewHolder {
             private TextView orderTime, orderType, orderPrice;
-            private ListView listView;
+            private UnSwipeListView listView;
 
             public ViewHolder(View convertView) {
                 orderTime = (TextView) convertView.findViewById(R.id.consumer_item_orderTime);
                 orderType = (TextView) convertView.findViewById(R.id.consumer_item_payType);
                 orderPrice = (TextView) convertView.findViewById(R.id.consumer_item_orderPrice);
-                listView = (ListView) convertView.findViewById(R.id.consumer_item_listView);
+                listView = (UnSwipeListView) convertView.findViewById(R.id.consumer_item_listView);
             }
         }
     }
@@ -276,6 +279,7 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
                     holder.productName.setText(list.get(position).name);
                 }
                 holder.productCount.setText("X " + list.get(position).count);
+            }else {
             }
             return convertView;
         }
@@ -288,11 +292,6 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
                 productCount = (TextView) convertView.findViewById(R.id.product_count);
             }
         }
-    }
-
-    public String formatDate(String time) {
-        String substring = time.substring(0, 19);
-        return substring.replace("T", " ");
     }
 
 }

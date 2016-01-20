@@ -136,6 +136,8 @@
         <activity android:name=".activitys.AboutUsActivity" />
         <!-- 选择支付订单 -->
         <activity android:name=".activitys.SelectPayOrderActivity" />
+        <!-- 查看支付详情 -->
+        <activity android:name=".activitys.CheckPayDetailActivity" />
         AboutUsActivity
         <!-- 新农邀请 -->
         <activity

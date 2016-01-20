@@ -50,9 +50,14 @@ import com.ksfc.newfarmer.protocol.beans.saveAddress;
 public enum ApiType {
 
     /**
+     * 获取用户白名单
+     */
+    GET_WRITE_LIST("/api/v2.0/user/isInWhiteList", ResponseResult.class),
+
+    /**
      * 银联
      */
-    GET_UNI("/unionpay ", UnipayResult.class),
+    GET_UNI("/unionpay", UnipayResult.class),
     /**
      * 支付宝
      */

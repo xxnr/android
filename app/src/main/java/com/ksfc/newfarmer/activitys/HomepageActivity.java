@@ -347,17 +347,25 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
                     .findViewById(R.id.huafei_xianjia);
             ImageView huafei_img = (ImageView) view
                     .findViewById(R.id.huafei_img);
-
-            ImageLoader.getInstance().displayImage(MsgID.IP + hfList.get(position).imgUrl,huafei_img);
-            huafei_name_tv.setText(hfList.get(position).goodsName);
+            //商品图
+            ImageLoader.getInstance().displayImage(MsgID.IP + hfList.get(position).imgUrl, huafei_img);
+            //商品名
+            if (StringUtil.checkStr(hfList.get(position).goodsName)){
+                huafei_name_tv.setText(hfList.get(position).goodsName);
+            }
+            //商品是否预售
             if (hfList.get(position).presale) {
                 huafei_xianjia.setTextColor(Color.GRAY);
                 huafei_xianjia
                         .setText("即将上线");
             } else {
+                //商品价格
                 huafei_xianjia.setTextColor(Color.parseColor("#ff4e00"));
-                huafei_xianjia
-                        .setText("¥" + hfList.get(position).originalPrice);
+                if (StringUtil.checkStr(hfList.get(position).unitPrice)){
+                    huafei_xianjia
+                            .setText("¥" + hfList.get(position).unitPrice);
+                }
+
             }
             huafei_gv.setOnItemClickListener(new OnItemClickListener() {
                 @Override
@@ -378,8 +386,6 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
     }
 
     public class qicheAdapter extends BaseAdapter {
-        float jiefen;
-
         @Override
         public int getCount() {
             return qcList.size() > 0 ? qcList.size() : 0;
@@ -409,9 +415,14 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
                     .findViewById(R.id.huafei_img);
             huafei_img.setScaleType(ScaleType.CENTER_CROP);
             ImageLoader.getInstance().displayImage(MsgID.IP + qcList.get(position).imgUrl, huafei_img);
-            huafei_name_tv.setText(qcList.get(position).goodsName);
-            huafei_xianjia
-                    .setText("¥" + qcList.get(position).originalPrice);
+
+            if (StringUtil.checkStr(qcList.get(position).goodsName)){
+                huafei_name_tv.setText(qcList.get(position).goodsName);
+            }
+            if (StringUtil.checkStr(qcList.get(position).unitPrice)){
+                huafei_xianjia.setText("¥"+qcList.get(position).unitPrice);
+            }
+
             qiche_gv.setOnItemClickListener(new OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> arg0, View arg1,

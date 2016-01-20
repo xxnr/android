@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.ksfc.newfarmer.protocol.ResponseResult;
+import com.ksfc.newfarmer.utils.StringUtil;
 
 public class MyOrderDetailResult extends ResponseResult {
 
@@ -48,7 +49,7 @@ public class MyOrderDetailResult extends ResponseResult {
             public String datePaid;  // 支付完成时间
             public String dateDelivered;  // 发货时间
             public String dateCompleted;  // 完成时间
-            public static OrderStatus orderStatus;
+            public OrderStatus orderStatus;
 
 
             public class OrderStatus implements Serializable {
@@ -60,13 +61,14 @@ public class MyOrderDetailResult extends ResponseResult {
 
         public static class SubOrders implements Serializable {
             public String id;// 阶段订单id
-            public float price;// 子订单价格
+            public String price;// 子订单价格
             public String type;//// 子订单类型'deposit':阶段一定金, 'balance':阶段二尾款 'full':全款
             public String _id;// 类别 化肥 汽车
             public String payStatus;// / 子订单付款状态1:待付款, 2:已付款, 3:部分付款
             public int paidCount; // 之前付款次数
-            public int payType;// 付款方式（可能没有）只有一次付款完成时才有
-            public List<Payments> Payments; // 子订单的每次付款详情（可能没有）只存在多次付款或者一次付款没有付完
+            public String payType;// 付款方式（可能没有）只有一次付款完成时才有
+            public String paidPrice;//已付款金额
+            public List<Payments> payments; // 子订单的每次付款详情（可能没有）只存在多次付款或者一次付款没有付完
 
             public static class Payments implements Serializable {
                 public String dateCreated;// 创建时间
@@ -128,6 +130,7 @@ public class MyOrderDetailResult extends ResponseResult {
         public String goodsCount;
         public String goodsName;
         public String orderSubNo;
+        public String deliverStatus;
         public float deposit;
 
     }

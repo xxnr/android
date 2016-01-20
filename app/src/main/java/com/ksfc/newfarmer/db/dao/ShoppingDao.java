@@ -15,7 +15,7 @@ import android.database.Cursor;
 public class ShoppingDao extends BaseDao {
 	private static final String TAG = "ShoppingDao";
 
-	public static String TABLE_NAME_SHOPPING = "shopping_" + uid;
+	public static String TABLE_NAME_SHOPPING = "shopping_1" + uid;
 
 	public static final String COLUMN_ID = "id";
 	public static final String COLUMN_ADDITIONS = "additions";

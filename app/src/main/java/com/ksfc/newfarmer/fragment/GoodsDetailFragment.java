@@ -87,11 +87,20 @@ public class GoodsDetailFragment extends BaseFragment implements View.OnClickLis
                 product_description.setText(detail.description);
             }
             if (detail.pictures != null) {
+
                 MyPagerAdapter myPagerAdapter = new MyPagerAdapter(detail.pictures);
                 viewPager.setAdapter(myPagerAdapter);
-                viewPager.addOnPageChangeListener(this);
-                current_count.setText("1/" + detail.pictures.size());
-                indicator.setViewPager(viewPager);
+
+                if (detail.pictures.size() > 1) {
+                    viewPager.addOnPageChangeListener(this);
+                    current_count.setText("1/" + detail.pictures.size());
+                    indicator.setViewPager(viewPager);
+                } else {
+                    viewPager.addOnPageChangeListener(null);
+                    current_count.setVisibility(View.GONE);
+                    indicator.setVisibility(View.GONE);
+                }
+
             }
             //根据化肥还是汽车 隐藏吨
             if (detail.category.equals("化肥")) {
@@ -105,22 +114,30 @@ public class GoodsDetailFragment extends BaseFragment implements View.OnClickLis
             } else {
                 detail_detail.setVisibility(View.INVISIBLE);
             }
-            //是否预售
-            if (detail.presale) {
-                product_huafei_dun.setVisibility(View.GONE);
-                product_newFarmer_price.setTextColor(Color.GRAY);
-                product_newFarmer_price.setText("即将上线");
-            } else {
-                if (detail.SKUPrice!=null){
-                    if (StringUtil.checkStr(detail.SKUPrice.min)&&StringUtil.checkStr(detail.SKUPrice.max))
-                        good_xianjia.setText("¥" + detail.SKUPrice.min+"-"+detail.SKUPrice.max);
-                }
-            }
             //是否有定金
             if (!detail.deposit.equals("0")) {
                 product_dingjing_name.setVisibility(View.VISIBLE);
                 product_dingjing.setText("¥" + detail.deposit);
             }
+            //是否预售
+            if (detail.presale) {
+                product_dingjing.setVisibility(View.GONE);
+                product_dingjing_name.setVisibility(View.GONE);
+                product_huafei_dun.setVisibility(View.GONE);
+                product_newFarmer_price.setTextColor(Color.GRAY);
+                product_newFarmer_price.setText("即将上线");
+            } else {
+                if (detail.SKUPrice != null) {
+                    if (StringUtil.checkStr(detail.SKUPrice.min) && StringUtil.checkStr(detail.SKUPrice.max)) {
+                        if (!detail.SKUPrice.min.equals(detail.SKUPrice.max)) {
+                            good_xianjia.setText("¥" + detail.SKUPrice.min + "-" + detail.SKUPrice.max);
+                        } else {
+                            good_xianjia.setText("¥" + detail.SKUPrice.min);
+                        }
+                    }
+                }
+            }
+
             return view;
         } else {
 

@@ -25,7 +25,6 @@ public class PersonalData extends ResponseResult implements Serializable {
         public String userType;
         public boolean isVerified;
         public String pointLaterTrade;
-        public boolean typeVerified;
         public String name;
         public boolean sex;
         public Address defaultAddress;

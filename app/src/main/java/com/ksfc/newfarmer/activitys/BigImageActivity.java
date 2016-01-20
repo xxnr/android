@@ -30,7 +30,6 @@ import uk.co.senab.photoview.PhotoView;
  * Created by CAI on 2015/12/7.
  */
 public class BigImageActivity extends BaseActivity {
-    private List<ImageView> dots;
 
     @Override
     public int getLayout() {
@@ -47,8 +46,12 @@ public class BigImageActivity extends BaseActivity {
         if (detail != null && detail.pictures != null) {
             MyPagerAdapter myPagerAdapter = new MyPagerAdapter(getSupportFragmentManager(), detail.pictures);
             viewPager.setAdapter(myPagerAdapter);
-            indicator.setViewPager(viewPager);
-            viewPager.setCurrentItem(position);
+            if (detail.pictures.size()>1){
+                indicator.setViewPager(viewPager);
+                viewPager.setCurrentItem(position);
+            }else {
+                indicator.setVisibility(View.GONE);
+            }
         }
     }
 

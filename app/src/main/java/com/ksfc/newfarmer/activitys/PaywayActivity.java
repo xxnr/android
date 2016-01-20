@@ -8,6 +8,7 @@ import java.util.HashMap;
 
 import com.alibaba.fastjson.JSON;
 import com.alipay.sdk.pay.demo.AlipayClass;
+import com.google.gson.Gson;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.RndApplication;
@@ -15,6 +16,7 @@ import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
+import com.ksfc.newfarmer.protocol.ResponseResult;
 import com.ksfc.newfarmer.protocol.ServerInterface;
 import com.ksfc.newfarmer.protocol.beans.AlipayResult;
 import com.ksfc.newfarmer.protocol.beans.MyOrderDetailResult;
@@ -25,6 +27,11 @@ import com.ksfc.newfarmer.protocol.beans.UnipayResult;
 import com.ksfc.newfarmer.protocol.beans.WaitingPay.Orders;
 import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.StringUtil;
+import com.lidroid.xutils.HttpUtils;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest;
 import com.unionpay.UPPayAssistEx;
 import com.unionpay.uppay.PayActivity;
 
@@ -38,12 +45,15 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
@@ -56,10 +66,15 @@ public class PaywayActivity extends BaseActivity implements Runnable {
     private int tag;
     private int order_type;//支付类型
     private String orderId;
+    private String price;
     private TextView payway_sumPrice, payWay_order_id, payWay_totalPrice, payWay_order_type;//应付金额 订单号 订单总额 订单状态
     private TextView payWay_pay_total_text, payWay_pay_times_text, payWay_pay_total_bar, payWay_pay_times_bar;//全额支付 分次支付
     private TextView payWay_pay_total_price; //全额支付 应付金额
     private RelativeLayout payWay_pay_total_view, payWay_pay_times_view;//全额支付 分次支付
+    private ImageView payWay_discount_jia, payWay_discount_jian;//分次支付里的加减
+    private EditText payWay_times_price_tv;//分次支付里的金额tv
+    private double pauWay_times_price = 3000.00;//分次支付里的金额
+    private double duePrice;  //待支付金额
     private static final String mMode = "00";// 设置测试模式:01为测试 00为正式环境
     private static final String TN_URL_01 = ApiType.url + "unionpay";// 自己后台需要实现的给予我们app的tn号接口
     private Handler mHandler = new Handler() {
@@ -132,6 +147,7 @@ public class PaywayActivity extends BaseActivity implements Runnable {
         payWay_order_id = (TextView) findViewById(R.id.payWay_order_id);
         payWay_order_type = (TextView) findViewById(R.id.payWay_order_type);
 
+
         payWay_pay_total_text = (TextView) findViewById(R.id.payWay_pay_total_text);
         payWay_pay_times_text = (TextView) findViewById(R.id.payWay_pay_times_text);
         payWay_pay_total_bar = (TextView) findViewById(R.id.payWay_pay_total_bar);
@@ -141,10 +157,14 @@ public class PaywayActivity extends BaseActivity implements Runnable {
 
         payWay_pay_total_price = (TextView) findViewById(R.id.payWay_pay_total_price);
 
+        payWay_discount_jian = (ImageView) findViewById(R.id.payWay_discount_jian);
+        payWay_times_price_tv = (EditText) findViewById(R.id.payWay_discount_price);
+        payWay_times_price_tv.setEnabled(false);
+        payWay_discount_jia = (ImageView) findViewById(R.id.payWay_discount_jia);
 
         orderId = getIntent().getStringExtra("orderId");
-        order_type = getIntent().getIntExtra("order_type", 1);
-
+        order_type = getIntent().getIntExtra("payType", 1);
+        //获取订单详情
         if (StringUtil.checkStr(orderId)) {
             showProgressDialog();
             RequestParams params = new RequestParams();
@@ -152,13 +172,16 @@ public class PaywayActivity extends BaseActivity implements Runnable {
             params.put("orderId", orderId);
             execApi(ApiType.GET_ORDER_DETAILS, params);
         }
-        payWay_order_id.setText(orderId);
+        //获取白名单
+        getWriteList();
 
+        payWay_order_id.setText(orderId);
         setViewClick(R.id.alipay_ll);
         setViewClick(R.id.bank_ll);
         setViewClick(R.id.pay_sure_tv);
         setViewClick(R.id.payWay_pay_total_rel);
         setViewClick(R.id.payWay_pay_times_rel);
+
 //        setViewClick(R.id.bank_dianhui_ll);
 //        setViewClick(R.id.pos_ll);
 
@@ -193,6 +216,60 @@ public class PaywayActivity extends BaseActivity implements Runnable {
         }
     }
 
+    //获取白名单
+    private void getWriteList() {
+        com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
+        params.addBodyParameter("token", Store.User.queryMe().token);
+        HttpUtils http = new HttpUtils();
+        http.send(HttpRequest.HttpMethod.POST, ApiType.GET_WRITE_LIST.getOpt(), params,
+                new RequestCallBack<String>() {
+                    @Override
+                    public void onFailure(HttpException arg0, String arg1) {
+                    }
+
+                    @Override
+                    public void onSuccess(ResponseInfo<String> arg0) {
+
+                        Gson gson = new Gson();
+                        ResponseResult responseResult = gson.fromJson(arg0.result, ResponseResult.class);
+                        if (responseResult.getStatus().equals("1000")) {
+                            //白名单下 可以输入金额 ，并控制 不可以加减。
+                            payWay_discount_jian.setEnabled(false);
+                            payWay_discount_jia.setEnabled(false);
+                            payWay_times_price_tv.setEnabled(true);
+                            payWay_times_price_tv.addTextChangedListener(new TextWatcher() {
+                                @Override
+                                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                                }
+
+                                @Override
+                                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+
+                                }
+
+                                @Override
+                                public void afterTextChanged(Editable s) {
+                                    if (StringUtil.checkStr(s.toString())) {
+                                        double price = Double.parseDouble(s.toString());
+                                        if (price > duePrice) {
+                                            payWay_times_price_tv.setText(StringUtil.toTwoString(duePrice + ""));
+                                        } else if (price == 0) {
+                                            payWay_times_price_tv.setText(StringUtil.toTwoString("0.01"));
+                                        }
+                                    } else {
+                                        payWay_times_price_tv.setText("0.01");
+                                    }
+                                }
+                            });
+
+                        }
+
+                    }
+
+                });
+    }
+
     @Override
     public void OnViewClick(View v) {
 
@@ -204,8 +281,6 @@ public class PaywayActivity extends BaseActivity implements Runnable {
                 payWay_pay_times_bar.setVisibility(View.INVISIBLE);
                 payWay_pay_times_text.setTextColor(getResources().getColor(R.color.main_index_gary));
                 payWay_pay_total_text.setTextColor(getResources().getColor(R.color.orange));
-
-
                 break;
             case R.id.payWay_pay_times_rel://分次支付
                 payWay_pay_total_view.setVisibility(View.GONE);
@@ -214,9 +289,13 @@ public class PaywayActivity extends BaseActivity implements Runnable {
                 payWay_pay_times_bar.setVisibility(View.VISIBLE);
                 payWay_pay_times_text.setTextColor(getResources().getColor(R.color.orange));
                 payWay_pay_total_text.setTextColor(getResources().getColor(R.color.main_index_gary));
-
                 break;
-
+            case R.id.payWay_discount_jia:
+                changePayPrice(true);
+                break;
+            case R.id.payWay_discount_jian:
+                changePayPrice(false);
+                break;
             case R.id.alipay_ll://支付宝
                 init();
                 alipay_img.setBackgroundResource(R.drawable.circle_green);
@@ -254,6 +333,22 @@ public class PaywayActivity extends BaseActivity implements Runnable {
 //                break;
             case R.id.pay_sure_tv:
                 if (payWay_pay_times_view.getVisibility() == View.VISIBLE) {
+                    if (tag == 1) {
+                        RequestParams params3 = new RequestParams();
+                        params3.put("userId", Store.User.queryMe().userid);
+                        params3.put("consumer", "app");
+                        if (StringUtil.checkStr(payWay_times_price_tv.getText().toString().trim())) {
+                            params3.put("price", payWay_times_price_tv.getText().toString().trim());
+                        }
+                        if (orderId != null) {
+                            params3.put("orderId", orderId);
+                        }
+                        execApi(ApiType.GET_ALI, params3);
+                    } else if (tag == 2) {
+                        new Thread(this).start();
+                    } else {
+                        showToast("请选择支付方式");
+                    }
 
                 } else {
                     if (tag == 1) {
@@ -277,6 +372,27 @@ public class PaywayActivity extends BaseActivity implements Runnable {
 
 
     }
+
+    /**
+     * @param flag true 代表+ false代表-
+     */
+    public void changePayPrice(boolean flag) {
+        if (flag) {
+            if (pauWay_times_price + 500 <= duePrice) {
+                pauWay_times_price += 500;
+            } else {
+                pauWay_times_price = duePrice;
+            }
+        } else {
+            if (pauWay_times_price - 500 > 3000) {
+                pauWay_times_price -= 500;
+            } else {
+                pauWay_times_price = 3000;
+            }
+        }
+        payWay_times_price_tv.setText(StringUtil.toTwoString("" + pauWay_times_price));
+    }
+
 
     /**
      * 调用支付宝支付
@@ -312,8 +428,22 @@ public class PaywayActivity extends BaseActivity implements Runnable {
                         }
                         //待付金额
                         if (StringUtil.checkStr(datas.rows.duePrice)) {
-                            payway_sumPrice.setText(datas.rows.duePrice);
-                            payWay_pay_total_price.setText(datas.rows.duePrice);
+                            payway_sumPrice.setText(datas.rows.duePrice + "元");
+                            //大于3000才能分次 ，如果小于3000 直接显示
+                            try {
+                                duePrice = Double.parseDouble(datas.rows.duePrice);
+                                if (Double.parseDouble(datas.rows.duePrice) > 3000) {
+                                    setViewClick(R.id.payWay_discount_jian);
+                                    setViewClick(R.id.payWay_discount_jia);
+                                } else {
+                                    payWay_times_price_tv.setText(datas.rows.duePrice);
+                                    payWay_discount_jian.setEnabled(false);
+                                    payWay_discount_jia.setEnabled(false);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            payWay_pay_total_price.setText("¥" + datas.rows.duePrice);
                         }
                         //订单状态
                         if (StringUtil.checkStr(datas.rows.paySubOrderType)) {
@@ -330,7 +460,7 @@ public class PaywayActivity extends BaseActivity implements Runnable {
                         //订单总额
                         if (datas.rows.order != null) {
                             if (StringUtil.checkStr(datas.rows.order.totalPrice)) {
-                                payWay_totalPrice.setText(datas.rows.order.totalPrice);
+                                payWay_totalPrice.setText(datas.rows.order.totalPrice + "元");
                             }
                         }
                     }
@@ -363,16 +493,33 @@ public class PaywayActivity extends BaseActivity implements Runnable {
             URLConnection ucon = myURL.openConnection();
             ((HttpURLConnection) ucon).setRequestMethod("POST");
             RndLog.i(TAG, "URL:" + url + "consumer=app&orderId=" + orderId);
-            byte[] b = ("token="+Store.User.queryMe().token+"&consumer=app&responseStyle=v1.0&orderId=" + orderId)
-                    .getBytes();
-            ucon.getOutputStream().write(b, 0, b.length);
+            //****************************************////////////////
+            //根据分次支付的布局是否显示来判断此次支付是分次还是全额 如果是分次 参数中传入price
+            if (payWay_pay_times_view.getVisibility() == View.VISIBLE) {
+                //分次支付金额
+                if (StringUtil.checkStr(payWay_times_price_tv.getText().toString().trim())) {
+                    price = payWay_times_price_tv.getText().toString().trim();
+                    byte[] b = ("token=" + Store.User.queryMe().token + "&consumer=app&orderId=" + orderId + "&price=" + payWay_times_price_tv.getText().toString().trim())
+                            .getBytes();
+                    ucon.getOutputStream().write(b, 0, b.length);
+                }
+
+            } else {
+                //全额金额
+                price = payWay_pay_total_price.getText().toString().trim();
+                byte[] b = ("token=" + Store.User.queryMe().token + "&consumer=app&orderId=" + orderId)
+                        .getBytes();
+                ucon.getOutputStream().write(b, 0, b.length);
+            }
+            //*********************************************////
+
             ucon.getOutputStream().flush();
             ucon.getOutputStream().close();
             ucon.setConnectTimeout(120000);
             is = ucon.getInputStream();
             final String json = ServerInterface.toString(is, "UTF-8");
             is.close();
-            response = JSON.parseObject(json,UnionPayResponse.class);
+            response = JSON.parseObject(json, UnionPayResponse.class);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -381,6 +528,7 @@ public class PaywayActivity extends BaseActivity implements Runnable {
         mHandler.sendMessage(msg);
     }
 
+    //银联
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (data == null) {
@@ -398,6 +546,7 @@ public class PaywayActivity extends BaseActivity implements Runnable {
                 Intent intent = new Intent(PaywayActivity.this,
                         OrderSuccessActivity.class);
                 intent.putExtra("orderId", orderId);
+                intent.putExtra("price", price);
                 startActivity(intent);
 
             } else if (str.equalsIgnoreCase("fail")) {
@@ -408,7 +557,6 @@ public class PaywayActivity extends BaseActivity implements Runnable {
         }
         // 支付完成,处理自己的业务逻辑!
         RndLog.v(TAG, msg);
-
     }
 
 }

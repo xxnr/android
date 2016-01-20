@@ -46,6 +46,7 @@ import com.ksfc.newfarmer.protocol.beans.GetGoodsData.SingleGood;
 import com.ksfc.newfarmer.utils.ImageLoaderUtils;
 import com.ksfc.newfarmer.utils.PullToRefreshUtils;
 import com.ksfc.newfarmer.utils.ScreenUtil;
+import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.GridViewWithHeaderAndFooter;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -610,89 +611,30 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
                 ImageLoader.getInstance().displayImage((MsgID.IP + nycList.get(position).imgUrl), holder.image_iv,
                         ImageLoaderUtils.buildImageOptions(getApplicationContext()));
             }
-
-            holder.title_tv.setText(nycList.get(position).goodsName);
+            if (StringUtil.checkStr(nycList.get(position).goodsName)){
+                holder.title_tv.setText(nycList.get(position).goodsName);
+            }
             String price = nycList.get(position).unitPrice;
             if (nycList.get(position).presale) {
                 holder.price_tv.setText("即将上线");
                 holder.price_tv.setTextColor(Color.GRAY);
-                holder.goodsCar_iv.setVisibility(View.GONE);
             } else {
-                holder.price_tv.setText("¥" + price);
-                holder.goodsCar_iv.setVisibility(View.VISIBLE);
+                if (StringUtil.checkStr(price)){
+                    holder.price_tv.setText("¥" + price);
+                }
                 holder.price_tv.setTextColor(Color.parseColor("#ff4e00"));
             }
-            // 加入购物车
-            holder.goodsCar_iv.setOnClickListener(new OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-
-                    if (isLogin()) {
-                        // app/shopCart/addToCart
-                        // locationUserId:操作人ID
-                        // goodsId:商品ID
-                        // userId:用户ID
-                        // count：件数
-                        // showProgressDialog("正在添加购物车");
-                        RequestParams params = new RequestParams();
-                        params.put("locationUserId",
-                                Store.User.queryMe().userid);
-                        params.put("userId", Store.User.queryMe().userid);
-                        params.put("goodsId", nycList.get(position).goodsId);
-                        params.put("count", 1);
-                        params.put("update_by_add", "true");
-                        execApi(ApiType.ADDTOCART, params);
-                    } else {
-                        // 查询数据库 为空 就插入 不为空 就更新
-                        Map<String, String> shopping = dao.getShopping(nycList
-                                .get(position).goodsId);
-                        if (shopping.isEmpty()) {
-                            nycList.get(position).orderNum = 1;
-                            // 新插入
-                            Map<String, String> map = new HashMap<String, String>();
-                            map.put("pid", nycList.get(position).goodsId);
-                            map.put("title", nycList.get(position).goodsName);
-                            map.put("imageurl", nycList.get(position).imgUrl);
-                            map.put("numbers", nycList.get(position).orderNum
-                                    + "");
-                            map.put("pricenow", nycList.get(position).unitPrice);
-                            map.put("type", nycList.get(position).brandName);
-                            map.put("priceold",
-                                    nycList.get(position).originalPrice);
-                            map.put("totalscore",
-                                    nycList.get(position).allowScore);
-                            map.put("usecore", nycList.get(position).allowScore);
-                            // map.put("praises", "88");
-                            dao.saveShopping(map);
-                        } else {
-                            // 先从数据库获取对应id的个数 然后相加本地的个数
-                            Map<String, String> shop = dao.getShopping(nycList
-                                    .get(position).goodsId);
-                            String string = shop.get("numbers");
-                            int num = Integer.valueOf(string) + 1;
-                            // 更新数据库商品对应的id
-                            dao.updateShopping(nycList.get(position).goodsId,
-                                    "" + num);
-                        }
-                        showToast("添加购物车成功");
-                    }
-
-                }
-            });
-
             return convertView;
         }
 
         class ViewHolder {
-            private ImageView image_iv, goodsCar_iv;
+            private ImageView image_iv;
             private TextView title_tv, price_tv;
 
             ViewHolder(View view) {
                 image_iv = (ImageView) view.findViewById(R.id.goods_image);
                 title_tv = (TextView) view.findViewById(R.id.goods_title);
                 price_tv = (TextView) view.findViewById(R.id.goods_price);
-                goodsCar_iv = (ImageView) view.findViewById(R.id.goods_car);
 
             }
 

@@ -206,39 +206,50 @@ public class MyDetailFragment extends BaseFragment implements View.OnClickListen
 
             ViewHolder holder = (ViewHolder) convertView.getTag();
             final WaitingPay.Orders order = rows.get(position);
-            holder.order_id_tv.setText("订单号：" + order.orderId);
+            if (StringUtil.checkStr(order.orderId)) {
+                holder.order_id_tv.setText("订单号：" + order.orderId);
+            }
+
 
             if (order.order != null) {
-                //订单状态
+
                 if (order.order.orderStatus != null) {
+                    //订单状态
                     if (StringUtil.checkStr(order.order.orderStatus.value)) {
                         holder.pay_state_tv.setText(order.order.orderStatus.value);
                     }
+                    //如果是待付款1的订单或者是部分付款的2的订单，点击可以去支付
+                    if (order.order.orderStatus.type == 1 || order.order.orderStatus.type == 2) {
+                        holder.go_to_pay_rel.setVisibility(View.VISIBLE);
+                        holder.go_to_pay.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                if (StringUtil.checkStr(order.orderId)) {
+                                    Intent intent = new Intent(getActivity(),
+                                            PaywayActivity.class);
+                                    intent.putExtra("orderId", order.orderId);
+                                    intent.putExtra("payType", order.payType);
+                                    startActivity(intent);
+                                }
+                            }
+                        });
+                    } else {
+                        holder.go_to_pay_rel.setVisibility(View.GONE);
+                        holder.go_to_pay.setOnClickListener(null);
+                    }
+
                 }
 
                 //订单合计金额
                 if (StringUtil.checkStr(order.order.totalPrice)) {
                     holder.price_tv.setText("¥" + order.order.totalPrice);
                 }
-            }
 
 
-            //如果是待付款的订单，点击可以去支付
-            if (order.typeValue == 1) {
-                holder.go_to_pay_rel.setVisibility(View.VISIBLE);
-                holder.go_to_pay.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getActivity(),
-                                PaywayActivity.class);
-                        intent.putExtra("orderInfo", order);
-                        startActivity(intent);
-                    }
-                });
-            } else {
-                holder.go_to_pay_rel.setVisibility(View.GONE);
-                holder.go_to_pay.setOnClickListener(null);
             }
+
+            //子商品列表
             if (order.SKUs != null && !order.SKUs.isEmpty()) {
                 ProductAdapter carAdapter = new ProductAdapter(order, order.SKUs);
                 holder.my_order_list.setAdapter(carAdapter);
@@ -403,7 +414,7 @@ public class MyDetailFragment extends BaseFragment implements View.OnClickListen
                     }
                 }
                 String car_attr = stringBuilder.toString().substring(0, stringBuilder.toString().length() - 1);
-                if (StringUtil.checkStr(car_attr)){
+                if (StringUtil.checkStr(car_attr)) {
                     holder.goods_car_attr.setText(car_attr);
                 }
 

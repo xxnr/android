@@ -276,11 +276,15 @@
                     android:background="@drawable/selector_jian"
                     android:scaleType="centerCrop" />
 
-                <TextView
+                <EditText
                     android:id="@+id/payWay_discount_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="¥3000.00"
+                    android:text="3000.00"
+                    android:inputType="numberDecimal"
+                    android:background="@null"
+                    android:maxLength="12"
+                    android:minWidth="30dp"
                     android:textColor="@color/orange_goods_price"
                     android:textSize="18sp" />
 

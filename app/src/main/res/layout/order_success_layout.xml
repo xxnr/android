@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <include layout="@layout/title_lay" />
 
@@ -12,46 +12,68 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
         android:gravity="center"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
-        <TextView
+
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="您的订单支付成功"
-            android:textColor="@color/green"
-            android:textSize="20sp" />
+            android:layout_marginRight="24dp"
+            android:background="@drawable/pay_right_btn" />
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="您已完成本次支付"
+                android:textColor="@color/green"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/pay_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="支付金额："
+                android:textColor="@color/black_goods_titile"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:orientation="horizontal"
-        android:padding="30dp" >
+        android:layout_marginTop="50dp"
+        android:gravity="center"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/contact_tv"
-            android:layout_width="wrap_content"
+            android:layout_width="90dp"
             android:layout_height="30dp"
-            android:layout_margin="10dp"
-            android:layout_weight="1"
-            android:background="@drawable/lianxikefu_selecter"
+            android:background="@drawable/login_roate"
             android:gravity="center"
-            android:text="联系客服"
+            android:text="返回订单列表"
             android:textColor="@color/white"
-            android:textSize="15sp" />
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/check_order_tv"
-            android:layout_width="wrap_content"
+            android:layout_width="90dp"
             android:layout_height="30dp"
-            android:layout_margin="10dp"
-            android:layout_weight="1"
+            android:layout_marginLeft="30dp"
             android:background="@drawable/login_roate"
             android:gravity="center"
-            android:text="查看订单"
+            android:text="查看该笔订单"
             android:textColor="@color/white"
-            android:textSize="15sp" />
+            android:textSize="12sp" />
     </LinearLayout>
 
 </LinearLayout>

@@ -5,69 +5,21 @@
     android:background="@color/default_act_bg"
     android:orientation="vertical">
 
-    <include layout="@layout/line_lay" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="10dp" />
-
-    <include layout="@layout/line_lay" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="@color/white"
-        android:orientation="vertical"
-        android:paddingBottom="10dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="12dp"
-            android:text="支付方式"
-            android:textColor="@color/main_index_gary"
-            android:textSize="14sp" />
-
-
-        <TextView
-            android:id="@+id/pay_type_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="12dp"
-            android:text="支付宝支付"
-            android:textColor="@color/black_goods_titile"
-            android:textSize="14sp" />
-
-    </RelativeLayout>
-
-    <include layout="@layout/line_lay" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="10dp" />
-
-    <include layout="@layout/line_lay" />
 
     <RelativeLayout
         android:id="@+id/contact_ll"
         android:layout_width="match_parent"
-        android:layout_height="49dp"
-        android:background="@color/white"
-        android:orientation="vertical"
-        android:paddingBottom="10dp">
-
+        android:layout_height="40dp"
+        android:background="@color/white">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/my_order_detail_price"
-            android:text="应付金额："
+            android:text="合计："
             android:textColor="@color/black_goods_titile"
-            android:textSize="14sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/my_order_detail_price"
@@ -78,7 +30,7 @@
             android:layout_marginRight="16dp"
             android:text=""
             android:textColor="@color/orange_goods_price"
-            android:textSize="14sp" />
+            android:textSize="18sp" />
     </RelativeLayout>
 
     <include layout="@layout/line_lay" />

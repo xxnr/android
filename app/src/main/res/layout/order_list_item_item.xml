@@ -41,11 +41,26 @@
                     android:layout_marginTop="5dp"
                     android:ellipsize="end"
                     android:maxLines="2"
-                    android:text=""
+                    android:layout_marginRight="60dp"
+                    android:text="江淮汽车-第二代瑞风S3-2015款"
                     android:textColor="@color/black_goods_titile"
                     android:textSize="14sp" />
 
                 <TextView
+                    android:id="@+id/ordering_item_orderType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="5dp"
+                    android:text="待发货"
+                    android:visibility="gone"
+                    android:textColor="@color/orange"
+                    android:textSize="14sp" />
+
+
+                <TextView
+                    android:layout_marginRight="16dp"
                     android:id="@+id/ordering_item_attr"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -72,8 +87,8 @@
                 android:layout_marginLeft="12dp"
                 android:layout_marginTop="10dp"
                 android:text=""
-                android:textColor="@color/orange_goods_price"
-                android:textSize="15sp" />
+                android:textColor="@color/black_goods_titile"
+                android:textSize="16sp" />
 
 
             <TextView
@@ -125,7 +140,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="12dp"
                 android:text=""
-                android:textColor="@color/orange_goods_price"
+                android:textColor="@color/black_goods_titile"
                 android:textSize="14sp" />
 
 

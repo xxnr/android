@@ -376,7 +376,11 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
             //价格
             if (detail.SKUPrice != null) {
                 if (StringUtil.checkStr(detail.SKUPrice.min) && StringUtil.checkStr(detail.SKUPrice.max)) {
-                    pop_price.setText("¥" + detail.SKUPrice.min + "-" + detail.SKUPrice.max);
+                    if (!detail.SKUPrice.min.equals(detail.SKUPrice.max)) {
+                        pop_price.setText("¥" + detail.SKUPrice.min + "-" + detail.SKUPrice.max);
+                    } else {
+                        pop_price.setText("¥" + detail.SKUPrice.min);
+                    }
                 }
             }
         }
@@ -596,6 +600,7 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
     //得到规格属性
     public void getRemainAttr() {
         List<Map<String, String>> list = new ArrayList<>();
+
         for (int i = 0; i < adapters.size(); i++) {
             String name = pop_texts.get(i).getText().toString();
             String value = "";
@@ -611,11 +616,11 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
                 list.add(map);
             }
             //初始化其他未选中的列表
-            if (!adapters.get(i).states.containsValue(true)) {
-                adapters.get(i).states.clear();
-                adapters.get(i).initMap();
-            }
+            adapters.get(i).states.clear();
+            adapters.get(i).initMap();
+            adapters.get(i).states.put(value, true);
         }
+
 
         //请求数据
         Gson gson = new Gson();
@@ -679,7 +684,6 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
             // count：件数
             if (StringUtil.checkStr(SKUId)) {
                 RequestParams params = new RequestParams();
-
                 Gson gson = new Gson();
                 Map<String, Object> map = new HashMap<>();
                 map.put("token", Store.User.queryMe().token);
@@ -724,71 +728,71 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
                             }
                             intent.putExtra("additions", (Serializable) skuAdditions);
                         }
-                        intent.addFlags(1);
-                        startActivity(intent);
                     }
-                } else {
-                    showToast("请选择商品信息");
+
+                    intent.addFlags(1);
+                    startActivity(intent);
                 }
             } else {
-                // 查询数据库 为空 就插入 不为空 就更新
-                if (StringUtil.checkStr(SKUId)) {
-                    Map<String, String> shopping = dao.getShopping(SKUId);
-                    if (shopping.isEmpty()) {
-                        // 新插入
-                        Map<String, String> map = new HashMap<String, String>();
-                        map.put("pid", detail.id);
-                        map.put("title", detail.name);
-                        map.put("imageurl", detail.imgUrl);
-                        map.put("numbers", pop_discount_geshu.getText().toString()
-                                .trim()
-                                + "");
-
-                        //附加选项存在本地数据库
-                        if (detail.SKUAdditions != null && !detail.SKUAdditions.isEmpty()) {
-                            if (additionsAdapter != null
-                                    && additionsAdapter.states != null
-                                    && additionsAdapter.states.containsValue(true)) {
-                                List<String> list = new ArrayList<>();
-                                List<GetGoodsDetail.GoodsDetail.SKUAdditions> skuAdditions = new ArrayList<>();
-                                for (String key : additionsAdapter.states.keySet()) {
-                                    if (additionsAdapter.states.get(key)) {
-                                        list.add(key);
-                                    }
+                showToast("请选择商品信息");
+            }
+        } else {
+            // 查询数据库 为空 就插入 不为空 就更新
+            if (StringUtil.checkStr(SKUId)) {
+                Map<String, String> shopping = dao.getShopping(SKUId);
+                if (shopping.isEmpty()) {
+                    // 新插入
+                    Map<String, String> map = new HashMap<String, String>();
+                    map.put("pid", detail.id);
+                    map.put("title", detail.name);
+                    map.put("imageurl", detail.imgUrl);
+                    map.put("numbers", pop_discount_geshu.getText().toString()
+                            .trim()
+                            + "");
+                    //附加选项存在本地数据库
+                    if (detail.SKUAdditions != null && !detail.SKUAdditions.isEmpty()) {
+                        if (additionsAdapter != null
+                                && additionsAdapter.states != null
+                                && additionsAdapter.states.containsValue(true)) {
+                            List<String> list = new ArrayList<>();
+                            List<GetGoodsDetail.GoodsDetail.SKUAdditions> skuAdditions = new ArrayList<>();
+                            for (String key : additionsAdapter.states.keySet()) {
+                                if (additionsAdapter.states.get(key)) {
+                                    list.add(key);
                                 }
-                                for (GetGoodsDetail.GoodsDetail.SKUAdditions key : detail.SKUAdditions) {
-                                    if (list.contains(key._id)) {
-                                        skuAdditions.add(key);
-                                    }
-                                }
-                                Gson gson = new Gson();
-                                String additions = gson.toJson(skuAdditions);
-                                map.put("additions", additions);
                             }
+                            for (GetGoodsDetail.GoodsDetail.SKUAdditions key : detail.SKUAdditions) {
+                                if (list.contains(key._id)) {
+                                    skuAdditions.add(key);
+                                }
+                            }
+                            Gson gson = new Gson();
+                            String additions = gson.toJson(skuAdditions);
+                            map.put("additions", additions);
                         }
-                        map.put("type", type);
-                        map.put("SKUId", SKUId);
-                        map.put("stars", "");
-                        map.put("pricenow", detail.price);
-                        dao.saveShopping(map);
-                    } else {
-                        // 先从数据库获取对应id的个数 然后相加本地的个数
-                        Map<String, String> shop = dao.getShopping(SKUId);
-                        String string = shop.get("numbers");
-                        // 更新数据库商品对应的id
-                        int sumNum = Integer.valueOf(string)
-                                + Integer.valueOf(pop_discount_geshu.getText()
-                                .toString().trim());
-                        dao.updateShopping(SKUId, sumNum + "");
                     }
-                    //添加购物车成功后关闭popupWindow
-                    showToast("添加购物车成功");
-                    if (popupWindow != null && popupWindow.isShowing()) {
-                        popupWindow.dismiss();
-                    }
+                    map.put("type", type);
+                    map.put("SKUId", SKUId);
+                    map.put("stars", "");
+                    map.put("pricenow", detail.price);
+                    dao.saveShopping(map);
                 } else {
-                    showToast("请选择商品信息");
+                    // 先从数据库获取对应id的个数 然后相加本地的个数
+                    Map<String, String> shop = dao.getShopping(SKUId);
+                    String string = shop.get("numbers");
+                    // 更新数据库商品对应的id
+                    int sumNum = Integer.valueOf(string)
+                            + Integer.valueOf(pop_discount_geshu.getText()
+                            .toString().trim());
+                    dao.updateShopping(SKUId, sumNum + "");
                 }
+                //添加购物车成功后关闭popupWindow
+                showToast("添加购物车成功");
+                if (popupWindow != null && popupWindow.isShowing()) {
+                    popupWindow.dismiss();
+                }
+            } else {
+                showToast("请选择商品信息");
             }
         }
     }
@@ -858,23 +862,58 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
                 //更新popWindow中和商品详情中的的价格区间
                 if (StringUtil.checkStr(remainGoodsAttr.data.price.min) && StringUtil.checkStr(remainGoodsAttr.data.price.max)) {
                     if (!detail.presale) {
+
                         if (remainGoodsAttr.data.price.min.equals(remainGoodsAttr.data.price.max)) {
+                            //加入规格的价钱
+                            float price = 0;
+                            List<String> list1 = new ArrayList<>();
+                            for (Map.Entry<String, Boolean> entry : additionsAdapter.states.entrySet()) {
+                                if (entry.getValue()) {
+                                    list1.add(entry.getKey());
+                                }
+                            }
+                            for (int i = 0; i < additionsAdapter.list.size(); i++) {
+                                if (list1.contains(additionsAdapter.list.get(i)._id)) {
+                                    try {
+                                        price += Double.parseDouble(additionsAdapter.list.get(i).price);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
                             pop_price.setText("¥" + remainGoodsAttr.data.price.min);
                             product_price.setText("¥" + remainGoodsAttr.data.price.min);
                         } else {
-                            pop_price.setText("¥" + remainGoodsAttr.data.price.min + "-" + remainGoodsAttr.data.price.max);
-                            product_price.setText("¥" + remainGoodsAttr.data.price.min + "-" + remainGoodsAttr.data.price.max);
+                            //加入规格的价钱
+                            float price = 0;
+                            List<String> list1 = new ArrayList<>();
+                            for (Map.Entry<String, Boolean> entry : additionsAdapter.states.entrySet()) {
+                                if (entry.getValue()) {
+                                    list1.add(entry.getKey());
+                                }
+                            }
+                            for (int i = 0; i < additionsAdapter.list.size(); i++) {
+                                if (list1.contains(additionsAdapter.list.get(i)._id)) {
+                                    try {
+                                        price += Double.parseDouble(additionsAdapter.list.get(i).price);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
+                                pop_price.setText
+                                        ("¥" + remainGoodsAttr.data.price.min + "-" + remainGoodsAttr.data.price.max);
+                                product_price.setText
+                                        ("¥" + remainGoodsAttr.data.price.min + "-" + remainGoodsAttr.data.price.max);
+                            }
                         }
                     }
                 }
-
                 //已选的SKU
                 StringBuilder stringBuilder = new StringBuilder();
                 stringBuilder.append("已选择");
                 for (int i = adapters.size() - 1; i >= 0; i--) {
-                    Iterator<Map.Entry<String, Boolean>> it = adapters.get(i).states.entrySet().iterator();
-                    while (it.hasNext()) {
-                        Map.Entry<String, Boolean> entry = it.next();
+                    for (Map.Entry<String, Boolean> entry : adapters.get(i).states.entrySet()) {
                         if (entry.getValue()) {
                             stringBuilder.append("\"").append(entry.getKey()).append("\" ");
                         }
@@ -941,8 +980,6 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
                     }
                 }
             }
-
-
         }
     }
 
