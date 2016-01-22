@@ -11,13 +11,28 @@
         android:orientation="horizontal"
         android:padding="12dp">
 
+        <TextView
+            android:id="@+id/btn_check_item_offline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/disline_bg"
+            android:button="@null"
+            android:ems="1"
+            android:padding="2dp"
+            android:text="已下架"
+            android:textColor="@color/list_bg"
+            android:visibility="gone" />
+
+
         <CheckBox
             android:id="@+id/btn_check_item_item"
             android:layout_width="18dp"
             android:layout_height="18dp"
             android:layout_marginTop="40dp"
+            android:background="@drawable/selector_check_box_circle"
             android:button="@null"
-            android:background="@drawable/selector_check_box_circle"  />
+            android:visibility="visible" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -35,6 +50,7 @@
                 android:scaleType="centerCrop" />
 
             <LinearLayout
+                android:id="@+id/ordering_item_discount_ll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -94,8 +110,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/ordering_item_name"
                 android:layout_marginTop="7dp"
-                android:textColor="@color/deep_gray"
                 android:text=""
+                android:textColor="@color/deep_gray"
                 android:textSize="14sp" />
 
             <TextView
@@ -104,9 +120,18 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_marginTop="105dp"
-                android:textColor="@color/orange_goods_price"
                 android:text=""
+                android:textColor="@color/orange_goods_price"
                 android:textSize="15sp" />
+
+
+            <ImageView
+                android:id="@+id/ordering_now_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:visibility="gone"
+                android:background="@drawable/delete_gary" />
         </RelativeLayout>
     </LinearLayout>
 

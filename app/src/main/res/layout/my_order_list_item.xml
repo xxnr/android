@@ -30,7 +30,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="12dp"
             android:text=""
-            android:textColor="@color/green"
+            android:textColor="@color/orange"
             android:textSize="14sp" />
     </RelativeLayout>
 
@@ -65,8 +65,8 @@
             android:layout_toLeftOf="@+id/my_order_pay_price"
             android:layout_centerVertical="true"
             android:layout_width="wrap_content"
-            android:textSize="12sp"
-            android:text="合计"
+            android:textSize="16sp"
+            android:text="合计："
             android:textColor="@color/black_goods_titile"
             android:layout_height="wrap_content" />
 
@@ -79,7 +79,7 @@
             android:layout_centerVertical="true"
             android:text=""
             android:textColor="@color/orange_goods_price"
-            android:textSize="12sp" />
+            android:textSize="16sp" />
     </RelativeLayout>
 
     <include layout="@layout/line_lay" />
@@ -97,7 +97,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="12dp"
-            android:background="@drawable/login_roate"
+            android:background="@drawable/login_roate_orange"
             android:text="去付款"
             android:textColor="@color/white"
             android:textSize="12sp" />

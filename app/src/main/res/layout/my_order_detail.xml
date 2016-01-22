@@ -41,7 +41,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="16dp"
-                android:background="@drawable/login_roate"
+                android:background="@drawable/login_roate_orange"
                 android:text="去付款"
                 android:textColor="@color/white"
                 android:textSize="12sp" />

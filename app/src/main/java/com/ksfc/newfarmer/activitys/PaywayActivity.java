@@ -20,11 +20,7 @@ import com.ksfc.newfarmer.protocol.ResponseResult;
 import com.ksfc.newfarmer.protocol.ServerInterface;
 import com.ksfc.newfarmer.protocol.beans.AlipayResult;
 import com.ksfc.newfarmer.protocol.beans.MyOrderDetailResult;
-import com.ksfc.newfarmer.protocol.beans.ProFileResult;
-import com.ksfc.newfarmer.protocol.beans.ProFileResult.Datas;
 import com.ksfc.newfarmer.protocol.beans.UnionPayResponse;
-import com.ksfc.newfarmer.protocol.beans.UnipayResult;
-import com.ksfc.newfarmer.protocol.beans.WaitingPay.Orders;
 import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.lidroid.xutils.HttpUtils;
@@ -39,23 +35,15 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -189,12 +177,12 @@ public class PaywayActivity extends BaseActivity implements Runnable {
         switch (order_type) {
             case 1:
                 // 支付宝支付
-                alipay_img.setBackgroundResource(R.drawable.circle_green);
+                alipay_img.setBackgroundResource(R.drawable.circle_orange);
                 tag = 1;
                 break;
             case 2:
                 // 银联支付
-                bank_img.setBackgroundResource(R.drawable.circle_green);
+                bank_img.setBackgroundResource(R.drawable.circle_orange);
                 tag = 2;
                 break;
 //            case 3:
@@ -209,7 +197,7 @@ public class PaywayActivity extends BaseActivity implements Runnable {
 //                break;
             default:
                 // 默认选中支付宝支付
-                alipay_img.setBackgroundResource(R.drawable.circle_green);
+                alipay_img.setBackgroundResource(R.drawable.circle_orange);
                 tag = 1;
                 break;
 
@@ -298,7 +286,7 @@ public class PaywayActivity extends BaseActivity implements Runnable {
                 break;
             case R.id.alipay_ll://支付宝
                 init();
-                alipay_img.setBackgroundResource(R.drawable.circle_green);
+                alipay_img.setBackgroundResource(R.drawable.circle_orange);
                 tag = 1;
                 RequestParams params = new RequestParams();
                 params.put("userId", Store.User.queryMe().userid);
@@ -311,7 +299,7 @@ public class PaywayActivity extends BaseActivity implements Runnable {
                 break;
             case R.id.bank_ll://银联
                 init();
-                bank_img.setBackgroundResource(R.drawable.circle_green);
+                bank_img.setBackgroundResource(R.drawable.circle_orange);
                 tag = 2;
                 RequestParams params1 = new RequestParams();
                 params1.put("userId", Store.User.queryMe().userid);

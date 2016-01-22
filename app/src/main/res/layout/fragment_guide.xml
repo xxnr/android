@@ -2,19 +2,36 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:background="@color/white"
+    android:orientation="vertical">
 
-    <Button
-        android:id="@+id/textView_guide_enter"
-        android:layout_width="150dp"
-        android:layout_height="45dp"
-        android:layout_centerHorizontal="true"
+
+    <RelativeLayout
+        android:layout_width="145dp"
+        android:layout_height="40dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="60dp"
-        android:background="@drawable/selector_start_bt"
-        android:gravity="center"
-        android:textColor="#fff"
-        android:textSize="18sp"
-        android:visibility="gone"/>
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="150dp">
+
+        <Button
+            android:id="@+id/textView_guide_enter1"
+            android:layout_centerInParent="true"
+            android:layout_width="145dp"
+            android:layout_height="40dp"
+            android:background="@drawable/immediately_experience_btn1"
+            android:visibility="gone" />
+        <Button
+            android:id="@+id/textView_guide_enter2"
+            android:layout_centerInParent="true"
+            android:layout_width="135dp"
+            android:layout_height="30dp"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            android:text="立即体验"
+            android:background="@drawable/immediately_experience_btn2"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+
 
 </RelativeLayout>

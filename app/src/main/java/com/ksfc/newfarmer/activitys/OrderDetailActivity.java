@@ -74,6 +74,7 @@ public class OrderDetailActivity extends BaseActivity {
             String name;
             String pic;
             int num;
+            float additionPrice;
             String attr;
             float xianjia;
             float dingjin;
@@ -419,11 +420,23 @@ public class OrderDetailActivity extends BaseActivity {
                 holder.goods_car_bar.setVisibility(View.VISIBLE);
                 holder.goods_car_deposit.setText("¥" + StringUtil.toTwoString(goodsList
                         .get(position).dingjin + ""));
-                holder.goods_car_weikuan.setText("¥" + StringUtil.toTwoString(goodsList.get(position).xianjia - goodsList
-                        .get(position).dingjin + ""));
+                if (goodsList.get(position).additionPrice == 0) {
+                    holder.goods_car_weikuan.setText("¥" + StringUtil.toTwoString((goodsList.get(position).xianjia - goodsList
+                            .get(position).dingjin) + ""));
+                } else {
+                    holder.goods_car_weikuan.setText("¥" + StringUtil.toTwoString((goodsList.get(position).xianjia + goodsList.get(position).additionPrice - goodsList
+                            .get(position).dingjin) + ""));
+                }
             }
-            holder.ordering_now_pri.setText("¥" + StringUtil.toTwoString(goodsList
-                    .get(position).xianjia + ""));
+            //总价
+            if (goodsList.get(position).additionPrice == 0) {
+                holder.ordering_now_pri.setText("¥" + StringUtil.toTwoString(goodsList
+                        .get(position).xianjia + ""));
+            } else {
+                holder.ordering_now_pri.setText("¥" + StringUtil.toTwoString((goodsList
+                        .get(position).xianjia + goodsList.get(position).additionPrice) + ""));
+            }
+
             return convertView;
         }
 
@@ -532,9 +545,15 @@ public class OrderDetailActivity extends BaseActivity {
                     //附加选项
                     if (rows.get(i).SKUList.get(j).additions != null && !rows.get(i).SKUList.get(j).additions.isEmpty()) {
                         stringBuilder.append("附加选项:");
+                        goods.additionPrice = 0;
                         for (int k = 0; k < rows.get(i).SKUList.get(j).additions.size(); k++) {
                             if (StringUtil.checkStr(rows.get(i).SKUList.get(j).additions.get(k).name)) {
                                 stringBuilder.append(rows.get(i).SKUList.get(j).additions.get(k).name + ";");
+                                try {
+                                    goods.additionPrice += Double.parseDouble(rows.get(i).SKUList.get(j).additions.get(k).price);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }
                     }

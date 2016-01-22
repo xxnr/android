@@ -4,7 +4,9 @@ import com.ksfc.newfarmer.protocol.beans.AboutUsResult;
 import com.ksfc.newfarmer.protocol.beans.AddOrderResult;
 import com.ksfc.newfarmer.protocol.beans.AddressList;
 import com.ksfc.newfarmer.protocol.beans.AlipayResult;
+import com.ksfc.newfarmer.protocol.beans.AttrSelectResult;
 import com.ksfc.newfarmer.protocol.beans.BannerResult;
+import com.ksfc.newfarmer.protocol.beans.BrandsResult;
 import com.ksfc.newfarmer.protocol.beans.BrandsShaixuan;
 import com.ksfc.newfarmer.protocol.beans.BuildingList;
 import com.ksfc.newfarmer.protocol.beans.CameraResult;
@@ -303,9 +305,17 @@ public enum ApiType {
      * 客户订单
      */
     GET_INVITEE_ORDERS("/api/v2.0/user/getInviteeOrders", ConsumerOrderResult.class),
+    /**
+     * 获取商品属性列表
+     */
+    GET_GOODS_ATTR("/api/v2.1/products/attributes", AttrSelectResult.class),
+
+    /**
+     * 获取品牌列表
+     */
+    GET_BRANDS_LIST(" /api/v2.1/brands", BrandsResult.class),
 
     TEST("", ResponseResult.class);
-
     //     private static String server_url = "http://api.xinxinnongren.com";
     private static String server_url = "http://101.200.194.203";
     // private static String server_url = "http://192.168.1.15";

@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.alibaba.fastjson.JSON;
 import com.google.gson.Gson;
@@ -25,6 +26,7 @@ import com.ksfc.newfarmer.protocol.beans.GetGoodsDetail;
 import com.ksfc.newfarmer.protocol.beans.GetshopCart;
 import com.ksfc.newfarmer.protocol.beans.RemainGoodsAttr;
 import com.ksfc.newfarmer.protocol.beans.addtoCart;
+import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.CustomDialog;
 import com.ksfc.newfarmer.widget.GridViewWithHeaderAndFooter;
@@ -71,7 +73,6 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
     private int fenshu;
     private VerticalViewPager viewPager;
     private boolean toast_flag = true;//true的时候提示 添加购物车成功  false 为不提示
-    private View toSoft_ll;//软件盘所在的布局
     private PopupWindow popupWindow;
     private LinearLayout shangpin_detail_bg;
     private ImageView pop_image;
@@ -94,7 +95,6 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
     private TextView product_price;//商品价格
     private TextView product_attribute;//商品已选择的属性
     private AdditionsAdapter additionsAdapter;
-    private String additions;//用于存本地数据库 附加选项
 
 
     @Override
@@ -143,10 +143,7 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
                 startActivity(intent);
             }
         });
-
         showRightImage();
-
-
     }
 
     @Override
@@ -184,14 +181,24 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
                 pop_discount_geshu.setText(fenshu + "");
                 break;
             case R.id.add_to_shopcart:
-                pop_flag = true;
-                pop_action = true;
-                showPopUp(v);
+                if (StringUtil.checkStr(SKUId)) {
+                    toast_flag = true;
+                    addToCar();
+                } else {
+                    pop_flag = true;
+                    pop_action = true;
+                    showPopUp(v);
+                }
                 break;
             case R.id.buy_now:
-                pop_flag = true;
-                pop_action = false;
-                showPopUp(v);
+                if (StringUtil.checkStr(SKUId)) {
+                    toast_flag = false;
+                    addToCar();
+                } else {
+                    pop_flag = true;
+                    pop_action = false;
+                    showPopUp(v);
+                }
                 break;
             case R.id.product_attribute_rel:
                 //弹出popWindow筛选规格
@@ -338,7 +345,7 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
         // 创建PopupWindow实例,200,LayoutParams.MATCH_PARENT分别是宽度和高度
         popupWindow = new PopupWindow(popupWindow_view,
                 LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, true);
-        popupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+
         // 设置动画效果
         popupWindow.setAnimationStyle(R.style.popWindow_anim_style);
         popupWindow.setFocusable(true);
@@ -385,7 +392,6 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
             }
         }
         if (detail.SKUAdditions != null && !detail.SKUAdditions.isEmpty()) {
-
             pop_text5.setVisibility(View.VISIBLE);
             additionsAdapter = new AdditionsAdapter(detail.SKUAdditions);
             pop_gv5.setAdapter(additionsAdapter);
@@ -426,6 +432,17 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
                     adapters.add(adapter4);
                     break;
             }
+        }
+        //如果单项为1时，默认选中
+        try {
+            for (int i = 0; i < adapters.size(); i++) {
+                if (adapters.get(i).getCount() == 1) {
+                    adapters.get(i).states.put(detail.SKUAttributes.get(adapters.size() - (i + 1)).values.get(0), true);
+                }
+            }
+            getRemainAttr();
+        } catch (Exception e) {
+            RndLog.v(TAG, "adapter_null");
         }
     }
 
@@ -575,6 +592,7 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
                 public void onClick(View v) {
                     states.put(list.get(position)._id, holder.checkBox.isChecked());
                     AdditionsAdapter.this.notifyDataSetChanged();
+                    getRemainAttr();
                 }
             });
 
@@ -653,8 +671,9 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
             pop_add_to_shopcart.setVisibility(View.VISIBLE);
             pop_sure.setVisibility(View.GONE);
         }
+        popupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         //软件盘监听
-        toSoft_ll = pop_discount_lin;
+        View toSoft_ll = pop_discount_lin;
         toSoft_ll.getViewTreeObserver().addOnGlobalLayoutListener(this);
         //设置背景及展示
         setBackgroundBlack(shangpin_detail_bg, 0);
@@ -813,13 +832,21 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
                 viewPager.setAdapter(adapter);
             }
             //商品是否预售
-            if (detail.presale) {
+            if (detail.presale||!detail.online) {
+
                 jinqingqidai_bar.setVisibility(View.VISIBLE);
                 shangpin_detail_bottom_bar.setVisibility(View.GONE);
+                if (detail.presale){
+                    jinqingqidai_bar.setText("敬请期待");
+                }else {
+                    jinqingqidai_bar.setText("商品已下架");
+                }
+
             } else {
                 jinqingqidai_bar.setVisibility(View.GONE);
                 shangpin_detail_bottom_bar.setVisibility(View.VISIBLE);
             }
+
 
 
             setViewClick(R.id.add_to_shopcart);
@@ -834,8 +861,13 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
                 View view = fragment.getView().findViewById(R.id.product_attribute_rel);
                 product_price = (TextView) fragment.getView().findViewById(R.id.product_price);
                 product_attribute = (TextView) fragment.getView().findViewById(R.id.product_attribute);
+                //如果是下架的商品 不展示sku
                 if (view != null) {
-                    view.setOnClickListener(this);
+                    if (detail.online) {
+                        view.setOnClickListener(this);
+                    } else {
+                        view.setVisibility(View.GONE);
+                    }
                 }
             }
 
@@ -865,42 +897,71 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
 
                         if (remainGoodsAttr.data.price.min.equals(remainGoodsAttr.data.price.max)) {
                             //加入规格的价钱
-                            float price = 0;
-                            List<String> list1 = new ArrayList<>();
-                            for (Map.Entry<String, Boolean> entry : additionsAdapter.states.entrySet()) {
-                                if (entry.getValue()) {
-                                    list1.add(entry.getKey());
-                                }
-                            }
-                            for (int i = 0; i < additionsAdapter.list.size(); i++) {
-                                if (list1.contains(additionsAdapter.list.get(i)._id)) {
-                                    try {
-                                        price += Double.parseDouble(additionsAdapter.list.get(i).price);
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
+                            if (additionsAdapter != null) {
+                                float price = 0;
+                                List<String> list1 = new ArrayList<>();
+                                for (Map.Entry<String, Boolean> entry : additionsAdapter.states.entrySet()) {
+                                    if (entry.getValue()) {
+                                        list1.add(entry.getKey());
                                     }
                                 }
-                            }
-                            pop_price.setText("¥" + remainGoodsAttr.data.price.min);
-                            product_price.setText("¥" + remainGoodsAttr.data.price.min);
-                        } else {
-                            //加入规格的价钱
-                            float price = 0;
-                            List<String> list1 = new ArrayList<>();
-                            for (Map.Entry<String, Boolean> entry : additionsAdapter.states.entrySet()) {
-                                if (entry.getValue()) {
-                                    list1.add(entry.getKey());
-                                }
-                            }
-                            for (int i = 0; i < additionsAdapter.list.size(); i++) {
-                                if (list1.contains(additionsAdapter.list.get(i)._id)) {
-                                    try {
-                                        price += Double.parseDouble(additionsAdapter.list.get(i).price);
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
+                                for (int i = 0; i < additionsAdapter.list.size(); i++) {
+                                    if (list1.contains(additionsAdapter.list.get(i)._id)) {
+                                        try {
+                                            price += Double.parseDouble(additionsAdapter.list.get(i).price);
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
                                     }
                                 }
 
+                                try {
+                                    double price_total = Double.parseDouble(remainGoodsAttr.data.price.min) + price;
+                                    pop_price.setText("¥" + Math.round(price_total));
+                                    product_price.setText("¥" + Math.round(price_total));
+                                } catch (Exception e) {
+                                    pop_price.setText("¥" + remainGoodsAttr.data.price.min);
+                                    product_price.setText("¥" + remainGoodsAttr.data.price.min);
+                                }
+
+                            } else {
+                                pop_price.setText("¥" + remainGoodsAttr.data.price.min);
+                                product_price.setText("¥" + remainGoodsAttr.data.price.min);
+                            }
+
+
+                        } else {
+                            //加入规格的价钱
+                            if (additionsAdapter != null) {
+                                float price = 0;
+                                List<String> list1 = new ArrayList<>();
+                                for (Map.Entry<String, Boolean> entry : additionsAdapter.states.entrySet()) {
+                                    if (entry.getValue()) {
+                                        list1.add(entry.getKey());
+                                    }
+                                }
+                                for (int i = 0; i < additionsAdapter.list.size(); i++) {
+                                    if (list1.contains(additionsAdapter.list.get(i)._id)) {
+                                        try {
+                                            price += Double.parseDouble(additionsAdapter.list.get(i).price);
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+
+                                try {
+                                    double price_min = Double.parseDouble(remainGoodsAttr.data.price.min) + price;
+                                    double price_max = Double.parseDouble(remainGoodsAttr.data.price.max) + price;
+                                    pop_price.setText("¥" + Math.round(price_min) + "-" + Math.round(price_max));
+                                    product_price.setText("¥" + Math.round(price_min) + "-" + Math.round(price_max));
+                                } catch (Exception e) {
+                                    pop_price.setText
+                                            ("¥" + remainGoodsAttr.data.price.min + "-" + remainGoodsAttr.data.price.max);
+                                    product_price.setText
+                                            ("¥" + remainGoodsAttr.data.price.min + "-" + remainGoodsAttr.data.price.max);
+                                }
+                            } else {
                                 pop_price.setText
                                         ("¥" + remainGoodsAttr.data.price.min + "-" + remainGoodsAttr.data.price.max);
                                 product_price.setText
@@ -915,7 +976,9 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
                 for (int i = adapters.size() - 1; i >= 0; i--) {
                     for (Map.Entry<String, Boolean> entry : adapters.get(i).states.entrySet()) {
                         if (entry.getValue()) {
-                            stringBuilder.append("\"").append(entry.getKey()).append("\" ");
+                            if (!entry.getKey().equals("")) {
+                                stringBuilder.append("\"" + entry.getKey() + "\"");
+                            }
                         }
                     }
                     adapters.get(i).notifyDataSetChanged();
@@ -925,7 +988,6 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
                 } else {
                     product_attribute.setText(stringBuilder.toString());
                 }
-
                 if (remainGoodsAttr.data.SKU != null) {
                     SKUId = remainGoodsAttr.data.SKU._id;
                 } else {

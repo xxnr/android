@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
  >
 
-    <RadioButton
+    <CheckBox
         android:id="@+id/shuaixuan_item_button"
         android:layout_width="91dp"
         android:layout_height="30dp"

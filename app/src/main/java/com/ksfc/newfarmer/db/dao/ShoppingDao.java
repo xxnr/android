@@ -93,7 +93,7 @@ public class ShoppingDao extends BaseDao {
 		Map<String, String> map = new HashMap<String, String>();
 		if (isDBOpen()) {
 			String sql = "SELECT * FROM " + TABLE_NAME_SHOPPING + " WHERE "
-					+ COLUMN_PID + " = ?";
+					+ COLUMN_SKUId + " = ?";
 			Cursor cursor = database.rawQuery(sql, new String[] { pid });
 
 			if (cursor.moveToFirst()) {

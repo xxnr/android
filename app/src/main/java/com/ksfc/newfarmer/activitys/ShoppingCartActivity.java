@@ -35,6 +35,9 @@ import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.WidgetUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import android.graphics.Color;
+import android.text.Editable;
+import android.text.Selection;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.CompoundButton;
@@ -76,6 +79,7 @@ public class ShoppingCartActivity extends BaseActivity {
     private double price; // 总价
     private static int num = 0; // 选中的商品数
     private int total = 0;
+    private int offCount = 0;
     private HashMap<String, Boolean> inCartMap = new HashMap<>();// 用于存放选中的项
     private HashMap<String, Boolean> inShopMap = new HashMap<>();// 用于店铺选中的项
     private CheckBox mBtnCheckAll;
@@ -127,7 +131,9 @@ public class ShoppingCartActivity extends BaseActivity {
         for (int i = 0; i < data.category.size(); i++) {
             inShopMap.put(data.category.get(i).title, true);
             for (int j = 0; j < data.category.get(i).goods.size(); j++) {
-                inCartMap.put(data.category.get(i).goods.get(j).SKUId, true);
+                if (data.category.get(i).goods.get(j).online){
+                    inCartMap.put(data.category.get(i).goods.get(j).SKUId, true);
+                }
             }
         }
     }
@@ -214,6 +220,10 @@ public class ShoppingCartActivity extends BaseActivity {
             goods_bar_ll.setVisibility(View.VISIBLE);
             setRightTextView("编辑");
             goto_pay_tv.setText("去结算" + "(" + num + ")");
+        }
+
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
         }
     }
 
@@ -382,14 +392,17 @@ public class ShoppingCartActivity extends BaseActivity {
         static class Category implements Serializable {
             String title;
             List<Goods> goods;
+            int offCount;
         }
 
-        static class Goods implements Serializable{
+        static class Goods implements Serializable {
             String id;
             String SKUId;
+            boolean online;
             String name;
             String pic;
             int num;
+            float additionPrice;
             String attr;
             float xianjia;
             float dingjin;
@@ -444,7 +457,7 @@ public class ShoppingCartActivity extends BaseActivity {
                                     if (isChecked != null && isChecked) {
                                         Goods good = data.category.get(i).goods.get(j);
                                         Map<String, Object> map = new HashMap<>();
-                                        if (good.jsonList!=null&&!good.jsonList.isEmpty()){
+                                        if (good.jsonList != null && !good.jsonList.isEmpty()) {
                                             map.put("additions", good.jsonList);
                                         }
                                         map.put("_id", good.SKUId);
@@ -563,6 +576,7 @@ public class ShoppingCartActivity extends BaseActivity {
             }
             total_count = res.datas.totalCount;
             total = res.datas.total;
+            offCount=res.datas.offlineEntryCount;
             toPay_ll.setVisibility(View.VISIBLE);
             setTitle("购物车" + "(" + total_count + ")");
             null_shop_cart_layout.setVisibility(View.GONE);
@@ -577,6 +591,7 @@ public class ShoppingCartActivity extends BaseActivity {
             for (int i = 0; i < rows.size(); i++) {
                 Category c = new Category();
                 c.title = rows.get(i).brandName;
+                c.offCount=rows.get(i).offlineEntryCount;
                 c.goods = new ArrayList<Goods>();
                 for (int j = 0; j < rows.get(i).SKUList.size(); j++) {
                     Goods goods = new Goods();
@@ -588,6 +603,9 @@ public class ShoppingCartActivity extends BaseActivity {
                             .parseInt(rows.get(i).SKUList.get(j).count);//数量
                     goods.pic = rows.get(i).SKUList.get(j).imgUrl;//图片
 
+                    //是否online
+                    goods.online = rows.get(i).SKUList.get(j).online;
+
                     //价格
                     if (StringUtil
                             .empty(rows.get(i).SKUList.get(j).price)) {
@@ -596,6 +614,8 @@ public class ShoppingCartActivity extends BaseActivity {
                         goods.xianjia = Float.parseFloat(rows.get(i).SKUList
                                 .get(j).price);
                     }
+
+
                     //定金
                     if (StringUtil.empty(rows.get(i).SKUList.get(j).deposit)) {
                         goods.dingjin = 0;
@@ -618,9 +638,16 @@ public class ShoppingCartActivity extends BaseActivity {
                     if (rows.get(i).SKUList.get(j).additions != null && !rows.get(i).SKUList.get(j).additions.isEmpty()) {
                         goods.jsonList = rows.get(i).SKUList.get(j).additions;
                         stringBuilder.append("附加选项:");
+                        goods.additionPrice = 0;
                         for (int k = 0; k < rows.get(i).SKUList.get(j).additions.size(); k++) {
                             if (StringUtil.checkStr(rows.get(i).SKUList.get(j).additions.get(k).name)) {
                                 stringBuilder.append(rows.get(i).SKUList.get(j).additions.get(k).name + ";");
+                                try {
+                                    goods.additionPrice += Double.parseDouble(rows.get(i).SKUList.get(j).additions.get(k).price);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
                             }
                         }
                     }
@@ -666,6 +693,7 @@ public class ShoppingCartActivity extends BaseActivity {
             }
             total_count = res.datas.totalCount;
             total = res.datas.total;
+            offCount=res.datas.offlineEntryCount;
             setTitle("购物车" + "(" + total_count + ")");
             toPay_ll.setVisibility(View.VISIBLE);
             null_shop_cart_layout.setVisibility(View.GONE);
@@ -687,6 +715,10 @@ public class ShoppingCartActivity extends BaseActivity {
                     goods.num = Integer
                             .parseInt(rows.get(i).SKUList.get(j).count);
                     goods.pic = rows.get(i).SKUList.get(j).imgUrl;
+
+                    //是否online
+                    goods.online = rows.get(i).SKUList.get(j).online;
+
                     //商品价格
                     if (StringUtil
                             .empty(rows.get(i).SKUList.get(j).price)) {
@@ -718,10 +750,16 @@ public class ShoppingCartActivity extends BaseActivity {
                     //附加选项
                     if (rows.get(i).SKUList.get(j).additions != null && !rows.get(i).SKUList.get(j).additions.isEmpty()) {
                         goods.jsonList = rows.get(i).SKUList.get(j).additions;
+                        goods.additionPrice = 0;
                         stringBuilder.append("附加选项:");
                         for (int k = 0; k < rows.get(i).SKUList.get(j).additions.size(); k++) {
                             if (StringUtil.checkStr(rows.get(i).SKUList.get(j).additions.get(k).name)) {
                                 stringBuilder.append(rows.get(i).SKUList.get(j).additions.get(k).name + ";");
+                                try {
+                                    goods.additionPrice += Double.parseDouble(rows.get(i).SKUList.get(j).additions.get(k).price);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }
                     }
@@ -775,6 +813,13 @@ public class ShoppingCartActivity extends BaseActivity {
             final ViewHolder holder = (ViewHolder) convertView.getTag();
             holder.car_name.setText(data.category.get(position).title);
             carAdapter = new carAdapter(data.category.get(position).goods, data.category.get(position));
+
+            if (data.category.get(position).goods.size()-data.category.get(position).offCount==0){
+                holder.shop_checkBox.setVisibility(View.INVISIBLE);
+            }else {
+                holder.shop_checkBox.setVisibility(View.VISIBLE);
+            }
+
             //设置其是否选中
             Boolean isChecked = inShopMap.get(data.category.get(position).title);
             if (isChecked != null && isChecked) {
@@ -796,7 +841,9 @@ public class ShoppingCartActivity extends BaseActivity {
                         }
                         //选中店铺下的全部商品
                         for (int i = 0; i < data.category.get(position).goods.size(); i++) {
-                            inCartMap.put(data.category.get(position).goods.get(i).SKUId, true);
+                            if (data.category.get(position).goods.get(i).online){
+                                inCartMap.put(data.category.get(position).goods.get(i).SKUId, true);
+                            }
                         }
                     } else {
 
@@ -874,10 +921,10 @@ public class ShoppingCartActivity extends BaseActivity {
         }
 
         class ViewHolder {
-            private LinearLayout goods_car_bar;
-            private ImageView ordering_item_jian, ordering_item_jia, ordering_item_img;
+            private LinearLayout goods_car_bar, ordering_item_discount_ll;
+            private ImageView ordering_item_jian, ordering_item_jia, ordering_item_img,ordering_now_delete;
             private CheckBox checkBox_item;
-            private TextView ordering_item_geshu, ordering_item_attr;
+            private TextView ordering_item_geshu, ordering_item_attr, btn_check_item_offline;
             private TextView ordering_now_pri, ordering_item_name, goods_car_deposit, goods_car_weikuan;
             private RelativeLayout shopCart_list_item_rel;
 
@@ -891,9 +938,14 @@ public class ShoppingCartActivity extends BaseActivity {
                         .findViewById(R.id.ordering_item_img);
                 checkBox_item = (CheckBox) convertView.findViewById(R.id.btn_check_item_item);
                 ExpandViewTouch.expandViewTouchDelegate(checkBox_item, 100, 100, 100, 100);
-
+                ordering_now_delete=(ImageView)convertView
+                        .findViewById(R.id.ordering_now_delete);
                 ordering_item_geshu = (TextView) convertView//商品个数
                         .findViewById(R.id.ordering_item_geshu);
+                ordering_item_discount_ll = (LinearLayout) convertView//数量输入框
+                        .findViewById(R.id.ordering_item_discount_ll);
+                btn_check_item_offline = (TextView) convertView    //已下架
+                        .findViewById(R.id.btn_check_item_offline);
                 ordering_now_pri = (TextView) convertView//商品价格
                         .findViewById(R.id.ordering_now_pri);
                 ordering_item_name = (TextView) convertView//商品名
@@ -919,12 +971,32 @@ public class ShoppingCartActivity extends BaseActivity {
             }
             final ViewHolder holder = (ViewHolder) convertView.getTag();
             showNum = goodsList.get(position).num;
+            //数量
             holder.ordering_item_geshu.setText(showNum + "");
-
-
+            //图片
             ImageLoader.getInstance().displayImage(
                     MsgID.IP + goodsList.get(position).pic, holder.ordering_item_img);
+            //名称
             holder.ordering_item_name.setText(goodsList.get(position).name);
+            //删除按钮
+            if (isEdit){
+                holder.ordering_now_delete.setVisibility(View.VISIBLE);
+            }else {
+                holder.ordering_now_delete.setVisibility(View.GONE);
+            }
+            //是否online  初步用名字来做判断
+            if (goodsList.get(position).online) {
+                holder.ordering_item_discount_ll.setVisibility(View.VISIBLE);
+                convertView.setBackgroundColor(Color.WHITE);
+                holder.btn_check_item_offline.setVisibility(View.GONE);
+                holder.checkBox_item.setVisibility(View.VISIBLE);
+            } else {
+                holder.ordering_item_discount_ll.setVisibility(View.INVISIBLE);
+                convertView.setBackgroundColor(getResources().getColor(R.color.list_bg));
+                holder.btn_check_item_offline.setVisibility(View.VISIBLE);
+                holder.checkBox_item.setVisibility(View.GONE);
+            }
+            //是否有订金 有的话显示阶段 ，否则不显示
             if (goodsList.get(position).dingjin == 0) {
                 holder.ordering_now_pri.setTextColor(getResources().getColor(R.color.orange_goods_price));
                 holder.goods_car_bar.setVisibility(View.GONE);
@@ -933,15 +1005,28 @@ public class ShoppingCartActivity extends BaseActivity {
                 holder.goods_car_bar.setVisibility(View.VISIBLE);
                 holder.goods_car_deposit.setText("¥" + StringUtil.toTwoString(goodsList
                         .get(position).dingjin + ""));
-                holder.goods_car_weikuan.setText("¥" + StringUtil.toTwoString(goodsList.get(position).xianjia - goodsList
-                        .get(position).dingjin + ""));
+                if (goodsList.get(position).additionPrice == 0) {
+                    holder.goods_car_weikuan.setText("¥" + StringUtil.toTwoString((goodsList.get(position).xianjia - goodsList
+                            .get(position).dingjin) + ""));
+                } else {
+                    holder.goods_car_weikuan.setText("¥" + StringUtil.toTwoString((goodsList.get(position).xianjia + goodsList.get(position).additionPrice - goodsList
+                            .get(position).dingjin) + ""));
+                }
 
             }
+            //sku属性 和附加选项
             if (StringUtil.checkStr(goodsList.get(position).attr)) {
                 holder.ordering_item_attr.setText(goodsList.get(position).attr);
             }
-            holder.ordering_now_pri.setText("¥" + StringUtil.toTwoString(goodsList
-                    .get(position).xianjia + ""));
+            //总价
+            if (goodsList.get(position).additionPrice == 0) {
+                holder.ordering_now_pri.setText("¥" + StringUtil.toTwoString(goodsList
+                        .get(position).xianjia + ""));
+            } else {
+                holder.ordering_now_pri.setText("¥" + StringUtil.toTwoString((goodsList
+                        .get(position).xianjia + goodsList.get(position).additionPrice) + ""));
+            }
+
             // 避免由于复用触发onChecked()事件
             holder.checkBox_item.setOnCheckedChangeListener(null);
             Boolean isChecked = inCartMap.get(goodsList.get(position).SKUId);
@@ -957,7 +1042,7 @@ public class ShoppingCartActivity extends BaseActivity {
                     if (isChecked) {
                         inCartMap.put(goodsList.get(position).SKUId, true);
                         // 如果所有项都被选中，则点亮全选按钮
-                        if (inCartMap.size() == total) {
+                        if (inCartMap.size() == total-offCount) {
                             mBtnCheckAll.setChecked(true);
                         }
                         // 如果一个店铺内的所有项都被选中 ，则点亮店铺按钮
@@ -968,7 +1053,7 @@ public class ShoppingCartActivity extends BaseActivity {
                                 count++;
                             }
                         }
-                        if (count == goodsList.size()) {
+                        if (count == goodsList.size()-category.offCount) {
                             inShopMap.put(category.title, true);
                             adapter.notifyDataSetChanged();
                         }
@@ -990,7 +1075,7 @@ public class ShoppingCartActivity extends BaseActivity {
                                 count++;
                             }
                         }
-                        if (count == goodsList.size()) {
+                        if (count == goodsList.size()-category.offCount) {
                             inShopMap.remove(category.title);
                             adapter.notifyDataSetChanged();
                         }
@@ -1060,9 +1145,13 @@ public class ShoppingCartActivity extends BaseActivity {
 
                             if (car_num == 1) {
                                 showToast("商品不能再减少了哦");
+
                             } else {
                                 car_num--;
                                 CustomDialogForShopCarCount.editText.setText(car_num + "");
+                                // 光标移到最后
+                                Editable eText = CustomDialogForShopCarCount.editText.getText();
+                                Selection.setSelection(eText, eText.length());
                             }
 
                         }
@@ -1071,6 +1160,9 @@ public class ShoppingCartActivity extends BaseActivity {
                         public void onClick(DialogInterface dialog, int which) {
                             car_num++;
                             CustomDialogForShopCarCount.editText.setText(car_num + "");
+                            // 光标移到最后
+                            Editable eText = CustomDialogForShopCarCount.editText.getText();
+                            Selection.setSelection(eText, eText.length());
                         }
                     });
                     CustomDialogForShopCarCount dialog = builder.create();

@@ -29,12 +29,12 @@ public class ConsumerOrderResult extends ResponseResult{
         public String recipientPhone;
         public String deposit;
         public List<Product> products;
+        public List<SKUS> SKUs;
         public String dateCreated;
     }
 
     public static class Product{
 
-        public String _id;
         public String deposit;
         public String price;
         public String name;
@@ -43,5 +43,10 @@ public class ConsumerOrderResult extends ResponseResult{
         public String thumbnail;
         public int count;
         public String deliverStatus;
+    }
+
+    public static class SKUS{
+        public String productName;
+        public int count;
     }
 }

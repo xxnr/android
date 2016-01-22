@@ -6,7 +6,6 @@ import java.util.List;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,15 +14,12 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
-import com.handmark.pulltorefresh.library.ILoadingLayout;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.ksfc.newfarmer.BaseActivity;
-import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.Request;
@@ -32,7 +28,6 @@ import com.ksfc.newfarmer.protocol.beans.InformationResult.DatasEntity.ItemsEnti
 import com.ksfc.newfarmer.utils.DateFormatUtils;
 import com.ksfc.newfarmer.utils.PullToRefreshUtils;
 import com.ksfc.newfarmer.utils.ScreenUtil;
-import com.ksfc.newfarmer.widget.PullToRefreshView;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
@@ -40,7 +35,6 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.squareup.picasso.Picasso;
 
 public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBase.OnRefreshListener2, AbsListView.OnScrollListener {
 

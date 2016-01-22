@@ -201,6 +201,7 @@ public class ChoiceActivity extends BaseActivity {
                     queueid = arg2.getExtras().getString("queueid");
                     buildid = arg2.getExtras().getString("buildid");
                     choice_city_text.setText(city);
+                    choice_town_text.setText("");
                     room_edit.setText("");
                     town="";
                     townid="";

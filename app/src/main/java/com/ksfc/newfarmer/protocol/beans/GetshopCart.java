@@ -22,10 +22,12 @@ public class GetshopCart extends ResponseResult implements Serializable{
         public long totalPrice;
         public List<shopCart> rows;
         public int totalCount;
+        public int offlineEntryCount;
     }
 
     public static class shopCart implements Serializable{
         public String brandName;
+        public int offlineEntryCount;
         public List<SKU> SKUList;
     }
 
@@ -42,6 +44,7 @@ public class GetshopCart extends ResponseResult implements Serializable{
         public String count;
         public List<Attributes> attributes;
         public List<Additions> additions;
+        public boolean online;
 
         public static class Attributes implements Serializable{
             public String order;

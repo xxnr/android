@@ -51,12 +51,14 @@ public class OrderSuccessActivity extends BaseActivity {
 		case R.id.contact_tv:
 			Intent intent = new Intent(OrderSuccessActivity.this,WaitingPayActivity.class);
 			startActivity(intent);
+			quit();
 			break;
 		case R.id.check_order_tv:
 			intent = new Intent(OrderSuccessActivity.this,
 					MyOrderDetailActivity.class);
 			intent.putExtra("orderId", orderId);
 			startActivity(intent);
+			quit();
 			break;
 
 		default:

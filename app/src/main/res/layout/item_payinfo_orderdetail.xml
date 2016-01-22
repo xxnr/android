@@ -97,7 +97,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="16dp"
             android:text="查看详情"
-            android:textColor="@color/main_index_gary"
+            android:textColor="@color/textview_selector_text"
             android:textSize="14sp" />
 
     </LinearLayout>

@@ -138,6 +138,10 @@ public class GoodsDetailFragment extends BaseFragment implements View.OnClickLis
                 }
             }
 
+            if (!detail.online){
+
+            }
+
             return view;
         } else {
 

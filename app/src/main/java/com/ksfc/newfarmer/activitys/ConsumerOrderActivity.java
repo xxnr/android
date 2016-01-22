@@ -217,13 +217,20 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
                 holder.orderTime.setText("下单时间：" + DateFormatUtils.convertTime(list.get(position).dateCreated));
             }
 
-            if (list.get(position).products != null) {
-                if (list.get(position).products.size() > 0) {
-                    ProductsAdapter carAdapter = new ProductsAdapter(list.get(position).products);
-                    holder.listView.setAdapter(carAdapter);
-                    WidgetUtil.setListViewHeightBasedOnChildren(holder.listView);
-                }else {
-                    holder.listView.setAdapter(null);
+
+            if (list.get(position).SKUs != null && !list.get(position).SKUs.isEmpty()) {
+                SkusAdapter carAdapter = new SkusAdapter(list.get(position).SKUs);
+                holder.listView.setAdapter(carAdapter);
+                WidgetUtil.setListViewHeightBasedOnChildren(holder.listView);
+            } else {
+                if (list.get(position).products != null) {
+                    if (list.get(position).products.size() > 0) {
+                        ProductsAdapter carAdapter = new ProductsAdapter(list.get(position).products);
+                        holder.listView.setAdapter(carAdapter);
+                        WidgetUtil.setListViewHeightBasedOnChildren(holder.listView);
+                    } else {
+                        holder.listView.setAdapter(null);
+                    }
                 }
             }
 
@@ -279,7 +286,56 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
                     holder.productName.setText(list.get(position).name);
                 }
                 holder.productCount.setText("X " + list.get(position).count);
-            }else {
+            }
+            return convertView;
+        }
+
+        class ViewHolder {
+            private TextView productName, productCount;
+
+            public ViewHolder(View convertView) {
+                productName = (TextView) convertView.findViewById(R.id.product_name);
+                productCount = (TextView) convertView.findViewById(R.id.product_count);
+            }
+        }
+    }
+
+
+    //内层的商品列表，已订单区分
+    class SkusAdapter extends BaseAdapter {
+        private List<ConsumerOrderResult.SKUS> list;
+
+        public SkusAdapter(List<ConsumerOrderResult.SKUS> list) {
+            this.list = list;
+        }
+
+        @Override
+        public int getCount() {
+            return list.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return list.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView = getLayoutInflater().inflate(R.layout.consumer_order_item_tem, null);
+                convertView.setTag(new ViewHolder(convertView));
+            }
+            ViewHolder holder = (ViewHolder) convertView.getTag();
+            if (list.get(position) != null) {
+                if (StringUtil.checkStr(list.get(position).productName)) {
+                    holder.productName.setText(list.get(position).productName);
+                }
+                holder.productCount.setText("X " + list.get(position).count);
             }
             return convertView;
         }

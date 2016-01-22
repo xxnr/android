@@ -33,7 +33,6 @@ import com.ksfc.newfarmer.protocol.beans.WaitingPay;
 import com.ksfc.newfarmer.utils.ExpandViewTouch;
 import com.ksfc.newfarmer.utils.PullToRefreshUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
-import com.ksfc.newfarmer.widget.PullToRefreshView;
 import com.ksfc.newfarmer.widget.UnSwipeListView;
 import com.ksfc.newfarmer.widget.WidgetUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
