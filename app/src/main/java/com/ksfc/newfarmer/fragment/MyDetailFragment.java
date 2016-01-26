@@ -115,6 +115,7 @@ public class MyDetailFragment extends BaseFragment implements View.OnClickListen
                     if (page == 1) {
                         null_layout.setVisibility(View.VISIBLE);
                     } else {
+                        page--;
                         (activity).showToast("暂时没有数据");
                     }
                 }
@@ -408,7 +409,7 @@ public class MyDetailFragment extends BaseFragment implements View.OnClickListen
                     stringBuilder.append("附加选项:");
                     for (int k = 0; k < SKUsList.get(position).additions.size(); k++) {
                         if (StringUtil.checkStr(SKUsList.get(position).additions.get(k).name)) {
-                            stringBuilder.append(SKUsList.get(position).additions.get(k).name + ";");
+                            stringBuilder.append(SKUsList.get(position).additions.get(k).name + ",");
                         }
                     }
                 }
@@ -469,6 +470,15 @@ public class MyDetailFragment extends BaseFragment implements View.OnClickListen
                 }
             });
             return convertView;
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (TYPE==1||TYPE==0) {
+            page = 1;
+            getData(page);
         }
     }
 }

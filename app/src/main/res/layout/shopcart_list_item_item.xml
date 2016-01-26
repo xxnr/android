@@ -94,21 +94,38 @@
             android:gravity="center_vertical"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/ordering_item_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="2"
-                android:text=""
-                android:textColor="@color/black_goods_titile"
-                android:textSize="16sp" />
+
+            <RelativeLayout
+                android:id="@+id/ordering_item_name_lin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/ordering_item_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:text=""
+                    android:textColor="@color/black_goods_titile"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/ordering_now_delete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/delete_gary"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
+
 
             <TextView
                 android:id="@+id/ordering_item_attr"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/ordering_item_name"
+                android:layout_below="@id/ordering_item_name_lin"
                 android:layout_marginTop="7dp"
                 android:text=""
                 android:textColor="@color/deep_gray"
@@ -125,13 +142,6 @@
                 android:textSize="15sp" />
 
 
-            <ImageView
-                android:id="@+id/ordering_now_delete"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:visibility="gone"
-                android:background="@drawable/delete_gary" />
         </RelativeLayout>
     </LinearLayout>
 
@@ -153,6 +163,7 @@
             android:layout_height="40dp">
 
             <TextView
+                android:id="@+id/goods_car_item_bar_step1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -186,6 +197,7 @@
             android:layout_height="40dp">
 
             <TextView
+                android:id="@+id/goods_car_item_bar_step2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"

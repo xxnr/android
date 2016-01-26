@@ -77,9 +77,9 @@ public class GoodsDetailFragment extends BaseFragment implements View.OnClickLis
             TextView product_dingjing = (TextView) view.findViewById(R.id.product_dingjin_price);//定金
             TextView product_description = (TextView) view.findViewById(R.id.product_description);//描述
             TextView product_dingjing_name = (TextView) view.findViewById(R.id.product_dingjin_name);//"定金"
-            TextView product_huafei_dun = (TextView) view.findViewById(R.id.product_huafei_dun);//"/吨"
             RelativeLayout detail_detail = (RelativeLayout) view.findViewById(R.id.goods_detail_detail);//继续上滑，可以加载更多
             TextView product_newFarmer_price = (TextView) view.findViewById(R.id.product_newFarmer_price);//新农价
+            RelativeLayout circlePageIndicator_rel = (RelativeLayout) view.findViewById(R.id.circlePageIndicator_rel);//商品多个主图时Indicator的背景
             if (StringUtil.checkStr(detail.name)) {
                 good_name.setText(detail.name);
             }
@@ -97,37 +97,37 @@ public class GoodsDetailFragment extends BaseFragment implements View.OnClickLis
                     indicator.setViewPager(viewPager);
                 } else {
                     viewPager.addOnPageChangeListener(null);
+                    circlePageIndicator_rel.setVisibility(View.GONE);
                     current_count.setVisibility(View.GONE);
                     indicator.setVisibility(View.GONE);
                 }
 
             }
-            //根据化肥还是汽车 隐藏吨
-            if (detail.category.equals("化肥")) {
-                product_huafei_dun.setVisibility(View.VISIBLE);
-            } else {
-                product_huafei_dun.setVisibility(View.GONE);
-            }
+
             //根据有无商品详情的url,隐藏继续滑动
             if (!TextUtils.isEmpty(detail.app_body_url)) {
                 detail_detail.setVisibility(View.VISIBLE);
             } else {
                 detail_detail.setVisibility(View.INVISIBLE);
             }
-            //是否有定金
+            //是否有订金
             if (!detail.deposit.equals("0")) {
                 product_dingjing_name.setVisibility(View.VISIBLE);
                 product_dingjing.setText("¥" + detail.deposit);
+            }
+            //下架的商品也不展示订金
+            if (!detail.online) {
+                product_dingjing.setVisibility(View.GONE);
+                product_dingjing_name.setVisibility(View.GONE);
             }
             //是否预售
             if (detail.presale) {
                 product_dingjing.setVisibility(View.GONE);
                 product_dingjing_name.setVisibility(View.GONE);
-                product_huafei_dun.setVisibility(View.GONE);
                 product_newFarmer_price.setTextColor(Color.GRAY);
                 product_newFarmer_price.setText("即将上线");
             } else {
-                if (detail.SKUPrice != null) {
+                if (detail.SKUPrice != null && detail.online) {
                     if (StringUtil.checkStr(detail.SKUPrice.min) && StringUtil.checkStr(detail.SKUPrice.max)) {
                         if (!detail.SKUPrice.min.equals(detail.SKUPrice.max)) {
                             good_xianjia.setText("¥" + detail.SKUPrice.min + "-" + detail.SKUPrice.max);
@@ -135,13 +135,16 @@ public class GoodsDetailFragment extends BaseFragment implements View.OnClickLis
                             good_xianjia.setText("¥" + detail.SKUPrice.min);
                         }
                     }
+                } else {
+                    if (detail.referencePrice != null) {
+                        if (!detail.referencePrice.min.equals(detail.referencePrice.max)) {
+                            good_xianjia.setText("¥" + detail.referencePrice.min + "-" + detail.referencePrice.max);
+                        } else {
+                            good_xianjia.setText("¥" + detail.referencePrice.min);
+                        }
+                    }
                 }
             }
-
-            if (!detail.online){
-
-            }
-
             return view;
         } else {
 

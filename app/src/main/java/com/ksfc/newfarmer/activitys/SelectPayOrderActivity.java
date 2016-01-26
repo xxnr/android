@@ -13,9 +13,12 @@ import android.widget.Toast;
 
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
+import com.ksfc.newfarmer.RndApplication;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.beans.AddOrderResult;
 import com.ksfc.newfarmer.utils.StringUtil;
+
+import net.yangentao.util.app.App;
 
 import java.util.List;
 
@@ -32,6 +35,9 @@ public class SelectPayOrderActivity extends BaseActivity {
 
     @Override
     public void OnActCreate(Bundle savedInstanceState) {
+
+        App.getApp().addActivity(this);
+        RndApplication.tempDestroyActivityList.add(SelectPayOrderActivity.this);
         setTitle("选择支付订单");
         Intent intent = getIntent();
         List<AddOrderResult.Orders> ordersList = (List<AddOrderResult.Orders>) intent.getSerializableExtra("orderInfo");

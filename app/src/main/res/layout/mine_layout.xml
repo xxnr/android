@@ -255,7 +255,7 @@
                 android:drawablePadding="3dp"
                 android:drawableTop="@drawable/yifahuo_gary"
                 android:gravity="center"
-                android:text="待收货"
+                android:text="已发货"
                 android:textColor="@color/black_goods_titile"
                 android:textSize="14sp" />
         </RelativeLayout>

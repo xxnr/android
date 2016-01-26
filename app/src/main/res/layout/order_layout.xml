@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:divider="@null"
-            android:dividerHeight="1dp"
+            android:dividerHeight="10dp"
             android:scrollbars="none" />
     </LinearLayout>
 
@@ -61,7 +61,7 @@
                         android:id="@+id/ordering_fenshu"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="总计："
+                        android:text="合计："
                         android:textColor="@color/black_goods_titile"
                         android:textSize="14sp" />
 

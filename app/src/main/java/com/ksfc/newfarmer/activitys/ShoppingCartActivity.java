@@ -131,7 +131,7 @@ public class ShoppingCartActivity extends BaseActivity {
         for (int i = 0; i < data.category.size(); i++) {
             inShopMap.put(data.category.get(i).title, true);
             for (int j = 0; j < data.category.get(i).goods.size(); j++) {
-                if (data.category.get(i).goods.get(j).online){
+                if (data.category.get(i).goods.get(j).online) {
                     inCartMap.put(data.category.get(i).goods.get(j).SKUId, true);
                 }
             }
@@ -576,7 +576,7 @@ public class ShoppingCartActivity extends BaseActivity {
             }
             total_count = res.datas.totalCount;
             total = res.datas.total;
-            offCount=res.datas.offlineEntryCount;
+            offCount = res.datas.offlineEntryCount;
             toPay_ll.setVisibility(View.VISIBLE);
             setTitle("购物车" + "(" + total_count + ")");
             null_shop_cart_layout.setVisibility(View.GONE);
@@ -591,7 +591,7 @@ public class ShoppingCartActivity extends BaseActivity {
             for (int i = 0; i < rows.size(); i++) {
                 Category c = new Category();
                 c.title = rows.get(i).brandName;
-                c.offCount=rows.get(i).offlineEntryCount;
+                c.offCount = rows.get(i).offlineEntryCount;
                 c.goods = new ArrayList<Goods>();
                 for (int j = 0; j < rows.get(i).SKUList.size(); j++) {
                     Goods goods = new Goods();
@@ -641,7 +641,7 @@ public class ShoppingCartActivity extends BaseActivity {
                         goods.additionPrice = 0;
                         for (int k = 0; k < rows.get(i).SKUList.get(j).additions.size(); k++) {
                             if (StringUtil.checkStr(rows.get(i).SKUList.get(j).additions.get(k).name)) {
-                                stringBuilder.append(rows.get(i).SKUList.get(j).additions.get(k).name + ";");
+                                stringBuilder.append(rows.get(i).SKUList.get(j).additions.get(k).name + ",");
                                 try {
                                     goods.additionPrice += Double.parseDouble(rows.get(i).SKUList.get(j).additions.get(k).price);
                                 } catch (Exception e) {
@@ -693,7 +693,7 @@ public class ShoppingCartActivity extends BaseActivity {
             }
             total_count = res.datas.totalCount;
             total = res.datas.total;
-            offCount=res.datas.offlineEntryCount;
+            offCount = res.datas.offlineEntryCount;
             setTitle("购物车" + "(" + total_count + ")");
             toPay_ll.setVisibility(View.VISIBLE);
             null_shop_cart_layout.setVisibility(View.GONE);
@@ -754,7 +754,7 @@ public class ShoppingCartActivity extends BaseActivity {
                         stringBuilder.append("附加选项:");
                         for (int k = 0; k < rows.get(i).SKUList.get(j).additions.size(); k++) {
                             if (StringUtil.checkStr(rows.get(i).SKUList.get(j).additions.get(k).name)) {
-                                stringBuilder.append(rows.get(i).SKUList.get(j).additions.get(k).name + ";");
+                                stringBuilder.append(rows.get(i).SKUList.get(j).additions.get(k).name + ",");
                                 try {
                                     goods.additionPrice += Double.parseDouble(rows.get(i).SKUList.get(j).additions.get(k).price);
                                 } catch (Exception e) {
@@ -814,9 +814,9 @@ public class ShoppingCartActivity extends BaseActivity {
             holder.car_name.setText(data.category.get(position).title);
             carAdapter = new carAdapter(data.category.get(position).goods, data.category.get(position));
 
-            if (data.category.get(position).goods.size()-data.category.get(position).offCount==0){
+            if (data.category.get(position).goods.size() - data.category.get(position).offCount == 0) {
                 holder.shop_checkBox.setVisibility(View.INVISIBLE);
-            }else {
+            } else {
                 holder.shop_checkBox.setVisibility(View.VISIBLE);
             }
 
@@ -841,7 +841,7 @@ public class ShoppingCartActivity extends BaseActivity {
                         }
                         //选中店铺下的全部商品
                         for (int i = 0; i < data.category.get(position).goods.size(); i++) {
-                            if (data.category.get(position).goods.get(i).online){
+                            if (data.category.get(position).goods.get(i).online) {
                                 inCartMap.put(data.category.get(position).goods.get(i).SKUId, true);
                             }
                         }
@@ -884,6 +884,7 @@ public class ShoppingCartActivity extends BaseActivity {
 
             public ViewHolder(View convertView) {
                 shop_checkBox = (CheckBox) convertView.findViewById(R.id.check_box_item);
+                ExpandViewTouch.expandViewTouchDelegate(shop_checkBox, 100, 100, 100, 100);
                 car_name = (TextView) convertView.findViewById(R.id.car_name);
                 car_list = (ListView) convertView.findViewById(R.id.car_list);
             }
@@ -921,12 +922,13 @@ public class ShoppingCartActivity extends BaseActivity {
         }
 
         class ViewHolder {
-            private LinearLayout goods_car_bar, ordering_item_discount_ll;
-            private ImageView ordering_item_jian, ordering_item_jia, ordering_item_img,ordering_now_delete;
+            private LinearLayout goods_car_bar;
+            private ImageView ordering_item_jian, ordering_item_jia, ordering_item_img, ordering_now_delete;
             private CheckBox checkBox_item;
             private TextView ordering_item_geshu, ordering_item_attr, btn_check_item_offline;
             private TextView ordering_now_pri, ordering_item_name, goods_car_deposit, goods_car_weikuan;
             private RelativeLayout shopCart_list_item_rel;
+            private TextView step1, step2;
 
             public ViewHolder(View convertView) {
                 goods_car_bar = (LinearLayout) convertView.findViewById(R.id.goods_car_item_bar);
@@ -938,12 +940,11 @@ public class ShoppingCartActivity extends BaseActivity {
                         .findViewById(R.id.ordering_item_img);
                 checkBox_item = (CheckBox) convertView.findViewById(R.id.btn_check_item_item);
                 ExpandViewTouch.expandViewTouchDelegate(checkBox_item, 100, 100, 100, 100);
-                ordering_now_delete=(ImageView)convertView
+                ordering_now_delete = (ImageView) convertView
                         .findViewById(R.id.ordering_now_delete);
                 ordering_item_geshu = (TextView) convertView//商品个数
                         .findViewById(R.id.ordering_item_geshu);
-                ordering_item_discount_ll = (LinearLayout) convertView//数量输入框
-                        .findViewById(R.id.ordering_item_discount_ll);
+
                 btn_check_item_offline = (TextView) convertView    //已下架
                         .findViewById(R.id.btn_check_item_offline);
                 ordering_now_pri = (TextView) convertView//商品价格
@@ -958,6 +959,8 @@ public class ShoppingCartActivity extends BaseActivity {
                         .findViewById(R.id.goods_car_item_bar_weikuan);
                 shopCart_list_item_rel = (RelativeLayout) convertView//点击去商品详情
                         .findViewById(R.id.shopCart_list_item_rel);
+                step1 = (TextView) convertView.findViewById(R.id.goods_car_item_bar_step1);
+                step2 = (TextView) convertView.findViewById(R.id.goods_car_item_bar_step2);
             }
         }
 
@@ -979,29 +982,102 @@ public class ShoppingCartActivity extends BaseActivity {
             //名称
             holder.ordering_item_name.setText(goodsList.get(position).name);
             //删除按钮
-            if (isEdit){
+            if (isEdit && !goodsList.get(position).online) {
+                holder.ordering_item_name.setEms(10);
                 holder.ordering_now_delete.setVisibility(View.VISIBLE);
-            }else {
+            } else {
+                holder.ordering_item_name.setEms(12);
                 holder.ordering_now_delete.setVisibility(View.GONE);
             }
-            //是否online  初步用名字来做判断
+            //删除单个商品 这里只用于删除失效商品
+            holder.ordering_now_delete.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    CustomDialog.Builder builder = new CustomDialog.Builder(
+                            ShoppingCartActivity.this);
+                    builder.setMessage("您确定要删除吗？")
+                            .setPositiveButton("是",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog,
+                                                            int which) {
+                                            if (isLogin()) {
+                                                RequestParams params = new RequestParams();
+                                                params.put("userId", Store.User.queryMe().userid);
+                                                params.put("SKUId", goodsList.get(position).SKUId);
+                                                params.put("quantity", "0");
+                                                execApi(ApiType.CHANGE_NUM,
+                                                        params);
+                                                showProgressDialog("删除中");
+
+                                            } else {
+                                                dao.deleteShopping(goodsList.get(position).SKUId);
+                                                getData();
+                                                showToast("商品删除成功");
+                                            }
+                                            dialog.dismiss();
+                                        }
+                                    })
+                            .setNegativeButton("否",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog,
+                                                            int which) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                    CustomDialog dialog = builder.create();
+                    dialog.show();
+                }
+            });
+            //是否online
             if (goodsList.get(position).online) {
-                holder.ordering_item_discount_ll.setVisibility(View.VISIBLE);
+
                 convertView.setBackgroundColor(Color.WHITE);
                 holder.btn_check_item_offline.setVisibility(View.GONE);
+
+                holder.ordering_item_jia.setVisibility(View.VISIBLE);
+                holder.ordering_item_jian.setVisibility(View.VISIBLE);
+                holder.ordering_item_jia.setEnabled(true);
+                holder.ordering_item_jian.setEnabled(true);
                 holder.checkBox_item.setVisibility(View.VISIBLE);
+
+                holder.step1.setTextColor(getResources().getColor(R.color.black_goods_titile));
+                holder.step2.setTextColor(getResources().getColor(R.color.black_goods_titile));
+                holder.goods_car_weikuan.setTextColor(getResources().getColor(R.color.black_goods_titile));
+                holder.goods_car_deposit.setTextColor(getResources().getColor(R.color.orange_goods_price));
+                holder.ordering_now_pri.setTextColor(getResources().getColor(R.color.black_goods_titile));
+                holder.ordering_item_geshu.setBackgroundResource(R.drawable.round_line_gary_write_1px);
             } else {
-                holder.ordering_item_discount_ll.setVisibility(View.INVISIBLE);
+
+
                 convertView.setBackgroundColor(getResources().getColor(R.color.list_bg));
                 holder.btn_check_item_offline.setVisibility(View.VISIBLE);
+
+                holder.ordering_item_jia.setVisibility(View.INVISIBLE);
+                holder.ordering_item_jian.setVisibility(View.INVISIBLE);
+                holder.ordering_item_jia.setEnabled(false);
+                holder.ordering_item_jian.setEnabled(false);
                 holder.checkBox_item.setVisibility(View.GONE);
+
+                holder.ordering_item_geshu.setBackgroundColor(getResources().getColor(R.color.list_bg));
+
+                holder.step1.setTextColor(getResources().getColor(R.color.main_index_gary));
+                holder.step2.setTextColor(getResources().getColor(R.color.main_index_gary));
+                holder.goods_car_weikuan.setTextColor(getResources().getColor(R.color.main_index_gary));
+                holder.goods_car_deposit.setTextColor(getResources().getColor(R.color.main_index_gary));
+                holder.ordering_now_pri.setTextColor(getResources().getColor(R.color.main_index_gary));
             }
             //是否有订金 有的话显示阶段 ，否则不显示
             if (goodsList.get(position).dingjin == 0) {
-                holder.ordering_now_pri.setTextColor(getResources().getColor(R.color.orange_goods_price));
+                if (goodsList.get(position).online) {
+                    holder.ordering_now_pri.setTextColor(getResources().getColor(R.color.orange_goods_price));
+                }
                 holder.goods_car_bar.setVisibility(View.GONE);
             } else {
-                holder.ordering_now_pri.setTextColor(getResources().getColor(R.color.black_goods_titile));
+                if (goodsList.get(position).online){
+                    holder.ordering_now_pri.setTextColor(getResources().getColor(R.color.black_goods_titile));
+                }
                 holder.goods_car_bar.setVisibility(View.VISIBLE);
                 holder.goods_car_deposit.setText("¥" + StringUtil.toTwoString(goodsList
                         .get(position).dingjin + ""));
@@ -1042,7 +1118,7 @@ public class ShoppingCartActivity extends BaseActivity {
                     if (isChecked) {
                         inCartMap.put(goodsList.get(position).SKUId, true);
                         // 如果所有项都被选中，则点亮全选按钮
-                        if (inCartMap.size() == total-offCount) {
+                        if (inCartMap.size() == total - offCount) {
                             mBtnCheckAll.setChecked(true);
                         }
                         // 如果一个店铺内的所有项都被选中 ，则点亮店铺按钮
@@ -1053,7 +1129,7 @@ public class ShoppingCartActivity extends BaseActivity {
                                 count++;
                             }
                         }
-                        if (count == goodsList.size()-category.offCount) {
+                        if (count == goodsList.size() - category.offCount) {
                             inShopMap.put(category.title, true);
                             adapter.notifyDataSetChanged();
                         }
@@ -1075,7 +1151,7 @@ public class ShoppingCartActivity extends BaseActivity {
                                 count++;
                             }
                         }
-                        if (count == goodsList.size()-category.offCount) {
+                        if (count == goodsList.size() - category.offCount) {
                             inShopMap.remove(category.title);
                             adapter.notifyDataSetChanged();
                         }
@@ -1088,91 +1164,96 @@ public class ShoppingCartActivity extends BaseActivity {
             });
 
             //修改商品数量
-            holder.ordering_item_geshu.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    CustomDialogForShopCarCount.Builder builder = new CustomDialogForShopCarCount.Builder(
-                            ShoppingCartActivity.this);
-                    car_num = Integer.parseInt(holder.ordering_item_geshu.getText().toString().trim());
-                    builder.setMessage("修改购买数量").setEditText(car_num + "")
-                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    String str = CustomDialogForShopCarCount.editText.getText().toString().trim();
-                                    if (!TextUtils.isEmpty(str) && !str.equals("0")) {
-                                        holder.ordering_item_geshu.setText(str);
-                                        if (isLogin()) {
-                                            RequestParams params = new RequestParams();
-                                            params.put("userId", Store.User.queryMe().userid);
-                                            params.put("SKUId", goodsList.get(position).SKUId);
-                                            params.put("quantity", Integer.valueOf(str));
-                                            execApi(ApiType.CHANGE_NUM, params);
-                                            showProgressDialog("提交中");
-                                        } else {
-                                            goodsList.get(position).num = Integer.valueOf(str);
-                                            dao.updateShopping(goodsList.get(position).SKUId,
-                                                    holder.ordering_item_geshu.getText().toString()
-                                                            .trim());
-                                            RndLog.i("pid..............jian1", goodsList.size()
-                                                    + "name,," + goodsList.get(position).name
-                                                    + "SKUId--" + goodsList.get(position).SKUId
-                                                    + "///////");
-                                            notifyDataSetChanged();
-                                            // 如果被选中，更新价格
-                                            if (holder.checkBox_item.isChecked()) {
-                                                notifyCheckedChanged();
+            if (goodsList.get(position).online) {
+                holder.ordering_item_geshu.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        CustomDialogForShopCarCount.Builder builder = new CustomDialogForShopCarCount.Builder(
+                                ShoppingCartActivity.this);
+                        car_num = Integer.parseInt(holder.ordering_item_geshu.getText().toString().trim());
+                        builder.setMessage("修改购买数量").setEditText(car_num + "")
+                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        String str = CustomDialogForShopCarCount.editText.getText().toString().trim();
+                                        if (!TextUtils.isEmpty(str) && !str.equals("0")) {
+                                            holder.ordering_item_geshu.setText(str);
+                                            if (isLogin()) {
+                                                RequestParams params = new RequestParams();
+                                                params.put("userId", Store.User.queryMe().userid);
+                                                params.put("SKUId", goodsList.get(position).SKUId);
+                                                params.put("quantity", Integer.valueOf(str));
+                                                execApi(ApiType.CHANGE_NUM, params);
+                                                showProgressDialog("提交中");
+                                            } else {
+                                                goodsList.get(position).num = Integer.valueOf(str);
+                                                dao.updateShopping(goodsList.get(position).SKUId,
+                                                        holder.ordering_item_geshu.getText().toString()
+                                                                .trim());
+                                                RndLog.i("pid..............jian1", goodsList.size()
+                                                        + "name,," + goodsList.get(position).name
+                                                        + "SKUId--" + goodsList.get(position).SKUId
+                                                        + "///////");
+                                                notifyDataSetChanged();
+                                                // 如果被选中，更新价格
+                                                if (holder.checkBox_item.isChecked()) {
+                                                    notifyCheckedChanged();
+                                                }
+                                                notifyNumChanged();
                                             }
-                                            notifyNumChanged();
+
+                                            dialog.dismiss();
+                                        } else {
+                                            showToast("请输入正确的商品数量哟");
                                         }
 
-                                        dialog.dismiss();
-                                    } else {
-                                        showToast("请输入正确的商品数量哟");
                                     }
+                                }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
 
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                        //编辑框
+                        builder.SetLiftButton(new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                if (car_num == 1) {
+                                    showToast("商品不能再减少了哦");
+
+                                } else {
+                                    car_num--;
+                                    CustomDialogForShopCarCount.editText.setText(car_num + "");
+                                    // 光标移到最后
+                                    Editable eText = CustomDialogForShopCarCount.editText.getText();
+                                    Selection.setSelection(eText, eText.length());
                                 }
-                            }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
 
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-                    //编辑框
-                    builder.SetLiftButton(new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-                            if (car_num == 1) {
-                                showToast("商品不能再减少了哦");
-
-                            } else {
-                                car_num--;
+                            }
+                        }).SetRightButton(new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                car_num++;
                                 CustomDialogForShopCarCount.editText.setText(car_num + "");
                                 // 光标移到最后
                                 Editable eText = CustomDialogForShopCarCount.editText.getText();
                                 Selection.setSelection(eText, eText.length());
                             }
+                        });
+                        CustomDialogForShopCarCount dialog = builder.create();
+                        dialog.setCanceledOnTouchOutside(false);
+                        dialog.show();
 
-                        }
-                    }).SetRightButton(new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            car_num++;
-                            CustomDialogForShopCarCount.editText.setText(car_num + "");
-                            // 光标移到最后
-                            Editable eText = CustomDialogForShopCarCount.editText.getText();
-                            Selection.setSelection(eText, eText.length());
-                        }
-                    });
-                    CustomDialogForShopCarCount dialog = builder.create();
-                    dialog.setCanceledOnTouchOutside(false);
-                    dialog.show();
+                    }
 
-                }
-
-            });
-
+                });
+            } else {
+                holder.ordering_item_geshu.setOnClickListener(null);
+                holder.ordering_item_geshu.setTextColor(getResources().getColor(R.color.main_index_gary));
+                holder.ordering_item_geshu.setText("X" + goodsList.get(position).num);
+            }
 
             // 减少
             holder.ordering_item_jian.setOnClickListener(new OnClickListener() {

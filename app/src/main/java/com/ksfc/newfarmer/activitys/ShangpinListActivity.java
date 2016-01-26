@@ -3,13 +3,16 @@ package com.ksfc.newfarmer.activitys;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -30,6 +33,8 @@ import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.ksfc.newfarmer.BaseActivity;
@@ -44,12 +49,16 @@ import com.ksfc.newfarmer.protocol.beans.AttrSelectResult;
 import com.ksfc.newfarmer.protocol.beans.BrandsResult;
 import com.ksfc.newfarmer.protocol.beans.GetGoodsData;
 import com.ksfc.newfarmer.protocol.beans.GetGoodsData.SingleGood;
+import com.ksfc.newfarmer.utils.ExpandViewTouch;
 import com.ksfc.newfarmer.utils.ImageLoaderUtils;
 import com.ksfc.newfarmer.utils.PullToRefreshUtils;
 import com.ksfc.newfarmer.utils.ScreenUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.GridViewWithHeaderAndFooter;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class ShangpinListActivity extends BaseActivity implements OnItemClickListener, PullToRefreshBase.OnRefreshListener2, AbsListView.OnScrollListener {
 
@@ -67,8 +76,7 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
 
     private int page = 1;
     private String classId;
-    private String brandName;
-    private String modelName;
+    private StringBuilder brand;
     private String sort;
     private String reservePrice;
 
@@ -89,9 +97,12 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
     private GridViewWithHeaderAndFooter banrds_gv;
     private GridViewWithHeaderAndFooter price_gv;
 
-    private String brand = "0";//品牌的value
+    private StringBuilder brandBuilder;//品牌的value
     private TextView popwindow_text1, popwindow_text2, popwindow_text3, popwindow_text4, popwindow_text5;//动态的标题
     private GridViewWithHeaderAndFooter pop_gv1, pop_gv2, pop_gv3, pop_gv4, pop_gv5;//动态的内容
+    private BransAdapter bransAdapter;
+    private HashMap<String, AttrAdapter> attrAdapterMap = new HashMap<>();
+    private List<Map<String, Object>> attributesList;
 
 
     @Override
@@ -129,6 +140,8 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
         goods_none_view_rel = (RelativeLayout) findViewById(R.id.goods_none_view_rel);
         // 去顶部
         return_top = (ImageView) findViewById(R.id.return_top);
+        //扩大点击区域
+        ExpandViewTouch.expandViewTouchDelegate(return_top, 100, 100, 100, 100);
         // 筛选框
         LinearLayout goods_shanxuan_lin = (LinearLayout) findViewById(R.id.goods_shanxuan_lin);
         goods_shanxuan_lin.setVisibility(View.VISIBLE);
@@ -150,20 +163,29 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
     private void getData() {
         showProgressDialog();
         RequestParams params = new RequestParams();
-        params.put("page", page);
-        params.put("rowCount", "20");
-        params.put("classId", classId);
-        params.put("brandName", brandName);
-        params.put("modelName", modelName);
-        params.put("sort", sort);
-        params.put("reservePrice", reservePrice);
-        if (isLogin()) {
-            params.put("locationUserId", Store.User.queryMe().userid);
-        } else {
-            params.put("locationUserId", "");
-        }
-        execApi(ApiType.GET_HUAFEI, params);
+        Gson gson = new Gson();
+        Map<String, Object> map = new HashMap<>();
 
+        map.put("page", page);
+        map.put("rowCount", "20");
+        map.put("classId", classId);
+        map.put("sort", sort);
+        map.put("reservePrice", reservePrice);
+        if (brand != null) {
+            map.put("brand", brand.toString());
+        }
+
+        if (attributesList != null && !attributesList.isEmpty()) {
+            map.put("attributes", attributesList);
+        }
+
+        if (isLogin()) {
+            map.put("locationUserId", Store.User.queryMe().userid);
+        } else {
+            map.put("locationUserId", "");
+        }
+        params.put("JSON", gson.toJson(map));
+        execApi(ApiType.GET_HUAFEI.setMethod(RequestMethod.POSTJSON), params);
     }
 
 
@@ -177,9 +199,28 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
 
     //获得筛选value
     private void getAttrsData() {
+        brandBuilder = new StringBuilder();
+        List<String> list = new ArrayList<>();//存放选中的brands
+        if (bransAdapter != null && !bransAdapter.states.isEmpty()) {
+            for (Map.Entry<String, Boolean> entry : bransAdapter.states.entrySet()) {
+                if (entry.getValue()) {
+                    list.add(entry.getKey());
+                }
+            }
+        }
+        for (String key : list) {
+            brandBuilder.append(key).append(",");
+        }
+        String brandString;
+        if (brandBuilder.toString().equals("")) {
+            brandBuilder.append("0");
+            brandString = brandBuilder.toString();
+        } else {
+            brandString = brandBuilder.substring(0, brandBuilder.length() - 1);
+        }
         RequestParams params = new RequestParams();
         execApi(ApiType.GET_GOODS_ATTR.setMethod(RequestMethod.GET).setOpt(
-                "/api/v2.1/products/attributes" + "?brand=" + brand + "&category=" + classId), params);
+                "/api/v2.1/products/attributes" + "?brand=" + brandString + "&category=" + classId), params);
     }
 
     @Override
@@ -187,7 +228,7 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
         // TODO Auto-generated method stub
         switch (v.getId()) {
             case R.id.return_top:
-                listView.getRefreshableView().setSelection(0);
+                listView.getRefreshableView().smoothScrollToPosition(0);
                 break;
             case R.id.goods_zonghe_rel:
                 jiage_image.setVisibility(View.GONE);
@@ -216,9 +257,11 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
                 if (popupWindow != null && popupWindow.isShowing()) {
                     popupWindow.dismiss();
                 } else {
-                    getPopupWindow();
-                    getBrandsList();
-                    getAttrsData();
+                    if (popupWindow==null){
+                        getPopupWindow();
+                        getBrandsList();
+                        getAttrsData();
+                    }
                     popupWindow.showAsDropDown(goods_bar_separatrix);
                 }
                 break;
@@ -280,7 +323,6 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
                         getData();
                         if (popupWindow != null && popupWindow.isShowing()) {
                             popupWindow.dismiss();
-                            popupWindow = null;
                         }
                     }
                 });
@@ -308,132 +350,130 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
 
     // 得到筛选框中筛选的结果
     private void getShuaixuan_value() {
-        int pri_position = 0;
-        //化肥还是汽车
+        int pri_position = -1;
+        //得到品牌
+        brand = new StringBuilder();
+        List<String> list = new ArrayList<>();
+        if (bransAdapter != null && !bransAdapter.states.isEmpty()) {
+            for (Map.Entry<String, Boolean> entry : bransAdapter.states.entrySet()) {
+                if (entry.getValue()) {
+                    list.add(entry.getKey());
+                }
+            }
+        }
+
+        for (String key : list) {
+            brand.append(key).append(",");
+        }
+
+        if (brand.toString().equals("")) {
+            brand = null;
+        } else {
+            brand.deleteCharAt(brand.toString().length() - 1);
+        }
+        //价钱
+        for (int i = 0, j = price_gv.getCount(); i < j; i++) {
+            View child = price_gv.getChildAt(i);
+            CheckBox rdoBtn = (CheckBox) child
+                    .findViewById(R.id.shuaixuan_item_button);
+            if (rdoBtn.isChecked()) {
+                pri_position = i;
+                pass_flag_price = i;
+            }
+        }
+
         if (goods_flag.equals("huafei")) {
-            for (int i = 0, j = banrds_gv.getCount(); i < j; i++) {
-                View child = banrds_gv.getChildAt(i);
-                RadioButton rdoBtn = (RadioButton) child
-                        .findViewById(R.id.shuaixuan_item_button);
-                if (rdoBtn.isChecked() && i != 0) {
-                    brandName = rdoBtn.getText().toString();
-                    pass_flag_brands = i;
-                } else if (i == 0) {
-                    brandName = null;
-                    pass_flag_brands = 0;
-                }
-            }
-
-            for (int i = 0, j = price_gv.getCount(); i < j; i++) {
-                View child = price_gv.getChildAt(i);
-                RadioButton rdoBtn = (RadioButton) child
-                        .findViewById(R.id.shuaixuan_item_button);
-                if (rdoBtn.isChecked()) {
-                    pri_position = i;
-                    pass_flag_price = i;
-                }
-            }
-
             switch (pri_position) {
                 case 0:
-                    reservePrice = null;
-                    break;
-                case 1:
                     reservePrice = "0,1000";
                     break;
-                case 2:
+                case 1:
                     reservePrice = "1000,2000";
                     break;
-                case 3:
+                case 2:
                     reservePrice = "2000,3000";
                     break;
-                case 4:
+                case 3:
                     reservePrice = "3000,1000000";
                     break;
                 default:
+                    reservePrice = null;
                     break;
             }
 
         } else if (goods_flag.equals("qiche")) {
-            brandName = "江淮";
-            for (int i = 0, j = banrds_gv.getCount(); i < j; i++) {
-                View child = banrds_gv.getChildAt(i);
-                RadioButton rdoBtn = (RadioButton) child
-                        .findViewById(R.id.shuaixuan_item_button);
-                if (rdoBtn.isChecked() && i != 0) {
-                    modelName = rdoBtn.getText().toString();
-                    pass_flag_brands = i;
-                } else if (i == 0) {
-                    modelName = null;
-                    pass_flag_brands = 0;
-                }
-            }
-
-            for (int i = 0, j = price_gv.getCount(); i < j; i++) {
-                View child = price_gv.getChildAt(i);
-                RadioButton rdoBtn = (RadioButton) child
-                        .findViewById(R.id.shuaixuan_item_button);
-                if (rdoBtn.isChecked()) {
-                    pri_position = i;
-                    pass_flag_price = i;
-                }
-            }
-
             switch (pri_position) {
                 case 0:
-                    reservePrice = null;
-                    break;
-                case 1:
                     reservePrice = "0,50000";
                     break;
-                case 2:
+                case 1:
                     reservePrice = "50000,60000";
                     break;
-                case 3:
+                case 2:
                     reservePrice = "60000,70000";
                     break;
-                case 4:
+                case 3:
                     reservePrice = "70000,1000000";
                     break;
                 default:
+                    reservePrice = null;
                     break;
             }
         }
 
-        if (pass_flag_brands == 0 && pass_flag_price == 0) {
+        //获得选中的属性
+        if (attrAdapterMap != null && !attrAdapterMap.isEmpty()) {
+            attributesList = new ArrayList<>();
+            for (Map.Entry<String, AttrAdapter> entry : attrAdapterMap.entrySet()) {
+                Map<String, Object> map = new HashMap<>();
+                Map<String, Object> mapKey_Value = new HashMap<>();
+                List<String> listString = new ArrayList<>();
+                for (Map.Entry<String, Boolean> entry1 : entry.getValue().states.entrySet()) {
+                    if (entry1.getValue()) {
+                        listString.add(entry1.getKey());
+                    }
+                }
+                if (!listString.isEmpty()) {
+                    map.put("$in", listString);
+                    mapKey_Value.put("name", entry.getKey());
+                    mapKey_Value.put("value", map);
+                }
+                if (!mapKey_Value.isEmpty()) {
+                    attributesList.add(mapKey_Value);
+                }
+            }
+        }
+
+        if (pass_flag_brands == 0 && pass_flag_price == -1) {
             shaixuan_text.setTextColor(Color.BLACK);
             shaixuan_image.setImageResource(R.drawable.shaixuan_gary);
         } else {
             shaixuan_text.setTextColor(Color.parseColor("#ff4e00"));
             shaixuan_image.setImageResource(R.drawable.shaixuan_orange);
         }
-
     }
 
     // 重置筛选框
     private void reset() {
-
+        //删除map
+        if (attrAdapterMap != null && !attrAdapterMap.isEmpty()) {
+            for (Map.Entry<String, AttrAdapter> entry : attrAdapterMap.entrySet()) {
+                entry.getValue().states.clear();
+                entry.getValue().notifyDataSetChanged();
+            }
+        }
         adapter_price.states.clear();
-
+        adapter_price.notifyDataSetChanged();
+        bransAdapter.states.clear();
+        bransAdapter.notifyDataSetChanged();
         pass_flag_brands = 0;
-        pass_flag_price = 0;
-
-
-        adapter_price.states.put("0", true);
-
-        adapter_price.notifyDataSetChanged();
-        brandName = null;
-        modelName = null;
+        pass_flag_price = -1;
+        brand = null;
+        brandBuilder=null;
         reservePrice = null;
+        getAttrsData();
     }
 
-    // 传送上次筛选的结果给筛选框
-    private void passValue() {
-        adapter_price.states.clear();
-        adapter_price.states.put(pass_flag_price + "", true);
-        adapter_price.notifyDataSetChanged();
-
-    }
 
     @Override
     public void onResponsed(Request req) {
@@ -473,7 +513,7 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
             BrandsResult data = (BrandsResult) req.getData();
             if (data.getStatus().equals("1000")) {
                 if (data.brands != null && !data.brands.isEmpty()) {
-                    BransAdapter bransAdapter = new BransAdapter(data.brands);
+                    bransAdapter = new BransAdapter(data.brands);
                     banrds_gv.setAdapter(bransAdapter);
                 }
             }
@@ -499,21 +539,23 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
             AttrSelectResult data = (AttrSelectResult) req.getData();
             if (data.getStatus().equals("1000")) {
                 if (data.attributes != null && !data.attributes.isEmpty()) {
-                    if (brand.equals("0")) {
+                    if (brandBuilder != null && brandBuilder.toString().equals("0")) {
                         initAttrAdapter();
                         switch (data.attributes.size()) {
                             case 2:
                                 popwindow_text2.setVisibility(View.VISIBLE);
                                 pop_gv2.setVisibility(View.VISIBLE);
-                                AttrAdapter bransAdapter2 = new AttrAdapter(data.attributes.get(1).values);
+                                AttrAdapter attrAdapter2 = new AttrAdapter(data.attributes.get(1).values);
                                 popwindow_text2.setText(data.attributes.get(1)._id.name);
-                                pop_gv2.setAdapter(bransAdapter2);
+                                pop_gv2.setAdapter(attrAdapter2);
+                                attrAdapterMap.put(data.attributes.get(1)._id.name, attrAdapter2);
                             case 1:
                                 popwindow_text1.setVisibility(View.VISIBLE);
                                 pop_gv1.setVisibility(View.VISIBLE);
-                                AttrAdapter bransAdapter1 = new AttrAdapter(data.attributes.get(0).values);
+                                AttrAdapter attrAdapter1 = new AttrAdapter(data.attributes.get(0).values);
                                 popwindow_text1.setText(data.attributes.get(0)._id.name);
-                                pop_gv1.setAdapter(bransAdapter1);
+                                pop_gv1.setAdapter(attrAdapter1);
+                                attrAdapterMap.put(data.attributes.get(0)._id.name, attrAdapter1);
                                 break;
                         }
                     } else {
@@ -522,23 +564,26 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
                                 setShowAnimation(pop_gv5);
                                 popwindow_text5.setVisibility(View.VISIBLE);
                                 pop_gv5.setVisibility(View.VISIBLE);
-                                AttrAdapter bransAdapter3 = new AttrAdapter(data.attributes.get(2).values);
+                                AttrAdapter attrAdapter3 = new AttrAdapter(data.attributes.get(2).values);
                                 popwindow_text5.setText(data.attributes.get(2)._id.name);
-                                pop_gv5.setAdapter(bransAdapter3);
+                                pop_gv5.setAdapter(attrAdapter3);
+                                attrAdapterMap.put(data.attributes.get(2)._id.name, attrAdapter3);
                             case 2:
                                 setShowAnimation(pop_gv4);
                                 popwindow_text4.setVisibility(View.VISIBLE);
                                 pop_gv4.setVisibility(View.VISIBLE);
-                                AttrAdapter bransAdapter2 = new AttrAdapter(data.attributes.get(1).values);
+                                AttrAdapter attrAdapter2 = new AttrAdapter(data.attributes.get(1).values);
                                 popwindow_text4.setText(data.attributes.get(1)._id.name);
-                                pop_gv4.setAdapter(bransAdapter2);
+                                pop_gv4.setAdapter(attrAdapter2);
+                                attrAdapterMap.put(data.attributes.get(1)._id.name, attrAdapter2);
                             case 1:
                                 setShowAnimation(pop_gv3);
                                 popwindow_text3.setVisibility(View.VISIBLE);
                                 pop_gv3.setVisibility(View.VISIBLE);
-                                AttrAdapter bransAdapter1 = new AttrAdapter(data.attributes.get(0).values);
+                                AttrAdapter attrAdapter1 = new AttrAdapter(data.attributes.get(0).values);
                                 popwindow_text3.setText(data.attributes.get(0)._id.name);
-                                pop_gv3.setAdapter(bransAdapter1);
+                                pop_gv3.setAdapter(attrAdapter1);
+                                attrAdapterMap.put(data.attributes.get(0)._id.name, attrAdapter1);
                                 break;
                         }
                     }
@@ -607,17 +652,20 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
                     .setOnClickListener(new View.OnClickListener() {
 
                         public void onClick(View v) {
-
-                            if (holder.brands_name_tv.isChecked()) {
-                                brand = list.get(position)._id;
-                                getAttrsData();
-                            } else {
-                                brand = "0";
-                                getAttrsData();
-                            }
+                            states.put(list.get(position)._id, holder.brands_name_tv.isChecked());
+                            getAttrsData();
                         }
                     });
 
+            boolean res = false;
+
+            if (states.get(list.get(position)._id) != null && states.get(list.get(position)._id)) {
+                res = true;
+            } else {
+                res = false;
+                states.put(list.get(position)._id, false);
+            }
+            holder.brands_name_tv.setChecked(res);
             return convertView;
         }
 
@@ -677,10 +725,20 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
             holder.brands_name_tv
                     .setOnClickListener(new View.OnClickListener() {
                         public void onClick(View v) {
-                            states.put(String.valueOf(position),
+                            states.put(list.get(position),
                                     holder.brands_name_tv.isChecked());
                         }
                     });
+
+            boolean res = false;
+
+            if (states.get(list.get(position)) != null && states.get(list.get(position))) {
+                res = true;
+            } else {
+                res = false;
+                states.put(list.get(position), false);
+            }
+            holder.brands_name_tv.setChecked(res);
             return convertView;
         }
 
@@ -753,6 +811,16 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
                             priceAdapter.this.notifyDataSetChanged();
                         }
                     });
+
+            boolean res = false;
+
+            if (states.get(String.valueOf(position)) != null && states.get(String.valueOf(position))) {
+                res = true;
+            } else {
+                res = false;
+                states.put(String.valueOf(position), false);
+            }
+            holder.brands_name_tv.setChecked(res);
             return convertView;
         }
 

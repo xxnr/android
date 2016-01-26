@@ -35,6 +35,8 @@ public class GetGoodsDetail extends ResponseResult implements Serializable {
         public String payWithScoresLimit;
         public String app_body_url;
         public List<Pictures> pictures;
+        public ReferencePrice referencePrice;
+
 
         public static class Pictures implements Serializable {
 
@@ -42,6 +44,11 @@ public class GetGoodsDetail extends ResponseResult implements Serializable {
             public String originalUrl;
             public String thumbnail;
 
+        }
+
+        public static class ReferencePrice implements Serializable {
+            public String min;
+            public String max;
         }
 
         public SKUPrice SKUPrice;

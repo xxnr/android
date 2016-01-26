@@ -62,6 +62,11 @@
                 </RelativeLayout>
             </RelativeLayout>
 
+            <View
+                android:background="@color/gary_line"
+                android:layout_width="match_parent"
+                android:layout_height="1px" />
+
             <LinearLayout
 
                 android:layout_width="match_parent"
@@ -102,17 +107,6 @@
                         android:text=""
                         android:textColor="@color/orange_goods_price"
                         android:textSize="20sp" />
-
-                    <TextView
-                        android:id="@+id/product_huafei_dun"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="3dp"
-                        android:text="/吨"
-                        android:textColor="@color/black"
-                        android:textSize="16sp"
-                        android:visibility="gone" />
-
 
                     <TextView
                         android:id="@+id/product_dingjin_name"

@@ -209,9 +209,9 @@ public class MyOrderDetailActivity extends BaseActivity {
                     holder.item_payInfo_type.setText("部分付款");
                 }
                 //应支付金额
-                holder.to_pay_price.setText("¥"+subOrders.price);
+                holder.to_pay_price.setText("¥" + subOrders.price);
                 //已支付金额
-                holder.order_yet_price.setText("¥"+subOrders.paidPrice);
+                holder.order_yet_price.setText("¥" + subOrders.paidPrice);
                 //支付类型
                 if (StringUtil.checkStr(subOrders.payType)) {
                     holder.order_pay_type_ll.setVisibility(View.VISIBLE);
@@ -224,18 +224,18 @@ public class MyOrderDetailActivity extends BaseActivity {
                     holder.order_pay_type_ll.setVisibility(View.GONE);
                 }
                 //查看详情
-                if (subOrders.payments!=null&&!subOrders.payments.isEmpty()){
+                if (subOrders.payments != null && !subOrders.payments.isEmpty()) {
                     holder.to_get_pay_detail.setVisibility(View.VISIBLE);
                     holder.to_get_pay_detail.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent intent =new Intent(MyOrderDetailActivity.this,CheckPayDetailActivity.class);
+                            Intent intent = new Intent(MyOrderDetailActivity.this, CheckPayDetailActivity.class);
                             intent.putExtra("payInfo", (Serializable) subOrders);
                             intent.putExtra("orderId", orderId);
                             startActivity(intent);
                         }
                     });
-                }else {
+                } else {
                     holder.to_get_pay_detail.setVisibility(View.GONE);
                 }
 
@@ -416,7 +416,7 @@ public class MyOrderDetailActivity extends BaseActivity {
                     stringBuilder.append("附加选项:");
                     for (int k = 0; k < SKUsList.get(position).additions.size(); k++) {
                         if (StringUtil.checkStr(SKUsList.get(position).additions.get(k).name)) {
-                            stringBuilder.append(SKUsList.get(position).additions.get(k).name + ";");
+                            stringBuilder.append(SKUsList.get(position).additions.get(k).name + ",");
                         }
                     }
                 }
@@ -480,5 +480,11 @@ public class MyOrderDetailActivity extends BaseActivity {
             }
             return convertView;
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        requestData(orderId);
     }
 }

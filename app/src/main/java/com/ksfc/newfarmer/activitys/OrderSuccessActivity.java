@@ -25,7 +25,8 @@ public class OrderSuccessActivity extends BaseActivity {
 	@Override
 	public void OnActCreate(Bundle savedInstanceState) {
 		quit();
-		setTitle("订单成功");
+		RndApplication.tempDestroyActivityList.add(OrderSuccessActivity.this);
+		setTitle("支付成功");
 		orderId = (String) getIntent().getSerializableExtra("orderId");
 		price = (String) getIntent().getSerializableExtra("price");
 		TextView price_tv = (TextView) findViewById(R.id.pay_price);

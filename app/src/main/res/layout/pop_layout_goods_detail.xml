@@ -92,13 +92,13 @@
                 <com.ksfc.newfarmer.widget.GridViewWithHeaderAndFooter
                     android:id="@+id/pop_gv_1"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left"
+                    android:layout_height="match_parent"
                     android:layout_margin="10dp"
                     android:horizontalSpacing="10dp"
                     android:listSelector="@null"
                     android:numColumns="4"
                     android:scrollbars="none"
+                    android:visibility="gone"
                     android:stretchMode="columnWidth"
                     android:verticalSpacing="10dp" />
 
@@ -117,12 +117,12 @@
 
                 <com.ksfc.newfarmer.widget.GridViewWithHeaderAndFooter
                     android:id="@+id/pop_gv_2"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_gravity="left"
                     android:layout_margin="10dp"
                     android:horizontalSpacing="20dp"
                     android:listSelector="@null"
+                    android:visibility="gone"
                     android:numColumns="4"
                     android:scrollbars="none"
                     android:stretchMode="columnWidth"
@@ -131,7 +131,7 @@
                 <TextView
                     android:id="@+id/pop_text3"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginBottom="5dp"
                     android:layout_marginLeft="16dp"
                     android:layout_marginTop="10dp"
@@ -143,12 +143,12 @@
 
                 <com.ksfc.newfarmer.widget.GridViewWithHeaderAndFooter
                     android:id="@+id/pop_gv_3"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_gravity="left"
                     android:layout_margin="10dp"
                     android:horizontalSpacing="10dp"
                     android:listSelector="@null"
+                    android:visibility="gone"
                     android:numColumns="4"
                     android:scrollbars="none"
                     android:stretchMode="columnWidth"
@@ -169,13 +169,13 @@
 
                 <com.ksfc.newfarmer.widget.GridViewWithHeaderAndFooter
                     android:id="@+id/pop_gv_4"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_gravity="left"
                     android:layout_margin="10dp"
                     android:horizontalSpacing="10dp"
                     android:listSelector="@null"
                     android:numColumns="4"
+                    android:visibility="gone"
                     android:scrollbars="none"
                     android:stretchMode="columnWidth"
                     android:verticalSpacing="10dp" />
@@ -195,13 +195,13 @@
 
                 <com.ksfc.newfarmer.widget.GridViewWithHeaderAndFooter
                     android:id="@+id/pop_gv_5"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_gravity="left"
                     android:layout_margin="10dp"
                     android:horizontalSpacing="10dp"
                     android:listSelector="@null"
-                    android:numColumns="3"
+                    android:numColumns="auto_fit"
+                    android:visibility="gone"
                     android:scrollbars="none"
                     android:stretchMode="columnWidth"
                     android:verticalSpacing="10dp" />
@@ -219,7 +219,7 @@
                         android:layout_marginLeft="16dp"
                         android:text="数量"
                         android:textColor="@color/main_index_gary"
-                        android:textSize="18sp" />
+                        android:textSize="16sp" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"

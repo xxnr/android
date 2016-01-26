@@ -26,6 +26,7 @@ import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.beans.InformationResult;
 import com.ksfc.newfarmer.protocol.beans.InformationResult.DatasEntity.ItemsEntity;
 import com.ksfc.newfarmer.utils.DateFormatUtils;
+import com.ksfc.newfarmer.utils.ExpandViewTouch;
 import com.ksfc.newfarmer.utils.PullToRefreshUtils;
 import com.ksfc.newfarmer.utils.ScreenUtil;
 import com.lidroid.xutils.HttpUtils;
@@ -60,6 +61,8 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
         //设置刷新的文字
         PullToRefreshUtils.setFreshText(listView);
         return_top = (ImageView) findViewById(R.id.return_top);
+        //扩大点击区域
+        ExpandViewTouch.expandViewTouchDelegate(return_top, 100, 100, 100, 100);
         setViewClick(R.id.return_top);
 
         listView.setOnItemClickListener(new OnItemClickListener() {
@@ -131,7 +134,7 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
     @Override
     public void OnViewClick(View v) {
         if (v.getId() == R.id.return_top) {
-            listView.getRefreshableView().setSelection(0);
+            listView.getRefreshableView().smoothScrollToPosition(0);
         }
     }
 

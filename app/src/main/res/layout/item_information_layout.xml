@@ -33,7 +33,7 @@
             android:ellipsize="end"
             android:text="河南日报：新农人网络科技有限公司打造新新农人网络平台"
             android:textColor="@color/black_goods_titile"
-            android:maxLines="3"
+            android:maxLines="2"
 
             android:textSize="16sp" />
 

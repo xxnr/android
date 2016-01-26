@@ -337,7 +337,6 @@ public class PaywayActivity extends BaseActivity implements Runnable {
                     } else {
                         showToast("请选择支付方式");
                     }
-
                 } else {
                     if (tag == 1) {
                         RequestParams params3 = new RequestParams();
@@ -415,23 +414,24 @@ public class PaywayActivity extends BaseActivity implements Runnable {
                             payWay_order_id.setText(datas.rows.id);
                         }
                         //待付金额
-                        if (StringUtil.checkStr(datas.rows.duePrice)) {
-                            payway_sumPrice.setText(datas.rows.duePrice + "元");
+                        if (datas.rows.payment != null) {
+                            payway_sumPrice.setText(datas.rows.payment.price + "元");
                             //大于3000才能分次 ，如果小于3000 直接显示
                             try {
-                                duePrice = Double.parseDouble(datas.rows.duePrice);
-                                if (Double.parseDouble(datas.rows.duePrice) > 3000) {
+                                duePrice = Double.parseDouble(datas.rows.payment.price);
+                                if (duePrice > 3000) {
                                     setViewClick(R.id.payWay_discount_jian);
                                     setViewClick(R.id.payWay_discount_jia);
                                 } else {
-                                    payWay_times_price_tv.setText(datas.rows.duePrice);
                                     payWay_discount_jian.setEnabled(false);
                                     payWay_discount_jia.setEnabled(false);
                                 }
+                                payWay_times_price_tv.setText(StringUtil.toTwoString(duePrice + ""));
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                            payWay_pay_total_price.setText("¥" + datas.rows.duePrice);
+                            //全额支付
+                            payWay_pay_total_price.setText("¥" + datas.rows.payment.price);
                         }
                         //订单状态
                         if (StringUtil.checkStr(datas.rows.paySubOrderType)) {
@@ -441,7 +441,7 @@ public class PaywayActivity extends BaseActivity implements Runnable {
                             } else if (datas.rows.paySubOrderType.equals("balance")) {
                                 payWay_order_type.setText("阶段二：尾款");
                             } else if (datas.rows.paySubOrderType.equals("full")) {
-                                payWay_order_type.setText("全款");
+                                payWay_order_type.setText("订单总额");
                             }
                         }
 

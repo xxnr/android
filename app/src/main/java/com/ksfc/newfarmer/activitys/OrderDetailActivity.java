@@ -418,6 +418,7 @@ public class OrderDetailActivity extends BaseActivity {
             } else {
                 holder.ordering_now_pri.setTextColor(getResources().getColor(R.color.black_goods_titile));
                 holder.goods_car_bar.setVisibility(View.VISIBLE);
+                holder.goods_car_deposit.setTextColor(getResources().getColor(R.color.orange_goods_price));
                 holder.goods_car_deposit.setText("¥" + StringUtil.toTwoString(goodsList
                         .get(position).dingjin + ""));
                 if (goodsList.get(position).additionPrice == 0) {
@@ -548,7 +549,7 @@ public class OrderDetailActivity extends BaseActivity {
                         goods.additionPrice = 0;
                         for (int k = 0; k < rows.get(i).SKUList.get(j).additions.size(); k++) {
                             if (StringUtil.checkStr(rows.get(i).SKUList.get(j).additions.get(k).name)) {
-                                stringBuilder.append(rows.get(i).SKUList.get(j).additions.get(k).name + ";");
+                                stringBuilder.append(rows.get(i).SKUList.get(j).additions.get(k).name + ",");
                                 try {
                                     goods.additionPrice += Double.parseDouble(rows.get(i).SKUList.get(j).additions.get(k).price);
                                 } catch (Exception e) {
@@ -575,5 +576,6 @@ public class OrderDetailActivity extends BaseActivity {
         params.put("userId", Store.User.queryMe().userid);
         execApi(ApiType.ADDRESS_LIST, params);
     }
+
 
 }

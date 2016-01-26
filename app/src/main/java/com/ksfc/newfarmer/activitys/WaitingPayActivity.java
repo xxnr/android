@@ -72,5 +72,4 @@ public class WaitingPayActivity extends BaseActivity {
         titleList.add("已完成");
     }
 
-
 }

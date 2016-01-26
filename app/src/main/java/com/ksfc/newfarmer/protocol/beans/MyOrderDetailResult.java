@@ -84,7 +84,7 @@ public class MyOrderDetailResult extends ResponseResult {
 
         public static class Payment implements Serializable {
             public String paymentId;// 支付id
-            public float price;// 支付金额
+            public String price;// 支付金额
             public String suborderId;//// 子阶段id
         }
 

@@ -59,7 +59,9 @@
         <!-- 引导页 -->
         <activity android:name=".GuideActivity" />
         <!-- 我的订单详情 -->
-        <activity android:name=".activitys.MyOrderDetailActivity" />
+        <activity
+            android:name=".activitys.MyOrderDetailActivity"
+            android:launchMode="singleTask" />
         <!-- 我的 -->
         <activity android:name=".activitys.MineActivity" />
         <!-- 签到成功 -->
@@ -101,7 +103,9 @@
         <!-- 系统设置 -->
         <activity android:name=".activitys.SettingActivity" />
         <!-- 待付款 -->
-        <activity android:name=".activitys.WaitingPayActivity" />
+        <activity
+            android:name=".activitys.WaitingPayActivity"
+            android:launchMode="singleTask" />
         <!-- 订单信息 -->
         <activity android:name=".activitys.OrderDetailActivity" />
         <!-- 修改密码 -->

@@ -1,8 +1,11 @@
 package com.ksfc.newfarmer.activitys;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.ILoadingLayout;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
@@ -130,18 +133,20 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
      *
      */
     private void getData() {
-        showProgressDialog();
         RequestParams params = new RequestParams();
-        params.put("page", page1);
-        params.put("rowCount", 6);
-        params.put("classId", "531680A5");
+        Map<String, Object> map = new HashMap<>();
+        map.put("page", page1);
+        map.put("rowCount", 6);
+        map.put("classId", "531680A5");
 
         if (isLogin()) {
-            params.put("locationUserId", Store.User.queryMe().userid);
+            map.put("locationUserId", Store.User.queryMe().userid);
         } else {
-            params.put("locationUserId", "");
+            map.put("locationUserId", "");
         }
-        execApi(ApiType.GET_HUAFEI, params);
+        Gson gson = new Gson();
+        params.put("JSON", gson.toJson(map));
+        execApi(ApiType.GET_HUAFEI.setMethod(RequestMethod.POSTJSON), params);
     }
 
     /**
@@ -149,17 +154,19 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
      */
     private void getNyc() {
         // TODO Auto-generated method stub
-        showProgressDialog();
         RequestParams params = new RequestParams();
-        params.put("page", page2);
-        params.put("rowCount", 6);
-        params.put("classId", "6C7D8F66");
+        Map<String, Object> map = new HashMap<>();
+        map.put("page", page2);
+        map.put("rowCount", 6);
+        map.put("classId", "6C7D8F66");
         if (isLogin()) {
-            params.put("locationUserId", Store.User.queryMe().userid);
+            map.put("locationUserId", Store.User.queryMe().userid);
         } else {
-            params.put("locationUserId", "");
+            map.put("locationUserId", "");
         }
-        execApi(ApiType.GET_NYC, params);
+        Gson gson = new Gson();
+        params.put("JSON", gson.toJson(map));
+        execApi(ApiType.GET_NYC.setMethod(RequestMethod.POSTJSON), params);
     }
 
     private void initView() {
@@ -195,7 +202,6 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
         setViewClick(R.id.car_bottom_bar_qianjin);
         initGv();
     }
-
 
 
     private void initQiandao() {
@@ -350,7 +356,7 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
             //商品图
             ImageLoader.getInstance().displayImage(MsgID.IP + hfList.get(position).imgUrl, huafei_img);
             //商品名
-            if (StringUtil.checkStr(hfList.get(position).goodsName)){
+            if (StringUtil.checkStr(hfList.get(position).goodsName)) {
                 huafei_name_tv.setText(hfList.get(position).goodsName);
             }
             //商品是否预售
@@ -361,7 +367,7 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
             } else {
                 //商品价格
                 huafei_xianjia.setTextColor(Color.parseColor("#ff4e00"));
-                if (StringUtil.checkStr(hfList.get(position).unitPrice)){
+                if (StringUtil.checkStr(hfList.get(position).unitPrice)) {
                     huafei_xianjia
                             .setText("¥" + hfList.get(position).unitPrice);
                 }
@@ -416,11 +422,11 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
             huafei_img.setScaleType(ScaleType.CENTER_CROP);
             ImageLoader.getInstance().displayImage(MsgID.IP + qcList.get(position).imgUrl, huafei_img);
 
-            if (StringUtil.checkStr(qcList.get(position).goodsName)){
+            if (StringUtil.checkStr(qcList.get(position).goodsName)) {
                 huafei_name_tv.setText(qcList.get(position).goodsName);
             }
-            if (StringUtil.checkStr(qcList.get(position).unitPrice)){
-                huafei_xianjia.setText("¥"+qcList.get(position).unitPrice);
+            if (StringUtil.checkStr(qcList.get(position).unitPrice)) {
+                huafei_xianjia.setText("¥" + qcList.get(position).unitPrice);
             }
 
             qiche_gv.setOnItemClickListener(new OnItemClickListener() {
