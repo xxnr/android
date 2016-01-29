@@ -412,15 +412,21 @@ public class OrderDetailActivity extends BaseActivity {
                 convertView.setTag(new ViewHolder(convertView));
             }
             ViewHolder holder = (ViewHolder) convertView.getTag();
-            //图片
-            if (StringUtil.checkStr(goodsList.get(position).pic)) {
-                Picasso.with(OrderDetailActivity.this)
-                        .load(MsgID.IP +  goodsList.get(position).pic)
-                        .error(R.drawable.error)
-                        .placeholder(R.drawable.zhanweitu)
-                        .into(holder.ordering_item_img);
 
+            try{
+                //图片
+                if (StringUtil.checkStr(goodsList.get(position).pic)) {
+                    Picasso.with(OrderDetailActivity.this)
+                            .load(MsgID.IP +  goodsList.get(position).pic)
+                            .error(R.drawable.error)
+                            .placeholder(R.drawable.zhanweitu)
+                            .into(holder.ordering_item_img);
+
+                }
+            }catch (Exception e){
+                e.printStackTrace();
             }
+
             //数量
             holder.ordering_item_geshu.setText("X " + goodsList.get(position).num + "");
             //名字
@@ -528,12 +534,14 @@ public class OrderDetailActivity extends BaseActivity {
                                 SelectPayOrderActivity.class);
                         intent.putExtra("orderInfo", (Serializable) data.orders);
                         startActivity(intent);
+                        finish();
                     } else {
                         Intent intent = new Intent(OrderDetailActivity.this,
                                 PaywayActivity.class);
                         if (StringUtil.checkStr(data.orders.get(0).id)) {
                             intent.putExtra("orderId", data.orders.get(0).id);
                             startActivity(intent);
+                            finish();
                         }
                     }
                 }

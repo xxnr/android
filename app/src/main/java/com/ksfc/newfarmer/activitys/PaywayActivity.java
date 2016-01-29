@@ -353,7 +353,6 @@ public class PaywayActivity extends BaseActivity implements Runnable {
                     }
                 }
 
-
                 break;
             default:
                 break;

@@ -83,13 +83,12 @@ public class MyDetailFragment extends BaseFragment implements View.OnClickListen
         }
 
         MsgCenter.addListener(new MsgListener() {
-
             @Override
             public void onMsg(Object sender, String msg, Object... args) {
                 page = 1;
                 getData(page);
             }
-        }, "paySuccess");
+        }, "Pay_success");
 
         getData(page);
         return view;

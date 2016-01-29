@@ -3,7 +3,6 @@ package com.ksfc.newfarmer.activitys;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -12,15 +11,12 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -29,12 +25,10 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.ksfc.newfarmer.BaseActivity;
@@ -58,9 +52,6 @@ import com.ksfc.newfarmer.utils.ScreenUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.GridViewWithHeaderAndFooter;
 import com.nostra13.universalimageloader.core.ImageLoader;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class ShangpinListActivity extends BaseActivity implements OnItemClickListener, PullToRefreshBase.OnRefreshListener2, AbsListView.OnScrollListener {
 
@@ -89,9 +80,6 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
     private TextView jiage_text;
     private ImageView jiage_image;
 
-    private int pass_flag_brands;
-    private int pass_flag_price;
-
     private TextView shaixuan_text;
     private ImageView shaixuan_image;
     private RelativeLayout goods_none_view_rel;//没有商品时的视图
@@ -102,9 +90,11 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
     private StringBuilder brandBuilder;//品牌的value
     private TextView popwindow_text1, popwindow_text2, popwindow_text3, popwindow_text4, popwindow_text5;//动态的标题
     private GridViewWithHeaderAndFooter pop_gv1, pop_gv2, pop_gv3, pop_gv4, pop_gv5;//动态的内容
-    private BransAdapter bransAdapter;
+    private ShangpinListActivity.bransAdapter bransAdapter;
     private HashMap<String, AttrAdapter> attrAdapterMap = new HashMap<>();
     private List<Map<String, Object>> attributesList;
+
+    //存选中的品牌Id 和 和 下面的选中的属性
 
 
     @Override
@@ -353,6 +343,8 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
 
     // 得到筛选框中筛选的结果
     private void getShuaixuan_value() {
+
+
         int pri_position = -1;
         //得到品牌
         brand = new StringBuilder();
@@ -362,6 +354,7 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
                 if (entry.getValue()) {
                     list.add(entry.getKey());
                 }
+
             }
         }
 
@@ -381,7 +374,6 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
                     .findViewById(R.id.shuaixuan_item_button);
             if (rdoBtn.isChecked()) {
                 pri_position = i;
-                pass_flag_price = i;
             }
         }
 
@@ -423,7 +415,6 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
                     break;
             }
         }
-
         //获得选中的属性
         if (attrAdapterMap != null && !attrAdapterMap.isEmpty()) {
             attributesList = new ArrayList<>();
@@ -469,8 +460,6 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
         adapter_price.notifyDataSetChanged();
         bransAdapter.states.clear();
         bransAdapter.notifyDataSetChanged();
-        pass_flag_price = -1;
-        pass_flag_brands=0;
         brand = null;
         brandBuilder = null;
         reservePrice = null;
@@ -516,7 +505,7 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
             BrandsResult data = (BrandsResult) req.getData();
             if (data.getStatus().equals("1000")) {
                 if (data.brands != null && !data.brands.isEmpty()) {
-                    bransAdapter = new BransAdapter(data.brands);
+                    bransAdapter = new bransAdapter(data.brands);
                     banrds_gv.setAdapter(bransAdapter);
                 }
             }
@@ -609,12 +598,12 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
     }
 
     //popWindow中的品牌
-    class BransAdapter extends BaseAdapter {
+    class bransAdapter extends BaseAdapter {
         private List<BrandsResult.BrandsEntity> list;
         // 用于记录每个RadioButton的状态，并保证只可选一个
         HashMap<String, Boolean> states = new HashMap<String, Boolean>();
 
-        public BransAdapter(List<BrandsResult.BrandsEntity> list) {
+        public bransAdapter(List<BrandsResult.BrandsEntity> list) {
             this.list = list;
         }
 

@@ -127,7 +127,7 @@
             <Button
                 android:id="@+id/umeng_update_id_ok"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@drawable/dialog_btn_left_bg_selector"
                 android:focusable="true"

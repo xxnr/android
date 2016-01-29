@@ -19,6 +19,7 @@ import com.umeng.update.UmengUpdateAgent;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.media.SoundPool;
 import android.os.Environment;
 import android.widget.Toast;
@@ -76,7 +77,7 @@ public class RndApplication extends Application {
                 .discCacheFileNameGenerator(new Md5FileNameGenerator())
                 .tasksProcessingOrder(QueueProcessingType.LIFO)
                 .memoryCache(new WeakMemoryCache())
-                .memoryCacheSize(10 * 1024 * 1024)
+                .memoryCacheSize(20 * 1024 * 1024)
                 .discCache(
                         new UnlimitedDiscCache(new File(Environment
                                 .getExternalStorageDirectory()
@@ -94,7 +95,7 @@ public class RndApplication extends Application {
     private static DisplayImageOptions buildImageOptions(Context mContext) {
         DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
                 .showImageOnLoading(null)
-                .showImageForEmptyUri(R.drawable.error)
+                .showImageForEmptyUri(R.drawable.error).bitmapConfig(Bitmap.Config.RGB_565)
                 .showImageOnFail(R.drawable.error).considerExifParams(true)
                 .showImageOnLoading(R.drawable.zhanweitu)
                 .cacheInMemory(true).cacheOnDisc(true).build();
@@ -131,7 +132,14 @@ public class RndApplication extends Application {
                 activity.finish();
             }
         }
+        tempDestroyActivityList.clear();
+        for (Activity activity : tempDestroyActivityList) {
+            if (null != activity) {
+                activity.finish();
+            }
+        }
         unDestroyActivityList.clear();
+
     }
 
     public void setUid(String uid) {

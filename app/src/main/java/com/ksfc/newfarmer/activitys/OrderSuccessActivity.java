@@ -35,10 +35,11 @@ public class OrderSuccessActivity extends BaseActivity {
         if (StringUtil.checkStr(price)) {
             price_tv.setText("支付金额：¥" + price + "元");
         }
+        //通知 订单列表刷新
+        MsgCenter.fireNull("Pay_success", "price");
         setViewClick(R.id.contact_tv);
         setViewClick(R.id.check_order_tv);
-        //通知 订单列表刷新
-        MsgCenter.fireNull("paySuccess", new Object());
+
     }
 
     public void quit() {

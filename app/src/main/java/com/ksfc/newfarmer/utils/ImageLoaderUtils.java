@@ -1,6 +1,7 @@
 package com.ksfc.newfarmer.utils;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 
 import com.ksfc.newfarmer.R;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -15,7 +16,7 @@ public class ImageLoaderUtils {
                 .showImageOnLoading(null)
                 .showImageForEmptyUri(R.drawable.error)
                 .showImageOnFail(R.drawable.error).considerExifParams(true)
-                .showImageOnLoading(R.drawable.zhanweitu_wide)
+                .showImageOnLoading(R.drawable.zhanweitu_wide).bitmapConfig(Bitmap.Config.RGB_565)
                 .cacheInMemory(true).cacheOnDisc(true).build();
 
         return defaultOptions;
@@ -26,7 +27,7 @@ public class ImageLoaderUtils {
                 .showImageOnLoading(null)
                 .showImageForEmptyUri(R.drawable.error)
                 .showImageOnFail(R.drawable.error).considerExifParams(true)
-                .showImageOnLoading(R.drawable.banner_load)
+                .showImageOnLoading(R.drawable.banner_load).bitmapConfig(Bitmap.Config.RGB_565)
                 .cacheInMemory(true).cacheOnDisc(true).build();
         return defaultOptions;
     }

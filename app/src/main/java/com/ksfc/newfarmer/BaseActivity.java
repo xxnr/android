@@ -491,7 +491,7 @@ public abstract class BaseActivity extends FragmentActivity implements
     public boolean isMobileValid(String mobile) {
 
         if (TextUtils.isEmpty(mobile)) {
-            showToast("手机号不能为空");
+            showToast("请输入手机号");
             return false;
         }
         if (!isMobileNum(mobile)) {

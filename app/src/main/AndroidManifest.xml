@@ -106,10 +106,9 @@
         <activity
             android:name=".activitys.WaitingPayActivity"
             android:launchMode="singleTask"
-            android:process=":picture"
             />
         <!-- 订单信息 -->
-        <activity android:name=".activitys.OrderDetailActivity" android:process=":picture" />
+        <activity android:name=".activitys.OrderDetailActivity"  />
         <!-- 修改密码 -->
         <activity android:name=".activitys.ChangePasswordActivity" />
         <!-- 轮播 -->
@@ -169,7 +168,7 @@
         <!-- umeng appkey   android:value="564d588ce0f55a25e9003ec7"-->
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="YOUR APPKEY" />
+            android:value="564d588ce0f55a25e9003ec7" />
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="Wandoujia" />

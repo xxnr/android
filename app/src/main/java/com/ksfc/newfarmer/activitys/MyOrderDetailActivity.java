@@ -496,6 +496,7 @@ public class MyOrderDetailActivity extends BaseActivity {
                 holder.ordering_item_geshu.setText("X " + goodsList.get(position).goodsCount + "");
                 //商品名
                 if (StringUtil.checkStr(goodsList.get(position).goodsName)) {
+                    holder.ordering_item_name.setEms(10);
                     holder.ordering_item_name.setText(goodsList.get(position).goodsName);
                 }
                 //商品发货状态

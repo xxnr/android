@@ -1,5 +1,6 @@
 package com.ksfc.newfarmer.fragment;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -28,7 +29,7 @@ public class BigImageFragment extends BaseFragment {
         String picture = bundle.getString("picture");
         //可以自由放大缩小图片的控键
         if (StringUtil.checkStr(picture)) {
-            Picasso.with(getActivity()).load(MsgID.IP + picture).error(R.drawable.error).skipMemoryCache().placeholder(R.drawable.zhanweitu).into(photoView);
+            Picasso.with(getActivity()).load(MsgID.IP + picture).config(Bitmap.Config.RGB_565).error(R.drawable.error).skipMemoryCache().placeholder(R.drawable.zhanweitu).into(photoView);
         }
         photoView.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
             @Override
