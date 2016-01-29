@@ -44,7 +44,7 @@ public class HackyViewPager extends ViewPager {
     	if (!isLocked) {
 	        try {
 	            return super.onInterceptTouchEvent(ev);
-	        } catch (IllegalArgumentException e) {
+	        } catch (Exception e) {
 	            e.printStackTrace();
 	            return false;
 	        }

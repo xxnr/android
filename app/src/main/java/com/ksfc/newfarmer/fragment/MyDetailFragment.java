@@ -1,6 +1,7 @@
 package com.ksfc.newfarmer.fragment;
 
 import android.content.Intent;
+import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.sax.RootElement;
@@ -32,10 +33,16 @@ import com.ksfc.newfarmer.protocol.RequestParams;
 import com.ksfc.newfarmer.protocol.beans.WaitingPay;
 import com.ksfc.newfarmer.utils.ExpandViewTouch;
 import com.ksfc.newfarmer.utils.PullToRefreshUtils;
+import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.StringUtil;
+import com.ksfc.newfarmer.widget.RecyclerImageView;
 import com.ksfc.newfarmer.widget.UnSwipeListView;
 import com.ksfc.newfarmer.widget.WidgetUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.squareup.picasso.Picasso;
+
+import net.yangentao.util.msg.MsgCenter;
+import net.yangentao.util.msg.MsgListener;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -48,7 +55,7 @@ public class MyDetailFragment extends BaseFragment implements View.OnClickListen
 
     private PullToRefreshListView waitingpay_lv;
     private int page = 1;
-    private int TYPE;//订单类型 1:未付款 2:待发货 3: 已发货 4:已完成
+    private int TYPE = 0;//订单类型 1:未付款 2:待发货 3: 已发货 4:已完成
     private OrderAdapter adapter;
     private List<WaitingPay.Orders> list;
     private RelativeLayout null_layout;
@@ -68,8 +75,22 @@ public class MyDetailFragment extends BaseFragment implements View.OnClickListen
         view.findViewById(R.id.my_login_cancel).setOnClickListener(this);
 
         Bundle bundle = getArguments();
-        TYPE = bundle.getInt("TYPE");
+        TYPE = bundle.getInt("TYPE", 0);
         list = new ArrayList<>();
+        //刷新时候的只出现一个
+        if (TYPE == 0) {
+            showProgressDialog();
+        }
+
+        MsgCenter.addListener(new MsgListener() {
+
+            @Override
+            public void onMsg(Object sender, String msg, Object... args) {
+                page = 1;
+                getData(page);
+            }
+        }, "paySuccess");
+
         getData(page);
         return view;
     }
@@ -92,6 +113,7 @@ public class MyDetailFragment extends BaseFragment implements View.OnClickListen
 
     @Override
     public void onResponsed(Request req) {
+        disMissDialog();
         if (ApiType.GETORDERLIST == req.getApi()) {
             WaitingPay data = (WaitingPay) req.getData();
             waitingpay_lv.onRefreshComplete();
@@ -257,6 +279,7 @@ public class MyDetailFragment extends BaseFragment implements View.OnClickListen
                 ProductAdapter carAdapter = new ProductAdapter(order.products, order);
                 holder.my_order_list.setAdapter(carAdapter);
             }
+//            设置ListView子listView的高度，避免只显示一个listView item 但是比较耗内存
             WidgetUtil.setListViewHeightBasedOnChildren(holder.my_order_list);
             return convertView;
         }
@@ -324,14 +347,15 @@ public class MyDetailFragment extends BaseFragment implements View.OnClickListen
         }
 
         class ViewHolder {
-            private LinearLayout goods_car_bar;
-            private ImageView ordering_item_img;
+            private LinearLayout goods_car_bar, additions_lin;
+            private RecyclerImageView ordering_item_img;
             private TextView ordering_now_pri, ordering_item_name, goods_car_deposit,
                     goods_car_weikuan, ordering_item_geshu, goods_car_attr;
+            private TextView additions_text, additions_price;
 
             public ViewHolder(View convertView) {
                 goods_car_bar = (LinearLayout) convertView.findViewById(R.id.goods_car_item_bar);
-                ordering_item_img = (ImageView) convertView//商品图
+                ordering_item_img = (RecyclerImageView) convertView//商品图
                         .findViewById(R.id.ordering_item_img);
                 ordering_item_geshu = (TextView) convertView//商品个数
                         .findViewById(R.id.ordering_item_geshu);
@@ -345,6 +369,12 @@ public class MyDetailFragment extends BaseFragment implements View.OnClickListen
                         .findViewById(R.id.goods_car_item_bar_weikuan);
                 goods_car_attr = (TextView) convertView//汽车尾款
                         .findViewById(R.id.ordering_item_attr);
+                additions_text = (TextView) convertView//附加选项
+                        .findViewById(R.id.additions_text);
+                additions_price = (TextView) convertView//附加选项价格
+                        .findViewById(R.id.additions_price);
+                additions_lin = (LinearLayout) convertView
+                        .findViewById(R.id.additions_lin);
             }
         }
 
@@ -361,31 +391,53 @@ public class MyDetailFragment extends BaseFragment implements View.OnClickListen
             if (SKUsList != null && !SKUsList.isEmpty()) {//新订单
                 //商品图片
                 if (StringUtil.checkStr(SKUsList.get(position).thumbnail)) {
-                    ImageLoader.getInstance().displayImage(
-                            MsgID.IP + SKUsList.get(position).thumbnail, holder.ordering_item_img);
+                    Picasso.with(getActivity())
+                            .load(MsgID.IP + SKUsList.get(position).thumbnail)
+                            .error(R.drawable.error)
+                            .placeholder(R.drawable.zhanweitu)
+                            .into(holder.ordering_item_img);
+
                 }
                 //商品个数
-                if (StringUtil.checkStr(SKUsList.get(position).count)) {
-                    holder.ordering_item_geshu.setText("X " + SKUsList.get(position).count + "");
-                }
+                holder.ordering_item_geshu.setText("X " + SKUsList.get(position).count + "");
                 //商品名
                 if (StringUtil.checkStr(SKUsList.get(position).productName)) {
                     holder.ordering_item_name.setText(SKUsList.get(position).productName);
                 }
 
+                //附加选项
+                StringBuilder stringAdditions = new StringBuilder();
+                float car_additions_price = 0;
+                if (SKUsList.get(position).additions != null && !SKUsList.get(position).additions.isEmpty()) {
+                    holder.additions_lin.setVisibility(View.VISIBLE);
+                    stringAdditions.append("附加项目:");
+                    for (int k = 0; k < SKUsList.get(position).additions.size(); k++) {
+                        if (StringUtil.checkStr(SKUsList.get(position).additions.get(k).name)) {
+                            stringAdditions.append(SKUsList.get(position).additions.get(k).name + ";");
+                            car_additions_price += SKUsList.get(position).additions.get(k).price;
+                        }
+                    }
+                    String car_additions = stringAdditions.toString().substring(0, stringAdditions.toString().length() - 1);
+                    if (StringUtil.checkStr(car_additions)) {
+                        holder.additions_text.setText(car_additions);
+                        holder.additions_price.setText("¥" + StringUtil.toTwoString(car_additions_price + ""));
+                    }
+                } else {
+                    holder.additions_lin.setVisibility(View.GONE);
+                }
+                //商品 单价 阶段 订金 尾款
+                holder.ordering_now_pri.setTextColor(getResources().getColor(R.color.orange_goods_price));
                 if (SKUsList.get(position).deposit == 0) {
-                    holder.ordering_now_pri.setTextColor(getResources().getColor(R.color.orange_goods_price));
                     holder.goods_car_bar.setVisibility(View.GONE);
                 } else {
-                    holder.ordering_now_pri.setTextColor(getResources().getColor(R.color.black_goods_titile));
                     holder.goods_car_bar.setVisibility(View.VISIBLE);
                     String deposit = StringUtil.toTwoString(SKUsList
-                            .get(position).deposit + "");
+                            .get(position).deposit * SKUsList.get(position).count + "");
                     if (StringUtil.checkStr(deposit)) {
                         holder.goods_car_deposit.setText("¥" + deposit);
                     }
-                    String weiKuan = StringUtil.toTwoString(SKUsList.get(position).price - SKUsList
-                            .get(position).deposit + "");
+                    String weiKuan = StringUtil.toTwoString((SKUsList.get(position).price + car_additions_price - SKUsList
+                            .get(position).deposit) * SKUsList.get(position).count + "");
                     if (StringUtil.checkStr(weiKuan)) {
                         holder.goods_car_weikuan.setText("¥" + weiKuan);
                     }
@@ -394,29 +446,21 @@ public class MyDetailFragment extends BaseFragment implements View.OnClickListen
                         .get(position).price + ""));
 
                 //Sku属性
-                StringBuilder stringBuilder = new StringBuilder();
+                StringBuilder stringSku = new StringBuilder();
                 if (SKUsList.get(position).attributes != null && !SKUsList.get(position).attributes.isEmpty()) {
                     for (int k = 0; k < SKUsList.get(position).attributes.size(); k++) {
                         if (StringUtil.checkStr(SKUsList.get(position).attributes.get(k).name)
                                 && StringUtil.checkStr(SKUsList.get(position).attributes.get(k).value)) {
-                            stringBuilder.append(SKUsList.get(position).attributes.get(k).name + ":")
+                            stringSku.append(SKUsList.get(position).attributes.get(k).name + ":")
                                     .append(SKUsList.get(position).attributes.get(k).value + ";");
                         }
                     }
-                }
-                //附加选项
-                if (SKUsList.get(position).additions != null && !SKUsList.get(position).additions.isEmpty()) {
-                    stringBuilder.append("附加选项:");
-                    for (int k = 0; k < SKUsList.get(position).additions.size(); k++) {
-                        if (StringUtil.checkStr(SKUsList.get(position).additions.get(k).name)) {
-                            stringBuilder.append(SKUsList.get(position).additions.get(k).name + ",");
-                        }
+                    String car_attr = stringSku.toString().substring(0, stringSku.toString().length() - 1);
+                    if (StringUtil.checkStr(car_attr)) {
+                        holder.goods_car_attr.setText(car_attr);
                     }
                 }
-                String car_attr = stringBuilder.toString().substring(0, stringBuilder.toString().length() - 1);
-                if (StringUtil.checkStr(car_attr)) {
-                    holder.goods_car_attr.setText(car_attr);
-                }
+
 
             } else {  //兼容老订单
                 //商品图片
@@ -425,9 +469,7 @@ public class MyDetailFragment extends BaseFragment implements View.OnClickListen
                             MsgID.IP + goodsList.get(position).thumbnail, holder.ordering_item_img);
                 }
                 //商品个数
-                if (StringUtil.checkStr(goodsList.get(position).count)) {
-                    holder.ordering_item_geshu.setText("X " + goodsList.get(position).count + "");
-                }
+                holder.ordering_item_geshu.setText("X " + goodsList.get(position).count + "");
                 //商品名
                 if (StringUtil.checkStr(goodsList.get(position).name)) {
                     holder.ordering_item_name.setText(goodsList.get(position).name);
@@ -440,12 +482,12 @@ public class MyDetailFragment extends BaseFragment implements View.OnClickListen
                     holder.ordering_now_pri.setTextColor(getResources().getColor(R.color.black_goods_titile));
                     holder.goods_car_bar.setVisibility(View.VISIBLE);
                     String deposit = StringUtil.toTwoString(goodsList
-                            .get(position).deposit + "");
+                            .get(position).deposit * goodsList.get(position).count + "");
                     if (StringUtil.checkStr(deposit)) {
                         holder.goods_car_deposit.setText("¥" + deposit);
                     }
-                    String weiKuan = StringUtil.toTwoString(goodsList.get(position).price - goodsList
-                            .get(position).deposit + "");
+                    String weiKuan = StringUtil.toTwoString((goodsList.get(position).price - goodsList
+                            .get(position).deposit) * goodsList.get(position).count + "");
                     if (StringUtil.checkStr(weiKuan)) {
                         holder.goods_car_weikuan.setText("¥" + weiKuan);
                     }
@@ -476,9 +518,9 @@ public class MyDetailFragment extends BaseFragment implements View.OnClickListen
     @Override
     public void onResume() {
         super.onResume();
-        if (TYPE==1||TYPE==0) {
-            page = 1;
-            getData(page);
-        }
+//        if (TYPE == 1 || TYPE == 0) {
+//            page = 1;
+//            getData(page);
+//        }
     }
 }

@@ -96,7 +96,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="16dp"
-                        android:text="新农价："
+                        android:text=""
                         android:textColor="@color/black"
                         android:textSize="16sp" />
 
@@ -113,7 +113,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
-                        android:text="预付订金: "
+                        android:text="订金："
                         android:textColor="@color/black"
                         android:textSize="16sp"
                         android:visibility="gone" />
@@ -157,6 +157,8 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="16dp"
+                    android:singleLine="true"
+                    android:layout_marginRight="35dp"
                     android:text="请选择商品属性"
                     android:textColor="@color/black_goods_titile"
                     android:textSize="14sp" />

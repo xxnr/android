@@ -37,7 +37,9 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp">
+        android:layout_height="40dp"
+        android:visibility="gone"
+        >
 
         <TextView
             android:id="@+id/good_list_num"
@@ -67,7 +69,5 @@
             android:textColor="@color/orange_goods_price"
             android:textSize="14sp" />
     </RelativeLayout>
-
-    <include layout="@layout/line_lay" />
 
 </LinearLayout>

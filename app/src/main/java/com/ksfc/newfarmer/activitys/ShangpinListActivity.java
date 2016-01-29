@@ -40,6 +40,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
+import com.ksfc.newfarmer.RndApplication;
 import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.ApiType.RequestMethod;
@@ -52,6 +53,7 @@ import com.ksfc.newfarmer.protocol.beans.GetGoodsData.SingleGood;
 import com.ksfc.newfarmer.utils.ExpandViewTouch;
 import com.ksfc.newfarmer.utils.ImageLoaderUtils;
 import com.ksfc.newfarmer.utils.PullToRefreshUtils;
+import com.ksfc.newfarmer.utils.SPUtils;
 import com.ksfc.newfarmer.utils.ScreenUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.GridViewWithHeaderAndFooter;
@@ -116,15 +118,17 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
     public void OnActCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         // 根据intent判断加载化肥还是汽车
+        RndApplication.tempDestroyActivityList.add(ShangpinListActivity.this);
         goods_flag = getIntent().getStringExtra("goods");
         if (goods_flag.equals("huafei")) {
             setTitle("化肥");
-            classId = "531680A5";
+            classId = (String) SPUtils.get(this, "HuafeiId", "531680A5");
         } else if (goods_flag.equals("qiche")) {
             setTitle("汽车");
-            classId = "6C7D8F66";
+            classId = (String) SPUtils.get(this, "CarID", "6C7D8F66");
         }
         initView();
+        showProgressDialog();
         getData();
     }
 
@@ -161,7 +165,6 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
     }
 
     private void getData() {
-        showProgressDialog();
         RequestParams params = new RequestParams();
         Gson gson = new Gson();
         Map<String, Object> map = new HashMap<>();
@@ -228,7 +231,7 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
         // TODO Auto-generated method stub
         switch (v.getId()) {
             case R.id.return_top:
-                listView.getRefreshableView().smoothScrollToPosition(0);
+                listView.getRefreshableView().setSelection(0);
                 break;
             case R.id.goods_zonghe_rel:
                 jiage_image.setVisibility(View.GONE);
@@ -257,7 +260,7 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
                 if (popupWindow != null && popupWindow.isShowing()) {
                     popupWindow.dismiss();
                 } else {
-                    if (popupWindow==null){
+                    if (popupWindow == null) {
                         getPopupWindow();
                         getBrandsList();
                         getAttrsData();
@@ -444,7 +447,7 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
             }
         }
 
-        if (pass_flag_brands == 0 && pass_flag_price == -1) {
+        if (brand==null&&(attributesList==null||attributesList.isEmpty()) && pri_position == -1) {
             shaixuan_text.setTextColor(Color.BLACK);
             shaixuan_image.setImageResource(R.drawable.shaixuan_gary);
         } else {
@@ -466,10 +469,10 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
         adapter_price.notifyDataSetChanged();
         bransAdapter.states.clear();
         bransAdapter.notifyDataSetChanged();
-        pass_flag_brands = 0;
         pass_flag_price = -1;
+        pass_flag_brands=0;
         brand = null;
-        brandBuilder=null;
+        brandBuilder = null;
         reservePrice = null;
         getAttrsData();
     }

@@ -20,6 +20,7 @@ public class PersonalData extends ResponseResult implements Serializable {
         public String phone;
         public String photo;
         public String inviterNickname;
+        public String userTypeInName;//用户类型
         public String inviter;
         public String inviterName;
         public String userType;

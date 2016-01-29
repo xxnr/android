@@ -29,6 +29,7 @@ import com.ksfc.newfarmer.protocol.beans.CityList;
 import com.ksfc.newfarmer.protocol.beans.LoginResult;
 import com.ksfc.newfarmer.protocol.beans.QueueList;
 import com.ksfc.newfarmer.protocol.beans.TownList;
+import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -86,7 +87,10 @@ public class SelectUserTypeActivity extends BaseActivity implements AdapterView.
 
                     @Override
                     public void onSuccess(ResponseInfo<String> arg0) {
+
+
                         if (!StringUtil.empty(arg0.result.toString())) {
+                            RndLog.v(TAG,arg0.result);
                             list_key = new ArrayList<>();
                             list_value = new ArrayList<>();
                             JSONObject jsonObject = JSON.parseObject(arg0.result.toString());

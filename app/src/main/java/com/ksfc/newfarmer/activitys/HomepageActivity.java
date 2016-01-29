@@ -11,10 +11,8 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
-import com.ksfc.newfarmer.Push.App;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.db.Store;
-import com.ksfc.newfarmer.db.dao.ShoppingDao;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.ApiType.RequestMethod;
 import com.ksfc.newfarmer.protocol.Request;
@@ -26,34 +24,20 @@ import com.ksfc.newfarmer.protocol.beans.HomeImageResult;
 import com.ksfc.newfarmer.protocol.beans.HomeImageResult.Rows;
 import com.ksfc.newfarmer.protocol.beans.HomeImageResult.UserRollImage;
 import com.ksfc.newfarmer.protocol.beans.PointResult;
-import com.ksfc.newfarmer.utils.ImageLoaderUtils;
-import com.ksfc.newfarmer.utils.IntentUtil;
+import com.ksfc.newfarmer.utils.SPUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.CarouselDiagramViewPager;
-import com.ksfc.newfarmer.widget.CirclePageIndicator;
 import com.ksfc.newfarmer.widget.GridViewWithHeaderAndFooter;
-import com.ksfc.newfarmer.widget.PullToRefreshView;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.squareup.picasso.Picasso;
 import com.umeng.update.UmengUpdateAgent;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.v4.view.ViewPager;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
@@ -61,8 +45,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import net.yangentao.util.msg.MsgCenter;
-import net.yangentao.util.msg.MsgListener;
 
 public class HomepageActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener {
     private LinearLayout headerlayout, ll_banner_container;
@@ -71,8 +53,8 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
     private CarouselDiagramViewPager carouselDiagramViewPager;
     private int page1 = 1;
     private int page2 = 1;
-    List<SingleGood> hfList = new ArrayList<SingleGood>();
-    List<SingleGood> qcList = new ArrayList<SingleGood>();
+    List<SingleGood> hfList = new ArrayList<>();
+    List<SingleGood> qcList = new ArrayList<>();
     private huafeiAdapter hfAdapter;
     private RelativeLayout go_huafei;
     private RelativeLayout go_car;
@@ -99,9 +81,8 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
         // 获取首页轮播图
         RequestParams params1 = new RequestParams();
         execApi(ApiType.GETHOMEPIC, params1);
-        // getClassId();
-        getData();
-        getNyc();
+        getClassId();
+
     }
 
     private void getClassId() {
@@ -112,6 +93,12 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
     private void qiandao() {
         setRightImage(R.drawable.qiandao);
         showRightImage();
+        getRightImageView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                initQiandao();
+            }
+        });
         getRightImageView().setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -120,9 +107,9 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
                 }
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     setRightImage(R.drawable.qiandao_press);
-                    initQiandao();
+
                 }
-                return true;
+                return false;
             }
         });
 
@@ -133,11 +120,14 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
      *
      */
     private void getData() {
+
+
         RequestParams params = new RequestParams();
         Map<String, Object> map = new HashMap<>();
         map.put("page", page1);
         map.put("rowCount", 6);
-        map.put("classId", "531680A5");
+        String huafeiId = (String) SPUtils.get(HomepageActivity.this, "HuafeiId", "531680A5");
+        map.put("classId", huafeiId);
 
         if (isLogin()) {
             map.put("locationUserId", Store.User.queryMe().userid);
@@ -158,7 +148,8 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
         Map<String, Object> map = new HashMap<>();
         map.put("page", page2);
         map.put("rowCount", 6);
-        map.put("classId", "6C7D8F66");
+        String carID = (String) SPUtils.get(HomepageActivity.this, "CarID", "6C7D8F66");
+        map.put("classId", carID);
         if (isLogin()) {
             map.put("locationUserId", Store.User.queryMe().userid);
         } else {
@@ -227,25 +218,22 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
     public void OnViewClick(View v) {
 
         switch (v.getId()) {
-            case R.id.huafei_zhuanchang:
-            case R.id.head_bar_gengduo:
-            case R.id.head_bottom_bar_qianjin:
-                Intent intent = new Intent(HomepageActivity.this,
-                        ShangpinListActivity.class);
-                intent.putExtra("goods", "huafei");
-                startActivity(intent);
-
-                break;
             case R.id.car_zhuanchang:
-            case R.id.car_bar_gengduo:
-            case R.id.car_bottom_bar_qianjin:
+            case R.id.head_bar_gengduo:     //本为化肥
+            case R.id.head_bottom_bar_qianjin://本为化肥
                 Intent intent1 = new Intent(HomepageActivity.this,
                         ShangpinListActivity.class);
                 intent1.putExtra("goods", "qiche");
                 startActivity(intent1);
-
                 break;
-
+            case R.id.huafei_zhuanchang:
+            case R.id.car_bar_gengduo://本为汽车
+            case R.id.car_bottom_bar_qianjin://本为汽车
+                Intent intent = new Intent(HomepageActivity.this,
+                        ShangpinListActivity.class);
+                intent.putExtra("goods", "huafei");
+                startActivity(intent);
+                break;
             default:
                 break;
         }
@@ -254,6 +242,7 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
 
     @Override
     public void onResponsed(Request req) {
+        disMissDialog();
         scrollView.onRefreshComplete();
         if (req.getApi() == ApiType.GETHOMEPIC) {
             HomeImageResult res = (HomeImageResult) req.getData();
@@ -274,7 +263,7 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
                     hfList.clear();
                     hfList.addAll(huafeiList);
                     hfAdapter = new huafeiAdapter();
-                    huafei_gv.setAdapter(hfAdapter);
+                    qiche_gv.setAdapter(hfAdapter);
                 } else {
                     hfList.addAll(huafeiList);
                     hfAdapter.notifyDataSetChanged();
@@ -294,7 +283,7 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
                     qcList.clear();
                     qcList.addAll(nongyongcheList);
                     qcAdapter = new qicheAdapter();
-                    qiche_gv.setAdapter(qcAdapter);
+                    huafei_gv.setAdapter(qcAdapter);
                 } else {
                     qcAdapter.notifyDataSetChanged();
                 }
@@ -316,15 +305,36 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
             }
 
         } else if (ApiType.GET_CLASSID == req.getApi()) {
-            @SuppressWarnings("unchecked")
-            List<ClassIDResult> data = (List<ClassIDResult>) req.getData();
+            ClassIDResult data = (ClassIDResult) req.getData();
+            if (data.getStatus().equals("1000")) {
+                for (int i = 0; i < data.categories.size(); i++) {
+                    if (data.categories.get(i).name.equals("化肥")) {
+                        //保存到本地此购物车的Id
+                        SPUtils.put(HomepageActivity.this, "HuafeiId",
+                                data.categories.get(i).id);
+
+                    } else if (data.categories.get(i).name.equals("汽车")) {
+                        SPUtils.put(HomepageActivity.this, "CarID",
+                                data.categories.get(i).id);
+                    }
+                }
+
+            } else {
+                //保存到本地此购物车的Id
+                SPUtils.put(HomepageActivity.this, "HuafeiId",
+                        "531680A5");
+                SPUtils.put(HomepageActivity.this, "CarID",
+                        "6C7D8F66");
+            }
+            showProgressDialog();
+            getNyc();
+            getData();
         }
 
     }
 
 
     public class huafeiAdapter extends BaseAdapter {
-        float jiefen;
 
         @Override
         public int getCount() {
@@ -333,7 +343,7 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
 
         @Override
         public Object getItem(int position) {
-            return null;
+            return hfList.get(position);
         }
 
         @Override
@@ -344,48 +354,66 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
         @Override
         public View getView(final int position, View convertView,
                             ViewGroup parent) {
+            if (convertView == null) {
+                convertView = LayoutInflater.from(HomepageActivity.this).inflate(
+                        R.layout.home_gv_item, parent, false);
+                convertView.setTag(new ViewHolder(convertView));
 
-            View view = LayoutInflater.from(HomepageActivity.this).inflate(
-                    R.layout.home_gv_item, parent, false);
-            TextView huafei_name_tv = (TextView) view
-                    .findViewById(R.id.huafei_name_tv);
-            TextView huafei_xianjia = (TextView) view
-                    .findViewById(R.id.huafei_xianjia);
-            ImageView huafei_img = (ImageView) view
-                    .findViewById(R.id.huafei_img);
+            }
+            ViewHolder holder = (ViewHolder) convertView.getTag();
+
+
             //商品图
-            ImageLoader.getInstance().displayImage(MsgID.IP + hfList.get(position).imgUrl, huafei_img);
+            ImageLoader.getInstance().displayImage(MsgID.IP + hfList.get(position).imgUrl, holder.huafei_img);
             //商品名
             if (StringUtil.checkStr(hfList.get(position).goodsName)) {
-                huafei_name_tv.setText(hfList.get(position).goodsName);
+                holder.huafei_name_tv.setText(hfList.get(position).goodsName);
             }
             //商品是否预售
             if (hfList.get(position).presale) {
-                huafei_xianjia.setTextColor(Color.GRAY);
-                huafei_xianjia
+                holder.huafei_xianjia.setTextColor(Color.GRAY);
+                holder.huafei_xianjia
                         .setText("即将上线");
             } else {
                 //商品价格
-                huafei_xianjia.setTextColor(Color.parseColor("#ff4e00"));
+                holder.huafei_xianjia.setTextColor(Color.parseColor("#ff4e00"));
                 if (StringUtil.checkStr(hfList.get(position).unitPrice)) {
-                    huafei_xianjia
+                    holder.huafei_xianjia
                             .setText("¥" + hfList.get(position).unitPrice);
                 }
 
             }
-            huafei_gv.setOnItemClickListener(new OnItemClickListener() {
+
+            convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onItemClick(AdapterView<?> arg0, View arg1,
-                                        int arg2, long arg3) {
+                public void onClick(View v) {
                     // 带商品的id过去
                     Intent intent = new Intent(HomepageActivity.this,
                             ShangpinDetailActivity.class);
-                    intent.putExtra("goodId", hfList.get(arg2).goodsId);
-                    intent.putExtra("type", hfList.get(arg2).brandName);
+                    intent.putExtra("goodId", hfList.get(position).goodsId);
                     startActivity(intent);
                 }
             });
-            return view;
+
+            return convertView;
+
+
+        }
+
+        class ViewHolder {
+
+            private TextView huafei_name_tv;
+            private TextView huafei_xianjia;
+            private ImageView huafei_img;
+
+            public ViewHolder(View convertView) {
+                huafei_name_tv = (TextView) convertView
+                        .findViewById(R.id.huafei_name_tv);
+                huafei_xianjia = (TextView) convertView
+                        .findViewById(R.id.huafei_xianjia);
+                huafei_img = (ImageView) convertView
+                        .findViewById(R.id.huafei_img);
+            }
 
         }
 
@@ -399,7 +427,7 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
 
         @Override
         public Object getItem(int position) {
-            return null;
+            return qcList.get(position);
         }
 
         @Override
@@ -411,36 +439,52 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
         public View getView(final int position, View convertView,
                             ViewGroup parent) {
 
-            View view = LayoutInflater.from(HomepageActivity.this).inflate(
-                    R.layout.home_gv_item, parent, false);
-            TextView huafei_name_tv = (TextView) view
-                    .findViewById(R.id.huafei_name_tv);
-            TextView huafei_xianjia = (TextView) view
-                    .findViewById(R.id.huafei_xianjia);
-            ImageView huafei_img = (ImageView) view
-                    .findViewById(R.id.huafei_img);
-            huafei_img.setScaleType(ScaleType.CENTER_CROP);
-            ImageLoader.getInstance().displayImage(MsgID.IP + qcList.get(position).imgUrl, huafei_img);
+            if (convertView == null) {
+                convertView = LayoutInflater.from(HomepageActivity.this).inflate(
+                        R.layout.home_gv_item, parent, false);
+                convertView.setTag(new ViewHolder(convertView));
+
+            }
+            ViewHolder holder = (ViewHolder) convertView.getTag();
+            holder.huafei_img.setScaleType(ScaleType.CENTER_CROP);
+            ImageLoader.getInstance().displayImage(MsgID.IP + qcList.get(position).imgUrl,  holder.huafei_img);
 
             if (StringUtil.checkStr(qcList.get(position).goodsName)) {
-                huafei_name_tv.setText(qcList.get(position).goodsName);
+                holder.huafei_name_tv.setText(qcList.get(position).goodsName);
             }
             if (StringUtil.checkStr(qcList.get(position).unitPrice)) {
-                huafei_xianjia.setText("¥" + qcList.get(position).unitPrice);
+                holder.huafei_xianjia.setText("¥" + qcList.get(position).unitPrice);
             }
 
-            qiche_gv.setOnItemClickListener(new OnItemClickListener() {
+            convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onItemClick(AdapterView<?> arg0, View arg1,
-                                        int arg2, long arg3) {
+                public void onClick(View v) {
                     // 带商品的id过去
                     Intent intent = new Intent(HomepageActivity.this,
                             ShangpinDetailActivity.class);
-                    intent.putExtra("goodId", qcList.get(arg2).goodsId);
+                    intent.putExtra("goodId", qcList.get(position).goodsId);
                     startActivity(intent);
                 }
             });
-            return view;
+
+            return convertView;
+
+        }
+
+        class ViewHolder {
+
+            private TextView huafei_name_tv;
+            private TextView huafei_xianjia;
+            private ImageView huafei_img;
+
+            public ViewHolder(View convertView) {
+                huafei_name_tv = (TextView) convertView
+                        .findViewById(R.id.huafei_name_tv);
+                huafei_xianjia = (TextView) convertView
+                        .findViewById(R.id.huafei_xianjia);
+                huafei_img = (ImageView) convertView
+                        .findViewById(R.id.huafei_img);
+            }
 
         }
 
@@ -449,8 +493,8 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
 
     @Override
     public void onRefresh(PullToRefreshBase refreshView) {
-        getData();
         getNyc();
+        getData();
         // 获取首页轮播图
         RequestParams params1 = new RequestParams();
         execApi(ApiType.GETHOMEPIC, params1);

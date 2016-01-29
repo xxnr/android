@@ -53,6 +53,7 @@ public class InviteFriendsList extends BaseFragment implements PullToRefreshBase
                 R.layout.item_invite_list_head, null);
         count_tv = (TextView) head_view
                 .findViewById(R.id.item_invite_list_head_count);
+        showProgressDialog();
         getData();
         return view;
     }
@@ -64,8 +65,6 @@ public class InviteFriendsList extends BaseFragment implements PullToRefreshBase
         params.put("max", 20);
         params.put("page", page);
         execApi(ApiType.GET_INVITEE, params);
-        showProgressDialog();
-
     }
 
     @Override

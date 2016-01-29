@@ -46,6 +46,7 @@ public class BigImageActivity extends BaseActivity {
         if (detail != null && detail.pictures != null) {
             MyPagerAdapter myPagerAdapter = new MyPagerAdapter(getSupportFragmentManager(), detail.pictures);
             viewPager.setAdapter(myPagerAdapter);
+            viewPager.setOffscreenPageLimit(1);
             if (detail.pictures.size()>1){
                 indicator.setViewPager(viewPager);
                 viewPager.setCurrentItem(position);

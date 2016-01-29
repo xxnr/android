@@ -317,8 +317,8 @@ public class MineActivity extends BaseActivity {
             }
 
 
-            if (!StringUtil.empty(user.userType)) {
-                mine_type.setText("类型：" + setUserType(user.userType));
+            if (!StringUtil.empty(user.userTypeInName)) {
+                mine_type.setText("类型：" + user.userTypeInName);
             } else {
                 mine_type.setText("类型：还没填写呦~");
             }
@@ -404,45 +404,10 @@ public class MineActivity extends BaseActivity {
             me.name = user.name;
             me.phone = user.phone;
             me.userType = user.userType;
+            me.userTypeInName = user.userTypeInName;
             Store.User.saveMe(me);
         }
 
     }
-
-
-    public String setUserType(String i) {
-        String userType = "";
-        int i1 = 1;
-        try {
-            i1 = Integer.parseInt(i);
-        } catch (Exception e) {
-            RndLog.d(TAG, e.getMessage());
-            i1 = 1;
-        }
-        switch (i1) {
-            case 1:
-                userType = "其他";
-                break;
-            case 2:
-                userType = "种植大户";
-                break;
-            case 3:
-                userType = "村级经销商";
-                break;
-            case 4:
-                userType = "乡镇经销商";
-                break;
-            case 5:
-                userType = "县级经销商";
-                break;
-            default:
-                userType = "其他";
-                break;
-        }
-
-        return userType;
-
-    }
-
 
 }

@@ -25,6 +25,7 @@ public class LoginResult extends ResponseResult {
 
         //需要保存的东西
         public String defaultAddress;// :用户默认送货地址
+        public String userTypeInName;//：用户类型
         public String token;
         public String shopCarCount;
         public String name;

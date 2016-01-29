@@ -318,7 +318,6 @@ public class ShoppingCartActivity extends BaseActivity {
             }
 
             // 加载用户购物车数据  GET 请求
-            showProgressDialog();
             RequestParams params = new RequestParams();
             execApi(ApiType.GET_SHOPCART_LIST.setMethod(ApiType.RequestMethod.GET).setOpt
                     ("/api/v2.1/cart/getShoppingCart" + "?token=" + Store.User.queryMe().token), params);
@@ -326,11 +325,13 @@ public class ShoppingCartActivity extends BaseActivity {
             dao.deleteAllShopping();
         } else {
             //未登录加载本地购物车
+            disMissDialog();
             jiadata(); // 本地数据库数据（假数据）
         }
     }
 
     private void jiadata() {
+
         dao = new ShoppingDao(getApplicationContext());
         allShoppings = dao.getAllShoppings(null);
         localToNet = new ArrayList<>();
@@ -374,7 +375,6 @@ public class ShoppingCartActivity extends BaseActivity {
             String jsonString = gson.toJson(map);
             params.put("JSON", jsonString);
             execApi(ApiType.GET_LOCAL_SHOPCART_LIST.setMethod(ApiType.RequestMethod.POSTJSON), params);
-
             if (adapter == null) {
                 adapter = new shopCartAdapter();
                 shopCart_list.setAdapter(adapter);
@@ -404,6 +404,7 @@ public class ShoppingCartActivity extends BaseActivity {
             int num;
             float additionPrice;
             String attr;
+            String additions;
             float xianjia;
             float dingjin;
             List<GetshopCart.SKU.Additions> jsonList;
@@ -560,6 +561,7 @@ public class ShoppingCartActivity extends BaseActivity {
     @Override
     public void onResponsed(Request req) {
         shopCart_list.onRefreshComplete();
+        disMissDialog();
         //获得购物车列表
         int total_count = 0;
         if (req.getApi() == ApiType.GET_SHOPCART_LIST) {
@@ -624,38 +626,38 @@ public class ShoppingCartActivity extends BaseActivity {
                                 .get(j).deposit);
                     }
                     //Sku属性
-                    StringBuilder stringBuilder = new StringBuilder();
+                    StringBuilder stringSku = new StringBuilder();
                     if (rows.get(i).SKUList.get(j).attributes != null && !rows.get(i).SKUList.get(j).attributes.isEmpty()) {
                         for (int k = 0; k < rows.get(i).SKUList.get(j).attributes.size(); k++) {
                             if (StringUtil.checkStr(rows.get(i).SKUList.get(j).attributes.get(k).name)
                                     && StringUtil.checkStr(rows.get(i).SKUList.get(j).attributes.get(k).value)) {
-                                stringBuilder.append(rows.get(i).SKUList.get(j).attributes.get(k).name + ":")
+                                stringSku.append(rows.get(i).SKUList.get(j).attributes.get(k).name + ":")
                                         .append(rows.get(i).SKUList.get(j).attributes.get(k).value + ";");
                             }
                         }
+                        goods.attr = stringSku.toString().substring(0, stringSku.toString().length() - 1);
                     }
+
                     //附加选项
+                    StringBuilder stringAddition = new StringBuilder();
                     if (rows.get(i).SKUList.get(j).additions != null && !rows.get(i).SKUList.get(j).additions.isEmpty()) {
                         goods.jsonList = rows.get(i).SKUList.get(j).additions;
-                        stringBuilder.append("附加选项:");
+                        stringAddition.append("附加项目:");
                         goods.additionPrice = 0;
                         for (int k = 0; k < rows.get(i).SKUList.get(j).additions.size(); k++) {
                             if (StringUtil.checkStr(rows.get(i).SKUList.get(j).additions.get(k).name)) {
-                                stringBuilder.append(rows.get(i).SKUList.get(j).additions.get(k).name + ",");
+                                stringAddition.append(rows.get(i).SKUList.get(j).additions.get(k).name + ";");
                                 try {
-                                    goods.additionPrice += Double.parseDouble(rows.get(i).SKUList.get(j).additions.get(k).price);
+                                    goods.additionPrice += Double.parseDouble(rows.get(i).SKUList.get(j).additions.get(k).price+"");
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
 
                             }
                         }
+                        goods.additions = stringAddition.toString().substring(0, stringAddition.toString().length() - 1);
                     }
-
-                    goods.attr = stringBuilder.toString().substring(0, stringBuilder.toString().length() - 1);
                     //附加选项的List(用于query)
-
-
                     c.goods.add(goods);
                 }
                 data.category.add(c);
@@ -736,34 +738,38 @@ public class ShoppingCartActivity extends BaseActivity {
                     }
 
                     //Sku属性
-                    StringBuilder stringBuilder = new StringBuilder();
+                    StringBuilder stringSku = new StringBuilder();
                     if (rows.get(i).SKUList.get(j).attributes != null && !rows.get(i).SKUList.get(j).attributes.isEmpty()) {
-
                         for (int k = 0; k < rows.get(i).SKUList.get(j).attributes.size(); k++) {
                             if (StringUtil.checkStr(rows.get(i).SKUList.get(j).attributes.get(k).name)
                                     && StringUtil.checkStr(rows.get(i).SKUList.get(j).attributes.get(k).value)) {
-                                stringBuilder.append(rows.get(i).SKUList.get(j).attributes.get(k).name + ":")
+                                stringSku.append(rows.get(i).SKUList.get(j).attributes.get(k).name + ":")
                                         .append(rows.get(i).SKUList.get(j).attributes.get(k).value + ";");
                             }
                         }
+                        goods.attr = stringSku.toString().substring(0, stringSku.toString().length() - 1);
                     }
+
+
                     //附加选项
+                    StringBuilder stringAddition = new StringBuilder();
                     if (rows.get(i).SKUList.get(j).additions != null && !rows.get(i).SKUList.get(j).additions.isEmpty()) {
                         goods.jsonList = rows.get(i).SKUList.get(j).additions;
+                        stringAddition.append("附加项目:");
                         goods.additionPrice = 0;
-                        stringBuilder.append("附加选项:");
                         for (int k = 0; k < rows.get(i).SKUList.get(j).additions.size(); k++) {
                             if (StringUtil.checkStr(rows.get(i).SKUList.get(j).additions.get(k).name)) {
-                                stringBuilder.append(rows.get(i).SKUList.get(j).additions.get(k).name + ",");
+                                stringAddition.append(rows.get(i).SKUList.get(j).additions.get(k).name + ";");
                                 try {
-                                    goods.additionPrice += Double.parseDouble(rows.get(i).SKUList.get(j).additions.get(k).price);
+                                    goods.additionPrice += Double.parseDouble(rows.get(i).SKUList.get(j).additions.get(k).price+"");
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
                             }
                         }
+                        goods.additions = stringAddition.toString().substring(0, stringAddition.toString().length() - 1);
                     }
-                    goods.attr = stringBuilder.toString().substring(0, stringBuilder.toString().length() - 1);
+
                     c.goods.add(goods);
                 }
                 data.category.add(c);
@@ -922,16 +928,17 @@ public class ShoppingCartActivity extends BaseActivity {
         }
 
         class ViewHolder {
-            private LinearLayout goods_car_bar;
+            private LinearLayout goods_car_bar, additions_lin;
             private ImageView ordering_item_jian, ordering_item_jia, ordering_item_img, ordering_now_delete;
             private CheckBox checkBox_item;
             private TextView ordering_item_geshu, ordering_item_attr, btn_check_item_offline;
             private TextView ordering_now_pri, ordering_item_name, goods_car_deposit, goods_car_weikuan;
             private RelativeLayout shopCart_list_item_rel;
-            private TextView step1, step2;
+            private TextView step1, step2, additions_text, additions_price;
 
             public ViewHolder(View convertView) {
                 goods_car_bar = (LinearLayout) convertView.findViewById(R.id.goods_car_item_bar);
+
                 ordering_item_jian = (ImageView) convertView//商品-
                         .findViewById(R.id.ordering_item_jian1);
                 ordering_item_jia = (ImageView) convertView//商品+
@@ -942,9 +949,9 @@ public class ShoppingCartActivity extends BaseActivity {
                 ExpandViewTouch.expandViewTouchDelegate(checkBox_item, 100, 100, 100, 100);
                 ordering_now_delete = (ImageView) convertView
                         .findViewById(R.id.ordering_now_delete);
+                ExpandViewTouch.expandViewTouchDelegate(ordering_now_delete, 100, 100, 100, 100);
                 ordering_item_geshu = (TextView) convertView//商品个数
                         .findViewById(R.id.ordering_item_geshu);
-
                 btn_check_item_offline = (TextView) convertView    //已下架
                         .findViewById(R.id.btn_check_item_offline);
                 ordering_now_pri = (TextView) convertView//商品价格
@@ -961,6 +968,12 @@ public class ShoppingCartActivity extends BaseActivity {
                         .findViewById(R.id.shopCart_list_item_rel);
                 step1 = (TextView) convertView.findViewById(R.id.goods_car_item_bar_step1);
                 step2 = (TextView) convertView.findViewById(R.id.goods_car_item_bar_step2);
+
+                additions_lin = (LinearLayout) convertView.findViewById(R.id.additions_lin);//附加选项所在的布局
+                additions_text = (TextView) convertView//附加选项
+                        .findViewById(R.id.additions_text);
+                additions_price = (TextView) convertView//附加选项价格
+                        .findViewById(R.id.additions_price);
             }
         }
 
@@ -1075,18 +1088,18 @@ public class ShoppingCartActivity extends BaseActivity {
                 }
                 holder.goods_car_bar.setVisibility(View.GONE);
             } else {
-                if (goodsList.get(position).online){
+                if (goodsList.get(position).online) {
                     holder.ordering_now_pri.setTextColor(getResources().getColor(R.color.black_goods_titile));
                 }
                 holder.goods_car_bar.setVisibility(View.VISIBLE);
                 holder.goods_car_deposit.setText("¥" + StringUtil.toTwoString(goodsList
-                        .get(position).dingjin + ""));
+                        .get(position).dingjin * goodsList.get(position).num + ""));
                 if (goodsList.get(position).additionPrice == 0) {
                     holder.goods_car_weikuan.setText("¥" + StringUtil.toTwoString((goodsList.get(position).xianjia - goodsList
-                            .get(position).dingjin) + ""));
+                            .get(position).dingjin) * goodsList.get(position).num + ""));
                 } else {
                     holder.goods_car_weikuan.setText("¥" + StringUtil.toTwoString((goodsList.get(position).xianjia + goodsList.get(position).additionPrice - goodsList
-                            .get(position).dingjin) + ""));
+                            .get(position).dingjin) * goodsList.get(position).num + ""));
                 }
 
             }
@@ -1094,14 +1107,25 @@ public class ShoppingCartActivity extends BaseActivity {
             if (StringUtil.checkStr(goodsList.get(position).attr)) {
                 holder.ordering_item_attr.setText(goodsList.get(position).attr);
             }
-            //总价
-            if (goodsList.get(position).additionPrice == 0) {
-                holder.ordering_now_pri.setText("¥" + StringUtil.toTwoString(goodsList
-                        .get(position).xianjia + ""));
+            if (StringUtil.checkStr(goodsList.get(position).additions)) {
+
+                holder.additions_lin.setVisibility(View.VISIBLE);
+                holder.additions_text.setText(goodsList.get(position).additions);
+                holder.additions_price.setText("¥" + StringUtil.toTwoString(goodsList.get(position).additionPrice + ""));
+                if (goodsList.get(position).online) {
+                    holder.additions_price.setTextColor(getResources().getColor(R.color.black_goods_titile));
+                    holder.additions_text.setTextColor(getResources().getColor(R.color.black_goods_titile));
+                } else {
+                    holder.additions_price.setTextColor(getResources().getColor(R.color.main_index_gary));
+                    holder.additions_text.setTextColor(getResources().getColor(R.color.main_index_gary));
+                }
             } else {
-                holder.ordering_now_pri.setText("¥" + StringUtil.toTwoString((goodsList
-                        .get(position).xianjia + goodsList.get(position).additionPrice) + ""));
+                holder.additions_lin.setVisibility(View.GONE);
             }
+
+            //sku单价
+            holder.ordering_now_pri.setText("¥" + StringUtil.toTwoString(goodsList
+                    .get(position).xianjia + ""));
 
             // 避免由于复用触发onChecked()事件
             holder.checkBox_item.setOnCheckedChangeListener(null);
@@ -1356,6 +1380,7 @@ public class ShoppingCartActivity extends BaseActivity {
         inCartMap.clear();
         inShopMap.clear();
         notifyCheckedChanged();
+        showProgressDialog();
         getData();
     }
 

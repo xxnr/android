@@ -64,7 +64,7 @@ public class WaitingPay extends ResponseResult {
     public static class Product implements Serializable {
 
         public String category;// 类别 化肥 汽车
-        public String count;// 数量
+        public int count;// 数量
         public String thumbnail;// 商品图片
         public String name;//商品名称
         public float deposit;// 商品定金
@@ -81,13 +81,13 @@ public class WaitingPay extends ResponseResult {
         public String productName; //SKU简称
         public String name; //SKU名称
         public String thumbnail; //商品略缩图
-        public String count; //商品数量
+        public int count; //商品数量
         public String category; //商品分类
         public List<Additions> additions; //附加选项
         public List<Attributes> attributes; //属性
 
         public static class Additions implements Serializable{
-            public String price;//附加选项价格
+            public float price;//附加选项价格
             public String name;// 附加选项名称
             public String ref;//附加选项_id
             public String _id;//附加选项_id

@@ -83,6 +83,7 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
         setTitle("新农资讯");
         hideLeft();
         items = new ArrayList<InformationResult.DatasEntity.ItemsEntity>();
+        showProgressDialog();
         getData();
     }
 
@@ -102,6 +103,7 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
 
                     @Override
                     public void onSuccess(ResponseInfo<String> arg0) {
+                        disMissDialog();
                         listView.onRefreshComplete();
                         InformationResult info = null;
                         info = JSON.parseObject(arg0.result,
@@ -134,7 +136,7 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
     @Override
     public void OnViewClick(View v) {
         if (v.getId() == R.id.return_top) {
-            listView.getRefreshableView().smoothScrollToPosition(0);
+            listView.getRefreshableView().setSelection(0);
         }
     }
 

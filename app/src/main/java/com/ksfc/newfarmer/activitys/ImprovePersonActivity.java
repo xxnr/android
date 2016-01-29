@@ -163,8 +163,8 @@ public class ImprovePersonActivity extends BaseActivity {
         city = me.addressCity;
         town = me.addressTown;
         type_key = me.userType;
-        if (!StringUtil.empty(me.userType)) {
-            choice_type_text.setText(setUserType(me.userType));
+        if (!StringUtil.empty(me.userTypeInName)) {
+            choice_type_text.setText(me.userTypeInName);
         } else {
             choice_type_text.setText("还有没有填写呦~");
         }
@@ -334,38 +334,6 @@ public class ImprovePersonActivity extends BaseActivity {
             }
         }
 
-    }
-
-    public String setUserType(String i) {
-        String userType = "";
-        int i1 = 1;
-        try {
-            i1 = Integer.parseInt(i);
-        } catch (Exception e) {
-            RndLog.d(TAG, e.getMessage());
-            i1 = 1;
-        }
-        switch (i1) {
-            case 1:
-                userType = "其他";
-                break;
-            case 2:
-                userType = "种植大户";
-                break;
-            case 3:
-                userType = "村级经销商";
-                break;
-            case 4:
-                userType = "乡镇经销商";
-                break;
-            case 5:
-                userType = "县级经销商";
-                break;
-            default:
-                userType = "其他";
-                break;
-        }
-        return userType;
     }
 
     private void upAddress(String value) {

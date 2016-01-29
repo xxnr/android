@@ -24,6 +24,7 @@ import com.ksfc.newfarmer.protocol.beans.GetshopCart;
 import com.ksfc.newfarmer.protocol.beans.HomeImageResult;
 import com.ksfc.newfarmer.protocol.beans.HotLineResult;
 import com.ksfc.newfarmer.protocol.beans.InformationResult;
+import com.ksfc.newfarmer.protocol.beans.IntentionProductsResult;
 import com.ksfc.newfarmer.protocol.beans.InviteeResult;
 import com.ksfc.newfarmer.protocol.beans.JifenData;
 import com.ksfc.newfarmer.protocol.beans.LoginResult;
@@ -250,7 +251,7 @@ public enum ApiType {
      */
     UPDATE_ADDRESS("/api/v2.0/user/updateUserAddress", ResponseResult.class),
     /**
-     * 选择配送地址接口
+     *    选择配送地址接口
      */
     SELECT_ADDRESS("/app/order/addBuildingUserId", ResponseResult.class),
     /**
@@ -258,19 +259,19 @@ public enum ApiType {
      */
     LATEST_VERSION("/app/version/latestVersion", ResponseResult.class),
     /**
-     * 支付完成回调接口
+     * 用户相关 支付完成回调接口
      */
     PAY_BACK("/app/order/payNotify", Payback.class),
     /**
-     * 获取密码加密公钥
+     * 用户相关 获取密码加密公钥
      */
     GET_PUBLIC_KEY("/api/v2.0/user/getpubkey", PublicKeyResult.class),
     /**
-     * 邀请好友列表
+     * 用户相关 邀请好友列表
      */
     GET_INVITEE("/api/v2.0/user/getInvitee", InviteeResult.class),
     /**
-     * 我的邀请人
+     * 用户相关 我的邀请人
      */
     GET_BINDINVITER("/api/v2.0/user/bindInviter", MyInviteResult.class),
     /**
@@ -278,46 +279,67 @@ public enum ApiType {
      */
     GET_INFORMATION("/api/v2.0/news", InformationResult.class),
     /**
-     * 商品类型筛选
+     * 筛选相关 商品类型筛选
      */
     GET_ATTRIBUTENAME(null, BrandsShaixuan.class),
     /**
-     * 筛选后的商品列表
+     * 筛选相关 筛选后的商品列表
      */
     GET_SHAIXUAN_LIST(null, GetGoodsData.class),
     /**
-     * 化肥或者汽车的classID
+     * 商品相关 化肥或者汽车的classID
      */
     GET_CLASSID("/api/v2.0/products/categories", ClassIDResult.class),
     /**
-     * 更新订单支付方式
+     * 订单相关 更新订单支付方式
      */
     GET_UPDATPAYWAY("/api/v2.0/order/updateOrderPaytype", ResponseResult.class),
     /**
-     * 查找有无此用户
+     * 用户相关 查找有无此用户
      */
     FIND_USER("/api/v2.0/user/findAccount/", ResponseResult.class),
     /**
-     * 选择用户类型
+     * 用户相关 选择用户类型
      */
     USER_TYPE("/api/v2.0/usertypes", ResponseResult.class),
     /**
-     * 客户订单
+     * 订单相关 客户订单
      */
     GET_INVITEE_ORDERS("/api/v2.0/user/getInviteeOrders", ConsumerOrderResult.class),
     /**
-     * 获取商品属性列表
+     * 商品相关 获取商品属性列表
      */
     GET_GOODS_ATTR("/api/v2.1/products/attributes", AttrSelectResult.class),
 
     /**
-     * 获取品牌列表
+     * 筛选相关 获取品牌列表
      */
-    GET_BRANDS_LIST(" /api/v2.1/brands", BrandsResult.class),
+    GET_BRANDS_LIST("/api/v2.1/brands", BrandsResult.class),
+
+    /**
+     * 用户报备 获取意向商品列表
+     */
+    GET_PURPOSE_GOODS_LIST("/api/v2.1/intentionProducts", IntentionProductsResult.class),
+    /**
+     * 用户报备 判断手机号是否能添加为潜在客户
+     */
+    IS_POTENTIAL_CUSTOMER("/api/v2.1/potentialCustomer/isAvailable", ResponseResult.class),
+    /**
+     * 用户报备 添加潜在客户
+     */
+    ADD_POTENTIAL_CUSTOMER("/api/v2.1/potentialCustomer/add", ResponseResult.class),
+    /**
+     * 用户报备 获取潜在用户列表
+     */
+    GET_POTENTIAL_CUSTOMER_LIST("/api/v2.1/potentialCustomer/query", ResponseResult.class),
+    /**
+     * 用户报备 获取潜在客户详情
+     */
+    GET_POTENTIAL_CUSTOMER_DETAIL("/api/v2.1/potentialCustomer/get", ResponseResult.class),
 
     TEST("", ResponseResult.class);
-    //     private static String server_url = "http://api.xinxinnongren.com";
-    private static String server_url = "http://101.200.194.203";
+         private static String server_url = "http://api.xinxinnongren.com";
+//    private static String server_url = "http://101.200.194.203";
     // private static String server_url = "http://192.168.1.15";
 
 

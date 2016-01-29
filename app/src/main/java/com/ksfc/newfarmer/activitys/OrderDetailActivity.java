@@ -27,12 +27,16 @@ import com.ksfc.newfarmer.protocol.beans.GetshopCart.shopCart;
 import com.ksfc.newfarmer.utils.SPUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
 
+import com.ksfc.newfarmer.widget.RecyclerImageView;
+import com.ksfc.newfarmer.widget.UnSwipeListView;
 import com.ksfc.newfarmer.widget.WidgetUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.squareup.picasso.Picasso;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,6 +77,7 @@ public class OrderDetailActivity extends BaseActivity {
             String SKUId;
             String name;
             String pic;
+            List<GetshopCart.SKU.Additions> additionsList;
             int num;
             float additionPrice;
             String attr;
@@ -148,6 +153,7 @@ public class OrderDetailActivity extends BaseActivity {
     private void initData() {
         Intent intent = getIntent();
         int flags = intent.getFlags();
+        showProgressDialog("加载中");
         if (flags == 1) {
             String count = intent.getStringExtra("count");
             String SKUId = intent.getStringExtra("SKUId");
@@ -178,7 +184,7 @@ public class OrderDetailActivity extends BaseActivity {
             params.put("JSON", jsonString);
             execApi(ApiType.GET_LOCAL_SHOPCART_LIST.setMethod(ApiType.RequestMethod.POSTJSON), params);
         }
-        showProgressDialog();
+
     }
 
     @Override
@@ -371,13 +377,14 @@ public class OrderDetailActivity extends BaseActivity {
 
         class ViewHolder {
             private LinearLayout goods_car_bar;
-            private ImageView ordering_item_img;
+            private RecyclerImageView ordering_item_img;
             private TextView ordering_now_pri, ordering_item_name, goods_car_deposit,
                     goods_car_weikuan, ordering_item_geshu, ordering_item_attr;
+            private ListView additions_listView;
 
             public ViewHolder(View convertView) {
                 goods_car_bar = (LinearLayout) convertView.findViewById(R.id.goods_car_item_bar);
-                ordering_item_img = (ImageView) convertView//商品图
+                ordering_item_img = (RecyclerImageView) convertView//商品图
                         .findViewById(R.id.ordering_item_img);
                 ordering_item_geshu = (TextView) convertView//商品个数
                         .findViewById(R.id.ordering_item_geshu);
@@ -391,6 +398,8 @@ public class OrderDetailActivity extends BaseActivity {
                         .findViewById(R.id.goods_car_item_bar_deposit);
                 goods_car_weikuan = (TextView) convertView//汽车尾款
                         .findViewById(R.id.goods_car_item_bar_weikuan);
+                additions_listView = (ListView) convertView//附加选项
+                        .findViewById(R.id.additions_listView);
             }
         }
 
@@ -403,15 +412,26 @@ public class OrderDetailActivity extends BaseActivity {
                 convertView.setTag(new ViewHolder(convertView));
             }
             ViewHolder holder = (ViewHolder) convertView.getTag();
-            ImageLoader.getInstance().displayImage(
-                    MsgID.IP + goodsList.get(position).pic, holder.ordering_item_img);
+            //图片
+            if (StringUtil.checkStr(goodsList.get(position).pic)) {
+                Picasso.with(OrderDetailActivity.this)
+                        .load(MsgID.IP +  goodsList.get(position).pic)
+                        .error(R.drawable.error)
+                        .placeholder(R.drawable.zhanweitu)
+                        .into(holder.ordering_item_img);
+
+            }
+            //数量
             holder.ordering_item_geshu.setText("X " + goodsList.get(position).num + "");
+            //名字
             if (StringUtil.checkStr(goodsList.get(position).name)) {
                 holder.ordering_item_name.setText(goodsList.get(position).name);
             }
+            //Sku
             if (StringUtil.checkStr(goodsList.get(position).attr)) {
                 holder.ordering_item_attr.setText(goodsList.get(position).attr);
             }
+            //是否显示阶段
             if (goodsList.get(position).dingjin == 0) {
                 holder.ordering_now_pri.setTextColor(getResources().getColor(R.color.orange_goods_price));
                 holder.goods_car_bar.setVisibility(View.GONE);
@@ -420,27 +440,79 @@ public class OrderDetailActivity extends BaseActivity {
                 holder.goods_car_bar.setVisibility(View.VISIBLE);
                 holder.goods_car_deposit.setTextColor(getResources().getColor(R.color.orange_goods_price));
                 holder.goods_car_deposit.setText("¥" + StringUtil.toTwoString(goodsList
-                        .get(position).dingjin + ""));
+                        .get(position).dingjin * goodsList.get(position).num + ""));
                 if (goodsList.get(position).additionPrice == 0) {
                     holder.goods_car_weikuan.setText("¥" + StringUtil.toTwoString((goodsList.get(position).xianjia - goodsList
-                            .get(position).dingjin) + ""));
+                            .get(position).dingjin) * goodsList.get(position).num + ""));
                 } else {
                     holder.goods_car_weikuan.setText("¥" + StringUtil.toTwoString((goodsList.get(position).xianjia + goodsList.get(position).additionPrice - goodsList
-                            .get(position).dingjin) + ""));
+                            .get(position).dingjin) * goodsList.get(position).num + ""));
                 }
             }
-            //总价
-            if (goodsList.get(position).additionPrice == 0) {
-                holder.ordering_now_pri.setText("¥" + StringUtil.toTwoString(goodsList
-                        .get(position).xianjia + ""));
+            //单价
+            holder.ordering_now_pri.setText("¥" + StringUtil.toTwoString(goodsList
+                    .get(position).xianjia + ""));
+            //附加选项
+            if (goodsList.get(position).additionsList != null && !goodsList.get(position).additionsList.isEmpty()) {
+                holder.additions_listView.setVisibility(View.VISIBLE);
+                AdditionsAdapter adapter = new AdditionsAdapter(goodsList.get(position).additionsList);
+                holder.additions_listView.setAdapter(adapter);
+                WidgetUtil.setListViewHeightBasedOnChildren(holder.additions_listView);
             } else {
-                holder.ordering_now_pri.setText("¥" + StringUtil.toTwoString((goodsList
-                        .get(position).xianjia + goodsList.get(position).additionPrice) + ""));
+                holder.additions_listView.setVisibility(View.GONE);
             }
 
             return convertView;
         }
 
+    }
+
+
+    class AdditionsAdapter extends BaseAdapter {
+        private List<GetshopCart.SKU.Additions> list;
+
+        public AdditionsAdapter(List<GetshopCart.SKU.Additions> list) {
+            this.list = list;
+        }
+
+        @Override
+        public int getCount() {
+            return list.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return list.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView = LayoutInflater.from(OrderDetailActivity.this).inflate(R.layout.item_for_additions_layout, null);
+                convertView.setTag(new ViewHolder(convertView));
+            }
+            ViewHolder holder = (ViewHolder) convertView.getTag();
+            if (StringUtil.checkStr(list.get(position).name) && StringUtil.checkStr(list.get(position).price+"")) {
+                holder.item_additions_name.setText(list.get(position).name);
+                holder.item_additions_price.setText("¥" + StringUtil.toTwoString(list.get(position).price+""));
+            }
+            return convertView;
+        }
+
+        class ViewHolder {
+            private TextView item_additions_name, item_additions_price;
+
+            ViewHolder(View convertView) {
+                this.item_additions_name = ((TextView) convertView.findViewById(R.id.item_additions_name));
+                this.item_additions_price = ((TextView) convertView.findViewById(R.id.item_additions_price));
+            }
+
+        }
     }
 
 
@@ -542,23 +614,18 @@ public class OrderDetailActivity extends BaseActivity {
                                         .append(rows.get(i).SKUList.get(j).attributes.get(k).value + ";");
                             }
                         }
+                        goods.attr = stringBuilder.toString().substring(0, stringBuilder.toString().length() - 1);
                     }
                     //附加选项
                     if (rows.get(i).SKUList.get(j).additions != null && !rows.get(i).SKUList.get(j).additions.isEmpty()) {
-                        stringBuilder.append("附加选项:");
-                        goods.additionPrice = 0;
+                        goods.additionsList = rows.get(i).SKUList.get(j).additions;
+                        float addi_price = 0;
                         for (int k = 0; k < rows.get(i).SKUList.get(j).additions.size(); k++) {
-                            if (StringUtil.checkStr(rows.get(i).SKUList.get(j).additions.get(k).name)) {
-                                stringBuilder.append(rows.get(i).SKUList.get(j).additions.get(k).name + ",");
-                                try {
-                                    goods.additionPrice += Double.parseDouble(rows.get(i).SKUList.get(j).additions.get(k).price);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
+                            addi_price += rows.get(i).SKUList.get(j).additions.get(k).price;
                         }
+                        goods.additionPrice=addi_price;
                     }
-                    goods.attr = stringBuilder.toString().substring(0, stringBuilder.toString().length() - 1);
+
                     c.goods.add(goods);
                 }
                 data.category.add(c);

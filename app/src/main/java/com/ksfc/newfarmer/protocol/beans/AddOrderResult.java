@@ -15,7 +15,7 @@ public class AddOrderResult extends ResponseResult {
 
     public static class Orders implements Serializable {
         public String id;
-        public String deposit;
+        public double deposit;
         public String price;
         public Payment payment;
         public List<SKUS> SKUs;
@@ -29,6 +29,7 @@ public class AddOrderResult extends ResponseResult {
             public String productId; //商品id
             public String name; //SKU名称
             public String count; //商品数量
+            public String productName;//商品名称
 
         }
 

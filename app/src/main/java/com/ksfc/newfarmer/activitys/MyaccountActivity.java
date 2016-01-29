@@ -150,8 +150,8 @@ public class MyaccountActivity extends BaseActivity {
         name.setText(TextUtils.isEmpty(me.name) ? "" : me.name);
         address_home.setText(TextUtils.isEmpty(me.addressCity) ? "" : me.addressCity + me.addressTown);
 
-        if (!StringUtil.empty(me.userType)) {
-            type.setText(setUserType(me.userType));
+        if (!StringUtil.empty(me.userTypeInName)) {
+            type.setText(me.userTypeInName);
         } else {
             type.setText("还没填写呦~");
         }
@@ -387,31 +387,6 @@ public class MyaccountActivity extends BaseActivity {
                 });
     }
 
-
-    public String setUserType(String i) {
-        String userType = "";
-        switch (Integer.parseInt(i)) {
-            case 1:
-                userType = "其他";
-                break;
-            case 2:
-                userType = "种植大户";
-                break;
-            case 3:
-                userType = "村级经销商";
-                break;
-            case 4:
-                userType = "乡镇经销商";
-                break;
-            case 5:
-                userType = "县级经销商";
-                break;
-            default:
-                userType = "其他";
-                break;
-        }
-        return userType;
-    }
 
 
 }

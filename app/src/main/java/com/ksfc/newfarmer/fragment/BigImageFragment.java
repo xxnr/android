@@ -9,6 +9,7 @@ import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.squareup.picasso.Picasso;
 
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
@@ -27,7 +28,7 @@ public class BigImageFragment extends BaseFragment {
         String picture = bundle.getString("picture");
         //可以自由放大缩小图片的控键
         if (StringUtil.checkStr(picture)) {
-            ImageLoader.getInstance().displayImage(MsgID.IP + picture, photoView);
+            Picasso.with(getActivity()).load(MsgID.IP + picture).error(R.drawable.error).skipMemoryCache().placeholder(R.drawable.zhanweitu).into(photoView);
         }
         photoView.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
             @Override

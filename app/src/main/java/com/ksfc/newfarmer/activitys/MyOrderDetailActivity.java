@@ -13,7 +13,9 @@ import com.ksfc.newfarmer.protocol.RequestParams;
 import com.ksfc.newfarmer.protocol.beans.MyOrderDetailResult;
 import com.ksfc.newfarmer.protocol.beans.WaitingPay;
 import com.ksfc.newfarmer.utils.StringUtil;
+import com.ksfc.newfarmer.widget.RecyclerImageView;
 import com.ksfc.newfarmer.widget.UnSwipeListView;
+import com.ksfc.newfarmer.widget.WidgetUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import android.content.Intent;
@@ -187,50 +189,94 @@ public class MyOrderDetailActivity extends BaseActivity {
                 convertView.setTag(new ViewHolder(convertView));
             }
             ViewHolder holder = (ViewHolder) convertView.getTag();
-            final MyOrderDetailResult.Rows.SubOrders subOrders = this.subOrders.get(position);
-            if (subOrders != null) {
+            final MyOrderDetailResult.Rows.SubOrders subOrder = subOrders.get(position);
+            if (subOrder != null) {
                 //支付阶段
-                if (subOrders.type.equals("deposit")) {
+                if (subOrder.type.equals("deposit")) {
                     holder.item_payInfo_step.setText("阶段一：订金");
-                } else if (subOrders.type.equals("balance")) {
+                } else if (subOrder.type.equals("balance")) {
                     holder.item_payInfo_step.setText("阶段二：尾款");
-                } else if (subOrders.type.equals("full")) {
+                } else if (subOrder.type.equals("full")) {
                     holder.item_payInfo_step.setText("订单总额");
                 }
                 //支付状态
-                if (subOrders.payStatus.equals("1")) {
-                    holder.item_payInfo_type.setTextColor(getResources().getColor(R.color.orange));
-                    holder.item_payInfo_type.setText("待付款");
-                } else if (subOrders.payStatus.equals("2")) {
+                if (order_type != 0) { //如果交易状态 是已关闭 下方设置已关闭
+                    if (subOrder.type.equals("balance")) {//阶段二的子订单
+                        try {
+                            if (subOrders.get(position - 1).payStatus.equals("2")) {//如果阶段一的子订单 已付款
+
+                                if (subOrder.payStatus.equals("1")) {
+                                    holder.item_payInfo_type.setTextColor(getResources().getColor(R.color.orange));
+                                    holder.item_payInfo_type.setText("待付款");
+                                } else if (subOrder.payStatus.equals("2")) {
+                                    holder.item_payInfo_type.setTextColor(getResources().getColor(R.color.black_goods_titile));
+                                    holder.item_payInfo_type.setText("已付款");
+                                } else if (subOrder.payStatus.equals("3")) {
+                                    holder.item_payInfo_type.setTextColor(getResources().getColor(R.color.orange));
+                                    holder.item_payInfo_type.setText("部分付款");
+                                }
+
+                            } else {
+                                holder.item_payInfo_type.setTextColor(getResources().getColor(R.color.black_goods_titile));
+                                holder.item_payInfo_type.setText("未开始");
+                            }
+                        } catch (Exception e) {//如果下标越界 就 设置 默认设置
+
+                            if (subOrder.payStatus.equals("1")) {
+                                holder.item_payInfo_type.setTextColor(getResources().getColor(R.color.orange));
+                                holder.item_payInfo_type.setText("待付款");
+                            } else if (subOrder.payStatus.equals("2")) {
+                                holder.item_payInfo_type.setTextColor(getResources().getColor(R.color.black_goods_titile));
+                                holder.item_payInfo_type.setText("已付款");
+                            } else if (subOrder.payStatus.equals("3")) {
+                                holder.item_payInfo_type.setTextColor(getResources().getColor(R.color.orange));
+                                holder.item_payInfo_type.setText("部分付款");
+                            }
+                        }
+
+
+                    } else {
+                        if (subOrder.payStatus.equals("1")) {
+                            holder.item_payInfo_type.setTextColor(getResources().getColor(R.color.orange));
+                            holder.item_payInfo_type.setText("待付款");
+                        } else if (subOrder.payStatus.equals("2")) {
+                            holder.item_payInfo_type.setTextColor(getResources().getColor(R.color.black_goods_titile));
+                            holder.item_payInfo_type.setText("已付款");
+                        } else if (subOrder.payStatus.equals("3")) {
+                            holder.item_payInfo_type.setTextColor(getResources().getColor(R.color.orange));
+                            holder.item_payInfo_type.setText("部分付款");
+                        }
+                    }
+
+
+                } else {
                     holder.item_payInfo_type.setTextColor(getResources().getColor(R.color.black_goods_titile));
-                    holder.item_payInfo_type.setText("已付款");
-                } else if (subOrders.payStatus.equals("3")) {
-                    holder.item_payInfo_type.setTextColor(getResources().getColor(R.color.orange));
-                    holder.item_payInfo_type.setText("部分付款");
+                    holder.item_payInfo_type.setText("已关闭");
                 }
+
                 //应支付金额
-                holder.to_pay_price.setText("¥" + subOrders.price);
+                holder.to_pay_price.setText("¥" + subOrder.price);
                 //已支付金额
-                holder.order_yet_price.setText("¥" + subOrders.paidPrice);
+                holder.order_yet_price.setText("¥" + subOrder.paidPrice);
                 //支付类型
-                if (StringUtil.checkStr(subOrders.payType)) {
+                if (StringUtil.checkStr(subOrder.payType)) {
                     holder.order_pay_type_ll.setVisibility(View.VISIBLE);
-                    if (subOrders.payType.equals("1")) {
+                    if (subOrder.payType.equals("1")) {
                         holder.order_pay_type.setText("支付宝支付");
-                    } else if (subOrders.payType.equals("2")) {
+                    } else if (subOrder.payType.equals("2")) {
                         holder.order_pay_type.setText("银联支付");
                     }
                 } else {
                     holder.order_pay_type_ll.setVisibility(View.GONE);
                 }
                 //查看详情
-                if (subOrders.payments != null && !subOrders.payments.isEmpty()) {
+                if (subOrder.payments != null && !subOrder.payments.isEmpty()) {
                     holder.to_get_pay_detail.setVisibility(View.VISIBLE);
                     holder.to_get_pay_detail.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             Intent intent = new Intent(MyOrderDetailActivity.this, CheckPayDetailActivity.class);
-                            intent.putExtra("payInfo", (Serializable) subOrders);
+                            intent.putExtra("payInfo", (Serializable) subOrder);
                             intent.putExtra("orderId", orderId);
                             startActivity(intent);
                         }
@@ -316,13 +362,15 @@ public class MyOrderDetailActivity extends BaseActivity {
 
         class ViewHolder {
             private LinearLayout goods_car_bar;
-            private ImageView ordering_item_img;
+            private RecyclerImageView ordering_item_img;
             private TextView ordering_now_pri, ordering_item_name, goods_car_deposit,
                     goods_car_weikuan, ordering_item_geshu, ordering_item_attr, ordering_item_orderType;
+            private ListView additions_listView;
+
 
             public ViewHolder(View convertView) {
                 goods_car_bar = (LinearLayout) convertView.findViewById(R.id.goods_car_item_bar);
-                ordering_item_img = (ImageView) convertView//商品图
+                ordering_item_img = (RecyclerImageView) convertView//商品图
                         .findViewById(R.id.ordering_item_img);
                 ordering_item_geshu = (TextView) convertView//商品个数
                         .findViewById(R.id.ordering_item_geshu);
@@ -338,6 +386,8 @@ public class MyOrderDetailActivity extends BaseActivity {
                         .findViewById(R.id.goods_car_item_bar_deposit);
                 goods_car_weikuan = (TextView) convertView//汽车尾款
                         .findViewById(R.id.goods_car_item_bar_weikuan);
+                additions_listView = (ListView) convertView//附加选项
+                        .findViewById(R.id.additions_listView);
             }
         }
 
@@ -358,11 +408,10 @@ public class MyOrderDetailActivity extends BaseActivity {
                             MsgID.IP + SKUsList.get(position).imgs, holder.ordering_item_img);
                 }
                 //商品个数
-                if (StringUtil.checkStr(SKUsList.get(position).count)) {
-                    holder.ordering_item_geshu.setText("X " + SKUsList.get(position).count + "");
-                }
+                holder.ordering_item_geshu.setText("X " + SKUsList.get(position).count + "");
                 //商品名
                 if (StringUtil.checkStr(SKUsList.get(position).productName)) {
+                    holder.ordering_item_name.setEms(10);
                     holder.ordering_item_name.setText(SKUsList.get(position).productName);
                 }
 
@@ -382,17 +431,27 @@ public class MyOrderDetailActivity extends BaseActivity {
                         holder.ordering_item_orderType.setText("已发货");
                     }
                 }
+                //附加选项的总价
+                float car_additions_price = 0;
+                if (SKUsList.get(position).additions != null && !SKUsList.get(position).additions.isEmpty()) {
+                    for (int k = 0; k < SKUsList.get(position).additions.size(); k++) {
+                        if (StringUtil.checkStr(SKUsList.get(position).additions.get(k).name)) {
+                            car_additions_price += SKUsList.get(position).additions.get(k).price;
+                        }
+                    }
+                }
+
                 if (SKUsList.get(position).deposit == 0) {
                     holder.goods_car_bar.setVisibility(View.GONE);
                 } else {
                     holder.goods_car_bar.setVisibility(View.VISIBLE);
                     String deposit = StringUtil.toTwoString(SKUsList
-                            .get(position).deposit + "");
+                            .get(position).deposit * SKUsList.get(position).count + "");
                     if (StringUtil.checkStr(deposit)) {
                         holder.goods_car_deposit.setText("¥" + deposit);
                     }
-                    String weiKuan = StringUtil.toTwoString(SKUsList.get(position).price - SKUsList
-                            .get(position).deposit + "");
+                    String weiKuan = StringUtil.toTwoString((SKUsList.get(position).price + car_additions_price - SKUsList
+                            .get(position).deposit) * SKUsList.get(position).count + "");
                     if (StringUtil.checkStr(weiKuan)) {
                         holder.goods_car_weikuan.setText("¥" + weiKuan);
                     }
@@ -410,20 +469,22 @@ public class MyOrderDetailActivity extends BaseActivity {
                                     .append(SKUsList.get(position).attributes.get(k).value + ";");
                         }
                     }
+                    String car_attr = stringBuilder.toString().substring(0, stringBuilder.toString().length() - 1);
+                    if (StringUtil.checkStr(car_attr)) {
+                        holder.ordering_item_attr.setEms(10);
+                        holder.ordering_item_attr.setText(car_attr);
+                    }
                 }
                 //附加选项
                 if (SKUsList.get(position).additions != null && !SKUsList.get(position).additions.isEmpty()) {
-                    stringBuilder.append("附加选项:");
-                    for (int k = 0; k < SKUsList.get(position).additions.size(); k++) {
-                        if (StringUtil.checkStr(SKUsList.get(position).additions.get(k).name)) {
-                            stringBuilder.append(SKUsList.get(position).additions.get(k).name + ",");
-                        }
-                    }
+                    holder.additions_listView.setVisibility(View.VISIBLE);
+                    AdditionsAdapter adapter = new AdditionsAdapter(SKUsList.get(position).additions);
+                    holder.additions_listView.setAdapter(adapter);
+                    WidgetUtil.setListViewHeightBasedOnChildren(holder.additions_listView);
+                } else {
+                    holder.additions_listView.setVisibility(View.GONE);
                 }
-                String car_attr = stringBuilder.toString().substring(0, stringBuilder.toString().length() - 1);
-                if (StringUtil.checkStr(car_attr)) {
-                    holder.ordering_item_attr.setText(car_attr);
-                }
+
 
             } else {
                 //商品图片
@@ -432,9 +493,7 @@ public class MyOrderDetailActivity extends BaseActivity {
                             MsgID.IP + goodsList.get(position).imgs, holder.ordering_item_img);
                 }
                 //商品个数
-                if (StringUtil.checkStr(goodsList.get(position).goodsCount)) {
-                    holder.ordering_item_geshu.setText("X " + goodsList.get(position).goodsCount + "");
-                }
+                holder.ordering_item_geshu.setText("X " + goodsList.get(position).goodsCount + "");
                 //商品名
                 if (StringUtil.checkStr(goodsList.get(position).goodsName)) {
                     holder.ordering_item_name.setText(goodsList.get(position).goodsName);
@@ -461,11 +520,11 @@ public class MyOrderDetailActivity extends BaseActivity {
                 } else {
                     holder.goods_car_bar.setVisibility(View.VISIBLE);
                     String deposit = StringUtil.toTwoString(goodsList
-                            .get(position).deposit + "");
+                            .get(position).deposit * goodsList.get(position).goodsCount + "");
                     if (StringUtil.checkStr(deposit)) {
                         holder.goods_car_deposit.setText("¥" + deposit);
-                        String weiKuan = StringUtil.toTwoString(goodsList.get(position).unitPrice - goodsList
-                                .get(position).deposit + "");
+                        String weiKuan = StringUtil.toTwoString((goodsList.get(position).unitPrice - goodsList
+                                .get(position).deposit) * goodsList.get(position).goodsCount + "");
                         if (StringUtil.checkStr(weiKuan)) {
                             holder.goods_car_weikuan.setText("¥" + weiKuan);
                         }
@@ -479,6 +538,53 @@ public class MyOrderDetailActivity extends BaseActivity {
 
             }
             return convertView;
+        }
+    }
+
+    class AdditionsAdapter extends BaseAdapter {
+        private List<MyOrderDetailResult.Rows.SKUS.Additions> list;
+
+        public AdditionsAdapter(List<MyOrderDetailResult.Rows.SKUS.Additions> list) {
+            this.list = list;
+        }
+
+        @Override
+        public int getCount() {
+            return list.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return list.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView = LayoutInflater.from(MyOrderDetailActivity.this).inflate(R.layout.item_for_additions_layout, null);
+                convertView.setTag(new ViewHolder(convertView));
+            }
+            ViewHolder holder = (ViewHolder) convertView.getTag();
+            if (StringUtil.checkStr(list.get(position).name)) {
+                holder.item_additions_name.setText(list.get(position).name);
+                holder.item_additions_price.setText("¥" + StringUtil.toTwoString(list.get(position).price + ""));
+            }
+            return convertView;
+        }
+
+        class ViewHolder {
+            private TextView item_additions_name, item_additions_price;
+
+            ViewHolder(View convertView) {
+                this.item_additions_name = ((TextView) convertView.findViewById(R.id.item_additions_name));
+                this.item_additions_price = ((TextView) convertView.findViewById(R.id.item_additions_price));
+            }
+
         }
     }
 

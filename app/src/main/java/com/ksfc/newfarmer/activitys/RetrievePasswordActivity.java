@@ -61,19 +61,19 @@ public class RetrievePasswordActivity extends BaseActivity {
 		switch (v.getId()) {
 		case R.id.backdengLubutton:
 			if (!isMobileNum(backedit1.getText().toString())) {
-				Toast.makeText(this, "请填写正确的手机号", Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, "手机号格式错误", Toast.LENGTH_SHORT).show();
 				return;
 			} else if (backedit1.getText().toString().isEmpty()) {
-				Toast.makeText(this, "请填写手机号", Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, "请输入手机号", Toast.LENGTH_SHORT).show();
 				return;
 			} else if (backyanzhengma.getText().toString().isEmpty()) {
-				Toast.makeText(this, "验证码不能为空", Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, "请输入验证码", Toast.LENGTH_SHORT).show();
 				return;
 			} else if (backnewpassword.getText().toString().isEmpty()) {
-				Toast.makeText(this, "请填写密码", Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, "请输入密码", Toast.LENGTH_SHORT).show();
 				return;
 			} else if (confimPasword.getText().toString().isEmpty()) {
-				Toast.makeText(this, "请填写确认密码", Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, "请输入确认密码", Toast.LENGTH_SHORT).show();
 				return;
 			} else if (!password.equals(backnewpassword.getText().toString())) {
 				showToast("密码不一致");
@@ -129,7 +129,7 @@ public class RetrievePasswordActivity extends BaseActivity {
 		} else if (req.getApi() == ApiType.SEND_SMS) {
 			GetCodeResult res = (GetCodeResult) req.getData();
 			if ("1000".equals(res.getStatus())) {
-				showToast("获取验证码成功");
+				showToast("成功获取短信，请注意查收");
 				final MyCount mc = new MyCount(60000, 1000);
 				mc.start();
 			}

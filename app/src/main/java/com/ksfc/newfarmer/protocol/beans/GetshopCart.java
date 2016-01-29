@@ -60,7 +60,7 @@ public class GetshopCart extends ResponseResult implements Serializable{
             public String category;
             public String brand;
             public String name;
-            public String price;
+            public float price;
             public String __v;
 
         }

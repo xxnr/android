@@ -52,6 +52,7 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
     public void OnActCreate(Bundle savedInstanceState) {
         setTitle("客户订单");
         initView();
+        showProgressDialog();
         getData();
 
     }
@@ -99,6 +100,7 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
 
     @Override
     public void onResponsed(Request req) {
+        disMissDialog();
         listView.onRefreshComplete();
         if (req.getApi() == ApiType.GET_INVITEE_ORDERS) {
             ConsumerOrderResult data = (ConsumerOrderResult) req.getData();

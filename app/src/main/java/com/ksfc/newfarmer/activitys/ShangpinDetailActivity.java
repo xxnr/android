@@ -7,9 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import com.alibaba.fastjson.JSON;
 import com.google.gson.Gson;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MainActivity;
@@ -23,7 +21,6 @@ import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
 import com.ksfc.newfarmer.protocol.beans.GetGoodsDetail;
-import com.ksfc.newfarmer.protocol.beans.GetshopCart;
 import com.ksfc.newfarmer.protocol.beans.RemainGoodsAttr;
 import com.ksfc.newfarmer.protocol.beans.addtoCart;
 import com.ksfc.newfarmer.utils.ExpandViewTouch;
@@ -37,7 +34,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -55,7 +51,6 @@ import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -63,15 +58,12 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import net.yangentao.util.app.App;
-
 import org.json.JSONArray;
 
 public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObserver.OnGlobalLayoutListener {
     private ShoppingDao dao;
     private String goodId;
     private GetGoodsDetail.GoodsDetail detail;
-    private String type;
     private TextView jinqingqidai_bar;
     private LinearLayout shangpin_detail_bottom_bar;
     private int fenshu;
@@ -108,10 +100,8 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
 
     @Override
     public void OnActCreate(Bundle savedInstanceState) {
-        App.getApp().addActivity(this);
         RndApplication.tempDestroyActivityList.add(ShangpinDetailActivity.this);
         goodId = getIntent().getStringExtra("goodId");
-        type = getIntent().getStringExtra("type");
         setTitle("商品详情");
         initView();
         dao = new ShoppingDao(ShangpinDetailActivity.this);
@@ -462,9 +452,9 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
 
             if (maxLength <= 3) {
                 gridView.setNumColumns(4);
-            } else if (maxLength > 3 && maxLength <= 8) {
+            } else if (maxLength > 3 && maxLength <= 6) {
                 gridView.setNumColumns(3);
-            } else if (maxLength > 8 && maxLength <= 15) {
+            } else if (maxLength > 6&& maxLength <= 15) {
                 gridView.setNumColumns(2);
             } else if (maxLength > 15) {
                 gridView.setNumColumns(1);
@@ -750,6 +740,8 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
                         }
                     }
                     map.put("additions", list);
+                } else {
+                    map.put("additions", new ArrayList<>());
                 }
                 String json = gson.toJson(map);
                 params.put("JSON", json);
@@ -821,7 +813,6 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
                             map.put("additions", additions);
                         }
                     }
-                    map.put("type", type);
                     map.put("SKUId", SKUId);
                     map.put("stars", "");
                     map.put("pricenow", detail.price);
@@ -829,12 +820,39 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
                 } else {
                     // 先从数据库获取对应id的个数 然后相加本地的个数
                     Map<String, String> shop = dao.getShopping(SKUId);
-                    String string = shop.get("numbers");
+                    String numbers = shop.get("numbers");
                     // 更新数据库商品对应的id
-                    int sumNum = Integer.valueOf(string)
+                    int sumNum = Integer.valueOf(numbers)
                             + Integer.valueOf(pop_discount_geshu.getText()
                             .toString().trim());
                     dao.updateShopping(SKUId, sumNum + "");
+
+                    //附加选项存在本地数据库
+                    if (detail.SKUAdditions != null && !detail.SKUAdditions.isEmpty()) {
+                        if (additionsAdapter != null
+                                && additionsAdapter.states != null
+                                && additionsAdapter.states.containsValue(true)) {
+                            List<String> list = new ArrayList<>();
+                            List<GetGoodsDetail.GoodsDetail.SKUAdditions> skuAdditions = new ArrayList<>();
+                            for (String key : additionsAdapter.states.keySet()) {
+                                if (additionsAdapter.states.get(key)) {
+                                    list.add(key);
+                                }
+                            }
+                            for (GetGoodsDetail.GoodsDetail.SKUAdditions key : detail.SKUAdditions) {
+                                if (list.contains(key._id)) {
+                                    skuAdditions.add(key);
+                                }
+                            }
+                            Gson gson = new Gson();
+                            String additions = gson.toJson(skuAdditions);
+                            dao.updateShoppingAdditions(SKUId, additions);
+                        } else {
+                            dao.updateShoppingAdditions(SKUId, "[]");
+                        }
+                    }
+
+
                 }
                 //添加购物车成功后关闭popupWindow
                 showToast("添加购物车成功");
@@ -864,7 +882,6 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
             }
             //商品是否预售
             if (detail.presale || !detail.online) {
-
                 jinqingqidai_bar.setVisibility(View.VISIBLE);
                 shangpin_detail_bottom_bar.setVisibility(View.GONE);
                 if (detail.presale) {
@@ -983,7 +1000,7 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
                                 try {
                                     double price_min = Double.parseDouble(remainGoodsAttr.data.price.min) + price;
                                     double price_max = Double.parseDouble(remainGoodsAttr.data.price.max) + price;
-                                    pop_price.setText("¥" + reduceDouble(price_min) + "-" +  reduceDouble(price_max));
+                                    pop_price.setText("¥" + reduceDouble(price_min) + "-" + reduceDouble(price_max));
                                     product_price.setText("¥" + reduceDouble(price_min) + "-" + reduceDouble(price_max));
                                 } catch (Exception e) {
                                     pop_price.setText

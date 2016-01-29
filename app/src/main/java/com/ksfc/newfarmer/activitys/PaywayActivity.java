@@ -352,6 +352,8 @@ public class PaywayActivity extends BaseActivity implements Runnable {
                         showToast("请选择支付方式");
                     }
                 }
+
+
                 break;
             default:
                 break;
@@ -419,14 +421,16 @@ public class PaywayActivity extends BaseActivity implements Runnable {
                             //大于3000才能分次 ，如果小于3000 直接显示
                             try {
                                 duePrice = Double.parseDouble(datas.rows.payment.price);
-                                if (duePrice > 3000) {
+                                if (duePrice >= 3000) {
                                     setViewClick(R.id.payWay_discount_jian);
                                     setViewClick(R.id.payWay_discount_jia);
+                                    payWay_times_price_tv.setText(StringUtil.toTwoString(3000 + ""));
                                 } else {
                                     payWay_discount_jian.setEnabled(false);
                                     payWay_discount_jia.setEnabled(false);
+                                    payWay_times_price_tv.setText(StringUtil.toTwoString(duePrice + ""));
                                 }
-                                payWay_times_price_tv.setText(StringUtil.toTwoString(duePrice + ""));
+
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -494,7 +498,7 @@ public class PaywayActivity extends BaseActivity implements Runnable {
 
             } else {
                 //全额金额
-                price = payWay_pay_total_price.getText().toString().trim();
+                price = payWay_pay_total_price.getText().toString().trim().replace("¥", "");
                 byte[] b = ("token=" + Store.User.queryMe().token + "&consumer=app&orderId=" + orderId)
                         .getBytes();
                 ucon.getOutputStream().write(b, 0, b.length);

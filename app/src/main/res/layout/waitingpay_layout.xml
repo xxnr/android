@@ -19,6 +19,8 @@
         app:tabSelectedTextColor="@color/green"
         app:tabTextColor="@color/black_goods_titile" />
 
+    <include layout="@layout/line_lay" />
+
     <android.support.v4.view.ViewPager
         android:id="@+id/waitingpay_ViewPager"
         android:layout_width="match_parent"

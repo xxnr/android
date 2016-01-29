@@ -168,10 +168,10 @@ public class LoginActivity extends BaseActivity {
                 SPUtils.put(LoginActivity.this, "shopCartId",
                         login.datas.cartId);
                 showToast("登录成功");
-                //保存到本地此用户的赏赐登陆的手机号
+                //保存到本地此用户的上次登陆的手机号
                 PreferenceUtil pu = new PreferenceUtil();
                 pu.init(this, "config");
-                pu.putString("lastPhoneNumber",login.datas.phone);
+                pu.putString("lastPhoneNumber", login.datas.phone);
                 // 发广播 让首页列表再次刷新
                 MsgCenter.fireNull(MsgID.ISLOGIN, "islogin");
                 // turntoMainActivityOrFinish(id);
@@ -286,6 +286,7 @@ public class LoginActivity extends BaseActivity {
         me.sex = user.sex;
         me.name = user.name;
         me.userType = user.userType;
+        me.userTypeInName = user.userTypeInName;
         Store.User.saveMe(me);
     }
 }

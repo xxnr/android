@@ -16,6 +16,7 @@ import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.RndApplication;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.beans.AddOrderResult;
+import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.StringUtil;
 
 import net.yangentao.util.app.App;
@@ -91,10 +92,10 @@ public class SelectPayOrderActivity extends BaseActivity {
                 holder.orderId.setText("订单号：" + ordersList.get(position).id);
             }
             //订单类型（总额 or 订金）
-            if (ordersList.get(position).deposit.equals("0")) {
+            if (ordersList.get(position).deposit==0) {
                 holder.order_type.setText("订单总额");
             } else {
-                holder.order_type.setText("分阶段：订金");
+                holder.order_type.setText("阶段一：订金");
             }
             //订单金额（总额 and 待付）
             if (ordersList.get(position).payment != null) {
@@ -110,8 +111,8 @@ public class SelectPayOrderActivity extends BaseActivity {
             if (ordersList.get(position).SKUs != null && !ordersList.get(position).SKUs.isEmpty()) {
                 StringBuilder builder = new StringBuilder();
                 for (int i = 0; i < ordersList.get(position).SKUs.size(); i++) {
-                    if (StringUtil.checkStr(ordersList.get(position).SKUs.get(i).name)) {
-                        builder.append(ordersList.get(position).SKUs.get(i).name)
+                    if (StringUtil.checkStr(ordersList.get(position).SKUs.get(i).productName)) {
+                        builder.append(ordersList.get(position).SKUs.get(i).productName)
                                 .append("-")
                                 .append(ordersList.get(position).SKUs.get(i).count).append("件").append("，");
                     }

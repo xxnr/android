@@ -1,15 +1,20 @@
 package com.ksfc.newfarmer.protocol.beans;
 
-import java.util.List;
-
+import com.google.gson.Gson;
 import com.ksfc.newfarmer.protocol.ResponseResult;
 
+import java.util.List;
+
 public class ClassIDResult extends ResponseResult {
+    /**
+     * id : 531680A5
+     * name : 化肥
+     */
 
-	public List<Datas> categories;
+    public List<CategoriesEntity> categories;
 
-	public static class Datas {
-		public String name;
-		public String id;
-	}
+    public static class CategoriesEntity {
+        public String id;
+        public String name;
+    }
 }

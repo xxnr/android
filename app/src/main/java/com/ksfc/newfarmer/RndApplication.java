@@ -76,7 +76,7 @@ public class RndApplication extends Application {
                 .discCacheFileNameGenerator(new Md5FileNameGenerator())
                 .tasksProcessingOrder(QueueProcessingType.LIFO)
                 .memoryCache(new WeakMemoryCache())
-                .memoryCacheSize(30 * 1024 * 1024)
+                .memoryCacheSize(10 * 1024 * 1024)
                 .discCache(
                         new UnlimitedDiscCache(new File(Environment
                                 .getExternalStorageDirectory()

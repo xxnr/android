@@ -49,7 +49,7 @@
                     android:layout_height="16dp"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="16dp"
-                    android:background="@color/orange_goods_price" />
+                    android:background="@color/green" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -57,7 +57,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="6dp"
                     android:layout_toRightOf="@id/head_bottom_bar"
-                    android:text="汽车精选"
+                    android:text="化肥精选"
                     android:textColor="@color/black_goods_titile"
                     android:textSize="16sp" />
 
