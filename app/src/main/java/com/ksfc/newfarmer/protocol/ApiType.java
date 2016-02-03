@@ -26,6 +26,7 @@ import com.ksfc.newfarmer.protocol.beans.HotLineResult;
 import com.ksfc.newfarmer.protocol.beans.InformationResult;
 import com.ksfc.newfarmer.protocol.beans.IntentionProductsResult;
 import com.ksfc.newfarmer.protocol.beans.InviteeResult;
+import com.ksfc.newfarmer.protocol.beans.IsPotentialCustomerResult;
 import com.ksfc.newfarmer.protocol.beans.JifenData;
 import com.ksfc.newfarmer.protocol.beans.LoginResult;
 import com.ksfc.newfarmer.protocol.beans.MyInviteResult;
@@ -33,6 +34,8 @@ import com.ksfc.newfarmer.protocol.beans.MyOrderDetailResult;
 import com.ksfc.newfarmer.protocol.beans.Payback;
 import com.ksfc.newfarmer.protocol.beans.PersonalData;
 import com.ksfc.newfarmer.protocol.beans.PointResult;
+import com.ksfc.newfarmer.protocol.beans.PotentialCustomerDetailResult;
+import com.ksfc.newfarmer.protocol.beans.PotentialListResult;
 import com.ksfc.newfarmer.protocol.beans.ProFileResult;
 import com.ksfc.newfarmer.protocol.beans.PublicKeyResult;
 import com.ksfc.newfarmer.protocol.beans.QueueList;
@@ -323,7 +326,7 @@ public enum ApiType {
     /**
      * 用户报备 判断手机号是否能添加为潜在客户
      */
-    IS_POTENTIAL_CUSTOMER("/api/v2.1/potentialCustomer/isAvailable", ResponseResult.class),
+    IS_POTENTIAL_CUSTOMER("/api/v2.1/potentialCustomer/isAvailable", IsPotentialCustomerResult.class),
     /**
      * 用户报备 添加潜在客户
      */
@@ -331,16 +334,16 @@ public enum ApiType {
     /**
      * 用户报备 获取潜在用户列表
      */
-    GET_POTENTIAL_CUSTOMER_LIST("/api/v2.1/potentialCustomer/query", ResponseResult.class),
+    GET_POTENTIAL_CUSTOMER_LIST("/api/v2.1/potentialCustomer/query", PotentialListResult.class),
     /**
      * 用户报备 获取潜在客户详情
      */
-    GET_POTENTIAL_CUSTOMER_DETAIL("/api/v2.1/potentialCustomer/get", ResponseResult.class),
+    GET_POTENTIAL_CUSTOMER_DETAIL("/api/v2.1/potentialCustomer/get", PotentialCustomerDetailResult.class),
 
     TEST("", ResponseResult.class);
-         private static String server_url = "http://api.xinxinnongren.com";
-//    private static String server_url = "http://101.200.194.203";
-    // private static String server_url = "http://192.168.1.15";
+//         private static String server_url = "http://api.xinxinnongren.com";
+    private static String server_url = "http://101.200.194.203";
+//     private static String server_url = "http://192.168.1.15";
 
 
     public static final String url = server_url + "/";

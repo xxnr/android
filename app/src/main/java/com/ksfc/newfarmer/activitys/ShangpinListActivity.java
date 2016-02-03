@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -94,7 +95,9 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
     private HashMap<String, AttrAdapter> attrAdapterMap = new HashMap<>();
     private List<Map<String, Object>> attributesList;
 
-    //存选中的品牌Id 和 和 下面的选中的属性
+    private List<String> lastBrands = new ArrayList<>(); //点击确定后保存上一次的品牌数据
+    private List<String> lastAttr = new ArrayList<>(); //点击确定后保存上一次的attr数据
+    private int lastPrice = -1; //点击确定后保存上一次价格
 
 
     @Override
@@ -250,11 +253,14 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
                 if (popupWindow != null && popupWindow.isShowing()) {
                     popupWindow.dismiss();
                 } else {
-                    if (popupWindow == null) {
-                        getPopupWindow();
-                        getBrandsList();
-                        getAttrsData();
-                    }
+//                    if (popupWindow == null) {
+//                        getPopupWindow();
+//                        getBrandsList();
+//                        getAttrsData();
+//                    }
+                    getPopupWindow();
+                    getBrandsList();
+                    getAttrsData();
                     popupWindow.showAsDropDown(goods_bar_separatrix);
                 }
                 break;
@@ -343,7 +349,9 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
 
     // 得到筛选框中筛选的结果
     private void getShuaixuan_value() {
-
+        lastBrands.clear();
+        lastPrice=-1;
+        lastAttr.clear();
 
         int pri_position = -1;
         //得到品牌
@@ -354,9 +362,10 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
                 if (entry.getValue()) {
                     list.add(entry.getKey());
                 }
-
             }
         }
+        //保存 以便下次筛选时使用
+        lastBrands.addAll(list);
 
         for (String key : list) {
             brand.append(key).append(",");
@@ -377,6 +386,8 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
             }
         }
 
+        //保存上次价格 以便下次筛选时使用
+        lastPrice = pri_position;
         if (goods_flag.equals("huafei")) {
             switch (pri_position) {
                 case 0:
@@ -427,7 +438,10 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
                         listString.add(entry1.getKey());
                     }
                 }
+
                 if (!listString.isEmpty()) {
+                    //保存上一次的数据以便于筛选
+                    lastAttr.addAll(listString);
                     map.put("$in", listString);
                     mapKey_Value.put("name", entry.getKey());
                     mapKey_Value.put("value", map);
@@ -438,7 +452,7 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
             }
         }
 
-        if (brand==null&&(attributesList==null||attributesList.isEmpty()) && pri_position == -1) {
+        if (brand == null && (attributesList == null || attributesList.isEmpty()) && pri_position == -1) {
             shaixuan_text.setTextColor(Color.BLACK);
             shaixuan_image.setImageResource(R.drawable.shaixuan_gary);
         } else {
@@ -501,6 +515,7 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
                     goodsListAdapter.notifyDataSetChanged();
                 }
             }
+            //商品品牌
         } else if (req.getApi() == ApiType.GET_BRANDS_LIST) {
             BrandsResult data = (BrandsResult) req.getData();
             if (data.getStatus().equals("1000")) {
@@ -526,6 +541,18 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
 
             adapter_price = new priceAdapter(prices);
             price_gv.setAdapter(adapter_price);
+
+
+            //初始化 保存的价格
+            adapter_price.states.put(lastPrice + "", true);
+            adapter_price.notifyDataSetChanged();
+
+            //初始化 保存的品牌
+            for (String key : lastBrands) {
+                bransAdapter.states.put(key, true);
+            }
+            bransAdapter.notifyDataSetChanged();
+            getAttrsData();
 
         } else if (req.getApi() == ApiType.GET_GOODS_ATTR) {
             AttrSelectResult data = (AttrSelectResult) req.getData();
@@ -580,9 +607,8 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
                         }
                     }
                 }
+                bransAdapter.notifyDataSetChanged();
             }
-
-
         }
     }
 
@@ -648,7 +674,6 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
                             getAttrsData();
                         }
                     });
-
             boolean res = false;
 
             if (states.get(list.get(position)._id) != null && states.get(list.get(position)._id)) {
@@ -750,7 +775,7 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
     class priceAdapter extends BaseAdapter {
         private List<String> list;
         // 用于记录每个RadioButton的状态，并保证只可选一个
-        HashMap<String, Boolean> states = new HashMap<String, Boolean>();
+        HashMap<String, Boolean> states = new HashMap<>();
 
         public priceAdapter(List<String> list) {
             this.list = list;
@@ -984,8 +1009,8 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
 
     //获得显示动画
     public void setShowAnimation(View view) {
-        AlphaAnimation mShowAction = new AlphaAnimation(0.0f, 1.0f);
-        mShowAction.setDuration(500);
+        AlphaAnimation mShowAction = new AlphaAnimation(1.0f, 1.0f);
+        mShowAction.setDuration(0);
         view.startAnimation(mShowAction);
     }
 }

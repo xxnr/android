@@ -25,11 +25,13 @@ public class PersonalData extends ResponseResult implements Serializable {
         public String inviterName;
         public String userType;
         public boolean isVerified;
+        public boolean isXXNRAgent; //是否是新农经纪人
         public String pointLaterTrade;
         public String name;
         public boolean sex;
         public Address defaultAddress;
         public float score;
+
         public UserAddress address;
 
         public static class UserAddress implements Serializable {

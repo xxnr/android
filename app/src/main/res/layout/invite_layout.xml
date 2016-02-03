@@ -1,51 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/default_act_bg">
+    android:background="@color/default_act_bg"
+    android:orientation="vertical">
 
-    <include layout="@layout/title_lay" />
 
-    <FrameLayout
-        android:id="@+id/newframentfragment"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/radioGroup_invite"
-        android:layout_below="@+id/titleview" />
+        android:orientation="vertical">
 
-    <RadioGroup
-        android:id="@+id/radioGroup_invite"
+        <include layout="@layout/title_lay" />
+
+        <FrameLayout
+            android:id="@+id/newframentfragment"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <include layout="@layout/line_lay" />
+
+        <RadioGroup
+            android:id="@+id/radioGroup_invite"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/white"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/radio_button1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/tab_selector_invite"
+                android:button="@null"
+                android:drawableLeft="@drawable/tab_selsect_button_invite1"
+                android:drawablePadding="3dp"
+                android:paddingLeft="18dp"
+                android:text="我的客户"
+                android:textColor="@color/tab_selector_invite_textcolor"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="1px"
+                android:layout_height="match_parent"
+                android:background="@color/gray" />
+
+            <RadioButton
+                android:id="@+id/radio_button2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/tab_selector_invite"
+                android:button="@null"
+                android:drawableLeft="@drawable/tab_selsect_button_invite2"
+                android:drawablePadding="3dp"
+                android:paddingLeft="16dp"
+                android:text="我的代表"
+                android:textColor="@color/tab_selector_invite_textcolor"
+                android:textSize="16sp" />
+
+
+            <TextView
+                android:layout_width="1px"
+                android:layout_height="match_parent"
+                android:background="@color/gray" />
+
+            <RadioButton
+                android:id="@+id/radio_button3"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/tab_selector_invite"
+                android:button="@null"
+                android:drawableLeft="@drawable/tab_selsect_button_invite3"
+                android:drawablePadding="3dp"
+                android:paddingLeft="16dp"
+                android:text="客户登记"
+                android:textColor="@color/tab_selector_invite_textcolor"
+                android:textSize="16sp"
+                android:visibility="gone" />
+        </RadioGroup>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/customer_reg_bg"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/white"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:background="#60000000"
+        android:visibility="gone">
 
-        <RadioButton
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/tab_selector_invite"
-            android:button="@null"
-            android:drawableLeft="@drawable/tab_selsect_button_invite1"
-            android:drawablePadding="10dp"
-            android:paddingLeft="30dp"
-            android:text="我的客户"
-            android:textColor="@color/tab_selector_invite_textcolor"
-            android:textSize="16sp" />
+        <ImageView
+            android:id="@+id/add_potential_customer"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="70.5dp"
+            android:background="@drawable/circle_orange_bg_radius"
+            android:gravity="center"
+            android:scaleType="center"
+            android:src="@drawable/customer_jia"
+            android:textColor="@color/white" />
 
-        <RadioButton
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/tab_selector_invite"
-            android:button="@null"
-            android:drawableLeft="@drawable/tab_selsect_button_invite2"
-            android:drawablePadding="9dp"
-            android:paddingLeft="30dp"
-            android:text="我的新农代表"
-            android:textColor="@color/tab_selector_invite_textcolor"
-            android:textSize="16sp" />
-    </RadioGroup>
 
-</RelativeLayout>
+        <ImageView
+            android:id="@+id/customer_reg_bg_top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="120dp"
+            android:background="@drawable/customer_reg_yindao_top" />
+
+
+        <ImageView
+            android:id="@+id/customer_reg_bg_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/customer_reg_bg_top"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="36dp"
+            android:background="@drawable/customer_reg_yindao_button" />
+    </RelativeLayout>
+
+
+</FrameLayout>

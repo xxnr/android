@@ -20,6 +20,7 @@ public class QueueList extends ResponseResult {
 			public String areaId;
 			public String name;
 			public String id;
+			public String _id;
 
 		};
 	}

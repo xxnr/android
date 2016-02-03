@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/default_act_bg"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:background="@drawable/list_bg_selector"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:id="@+id/item_select_intent_checkbox"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginLeft="18dp"
+            android:background="@drawable/selector_check_box_circle_green"
+            android:button="@null" />
+
+
+        <TextView
+            android:id="@+id/item_select_intent_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="19dp"
+            android:text="瑞风S3"
+            android:textColor="@color/black_goods_titile"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -34,6 +34,7 @@ public class SelectAddressActivity extends BaseActivity implements AdapterView.O
     private LinearLayout title_ll;
 
     private int TAG = 1;//区分1省2市3县4乡镇
+
     private AddressAdapter adapter;
 
     private StringBuffer buffer = new StringBuffer();//省市县的名称
@@ -42,6 +43,7 @@ public class SelectAddressActivity extends BaseActivity implements AdapterView.O
     private String cityId, buildId, queueId;//省市县
 
     private String buildId1, queueId1, townId1;//市县乡
+    private String cityId2, buildId2, queueId2, townId2;//市县乡_id
 
     private ArrayList<CityList.Data.Rows> cityList;
     private ArrayList<QueueList.Data.Rows> queueList;
@@ -163,9 +165,9 @@ public class SelectAddressActivity extends BaseActivity implements AdapterView.O
             TownList add = (TownList) req.getData();
             if (add.datas != null) {
                 if (add.datas.rows.size() == 0) {
-                   showToast("此地区暂无街道地址");
+                    showToast("此地区暂无街道地址");
 
-                }else {
+                } else {
                     TAG = 4;
                     townList = add.datas.rows;
                     adapter = new AddressAdapter(townList);
@@ -185,6 +187,7 @@ public class SelectAddressActivity extends BaseActivity implements AdapterView.O
             case 1:
                 CityList.Data.Rows city = (CityList.Data.Rows) adapter.getItem(position);
                 cityId = city.id;
+                cityId2 = city._id;
                 buffer.append(city.name);
                 title_ll.setVisibility(View.VISIBLE);
                 textView.setText(buffer);
@@ -195,6 +198,7 @@ public class SelectAddressActivity extends BaseActivity implements AdapterView.O
             case 2:
                 QueueList.Data.Rows Queue = (QueueList.Data.Rows) adapter.getItem(position);
                 queueId = Queue.id;
+                queueId2 = Queue._id;
                 buffer.append(Queue.name);
                 textView.setText(buffer);
                 adapter.clear();
@@ -204,12 +208,14 @@ public class SelectAddressActivity extends BaseActivity implements AdapterView.O
             case 3:
                 BuildingList.BuildData build = (BuildingList.BuildData) adapter.getItem(position);
                 buildId = build.id;
+                buildId2 = build._id;
                 buffer.append(build.name);
                 backForResult();
                 break;
             case 4:
                 TownList.TownData town = (TownList.TownData) adapter.getItem(position);
                 townId1 = town.id;
+                townId2 = town._id;
                 townName = town.name;
                 backForResult1();
                 break;
@@ -220,12 +226,16 @@ public class SelectAddressActivity extends BaseActivity implements AdapterView.O
 
     //回传值并返回
     public void backForResult() {
+
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
         bundle.putString("city", buffer.toString());
         bundle.putString("cityareaid", cityId);
         bundle.putString("queueid", queueId);
         bundle.putString("buildid", buildId);
+        bundle.putString("cityareaid2", cityId2);
+        bundle.putString("queueid2", queueId2);
+        bundle.putString("buildid2", buildId2);
         intent.putExtras(bundle);
         setResult(RESULT_OK, intent);
         finish();
@@ -237,6 +247,7 @@ public class SelectAddressActivity extends BaseActivity implements AdapterView.O
         Bundle bundle = new Bundle();
         bundle.putString("town", townName);
         bundle.putString("townid", townId1);
+        bundle.putString("townid2", townId2);
         intent.putExtras(bundle);
         setResult(RESULT_OK, intent);
         finish();

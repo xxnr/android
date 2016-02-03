@@ -21,7 +21,7 @@
     <!-- 按钮的字体颜色 -->
     <color name="button_text_color">#FFFFFF</color>
     <!-- 红色 -->
-    <color name="red">#FF0000</color>
+    <color name="red">#df3d3e</color>
     <color name="loginback">#f4f4f4</color>
     <!-- 我的余额 -->
     <color name="moneyColor">#FFB401</color>

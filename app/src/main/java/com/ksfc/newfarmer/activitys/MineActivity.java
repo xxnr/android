@@ -38,6 +38,8 @@ public class MineActivity extends BaseActivity {
     private RelativeLayout titleView, titleview_login;
     private ImageView isVerified;
 
+    private boolean isXXNRAgent = false;
+
 
     @Override
     public int getLayout() {
@@ -315,7 +317,7 @@ public class MineActivity extends BaseActivity {
             } else {
                 nickName_mine.setText("昵称：" + "新新农人");
             }
-
+            isXXNRAgent = user.isXXNRAgent;
 
             if (!StringUtil.empty(user.userTypeInName)) {
                 mine_type.setText("类型：" + user.userTypeInName);
@@ -405,6 +407,7 @@ public class MineActivity extends BaseActivity {
             me.phone = user.phone;
             me.userType = user.userType;
             me.userTypeInName = user.userTypeInName;
+            me.isXXNRAgent = user.isXXNRAgent;
             Store.User.saveMe(me);
         }
 

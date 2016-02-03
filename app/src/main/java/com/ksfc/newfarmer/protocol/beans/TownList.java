@@ -25,5 +25,6 @@ public class TownList extends ResponseResult {
 		public String provinceId;
 		public String cityId;
 		public String countyId;
+		public String _id;
 	}
 }

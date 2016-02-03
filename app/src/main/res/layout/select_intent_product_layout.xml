@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/default_act_bg"
+    android:orientation="vertical">
+
+    <include layout="@layout/title_lay" />
+
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/choice_compelet"
+        android:layout_below="@+id/titleview"
+        android:divider="@color/gray"
+        android:dividerHeight="1px"
+        android:scrollbars="none" />
+
+
+    <TextView
+        android:id="@+id/choice_compelet"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="16dp"
+        android:background="@drawable/login_roate"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="确定"
+        android:textColor="@color/white"
+        android:textSize="18sp" />
+
+</RelativeLayout>

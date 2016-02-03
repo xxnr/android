@@ -142,7 +142,14 @@
         <activity android:name=".activitys.SelectPayOrderActivity" />
         <!-- 查看支付详情 -->
         <activity android:name=".activitys.CheckPayDetailActivity" />
-        AboutUsActivity
+        <!-- 添加潜在客户 -->
+        <activity android:name=".activitys.AddPotentialActivity" />
+        <!-- 选择意向商品 -->
+        <activity android:name=".activitys.SelectIntentProductActivity" />
+        <!-- 客户详情 -->
+        <activity android:name=".activitys.PotentialCustomerDetailActivity" />
+
+
         <!-- 新农邀请 -->
         <activity
             android:name=".activitys.NewFramerInvite"
@@ -168,7 +175,7 @@
         <!-- umeng appkey   android:value="564d588ce0f55a25e9003ec7"-->
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="564d588ce0f55a25e9003ec7" />
+            android:value="YOUR　APPKEY" />
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="Wandoujia" />

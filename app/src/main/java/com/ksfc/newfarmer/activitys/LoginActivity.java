@@ -287,6 +287,7 @@ public class LoginActivity extends BaseActivity {
         me.name = user.name;
         me.userType = user.userType;
         me.userTypeInName = user.userTypeInName;
+        me.isXXNRAgent = user.isXXNRAgent;
         Store.User.saveMe(me);
     }
 }

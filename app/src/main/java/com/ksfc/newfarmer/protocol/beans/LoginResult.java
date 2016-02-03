@@ -17,6 +17,7 @@ public class LoginResult extends ResponseResult {
         public String phone;
         public String userType;
         public String photo;
+        public boolean isXXNRAgent;//是否是新农经济人
         public boolean sex;// :性别
         public String address;
         public UserAddress userAddress;// :用户默认送货地址

@@ -81,6 +81,7 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
         // 获取首页轮播图
         RequestParams params1 = new RequestParams();
         execApi(ApiType.GETHOMEPIC, params1);
+        showProgressDialog();
         getClassId();
 
     }
@@ -447,7 +448,7 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
             }
             ViewHolder holder = (ViewHolder) convertView.getTag();
             holder.huafei_img.setScaleType(ScaleType.CENTER_CROP);
-            ImageLoader.getInstance().displayImage(MsgID.IP + qcList.get(position).imgUrl,  holder.huafei_img);
+            ImageLoader.getInstance().displayImage(MsgID.IP + qcList.get(position).imgUrl, holder.huafei_img);
 
             if (StringUtil.checkStr(qcList.get(position).goodsName)) {
                 holder.huafei_name_tv.setText(qcList.get(position).goodsName);

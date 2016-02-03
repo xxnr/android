@@ -31,6 +31,7 @@ public class CityList extends ResponseResult {
 			public String name;
 			public String shortName;
 			public String id;
+			public String _id;
 		}
 
 	}
