@@ -26,7 +26,7 @@
                 android:background="@drawable/round_line_gary_write"
                 android:padding="1dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/car_test" />
+               />
 
 
             <RelativeLayout

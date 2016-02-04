@@ -148,6 +148,7 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
     //上拉，下拉刷新
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+        PullToRefreshUtils.setFreshClose(refreshView);
         items.clear();
         page = 1;
         getData();
@@ -155,6 +156,7 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
 
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
+        PullToRefreshUtils.setFreshClose(refreshView);
         page++;
         getData();
     }

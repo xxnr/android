@@ -4,6 +4,7 @@ import android.os.Handler;
 import android.widget.ListView;
 
 import com.handmark.pulltorefresh.library.ILoadingLayout;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 /**
@@ -24,5 +25,16 @@ public class PullToRefreshUtils {
         endLabels.setPullLabel("上拉刷新...");// 刚下拉时，显示的提示
         endLabels.setRefreshingLabel("正在载入...");// 刷新时
         endLabels.setReleaseLabel("放开刷新...");// 下来达到一定距离时，显示的提示
+    }
+
+
+    public static void setFreshClose(final PullToRefreshBase View) {
+        //设置刷新的文字
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                View.onRefreshComplete();
+            }
+        }, 10000);
     }
 }

@@ -142,12 +142,14 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
     //上拉 下拉刷新
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+        PullToRefreshUtils.setFreshClose(refreshView);
         page = 1;
         getData();
     }
 
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
+        PullToRefreshUtils.setFreshClose(refreshView);
         page++;
         getData();
     }

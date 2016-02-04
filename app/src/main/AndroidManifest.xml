@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ksfc.newfarmer"
-    android:versionCode="9"
-    android:versionName="2.1.5">
+    android:versionCode="10"
+    android:versionName="2.1.6">
     <!-- 拨打电话的权限 -->
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
@@ -175,7 +175,7 @@
         <!-- umeng appkey   android:value="564d588ce0f55a25e9003ec7"-->
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="YOUR　APPKEY" />
+            android:value="564d588ce0f55a25e9003ec7" />
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="Wandoujia" />

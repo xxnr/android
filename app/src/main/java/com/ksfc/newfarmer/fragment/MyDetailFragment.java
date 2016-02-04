@@ -171,6 +171,7 @@ public class MyDetailFragment extends BaseFragment implements View.OnClickListen
     //刷新的方法
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+        PullToRefreshUtils.setFreshClose(refreshView);
         page = 1;
         getData(page);
     }
@@ -178,7 +179,7 @@ public class MyDetailFragment extends BaseFragment implements View.OnClickListen
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
 
-
+        PullToRefreshUtils.setFreshClose(refreshView);
         page++;
         getData(page);
 

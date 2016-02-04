@@ -136,6 +136,7 @@ public class PotentialCustomer extends BaseFragment implements PullToRefreshBase
     //上拉，下拉刷新
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+        PullToRefreshUtils.setFreshClose(refreshView);
         page = 1;
         isToast = true;
         getData();

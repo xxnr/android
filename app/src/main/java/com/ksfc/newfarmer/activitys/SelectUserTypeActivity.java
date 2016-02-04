@@ -70,6 +70,7 @@ public class SelectUserTypeActivity extends BaseActivity implements AdapterView.
         listView = ((ListView) findViewById(R.id.select_address_list));
         listView.setOnItemClickListener(this);
         flag = getIntent().getExtras().getBoolean("flag");
+        showProgressDialog();
         getData();
     }
 
@@ -82,15 +83,15 @@ public class SelectUserTypeActivity extends BaseActivity implements AdapterView.
 
                     @Override
                     public void onFailure(HttpException arg0, String arg1) {
+                        disMissDialog();
                         showToast("数据加载失败");
                     }
 
                     @Override
                     public void onSuccess(ResponseInfo<String> arg0) {
-
-
+                        disMissDialog();
                         if (!StringUtil.empty(arg0.result.toString())) {
-                            RndLog.v(TAG,arg0.result);
+                            RndLog.v(TAG, arg0.result);
                             list_key = new ArrayList<>();
                             list_value = new ArrayList<>();
                             JSONObject jsonObject = JSON.parseObject(arg0.result.toString());
@@ -115,6 +116,7 @@ public class SelectUserTypeActivity extends BaseActivity implements AdapterView.
 
     @Override
     public void onResponsed(Request req) {
+        disMissDialog();
         if (ApiType.SAVE_MYUSER == req.getApi()) {
             LoginResult.UserInfo queryMe = Store.User.queryMe();
             queryMe.userType = select;

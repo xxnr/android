@@ -98,7 +98,7 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
     private List<String> lastBrands = new ArrayList<>(); //点击确定后保存上一次的品牌数据
     private List<String> lastAttr = new ArrayList<>(); //点击确定后保存上一次的attr数据
     private int lastPrice = -1; //点击确定后保存上一次价格
-
+    private boolean isReset = false;
 
     @Override
     public int getLayout() {
@@ -208,12 +208,8 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
             brandBuilder.append(key).append(",");
         }
         String brandString;
-        if (brandBuilder.toString().equals("")) {
-            brandBuilder.append("0");
-            brandString = brandBuilder.toString();
-        } else {
-            brandString = brandBuilder.substring(0, brandBuilder.length() - 1);
-        }
+        brandBuilder.append("0");
+        brandString = brandBuilder.toString();
         RequestParams params = new RequestParams();
         execApi(ApiType.GET_GOODS_ATTR.setMethod(RequestMethod.GET).setOpt(
                 "/api/v2.1/products/attributes" + "?brand=" + brandString + "&category=" + classId), params);
@@ -228,7 +224,7 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
                 break;
             case R.id.goods_zonghe_rel:
                 jiage_image.setVisibility(View.GONE);
-                zonghe_text.setTextColor(Color.parseColor("#ff4e00"));
+                zonghe_text.setTextColor(getResources().getColor(R.color.orange_goods_price));
                 jiage_text.setTextColor(Color.BLACK);
                 sort = null;
                 getData();
@@ -236,7 +232,7 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
             case R.id.goods_jiage_rel:
                 zonghe_text.setTextColor(Color.BLACK);
                 jiage_image.setVisibility(View.VISIBLE);
-                jiage_text.setTextColor(Color.parseColor("#ff4e00"));
+                jiage_text.setTextColor(getResources().getColor(R.color.orange_goods_price));
                 page = 1;
                 if (price_flag) {
                     sort = "price-desc";
@@ -253,14 +249,9 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
                 if (popupWindow != null && popupWindow.isShowing()) {
                     popupWindow.dismiss();
                 } else {
-//                    if (popupWindow == null) {
-//                        getPopupWindow();
-//                        getBrandsList();
-//                        getAttrsData();
-//                    }
+                    isReset = false;
                     getPopupWindow();
                     getBrandsList();
-                    getAttrsData();
                     popupWindow.showAsDropDown(goods_bar_separatrix);
                 }
                 break;
@@ -330,6 +321,7 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
                 .setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        isReset = true;
                         reset();
                     }
                 });
@@ -350,7 +342,7 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
     // 得到筛选框中筛选的结果
     private void getShuaixuan_value() {
         lastBrands.clear();
-        lastPrice=-1;
+        lastPrice = -1;
         lastAttr.clear();
 
         int pri_position = -1;
@@ -456,7 +448,7 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
             shaixuan_text.setTextColor(Color.BLACK);
             shaixuan_image.setImageResource(R.drawable.shaixuan_gary);
         } else {
-            shaixuan_text.setTextColor(Color.parseColor("#ff4e00"));
+            shaixuan_text.setTextColor(getResources().getColor(R.color.orange_goods_price));
             shaixuan_image.setImageResource(R.drawable.shaixuan_orange);
         }
     }
@@ -541,8 +533,6 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
 
             adapter_price = new priceAdapter(prices);
             price_gv.setAdapter(adapter_price);
-
-
             //初始化 保存的价格
             adapter_price.states.put(lastPrice + "", true);
             adapter_price.notifyDataSetChanged();
@@ -558,56 +548,58 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
             AttrSelectResult data = (AttrSelectResult) req.getData();
             if (data.getStatus().equals("1000")) {
                 if (data.attributes != null && !data.attributes.isEmpty()) {
-                    if (brandBuilder != null && brandBuilder.toString().equals("0")) {
-                        initAttrAdapter();
-                        switch (data.attributes.size()) {
-                            case 2:
-                                popwindow_text2.setVisibility(View.VISIBLE);
-                                pop_gv2.setVisibility(View.VISIBLE);
-                                AttrAdapter attrAdapter2 = new AttrAdapter(data.attributes.get(1).values);
-                                popwindow_text2.setText(data.attributes.get(1)._id.name);
-                                pop_gv2.setAdapter(attrAdapter2);
-                                attrAdapterMap.put(data.attributes.get(1)._id.name, attrAdapter2);
-                            case 1:
-                                popwindow_text1.setVisibility(View.VISIBLE);
-                                pop_gv1.setVisibility(View.VISIBLE);
-                                AttrAdapter attrAdapter1 = new AttrAdapter(data.attributes.get(0).values);
-                                popwindow_text1.setText(data.attributes.get(0)._id.name);
-                                pop_gv1.setAdapter(attrAdapter1);
-                                attrAdapterMap.put(data.attributes.get(0)._id.name, attrAdapter1);
-                                break;
-                        }
-                    } else {
-                        switch (data.attributes.size()) {
-                            case 3:
-                                setShowAnimation(pop_gv5);
-                                popwindow_text5.setVisibility(View.VISIBLE);
-                                pop_gv5.setVisibility(View.VISIBLE);
-                                AttrAdapter attrAdapter3 = new AttrAdapter(data.attributes.get(2).values);
-                                popwindow_text5.setText(data.attributes.get(2)._id.name);
-                                pop_gv5.setAdapter(attrAdapter3);
-                                attrAdapterMap.put(data.attributes.get(2)._id.name, attrAdapter3);
-                            case 2:
-                                setShowAnimation(pop_gv4);
-                                popwindow_text4.setVisibility(View.VISIBLE);
-                                pop_gv4.setVisibility(View.VISIBLE);
-                                AttrAdapter attrAdapter2 = new AttrAdapter(data.attributes.get(1).values);
-                                popwindow_text4.setText(data.attributes.get(1)._id.name);
-                                pop_gv4.setAdapter(attrAdapter2);
-                                attrAdapterMap.put(data.attributes.get(1)._id.name, attrAdapter2);
-                            case 1:
-                                setShowAnimation(pop_gv3);
-                                popwindow_text3.setVisibility(View.VISIBLE);
-                                pop_gv3.setVisibility(View.VISIBLE);
-                                AttrAdapter attrAdapter1 = new AttrAdapter(data.attributes.get(0).values);
-                                popwindow_text3.setText(data.attributes.get(0)._id.name);
-                                pop_gv3.setAdapter(attrAdapter1);
-                                attrAdapterMap.put(data.attributes.get(0)._id.name, attrAdapter1);
-                                break;
-                        }
+                    initAttrAdapter();
+                    switch (data.attributes.size()) {
+                        case 5:
+                            popwindow_text5.setVisibility(View.VISIBLE);
+                            pop_gv5.setVisibility(View.VISIBLE);
+                            AttrAdapter attrAdapter5 = new AttrAdapter(data.attributes.get(4).values);
+                            popwindow_text5.setText(data.attributes.get(4)._id.name);
+                            pop_gv5.setAdapter(attrAdapter5);
+                            attrAdapterMap.put(data.attributes.get(4)._id.name, attrAdapter5);
+                        case 4:
+                            popwindow_text4.setVisibility(View.VISIBLE);
+                            pop_gv4.setVisibility(View.VISIBLE);
+                            AttrAdapter attrAdapter4 = new AttrAdapter(data.attributes.get(3).values);
+                            popwindow_text4.setText(data.attributes.get(3)._id.name);
+                            pop_gv4.setAdapter(attrAdapter4);
+                            attrAdapterMap.put(data.attributes.get(3)._id.name, attrAdapter4);
+                        case 3:
+                            popwindow_text3.setVisibility(View.VISIBLE);
+                            pop_gv3.setVisibility(View.VISIBLE);
+                            AttrAdapter attrAdapter3 = new AttrAdapter(data.attributes.get(2).values);
+                            popwindow_text3.setText(data.attributes.get(2)._id.name);
+                            pop_gv3.setAdapter(attrAdapter3);
+                            attrAdapterMap.put(data.attributes.get(2)._id.name, attrAdapter3);
+                            break;
+                        case 2:
+                            popwindow_text2.setVisibility(View.VISIBLE);
+                            pop_gv2.setVisibility(View.VISIBLE);
+                            AttrAdapter attrAdapter2 = new AttrAdapter(data.attributes.get(1).values);
+                            popwindow_text2.setText(data.attributes.get(1)._id.name);
+                            pop_gv2.setAdapter(attrAdapter2);
+                            attrAdapterMap.put(data.attributes.get(1)._id.name, attrAdapter2);
+                        case 1:
+                            popwindow_text1.setVisibility(View.VISIBLE);
+                            pop_gv1.setVisibility(View.VISIBLE);
+                            AttrAdapter attrAdapter1 = new AttrAdapter(data.attributes.get(0).values);
+                            popwindow_text1.setText(data.attributes.get(0)._id.name);
+                            pop_gv1.setAdapter(attrAdapter1);
+                            attrAdapterMap.put(data.attributes.get(0)._id.name, attrAdapter1);
+                            break;
                     }
                 }
-                bransAdapter.notifyDataSetChanged();
+                //初始化 保存的attr
+                for (Map.Entry<String, AttrAdapter> entry : attrAdapterMap.entrySet()) {
+                    for (Map.Entry<String, Boolean> entry1 : entry.getValue().states.entrySet()) {
+                        if (lastAttr.contains(entry1.getKey())) {
+                            if (!isReset) {
+                                entry1.setValue(true);
+                            }
+                        }
+                    }
+                    entry.getValue().notifyDataSetChanged();
+                }
             }
         }
     }
@@ -615,9 +607,14 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
 
     //如果取消了品牌 特有属性消失
     private void initAttrAdapter() {
+        popwindow_text1.setVisibility(View.GONE);
+        popwindow_text2.setVisibility(View.GONE);
         popwindow_text3.setVisibility(View.GONE);
         popwindow_text4.setVisibility(View.GONE);
         popwindow_text5.setVisibility(View.GONE);
+
+        pop_gv1.setVisibility(View.GONE);
+        pop_gv2.setVisibility(View.GONE);
         pop_gv3.setVisibility(View.GONE);
         pop_gv4.setVisibility(View.GONE);
         pop_gv5.setVisibility(View.GONE);
@@ -670,11 +667,12 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
                     .setOnClickListener(new View.OnClickListener() {
 
                         public void onClick(View v) {
+                            isReset = true;
                             states.put(list.get(position)._id, holder.brands_name_tv.isChecked());
                             getAttrsData();
                         }
                     });
-            boolean res = false;
+            boolean res;
 
             if (states.get(list.get(position)._id) != null && states.get(list.get(position)._id)) {
                 res = true;
@@ -706,6 +704,11 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
 
         public AttrAdapter(List<String> list) {
             this.list = list;
+
+            for (String key : list) {
+                states.put(key, false);
+            }
+
         }
 
         @Override
@@ -747,7 +750,7 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
                         }
                     });
 
-            boolean res = false;
+            boolean res;
 
             if (states.get(list.get(position)) != null && states.get(list.get(position))) {
                 res = true;
@@ -829,7 +832,7 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
                         }
                     });
 
-            boolean res = false;
+            boolean res;
 
             if (states.get(String.valueOf(position)) != null && states.get(String.valueOf(position))) {
                 res = true;
@@ -934,12 +937,14 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
 
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+        PullToRefreshUtils.setFreshClose(refreshView);
         page = 1;
         getData();
     }
 
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
+        PullToRefreshUtils.setFreshClose(refreshView);
         page++;
         getData();
     }
@@ -1005,12 +1010,5 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
         int firstVisiblePosition = listView.getRefreshableView().getFirstVisiblePosition();
         int top = c.getTop();
         return -top + firstVisiblePosition * c.getHeight();
-    }
-
-    //获得显示动画
-    public void setShowAnimation(View view) {
-        AlphaAnimation mShowAction = new AlphaAnimation(1.0f, 1.0f);
-        mShowAction.setDuration(0);
-        view.startAnimation(mShowAction);
     }
 }

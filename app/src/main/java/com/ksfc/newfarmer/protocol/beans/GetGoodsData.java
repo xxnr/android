@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.ksfc.newfarmer.protocol.beans;
 

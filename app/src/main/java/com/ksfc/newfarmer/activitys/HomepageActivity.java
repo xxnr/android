@@ -24,6 +24,7 @@ import com.ksfc.newfarmer.protocol.beans.HomeImageResult;
 import com.ksfc.newfarmer.protocol.beans.HomeImageResult.Rows;
 import com.ksfc.newfarmer.protocol.beans.HomeImageResult.UserRollImage;
 import com.ksfc.newfarmer.protocol.beans.PointResult;
+import com.ksfc.newfarmer.utils.PullToRefreshUtils;
 import com.ksfc.newfarmer.utils.SPUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.CarouselDiagramViewPager;
@@ -82,8 +83,10 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
         RequestParams params1 = new RequestParams();
         execApi(ApiType.GETHOMEPIC, params1);
         showProgressDialog();
+        scrollView.setRefreshing();
+        getNyc();
+        getData();
         getClassId();
-
     }
 
     private void getClassId() {
@@ -279,7 +282,6 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
             List<SingleGood> nongyongcheList = goodsData.datas.rows;
             if (nongyongcheList.size() > 0) {
                 car_bar_layout.setVisibility(View.VISIBLE);
-
                 if (page2 == 1) {
                     qcList.clear();
                     qcList.addAll(nongyongcheList);
@@ -310,7 +312,7 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
             if (data.getStatus().equals("1000")) {
                 for (int i = 0; i < data.categories.size(); i++) {
                     if (data.categories.get(i).name.equals("化肥")) {
-                        //保存到本地此购物车的Id
+                        //保存到本地class的Id
                         SPUtils.put(HomepageActivity.this, "HuafeiId",
                                 data.categories.get(i).id);
 
@@ -321,15 +323,13 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
                 }
 
             } else {
-                //保存到本地此购物车的Id
+                //保存到本地class的Id
                 SPUtils.put(HomepageActivity.this, "HuafeiId",
                         "531680A5");
                 SPUtils.put(HomepageActivity.this, "CarID",
                         "6C7D8F66");
             }
-            showProgressDialog();
-            getNyc();
-            getData();
+
         }
 
     }
@@ -494,6 +494,7 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
 
     @Override
     public void onRefresh(PullToRefreshBase refreshView) {
+        PullToRefreshUtils.setFreshClose(refreshView);
         getNyc();
         getData();
         // 获取首页轮播图

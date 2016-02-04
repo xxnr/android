@@ -247,6 +247,7 @@ public class ShoppingCartActivity extends BaseActivity {
         shopCart_list.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
             @Override
             public void onRefresh(PullToRefreshBase<ListView> refreshView) {
+                PullToRefreshUtils.setFreshClose(refreshView);
                 if (!isLogin()) {
                     shopCart_list.onRefreshComplete();
                 }

@@ -27,6 +27,7 @@ import com.ksfc.newfarmer.protocol.beans.IsPotentialCustomerResult;
 import com.ksfc.newfarmer.protocol.beans.LoginResult;
 import com.ksfc.newfarmer.protocol.beans.TownList;
 import com.ksfc.newfarmer.utils.IntentUtil;
+import com.ksfc.newfarmer.utils.MaxLengthWatcher;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -94,12 +95,12 @@ public class AddPotentialActivity extends BaseActivity {
 
     private void intView() {
         name = (EditText) findViewById(R.id.name_tv);
+        //设置最对输的字数
+        name.addTextChangedListener(new MaxLengthWatcher(12, name, AddPotentialActivity.this));
         phone = (EditText) findViewById(R.id.phone_tv);
         phone_error = (TextView) findViewById(R.id.phone_error);
         phone_error_ll = (LinearLayout) findViewById(R.id.phone_error_ll);//手机号能添加为潜在用户的提示框
         dividing_line = (TextView) findViewById(R.id.dividing_line);//分割线
-
-
         choice_city_text = (TextView) findViewById(R.id.choice_city_text);
         choice_town_text = (TextView) findViewById(R.id.choice_town_text);
         intent_product_text = (TextView) findViewById(R.id.choice_type_text); //意向商品
@@ -130,7 +131,7 @@ public class AddPotentialActivity extends BaseActivity {
                 } else {
                     if (s.length() == 11) {
                         showToast("请输入正确的手机号");
-                    }else {
+                    } else {
                         phone_error_ll.setVisibility(View.GONE);
                     }
                 }
@@ -224,12 +225,16 @@ public class AddPotentialActivity extends BaseActivity {
                         cityrequestCode, bundle1);
                 break;
             case R.id.choice_town_layout:
-                Bundle bundle = new Bundle();
-                bundle.putInt("tag", 1);
-                bundle.putString("queueid", queueid);
-                bundle.putString("buildid", buildid);
-                IntentUtil.startActivityForResult(this, SelectAddressActivity.class,
-                        townrequestCode, bundle);
+                if (StringUtil.checkStr(choice_city_text.getText().toString().trim())) {
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("tag", 1);
+                    bundle.putString("queueid", queueid);
+                    bundle.putString("buildid", buildid);
+                    IntentUtil.startActivityForResult(this, SelectAddressActivity.class,
+                            townrequestCode, bundle);
+                } else {
+                    showToast("请先选择地区");
+                }
                 break;
             case R.id.choose_type_ll:
                 IntentUtil.startActivityForResult(this, SelectIntentProductActivity.class,
@@ -244,9 +249,9 @@ public class AddPotentialActivity extends BaseActivity {
                         && StringUtil.checkStr(intent_product_text.getText().toString().trim())) {
                     saveInfo();
                 } else {
-                    if (phone_error_ll.getVisibility()==View.VISIBLE){
+                    if (phone_error_ll.getVisibility() == View.VISIBLE) {
                         showToast("请修改填写的手机号");
-                    }else {
+                    } else {
                         showToast("请完善信息");
                     }
 

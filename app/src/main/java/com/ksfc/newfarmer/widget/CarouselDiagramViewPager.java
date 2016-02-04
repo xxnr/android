@@ -4,15 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ksfc.newfarmer.MsgID;
-import com.ksfc.newfarmer.Push.App;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.protocol.beans.HomeImageResult.Rows;
 import com.ksfc.newfarmer.utils.BaseTools;
 import com.ksfc.newfarmer.utils.ImageLoaderUtils;
 import com.ksfc.newfarmer.utils.Utils;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.squareup.picasso.Picasso;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -20,7 +17,6 @@ import android.content.Context;
 import android.os.Handler;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;

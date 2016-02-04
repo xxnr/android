@@ -120,12 +120,14 @@ public class InviteFriendsList extends BaseFragment implements PullToRefreshBase
     //加载更多
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+        PullToRefreshUtils.setFreshClose(refreshView);
         page = 1;
         getData();
     }
 
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
+        PullToRefreshUtils.setFreshClose(refreshView);
         page++;
         getData();
     }

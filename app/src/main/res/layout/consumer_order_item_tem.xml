@@ -5,19 +5,19 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-
-
-
-    <RelativeLayout
+    <LinearLayout
+        android:gravity="center_vertical"
         android:layout_width="match_parent"
         android:layout_height="40dp">
 
         <TextView
             android:id="@+id/product_name"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:layout_centerVertical="true"
             android:layout_marginLeft="16dp"
+            android:layout_marginRight="10dp"
             android:text="中化 好苗子有机肥"
             android:singleLine="true"
             android:textColor="@color/black_goods_titile"
@@ -27,16 +27,11 @@
             android:id="@+id/product_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
             android:layout_marginRight="16dp"
             android:text="X 1000"
             android:textColor="@color/deep_gray"
             android:textSize="16sp" />
 
-
-    </RelativeLayout>
-
-
+    </LinearLayout>
 
 </LinearLayout>
