@@ -175,11 +175,6 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
             map.put("attributes", attributesList);
         }
 
-        if (isLogin()) {
-            map.put("locationUserId", Store.User.queryMe().userid);
-        } else {
-            map.put("locationUserId", "");
-        }
         params.put("JSON", gson.toJson(map));
         execApi(ApiType.GET_HUAFEI.setMethod(RequestMethod.POSTJSON), params);
     }

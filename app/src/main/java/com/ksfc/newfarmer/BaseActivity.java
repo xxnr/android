@@ -25,6 +25,7 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -371,7 +372,9 @@ public abstract class BaseActivity extends FragmentActivity implements
 
         // 判断是不是通过验证
         if (params.containsKey("userId")) {
-            params.put("token", Store.User.queryMe().token);
+            if (Store.User.queryMe() != null) {
+                params.put("token", Store.User.queryMe().token);
+            }
         }
         Request req = new Request();
         req.setApi(api);
@@ -501,7 +504,7 @@ public abstract class BaseActivity extends FragmentActivity implements
         return true;
     }
 
-    public void exitLogin(){
+    public void exitLogin() {
         Store.User.removeMe();
         SPUtils.clear(getApplicationContext());
     }

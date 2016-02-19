@@ -191,7 +191,9 @@ public class MyaccountActivity extends BaseActivity {
                                                         int which) {
                                         dialog.dismiss();
                                         RequestParams params = new RequestParams();
-                                        params.put("userId", Store.User.queryMe().userid);
+                                        if (isLogin()){
+                                            params.put("userId", Store.User.queryMe().userid);
+                                        }
                                         params.put("sex", "0");
                                         execApi(ApiType.SAVE_MYUSER, params);
                                         flag = false;
@@ -211,7 +213,9 @@ public class MyaccountActivity extends BaseActivity {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
                                 RequestParams params = new RequestParams();
-                                params.put("userId", Store.User.queryMe().userid);
+                                if (isLogin()){
+                                    params.put("userId", Store.User.queryMe().userid);
+                                }
                                 params.put("sex", "1");
                                 execApi(ApiType.SAVE_MYUSER, params);
                                 flag = true;
@@ -345,15 +349,20 @@ public class MyaccountActivity extends BaseActivity {
             CameraResult camera = (CameraResult) req.getData();
             String datas = camera.imageUrl;// 图片的URL
             UserInfo queryMe = Store.User.queryMe();
-            queryMe.photo = datas;
-            Store.User.saveMe(queryMe);
+            if (queryMe != null) {
+                queryMe.photo = datas;
+                Store.User.saveMe(queryMe);
+            }
+
             Bitmap decodeFile = BitmapFactory.decodeFile(path);
             myself_userImg.setImageBitmap(decodeFile);
             MsgCenter.fireNull(MsgID.UPDATE_USER, "update");
         } else if (ApiType.SAVE_MYUSER == req.getApi()) {
             UserInfo queryMe = Store.User.queryMe();
-            queryMe.sex = flag;
-            Store.User.saveMe(queryMe);
+            if (queryMe != null) {
+                queryMe.sex = flag;
+                Store.User.saveMe(queryMe);
+            }
             showToast("保存成功");
             if (flag) {
                 sex.setText("女");
@@ -368,7 +377,9 @@ public class MyaccountActivity extends BaseActivity {
         params.addQueryStringParameter(name, value);
         params.addBodyParameter(path.replace("/", ""), new File(path),
                 "image/jpeg");
-        params.addBodyParameter("token", Store.User.queryMe().token);
+        if (isLogin()){
+            params.addBodyParameter("token", Store.User.queryMe().token);
+        }
         HttpUtils http = new HttpUtils();
         http.send(HttpMethod.POST, ApiType.UP_HEAD_IMG.getOpt(), params,
                 new RequestCallBack<String>() {
@@ -385,7 +396,6 @@ public class MyaccountActivity extends BaseActivity {
 
                 });
     }
-
 
 
 }

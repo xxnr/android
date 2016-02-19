@@ -83,7 +83,9 @@ public class ImprovePersonActivity extends BaseActivity {
         setTitle("完善个人资料");
         me = Store.User.queryMe();
         intView();
-        setData();
+        if (me!=null){
+            setData();
+        }
 
         setLeftClickListener(new View.OnClickListener() {
             @Override
@@ -295,7 +297,9 @@ public class ImprovePersonActivity extends BaseActivity {
 
         Map<String, Object> map1 = new HashMap();
         map1.put("address", map);
-        map1.put("token", Store.User.queryMe().token);
+        if (isLogin()){
+            map1.put("token", Store.User.queryMe().token);
+        }
         map1.put("userName", name.getText().toString().trim());
         map1.put("type", type_key);
         if (boy_box.isChecked()) {

@@ -112,7 +112,9 @@ public class AddressmanageActivity extends BaseActivity {
     private void getAddressList() {
         showProgressDialog();
         RequestParams params = new RequestParams();
-        params.put("userId", Store.User.queryMe().userid);
+        if (isLogin()) {
+            params.put("userId", Store.User.queryMe().userid);
+        }
         execApi(ApiType.ADDRESS_LIST, params);
     }
 
@@ -126,33 +128,36 @@ public class AddressmanageActivity extends BaseActivity {
     public void onResponsed(Request req) {
         disMissDialog();
         if (req.getApi() == ApiType.ADDRESS_LIST) {
-            AddressList data = (AddressList) req.getData();
-            if (data == null) {
-                return;
-            }
-            if (data.datas == null) {
-                return;
-            }
-            rows = data.datas.rows;
-            map.clear();
-            for (int i = 0; i < rows.size(); i++) {
-                if (rows.get(i).type.equals("1")) {
-                    map.put("pos", i);
+            if (req.getData().getStatus().equals("1000")){
+                AddressList data = (AddressList) req.getData();
+                if (data == null) {
+                    return;
                 }
+                if (data.datas == null) {
+                    return;
+                }
+                rows = data.datas.rows;
+                map.clear();
+                for (int i = 0; i < rows.size(); i++) {
+                    if (rows.get(i).type.equals("1")) {
+                        map.put("pos", i);
+                    }
+                }
+                if (rows != null && rows.size() > 0) {
+                    addList.addAll(rows);
+                    none_address_rel.setVisibility(View.GONE);
+                    addressCount = -1;
+                    selectedAddress = rows.get(0);
+                } else {
+                    addList.clear();
+                    none_address_rel.setVisibility(View.VISIBLE);
+                    showToast("请先新增地址");
+                    addressCount = 0;
+                }
+                adapter = new addressAdapter();
+                address_list.setAdapter(adapter);
             }
-            if (rows != null && rows.size() > 0) {
-                addList.addAll(rows);
-                none_address_rel.setVisibility(View.GONE);
-                addressCount = -1;
-                selectedAddress = rows.get(0);
-            } else {
-                addList.clear();
-                none_address_rel.setVisibility(View.VISIBLE);
-                showToast("请先新增地址");
-                addressCount = 0;
-            }
-            adapter = new addressAdapter();
-            address_list.setAdapter(adapter);
+
         } else if (req.getApi() == ApiType.DELETE_ADDRESS) {
             ResponseResult data = (ResponseResult) req.getData();
             if ("1000".equals(data.getStatus())) {
@@ -270,11 +275,13 @@ public class AddressmanageActivity extends BaseActivity {
                                                             int which) {
                                             if (addList.get(position).type.equals("1")) {
                                                 UserInfo queryMe = Store.User.queryMe();
-                                                queryMe.defaultAddress = "";
-                                                Store.User.saveMe(queryMe);
-                                                map.put("pos", -1);
-                                                selectedAddress = null;
-                                                MsgCenter.fireNull("MSG.ADDR", selectedAddress);
+                                                if (queryMe != null) {
+                                                    queryMe.defaultAddress = "";
+                                                    Store.User.saveMe(queryMe);
+                                                    map.put("pos", -1);
+                                                    selectedAddress = null;
+                                                    MsgCenter.fireNull("MSG.ADDR", selectedAddress);
+                                                }
                                             }
                                             showProgressDialog();
                                             RequestParams params = new RequestParams();
@@ -314,7 +321,9 @@ public class AddressmanageActivity extends BaseActivity {
                     Address address = addList.get(position);
 
                     RequestParams params = new RequestParams();
-                    params.put("userId", Store.User.queryMe().userid);
+                    if (isLogin()) {
+                        params.put("userId", Store.User.queryMe().userid);
+                    }
                     params.put("addressId", address.addressId);
                     params.put("receiptPhone", address.receiptPhone);
                     params.put("receiptPeople", address.receiptPeople);
@@ -327,13 +336,17 @@ public class AddressmanageActivity extends BaseActivity {
                     if (isChecked) {
                         params.put("type", 1);
                         UserInfo queryMe = Store.User.queryMe();
-                        queryMe.defaultAddress = StringUtil.checkBufferStr(address.areaName + address.cityName, address.countyName, address.townName, address.address);
-                        Store.User.saveMe(queryMe);
+                        if (queryMe != null) {
+                            queryMe.defaultAddress = StringUtil.checkBufferStr(address.areaName + address.cityName, address.countyName, address.townName, address.address);
+                            Store.User.saveMe(queryMe);
+                        }
                     } else {
                         params.put("type", 2);
                         UserInfo queryMe = Store.User.queryMe();
-                        queryMe.defaultAddress = "";
-                        Store.User.saveMe(queryMe);
+                        if (queryMe != null) {
+                            queryMe.defaultAddress = "";
+                            Store.User.saveMe(queryMe);
+                        }
                     }
                     execApi(ApiType.UPDATE_ADDRESS, params);
                 }

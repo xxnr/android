@@ -66,7 +66,9 @@ public class ChoiceHomeAddress extends BaseActivity {
         setTitle("修改所在地区");
         me = Store.User.queryMe();
         initView();
-        setData();
+        if (me!=null){
+            setData();
+        }
     }
 
 
@@ -135,8 +137,10 @@ public class ChoiceHomeAddress extends BaseActivity {
                     Gson gson = new Gson();
                     Map<String, Object> map1 = new HashMap<>();
                     map1.put("address", map);
-                    map1.put("userId", Store.User.queryMe().userid);
-                    map1.put("token", Store.User.queryMe().token);
+                    if (isLogin()){
+                        map1.put("userId", Store.User.queryMe().userid);
+                        map1.put("token", Store.User.queryMe().token);
+                    }
                     String jsonStr = gson.toJson(map1);
                     upAddress(jsonStr);
                 } else {

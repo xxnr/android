@@ -109,11 +109,6 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
     private void getData() {
         showProgressDialog();
         RequestParams params = new RequestParams();
-        if (isLogin()) {
-            params.put("locationUserId", Store.User.queryMe().userid);
-        } else {
-            params.put("locationUserId", "");
-        }
         params.put("productId", goodId);
         execApi(ApiType.GET_GOOD_DETAIL, params);
     }
@@ -708,7 +703,9 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
                 RequestParams params = new RequestParams();
                 Gson gson = new Gson();
                 Map<String, Object> map = new HashMap<>();
-                map.put("token", Store.User.queryMe().token);
+                if (isLogin()){
+                    map.put("token", Store.User.queryMe().token);
+                }
                 map.put("quantity", fenshu);
                 map.put("SKUId", SKUId);
                 map.put("update_by_add", "true");

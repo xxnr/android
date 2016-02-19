@@ -165,7 +165,9 @@ public class ChoiceActivity extends BaseActivity {
 
                 showProgressDialog();
                 RequestParams params = new RequestParams();
-                params.put("userId", Store.User.queryMe().userid);
+                if (isLogin()){
+                    params.put("userId", Store.User.queryMe().userid);
+                }
                 params.put("areaId", cityareaid);
                 params.put("cityId", queueid);
                 params.put("countyId", buildid);
@@ -230,7 +232,9 @@ public class ChoiceActivity extends BaseActivity {
                             + room_edit.getEditableText().toString().trim();
                     MsgCenter.fireNull("MSG.ADDR", addr);
                     UserInfo queryMe = Store.User.queryMe();
-                    queryMe.defaultAddress = addr;
+                    if (queryMe!=null){
+                        queryMe.defaultAddress = addr;
+                    }
                     Store.User.saveMe(queryMe);
                 }
                 showToast("成功新增了地址");

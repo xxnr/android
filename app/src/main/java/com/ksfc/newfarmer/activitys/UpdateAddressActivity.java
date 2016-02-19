@@ -148,13 +148,19 @@ public class UpdateAddressActivity extends BaseActivity {
                                     public void onClick(DialogInterface dialog,
                                                         int which) {
                                         UserInfo queryMe = Store.User.queryMe();
+
                                         if (type.equals("1")) {
-                                            queryMe.defaultAddress = "";
-                                            Store.User.saveMe(queryMe);
+                                            if (queryMe!=null){
+                                                queryMe.defaultAddress = "";
+                                                Store.User.saveMe(queryMe);
+                                            }
+
                                         }
                                         showProgressDialog("删除中");
                                         RequestParams params1 = new RequestParams();
-                                        params1.put("userId", queryMe.userid);
+                                        if (queryMe!=null){
+                                            params1.put("userId", queryMe.userid);
+                                        }
                                         params1.put("addressId", addressId);
                                         execApi(ApiType.DELETE_ADDRESS, params1);
                                     }
@@ -226,7 +232,9 @@ public class UpdateAddressActivity extends BaseActivity {
 
                 showProgressDialog();
                 RequestParams params = new RequestParams();
-                params.put("userId", Store.User.queryMe().userid);
+                if (isLogin()){
+                    params.put("userId", Store.User.queryMe().userid);
+                }
                 params.put("addressId", addressId);
                 params.put("receiptPhone", shouhuo_tel.getEditableText().toString()
                         .trim());
@@ -290,8 +298,10 @@ public class UpdateAddressActivity extends BaseActivity {
                             + room_edit.getEditableText().toString().trim();
                     MsgCenter.fireNull("MSG.ADDR", addr);
                     UserInfo queryMe = Store.User.queryMe();
-                    queryMe.defaultAddress = addr;
-                    Store.User.saveMe(queryMe);
+                    if (queryMe!=null){
+                        queryMe.defaultAddress = addr;
+                        Store.User.saveMe(queryMe);
+                    }
                 }
                 finish();
                 showToast("成功更改了地址");

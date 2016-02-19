@@ -63,7 +63,9 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
             params.put("inviteeId", consumer.userId);
             params.put("page", page);
             params.put("max", 20);
-            params.put("userId", Store.User.queryMe().userid);
+            if (isLogin()){
+                params.put("userId", Store.User.queryMe().userid);
+            }
             execApi(ApiType.GET_INVITEE_ORDERS, params);
         }
     }

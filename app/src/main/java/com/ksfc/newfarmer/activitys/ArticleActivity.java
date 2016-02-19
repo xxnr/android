@@ -26,10 +26,29 @@ import com.umeng.socialize.utils.ShareBoardlistener;
 @SuppressLint("SetJavaScriptEnabled")
 public class ArticleActivity extends BaseActivity {
     private LinearLayout social_share_ll;
-    private UMImage image ;
+    private UMImage image;
     private String urlImage;
     private String urlTitle;
     private String url;
+    private String newsabstract;
+
+    private UMShareListener umShareListener = new UMShareListener() {
+        @Override
+        public void onResult(SHARE_MEDIA platform) {
+            Toast.makeText(ArticleActivity.this, platform + " 分享成功啦", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onError(SHARE_MEDIA platform, Throwable t) {
+            Toast.makeText(ArticleActivity.this, platform + " 分享失败啦", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onCancel(SHARE_MEDIA platform) {
+            Toast.makeText(ArticleActivity.this, platform + " 分享取消了", Toast.LENGTH_SHORT).show();
+        }
+    };
+
 
     @Override
     public int getLayout() {
@@ -44,11 +63,23 @@ public class ArticleActivity extends BaseActivity {
         url = getIntent().getStringExtra("articleUrl");
         urlImage = getIntent().getStringExtra("urlImage");
         urlTitle = getIntent().getStringExtra("urlTitle");
+        newsabstract = getIntent().getStringExtra("newsabstract");
 
-        if (StringUtil.checkStr(urlImage)){
+        if (!StringUtil.checkStr(urlTitle)) {
+            urlTitle = "新新农人";
+        }
+        if (!StringUtil.checkStr(url)) {
+            url = "http://www.xinxinnongren.com";
+        }
+
+        if (StringUtil.checkStr(urlImage)) {
             image = new UMImage(ArticleActivity.this, urlImage);
-        }else {
+        } else {
             image = new UMImage(ArticleActivity.this, R.drawable.ic_launcher);
+        }
+
+        if (!StringUtil.checkStr(newsabstract)) {
+            newsabstract = "新新农人";
         }
 
         social_share_ll = ((LinearLayout) findViewById(R.id.social_share_ll));
@@ -89,12 +120,13 @@ public class ArticleActivity extends BaseActivity {
                             SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE
                     };
             Config.dialog = CustomProgressDialog.createLoadingDialog(this, "分享中");
+
             new ShareAction(this).setDisplayList(displaylist)
-                    .withText("新新农人")
+                    .withText(newsabstract)
                     .withTitle(urlTitle)
                     .withTargetUrl(url)
                     .withMedia(image)
-                    .setListenerList(umShareListener, umShareListener)
+                    .setListenerList(umShareListener)
                     .open();
         }
     }
@@ -104,22 +136,7 @@ public class ArticleActivity extends BaseActivity {
 
     }
 
-    private UMShareListener umShareListener = new UMShareListener() {
-        @Override
-        public void onResult(SHARE_MEDIA platform) {
-            Toast.makeText(ArticleActivity.this, platform + " 分享成功啦", Toast.LENGTH_SHORT).show();
-        }
 
-        @Override
-        public void onError(SHARE_MEDIA platform, Throwable t) {
-            Toast.makeText(ArticleActivity.this, platform + " 分享失败啦", Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        public void onCancel(SHARE_MEDIA platform) {
-            Toast.makeText(ArticleActivity.this, platform + " 分享取消了", Toast.LENGTH_SHORT).show();
-        }
-    };
 
 
 }

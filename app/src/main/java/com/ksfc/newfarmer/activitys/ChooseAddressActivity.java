@@ -111,7 +111,10 @@ public class ChooseAddressActivity extends BaseActivity {
     private void getAddressList() {
         showProgressDialog();
         RequestParams params = new RequestParams();
-        params.put("userId", Store.User.queryMe().userid);
+        if (isLogin()){
+            params.put("userId", Store.User.queryMe().userid);
+
+        }
         execApi(ApiType.ADDRESS_LIST, params);
     }
 
@@ -267,8 +270,10 @@ public class ChooseAddressActivity extends BaseActivity {
                                                             int which) {
                                             LoginResult.UserInfo queryMe = Store.User.queryMe();
                                             if (addlist.get(position).type.equals("1")) {
-                                                queryMe.defaultAddress = "";
-                                                Store.User.saveMe(queryMe);
+                                                if (queryMe != null) {
+                                                    queryMe.defaultAddress = "";
+                                                    Store.User.saveMe(queryMe);
+                                                }
                                                 map.put("pos", -1);
                                             }
                                             if (addlist.get(position).addressId.equals(state.addressId)) {

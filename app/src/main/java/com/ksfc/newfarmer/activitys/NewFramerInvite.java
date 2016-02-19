@@ -49,7 +49,9 @@ public class NewFramerInvite extends BaseActivity implements
     public void OnActCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         setTitle("新农代表");
-        isXXNRAgent = Store.User.queryMe().isXXNRAgent;
+        if (isLogin()){
+            isXXNRAgent = Store.User.queryMe().isXXNRAgent;
+        }
         initView();
         //判断经纪人下的好友数量 如果数量为0 展示引导页
         if (isXXNRAgent){
@@ -61,8 +63,10 @@ public class NewFramerInvite extends BaseActivity implements
 
     private void getData() {
         RequestParams params = new RequestParams();
-        execApi(ApiType.GET_POTENTIAL_CUSTOMER_LIST.setMethod(ApiType.RequestMethod.GET)
-                .setOpt("/api/v2.1/potentialCustomer/query" + "?token=" + Store.User.queryMe().token + "&page=" + 1), params);
+        if (isLogin()){
+            execApi(ApiType.GET_POTENTIAL_CUSTOMER_LIST.setMethod(ApiType.RequestMethod.GET)
+                    .setOpt("/api/v2.1/potentialCustomer/query" + "?token=" + Store.User.queryMe().token + "&page=" + 1), params);
+        }
     }
 
     //设置返回监听的，回传数据

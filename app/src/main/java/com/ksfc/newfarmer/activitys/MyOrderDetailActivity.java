@@ -89,7 +89,9 @@ public class MyOrderDetailActivity extends BaseActivity {
     private void requestData(String orderId) {
         showProgressDialog();
         RequestParams params = new RequestParams();
-        params.put("userId", Store.User.queryMe().userid);
+        if (isLogin()){
+            params.put("userId", Store.User.queryMe().userid);
+        }
         params.put("orderId", orderId);
         execApi(ApiType.GET_ORDER_DETAILS, params);
     }

@@ -77,6 +77,7 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
                     intent.putExtra("articleUrl", entity.getUrl());
                     intent.putExtra("urlImage", entity.getImage());
                     intent.putExtra("urlTitle", entity.getTitle());
+                    intent.putExtra("newsabstract", entity.getNewsabstract());
                     startActivity(intent);
                 }
 

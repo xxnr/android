@@ -77,7 +77,9 @@ public class ChangePasswordActivity extends BaseActivity {
 		if (req.getApi() == ApiType.GET_PUBLIC_KEY) {
 			PublicKeyResult res = (PublicKeyResult) req.getData();
 			RequestParams params = new RequestParams();
-			params.put("userId", Store.User.queryMe().userid);
+			if (isLogin()){
+				params.put("userId", Store.User.queryMe().userid);
+			}
 			try {
 				params.put(
 						"newPwd",

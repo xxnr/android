@@ -37,9 +37,11 @@ public class PotentialCustomerDetailActivity extends BaseActivity {
 
     private void getData() {
         RequestParams params = new RequestParams();
-        execApi(ApiType.GET_POTENTIAL_CUSTOMER_DETAIL
-                .setMethod(ApiType.RequestMethod.GET)
-                .setOpt("/api/v2.1/potentialCustomer/get" + "?token=" + Store.User.queryMe().token + "&_id=" + _id), params);
+        if (isLogin()){
+            execApi(ApiType.GET_POTENTIAL_CUSTOMER_DETAIL
+                    .setMethod(ApiType.RequestMethod.GET)
+                    .setOpt("/api/v2.1/potentialCustomer/get" + "?token=" + Store.User.queryMe().token + "&_id=" + _id), params);
+        }
     }
 
     private void initView() {

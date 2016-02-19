@@ -132,12 +132,6 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
         map.put("rowCount", 6);
         String huafeiId = (String) SPUtils.get(HomepageActivity.this, "HuafeiId", "531680A5");
         map.put("classId", huafeiId);
-
-        if (isLogin()) {
-            map.put("locationUserId", Store.User.queryMe().userid);
-        } else {
-            map.put("locationUserId", "");
-        }
         Gson gson = new Gson();
         params.put("JSON", gson.toJson(map));
         execApi(ApiType.GET_HUAFEI.setMethod(RequestMethod.POSTJSON), params);
@@ -154,11 +148,6 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
         map.put("rowCount", 6);
         String carID = (String) SPUtils.get(HomepageActivity.this, "CarID", "6C7D8F66");
         map.put("classId", carID);
-        if (isLogin()) {
-            map.put("locationUserId", Store.User.queryMe().userid);
-        } else {
-            map.put("locationUserId", "");
-        }
         Gson gson = new Gson();
         params.put("JSON", gson.toJson(map));
         execApi(ApiType.GET_NYC.setMethod(RequestMethod.POSTJSON), params);
@@ -203,7 +192,9 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
         if (isLogin()) {
             showProgressDialog("请稍后...");
             RequestParams params = new RequestParams();
-            params.put("userId", Store.User.queryMe().userid);
+            if (isLogin()){
+                params.put("userId", Store.User.queryMe().userid);
+            }
             execApi(ApiType.SIGN_IN_POINT, params);
         } else {
             showToast("您还未登录哦，请登录后签到");

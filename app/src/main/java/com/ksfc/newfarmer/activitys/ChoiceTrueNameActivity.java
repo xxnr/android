@@ -86,7 +86,9 @@ public class ChoiceTrueNameActivity extends BaseActivity {
                 } else {
                     showProgressDialog("正在保存中...");
                     RequestParams params = new RequestParams();
-                    params.put("userId", Store.User.queryMe().userid);
+                    if (isLogin()){
+                        params.put("userId", Store.User.queryMe().userid);
+                    }
                     params.put("userName", str);
                     execApi(ApiType.SAVE_MYUSER, params);
                 }

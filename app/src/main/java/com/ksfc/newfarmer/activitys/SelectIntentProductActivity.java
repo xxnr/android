@@ -45,10 +45,11 @@ public class SelectIntentProductActivity extends BaseActivity {
         listView = ((ListView) findViewById(R.id.listView));
         showProgressDialog();
         RequestParams params = new RequestParams();
-        execApi(ApiType.GET_PURPOSE_GOODS_LIST
-                .setMethod(ApiType.RequestMethod.GET)
-                .setOpt("/api/v2.1/intentionProducts" + "?token=" + Store.User.queryMe().token), params);
-
+        if (isLogin()){
+            execApi(ApiType.GET_PURPOSE_GOODS_LIST
+                    .setMethod(ApiType.RequestMethod.GET)
+                    .setOpt("/api/v2.1/intentionProducts" + "?token=" + Store.User.queryMe().token), params);
+        }
         setViewClick(R.id.choice_compelet);
     }
 

@@ -13,6 +13,7 @@ import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.OnApiDataReceivedCallback;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
+import com.ksfc.newfarmer.protocol.beans.LoginResult;
 import com.ksfc.newfarmer.widget.dialog.CustomProgressDialog;
 
 import android.annotation.SuppressLint;
@@ -151,7 +152,11 @@ public abstract class BaseFragment extends Fragment implements
 			params = new RequestParams();
 		// 判断是不是通过验证
 		if (params.containsKey("userId")) {
-			params.put("token", Store.User.queryMe().token);
+			LoginResult.UserInfo userInfo = Store.User.queryMe();
+			if (userInfo!=null){
+				params.put("token", userInfo.token);
+			}
+
 		}
 		req.setParams(params);
 		req.executeNetworkApi(this);

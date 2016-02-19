@@ -68,10 +68,11 @@ public class MyIntegralActivity extends BaseActivity implements
 		// userId:用户ID
 		showProgressDialog();
 		RequestParams params = new RequestParams();
-		params.put("locationUserId", Store.User.queryMe().userid);
 		params.put("page", page);
 		params.put("rows", 10);
-		params.put("userId", Store.User.queryMe().userid);
+		if (isLogin()){
+			params.put("userId", Store.User.queryMe().userid);
+		}
 		execApi(ApiType.MY_JIFEN, params);
 
 

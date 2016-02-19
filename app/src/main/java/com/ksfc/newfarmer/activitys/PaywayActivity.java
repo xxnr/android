@@ -156,7 +156,9 @@ public class PaywayActivity extends BaseActivity implements Runnable {
         if (StringUtil.checkStr(orderId)) {
             showProgressDialog();
             RequestParams params = new RequestParams();
-            params.put("userId", Store.User.queryMe().userid);
+            if (isLogin()){
+                params.put("userId", Store.User.queryMe().userid);
+            }
             params.put("orderId", orderId);
             execApi(ApiType.GET_ORDER_DETAILS, params);
         }
@@ -207,7 +209,9 @@ public class PaywayActivity extends BaseActivity implements Runnable {
     //获取白名单
     private void getWriteList() {
         com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
-        params.addBodyParameter("token", Store.User.queryMe().token);
+        if (isLogin()){
+            params.addBodyParameter("token", Store.User.queryMe().token);
+        }
         HttpUtils http = new HttpUtils();
         http.send(HttpRequest.HttpMethod.POST, ApiType.GET_WRITE_LIST.getOpt(), params,
                 new RequestCallBack<String>() {
@@ -289,7 +293,9 @@ public class PaywayActivity extends BaseActivity implements Runnable {
                 alipay_img.setBackgroundResource(R.drawable.circle_orange);
                 tag = 1;
                 RequestParams params = new RequestParams();
-                params.put("userId", Store.User.queryMe().userid);
+                if (isLogin()){
+                    params.put("userId", Store.User.queryMe().userid);
+                }
                 if (orderId != null) {
                     params.put("orderId", orderId);
                 }
@@ -302,7 +308,9 @@ public class PaywayActivity extends BaseActivity implements Runnable {
                 bank_img.setBackgroundResource(R.drawable.circle_orange);
                 tag = 2;
                 RequestParams params1 = new RequestParams();
-                params1.put("userId", Store.User.queryMe().userid);
+                if (isLogin()){
+                    params1.put("userId", Store.User.queryMe().userid);
+                }
                 if (orderId != null) {
                     params1.put("orderId", orderId);
                 }
@@ -323,7 +331,9 @@ public class PaywayActivity extends BaseActivity implements Runnable {
                 if (payWay_pay_times_view.getVisibility() == View.VISIBLE) {
                     if (tag == 1) {
                         RequestParams params3 = new RequestParams();
-                        params3.put("userId", Store.User.queryMe().userid);
+                        if (isLogin()){
+                            params3.put("userId", Store.User.queryMe().userid);
+                        }
                         params3.put("consumer", "app");
                         if (StringUtil.checkStr(payWay_times_price_tv.getText().toString().trim())) {
                             params3.put("price", payWay_times_price_tv.getText().toString().trim());
@@ -340,7 +350,9 @@ public class PaywayActivity extends BaseActivity implements Runnable {
                 } else {
                     if (tag == 1) {
                         RequestParams params3 = new RequestParams();
-                        params3.put("userId", Store.User.queryMe().userid);
+                        if (isLogin()){
+                            params3.put("userId", Store.User.queryMe().userid);
+                        }
                         params3.put("consumer", "app");
                         if (orderId != null) {
                             params3.put("orderId", orderId);
@@ -490,17 +502,21 @@ public class PaywayActivity extends BaseActivity implements Runnable {
                 //分次支付金额
                 if (StringUtil.checkStr(payWay_times_price_tv.getText().toString().trim())) {
                     price = payWay_times_price_tv.getText().toString().trim();
-                    byte[] b = ("token=" + Store.User.queryMe().token + "&consumer=app&orderId=" + orderId + "&price=" + payWay_times_price_tv.getText().toString().trim())
-                            .getBytes();
-                    ucon.getOutputStream().write(b, 0, b.length);
+                    if (isLogin()){
+                        byte[] b = ("token=" + Store.User.queryMe().token + "&consumer=app&orderId=" + orderId + "&price=" + payWay_times_price_tv.getText().toString().trim())
+                                .getBytes();
+                        ucon.getOutputStream().write(b, 0, b.length);
+                    }
                 }
 
             } else {
                 //全额金额
                 price = payWay_pay_total_price.getText().toString().trim().replace("¥", "");
-                byte[] b = ("token=" + Store.User.queryMe().token + "&consumer=app&orderId=" + orderId)
-                        .getBytes();
-                ucon.getOutputStream().write(b, 0, b.length);
+                if (isLogin()){
+                    byte[] b = ("token=" + Store.User.queryMe().token + "&consumer=app&orderId=" + orderId)
+                            .getBytes();
+                    ucon.getOutputStream().write(b, 0, b.length);
+                }
             }
             //*********************************************////
 

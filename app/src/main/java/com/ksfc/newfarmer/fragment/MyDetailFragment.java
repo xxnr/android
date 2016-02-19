@@ -30,6 +30,7 @@ import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
+import com.ksfc.newfarmer.protocol.beans.LoginResult;
 import com.ksfc.newfarmer.protocol.beans.WaitingPay;
 import com.ksfc.newfarmer.utils.ExpandViewTouch;
 import com.ksfc.newfarmer.utils.PullToRefreshUtils;
@@ -102,7 +103,10 @@ public class MyDetailFragment extends BaseFragment implements View.OnClickListen
     @SuppressWarnings("unused")
     private void getData(int page) {
         RequestParams params = new RequestParams();
-        params.put("userId", Store.User.queryMe().userid);
+        LoginResult.UserInfo userInfo = Store.User.queryMe();
+        if (userInfo!=null){
+            params.put("userId", userInfo.userid);
+        }
         params.put("page", page);
         if (TYPE != 0) {
             params.put("typeValue", TYPE);

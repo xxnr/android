@@ -13,6 +13,7 @@ import com.ksfc.newfarmer.protocol.OnApiDataReceivedCallback;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
 import com.ksfc.newfarmer.protocol.beans.InviteeResult;
+import com.ksfc.newfarmer.protocol.beans.LoginResult;
 import com.ksfc.newfarmer.utils.PullToRefreshUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
 
@@ -60,8 +61,11 @@ public class InviteFriendsList extends BaseFragment implements PullToRefreshBase
 
     public void getData() {
         RequestParams params = new RequestParams();
-        String uid = Store.User.queryMe().userid;
-        params.put("userId", uid);
+        LoginResult.UserInfo userInfo = Store.User.queryMe();
+        if (userInfo!=null){
+            String uid = userInfo.userid;
+            params.put("userId", uid);
+        }
         params.put("max", 20);
         params.put("page", page);
         execApi(ApiType.GET_INVITEE, params);

@@ -256,38 +256,41 @@ public class LoginActivity extends BaseActivity {
     //存储个人信息部分到本地
     public void saveMe(LoginResult.UserInfo user) {
         LoginResult.UserInfo me = Store.User.queryMe();
-        if (user.userAddress != null) {
-            String province = "";
-            String city = "";
-            String county = "";
-            String town = "";
-            String address = "";
-            if (user.userAddress.province != null) {
-                province = user.userAddress.province.name;
-                me.provinceid = user.userAddress.province.id;
+        if (me!=null){
+            if (user.userAddress != null) {
+                String province = "";
+                String city = "";
+                String county = "";
+                String town = "";
+                String address = "";
+                if (user.userAddress.province != null) {
+                    province = user.userAddress.province.name;
+                    me.provinceid = user.userAddress.province.id;
+                }
+                if (user.userAddress.city != null) {
+                    city = user.userAddress.city.name;
+                    me.cityid = user.userAddress.city.id;
+                }
+                if (user.userAddress.county != null) {
+                    county = user.userAddress.county.name;
+                    me.countyid = user.userAddress.county.id;
+                }
+                if (user.userAddress.town != null) {
+                    town = user.userAddress.town.name;
+                    me.townid = user.userAddress.town.id;
+                }
+                address = StringUtil.checkBufferStr
+                        (province, city, county, "");
+                me.addressCity = address;
+                me.addressTown = town;
             }
-            if (user.userAddress.city != null) {
-                city = user.userAddress.city.name;
-                me.cityid = user.userAddress.city.id;
-            }
-            if (user.userAddress.county != null) {
-                county = user.userAddress.county.name;
-                me.countyid = user.userAddress.county.id;
-            }
-            if (user.userAddress.town != null) {
-                town = user.userAddress.town.name;
-                me.townid = user.userAddress.town.id;
-            }
-            address = StringUtil.checkBufferStr
-                    (province, city, county, "");
-            me.addressCity = address;
-            me.addressTown = town;
+            me.sex = user.sex;
+            me.name = user.name;
+            me.userType = user.userType;
+            me.userTypeInName = user.userTypeInName;
+            me.isXXNRAgent = user.isXXNRAgent;
+            Store.User.saveMe(me);
         }
-        me.sex = user.sex;
-        me.name = user.name;
-        me.userType = user.userType;
-        me.userTypeInName = user.userTypeInName;
-        me.isXXNRAgent = user.isXXNRAgent;
-        Store.User.saveMe(me);
+
     }
 }

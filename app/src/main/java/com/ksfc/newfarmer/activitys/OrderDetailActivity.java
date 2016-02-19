@@ -223,7 +223,9 @@ public class OrderDetailActivity extends BaseActivity {
                     map1.put("shopCartId", SPUtils.get(OrderDetailActivity.this,
                             "shopCartId", ""));
                     map1.put("addressId", selectedAddress.addressId);
-                    map1.put("token", Store.User.queryMe().token);
+                    if (isLogin()){
+                        map1.put("token", Store.User.queryMe().token);
+                    }
                     String jsonString = gson.toJson(map1);
                     RequestParams params = new RequestParams();
                     params.put("JSON", jsonString);
@@ -236,7 +238,9 @@ public class OrderDetailActivity extends BaseActivity {
                     map1.put("shopCartId", SPUtils.get(OrderDetailActivity.this,
                             "shopCartId", ""));
                     map1.put("addressId", selectedAddress.addressId);
-                    map1.put("token", Store.User.queryMe().token);
+                    if (isLogin()){
+                        map1.put("token", Store.User.queryMe().token);
+                    }
                     String jsonString = gson.toJson(map1);
                     RequestParams params = new RequestParams();
                     params.put("JSON", jsonString);
@@ -648,7 +652,9 @@ public class OrderDetailActivity extends BaseActivity {
     private void getAddress() {
         showProgressDialog();
         RequestParams params = new RequestParams();
-        params.put("userId", Store.User.queryMe().userid);
+        if (isLogin()){
+            params.put("userId", Store.User.queryMe().userid);
+        }
         execApi(ApiType.ADDRESS_LIST, params);
     }
 

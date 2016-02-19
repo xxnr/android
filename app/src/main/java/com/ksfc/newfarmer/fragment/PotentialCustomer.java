@@ -51,7 +51,11 @@ public class PotentialCustomer extends BaseFragment implements PullToRefreshBase
         listView.setMode(PullToRefreshBase.Mode.BOTH);
         listView.setOnRefreshListener(this);
 
-        boolean isXXNRAgent = Store.User.queryMe().isXXNRAgent;//是否是新农经纪人
+        boolean isXXNRAgent = false;
+        if (Store.User.queryMe() != null) {
+            isXXNRAgent = Store.User.queryMe().isXXNRAgent;//是否是新农经纪人
+        }
+
         //设置刷新的文字
         PullToRefreshUtils.setFreshText(listView);
 
@@ -84,8 +88,10 @@ public class PotentialCustomer extends BaseFragment implements PullToRefreshBase
 
     private void getData() {
         RequestParams params = new RequestParams();
-        execApi(ApiType.GET_POTENTIAL_CUSTOMER_LIST.setMethod(ApiType.RequestMethod.GET)
-                .setOpt("/api/v2.1/potentialCustomer/query" + "?token=" + Store.User.queryMe().token + "&page=" + page), params);
+        if (Store.User.queryMe() != null) {
+            execApi(ApiType.GET_POTENTIAL_CUSTOMER_LIST.setMethod(ApiType.RequestMethod.GET)
+                    .setOpt("/api/v2.1/potentialCustomer/query" + "?token=" + Store.User.queryMe().token + "&page=" + page), params);
+        }
     }
 
 

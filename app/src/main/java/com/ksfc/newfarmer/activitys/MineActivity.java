@@ -74,8 +74,9 @@ public class MineActivity extends BaseActivity {
         // userId
         // showProgressDialog("正在加载中..");
         RequestParams params = new RequestParams();
-        params.put("locationUserId", Store.User.queryMe().userid);
-        params.put("userId", Store.User.queryMe().userid);
+        if (isLogin()){
+            params.put("userId", Store.User.queryMe().userid);
+        }
         execApi(ApiType.PERSONAL_CENTER, params);
         showProgressDialog();
     }

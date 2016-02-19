@@ -125,9 +125,12 @@ public class AddPotentialActivity extends BaseActivity {
             public void afterTextChanged(Editable s) {
                 if (isMobileNum(s.toString())) {
                     RequestParams params = new RequestParams();
-                    execApi(ApiType.IS_POTENTIAL_CUSTOMER
-                            .setMethod(ApiType.RequestMethod.GET)
-                            .setOpt("/api/v2.1/potentialCustomer/isAvailable" + "?token=" + Store.User.queryMe().token + "&phone=" + s.toString().trim()), params);
+                    if (isLogin()) {
+                        execApi(ApiType.IS_POTENTIAL_CUSTOMER
+                                .setMethod(ApiType.RequestMethod.GET)
+                                .setOpt("/api/v2.1/potentialCustomer/isAvailable" + "?token=" + Store.User.queryMe().token + "&phone=" + s.toString().trim()), params);
+                    }
+
                 } else {
                     if (s.length() == 11) {
                         showToast("请输入正确的手机号");
@@ -282,7 +285,9 @@ public class AddPotentialActivity extends BaseActivity {
         }
 
         map1.put("buyIntentions", productIdList);
-        map1.put("token", Store.User.queryMe().token);
+        if (isLogin()){
+            map1.put("token", Store.User.queryMe().token);
+        }
         Gson gson = new Gson();
         String toJson = gson.toJson(map1);
         RequestParams params = new RequestParams();

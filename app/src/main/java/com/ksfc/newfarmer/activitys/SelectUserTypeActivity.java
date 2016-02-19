@@ -119,8 +119,10 @@ public class SelectUserTypeActivity extends BaseActivity implements AdapterView.
         disMissDialog();
         if (ApiType.SAVE_MYUSER == req.getApi()) {
             LoginResult.UserInfo queryMe = Store.User.queryMe();
-            queryMe.userType = select;
-            Store.User.saveMe(queryMe);
+            if (isLogin()){
+                queryMe.userType = select;
+                Store.User.saveMe(queryMe);
+            }
             showToast("保存成功！");
             MsgCenter.fireNull(MsgID.UPDATE_USER, "update");
             finish();
@@ -139,7 +141,9 @@ public class SelectUserTypeActivity extends BaseActivity implements AdapterView.
         if (flag) {
             showProgressDialog("正在保存中...");
             RequestParams params = new RequestParams();
-            params.put("userId", Store.User.queryMe().userid);
+            if (isLogin()){
+                params.put("userId", Store.User.queryMe().userid);
+            }
             params.put("type", list_key.get(position));
             execApi(ApiType.SAVE_MYUSER, params);
         } else {

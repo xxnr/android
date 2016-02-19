@@ -302,7 +302,9 @@ public class ShoppingCartActivity extends BaseActivity {
                 RequestParams params = new RequestParams();
                 Gson gson = new Gson();
                 Map<String, Object> map = new HashMap<>();
-                map.put("token", Store.User.queryMe().token);
+                if (isLogin()){
+                    map.put("token", Store.User.queryMe().token);
+                }
                 map.put("quantity", localToNet.get(i).get("sum"));
                 map.put("SKUId", localToNet.get(i).get("SKUId"));
                 map.put("update_by_add", "true");
@@ -318,8 +320,10 @@ public class ShoppingCartActivity extends BaseActivity {
 
             // 加载用户购物车数据  GET 请求
             RequestParams params = new RequestParams();
-            execApi(ApiType.GET_SHOPCART_LIST.setMethod(ApiType.RequestMethod.GET).setOpt
-                    ("/api/v2.1/cart/getShoppingCart" + "?token=" + Store.User.queryMe().token), params);
+            if (isLogin()){
+                execApi(ApiType.GET_SHOPCART_LIST.setMethod(ApiType.RequestMethod.GET).setOpt
+                        ("/api/v2.1/cart/getShoppingCart" + "?token=" + Store.User.queryMe().token), params);
+            }
             // 删除本地购物车数据
             dao.deleteAllShopping();
         } else {
@@ -494,7 +498,9 @@ public class ShoppingCartActivity extends BaseActivity {
                                                             if (isChecked != null && isChecked) {
                                                                 Goods good = data.category.get(i).goods.get(j);
                                                                 RequestParams params = new RequestParams();
-                                                                params.put("userId", Store.User.queryMe().userid);
+                                                                if (isLogin()){
+                                                                    params.put("userId", Store.User.queryMe().userid);
+                                                                }
                                                                 params.put("SKUId", good.SKUId);
                                                                 params.put("quantity", "0");
                                                                 execApi(ApiType.CHANGE_NUM,
@@ -675,9 +681,10 @@ public class ShoppingCartActivity extends BaseActivity {
             if ("1000".equals(res.getStatus())) {
                 // 加载用户购物车数据  GET 请求
                 RequestParams params = new RequestParams();
-                execApi(ApiType.GET_SHOPCART_LIST.setMethod(ApiType.RequestMethod.GET).setOpt
-                        ("/api/v2.1/cart/getShoppingCart" + "?token=" + Store.User.queryMe().token), params);
-
+                if (isLogin()){
+                    execApi(ApiType.GET_SHOPCART_LIST.setMethod(ApiType.RequestMethod.GET).setOpt
+                            ("/api/v2.1/cart/getShoppingCart" + "?token=" + Store.User.queryMe().token), params);
+                }
             }
             //获得本地的商品列表
         } else if (req.getApi() == ApiType.GET_LOCAL_SHOPCART_LIST) {
@@ -1015,7 +1022,9 @@ public class ShoppingCartActivity extends BaseActivity {
                                                             int which) {
                                             if (isLogin()) {
                                                 RequestParams params = new RequestParams();
-                                                params.put("userId", Store.User.queryMe().userid);
+                                                if (isLogin()){
+                                                    params.put("userId", Store.User.queryMe().userid);
+                                                }
                                                 params.put("SKUId", goodsList.get(position).SKUId);
                                                 params.put("quantity", "0");
                                                 execApi(ApiType.CHANGE_NUM,
@@ -1203,7 +1212,9 @@ public class ShoppingCartActivity extends BaseActivity {
                                             holder.ordering_item_geshu.setText(str);
                                             if (isLogin()) {
                                                 RequestParams params = new RequestParams();
-                                                params.put("userId", Store.User.queryMe().userid);
+                                                if (isLogin()){
+                                                    params.put("userId", Store.User.queryMe().userid);
+                                                }
                                                 params.put("SKUId", goodsList.get(position).SKUId);
                                                 params.put("quantity", Integer.valueOf(str));
                                                 execApi(ApiType.CHANGE_NUM, params);
@@ -1288,7 +1299,9 @@ public class ShoppingCartActivity extends BaseActivity {
                     }
                     if (isLogin()) {
                         RequestParams params = new RequestParams();
-                        params.put("userId", Store.User.queryMe().userid);
+                        if (isLogin()){
+                            params.put("userId", Store.User.queryMe().userid);
+                        }
                         params.put("SKUId", goodsList.get(position).SKUId);
                         params.put("quantity", goodsList.get(position).num - 1);
                         execApi(ApiType.CHANGE_NUM, params);
@@ -1321,7 +1334,9 @@ public class ShoppingCartActivity extends BaseActivity {
                     if (isLogin()) {
                         showProgressDialog("修改中..");
                         RequestParams params = new RequestParams();
-                        params.put("userId", Store.User.queryMe().userid);
+                        if (isLogin()){
+                            params.put("userId", Store.User.queryMe().userid);
+                        }
                         params.put("SKUId", goodsList.get(position).SKUId);
                         params.put("quantity", goodsList.get(position).num + 1);
                         execApi(ApiType.CHANGE_NUM, params);
