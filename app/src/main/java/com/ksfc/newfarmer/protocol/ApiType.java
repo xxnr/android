@@ -341,8 +341,8 @@ public enum ApiType {
     GET_POTENTIAL_CUSTOMER_DETAIL("/api/v2.1/potentialCustomer/get", PotentialCustomerDetailResult.class),
 
     TEST("", ResponseResult.class);
-         private static String server_url = "http://api.xinxinnongren.com";
-//    private static String server_url = "http://101.200.194.203";
+//         private static String server_url = "http://api.xinxinnongren.com";
+    private static String server_url = "http://101.200.194.203";
 //     private static String server_url = "http://192.168.1.15";
 
 

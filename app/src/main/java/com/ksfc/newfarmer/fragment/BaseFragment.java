@@ -13,7 +13,7 @@ import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.OnApiDataReceivedCallback;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
-import com.ksfc.newfarmer.widget.CustomProgressDialog;
+import com.ksfc.newfarmer.widget.dialog.CustomProgressDialog;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;

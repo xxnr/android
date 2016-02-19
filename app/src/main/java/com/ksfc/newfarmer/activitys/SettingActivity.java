@@ -6,8 +6,8 @@ package com.ksfc.newfarmer.activitys;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.protocol.Request;
-import com.ksfc.newfarmer.widget.CustomDialog;
-import com.ksfc.newfarmer.widget.CustomProgressDialogForCache;
+import com.ksfc.newfarmer.widget.dialog.CustomDialog;
+import com.ksfc.newfarmer.widget.dialog.CustomProgressDialogForCache;
 import com.ksfc.newfarmer.utils.DataCleanManager;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
@@ -25,12 +25,9 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.TextView;
-
-import net.yangentao.util.sql.Table;
 
 /**
  * 项目名称：newFarmer 类名称：SettingActivity 类描述： 创建人：王蕾 创建时间：2015-5-29 下午2:28:31 修改备注：

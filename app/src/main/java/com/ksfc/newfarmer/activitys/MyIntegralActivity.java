@@ -73,6 +73,9 @@ public class MyIntegralActivity extends BaseActivity implements
 		params.put("rows", 10);
 		params.put("userId", Store.User.queryMe().userid);
 		execApi(ApiType.MY_JIFEN, params);
+
+
+
 	}
 
 	private void initView() {

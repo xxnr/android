@@ -129,8 +129,7 @@
 
         </RelativeLayout>
 
-        <com.handmark.pulltorefresh.library.PullToRefreshListView
-            xmlns:ptr="http://schemas.android.com/apk/res-auto"
+        <com.handmark.pulltorefresh.library.PullToRefreshListView xmlns:ptr="http://schemas.android.com/apk/res-auto"
             android:id="@+id/information_listView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -155,6 +154,8 @@
             android:scaleType="centerCrop"
             android:src="@drawable/return_top"
             android:visibility="gone" />
+
+
 
     </RelativeLayout>
 

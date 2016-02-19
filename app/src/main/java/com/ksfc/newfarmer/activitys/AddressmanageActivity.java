@@ -14,7 +14,7 @@ import com.ksfc.newfarmer.protocol.ResponseResult;
 import com.ksfc.newfarmer.protocol.beans.AddressList;
 import com.ksfc.newfarmer.protocol.beans.AddressList.Address;
 import com.ksfc.newfarmer.protocol.beans.LoginResult.UserInfo;
-import com.ksfc.newfarmer.widget.CustomDialog;
+import com.ksfc.newfarmer.widget.dialog.CustomDialog;
 import com.ksfc.newfarmer.utils.ExpandViewTouch;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.StringUtil;

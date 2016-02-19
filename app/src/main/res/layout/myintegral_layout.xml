@@ -20,7 +20,7 @@
             android:layout_marginLeft="10dp"
             android:layout_weight="1"
             android:text="我的积分"
-            android:textColor="@color/black" />
+            android:textColor="@color/black_goods_titile" />
 
         <!-- <TextView
             android:layout_width="wrap_content"
@@ -42,17 +42,13 @@
         android:textColor="@color/green"
         android:textSize="30sp" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:background="@color/default_act_bg" />
-
     <com.ksfc.newfarmer.widget.PullToRefreshView
         android:id="@+id/myintergral_pull"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_margin="10dp"
         android:background="@color/white"
+        android:visibility="gone"
         android:orientation="vertical" >
 
         <ListView

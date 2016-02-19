@@ -13,6 +13,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -52,7 +53,6 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
 
     @Override
     public void OnActCreate(Bundle savedInstanceState) {
-
         listView = (PullToRefreshListView) findViewById(R.id.information_listView);
         listView.setMode(PullToRefreshBase.Mode.BOTH);
         listView.setOnRefreshListener(this);
@@ -75,6 +75,8 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
                         ArticleActivity.class);
                 if (!TextUtils.isEmpty(entity.getUrl())) {
                     intent.putExtra("articleUrl", entity.getUrl());
+                    intent.putExtra("urlImage", entity.getImage());
+                    intent.putExtra("urlTitle", entity.getTitle());
                     startActivity(intent);
                 }
 

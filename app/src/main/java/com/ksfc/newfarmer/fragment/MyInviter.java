@@ -1,8 +1,5 @@
 package com.ksfc.newfarmer.fragment;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.protocol.ApiType;
@@ -13,7 +10,7 @@ import com.ksfc.newfarmer.protocol.beans.MyInviteResult;
 import com.ksfc.newfarmer.protocol.beans.PersonalData;
 import com.ksfc.newfarmer.protocol.beans.PersonalData.Data;
 import com.ksfc.newfarmer.utils.Utils;
-import com.ksfc.newfarmer.widget.CustomDialog;
+import com.ksfc.newfarmer.widget.dialog.CustomDialog;
 
 import android.content.DialogInterface;
 import android.graphics.Color;

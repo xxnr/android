@@ -8,6 +8,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.custom.vg.list.CustomAdapter;
+import com.custom.vg.list.CustomListView;
 import com.google.gson.Gson;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MainActivity;
@@ -26,8 +28,7 @@ import com.ksfc.newfarmer.protocol.beans.addtoCart;
 import com.ksfc.newfarmer.utils.ExpandViewTouch;
 import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.StringUtil;
-import com.ksfc.newfarmer.widget.CustomDialog;
-import com.ksfc.newfarmer.widget.GridViewWithHeaderAndFooter;
+import com.ksfc.newfarmer.widget.dialog.CustomDialog;
 import com.ksfc.newfarmer.widget.VerticalViewPager;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -49,16 +50,13 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
-import android.widget.BaseAdapter;
+import android.view.animation.AlphaAnimation;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-
-import org.json.JSONArray;
 
 public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObserver.OnGlobalLayoutListener {
     private ShoppingDao dao;
@@ -74,7 +72,7 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
     private ImageView pop_image;
     private TextView pop_price;
     private TextView pop_title;
-    private GridViewWithHeaderAndFooter pop_gv1, pop_gv2, pop_gv3, pop_gv4, pop_gv5;
+    private CustomListView pop_gv1, pop_gv2, pop_gv3, pop_gv4, pop_gv5;
     private TextView pop_text1, pop_text2, pop_text3, pop_text4, pop_text5;
     private ArrayList<AttributesAdapter> adapters;
     private ArrayList<TextView> pop_texts;
@@ -273,11 +271,22 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
         pop_price = ((TextView) popupWindow_view.findViewById(R.id.pop_price));
         pop_title = ((TextView) popupWindow_view.findViewById(R.id.pop_title));
 
-        pop_gv1 = (GridViewWithHeaderAndFooter) popupWindow_view.findViewById(R.id.pop_gv_1);
-        pop_gv2 = (GridViewWithHeaderAndFooter) popupWindow_view.findViewById(R.id.pop_gv_2);
-        pop_gv3 = (GridViewWithHeaderAndFooter) popupWindow_view.findViewById(R.id.pop_gv_3);
-        pop_gv4 = (GridViewWithHeaderAndFooter) popupWindow_view.findViewById(R.id.pop_gv_4);
-        pop_gv5 = (GridViewWithHeaderAndFooter) popupWindow_view.findViewById(R.id.pop_gv_5);
+        pop_gv1 = (CustomListView) popupWindow_view.findViewById(R.id.pop_gv_1);
+        pop_gv2 = (CustomListView) popupWindow_view.findViewById(R.id.pop_gv_2);
+        pop_gv3 = (CustomListView) popupWindow_view.findViewById(R.id.pop_gv_3);
+        pop_gv4 = (CustomListView) popupWindow_view.findViewById(R.id.pop_gv_4);
+        pop_gv5 = (CustomListView) popupWindow_view.findViewById(R.id.pop_gv_5);
+
+        pop_gv1.setDividerHeight(20);
+        pop_gv1.setDividerWidth(20);
+        pop_gv2.setDividerHeight(20);
+        pop_gv2.setDividerWidth(20);
+        pop_gv3.setDividerHeight(20);
+        pop_gv3.setDividerWidth(20);
+        pop_gv4.setDividerHeight(20);
+        pop_gv4.setDividerWidth(20);
+        pop_gv5.setDividerHeight(20);
+        pop_gv5.setDividerWidth(20);
 
         pop_text1 = (TextView) popupWindow_view.findViewById(R.id.pop_text1);
         pop_text2 = (TextView) popupWindow_view.findViewById(R.id.pop_text2);
@@ -395,7 +404,6 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
                     pop_text4.setText(detail.SKUAttributes.get(3).name);
                     AttributesAdapter adapter1 = new AttributesAdapter(detail.SKUAttributes.get(3).values);
                     pop_gv4.setAdapter(adapter1);
-                    setColumn(pop_gv4, detail.SKUAttributes.get(3).values);
                     adapters.add(adapter1);
                     pop_texts.add(pop_text4);
                 case 3:
@@ -403,7 +411,6 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
                     pop_gv3.setVisibility(View.VISIBLE);
                     pop_text3.setText(detail.SKUAttributes.get(2).name);
                     AttributesAdapter adapter2 = new AttributesAdapter(detail.SKUAttributes.get(2).values);
-                    setColumn(pop_gv3, detail.SKUAttributes.get(2).values);
                     pop_gv3.setAdapter(adapter2);
                     pop_texts.add(pop_text3);
                     adapters.add(adapter2);
@@ -412,7 +419,6 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
                     pop_gv2.setVisibility(View.VISIBLE);
                     pop_text2.setText(detail.SKUAttributes.get(1).name);
                     AttributesAdapter adapter3 = new AttributesAdapter(detail.SKUAttributes.get(1).values);
-                    setColumn(pop_gv2, detail.SKUAttributes.get(1).values);
                     pop_gv2.setAdapter(adapter3);
                     pop_texts.add(pop_text2);
                     adapters.add(adapter3);
@@ -421,7 +427,6 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
                     pop_gv1.setVisibility(View.VISIBLE);
                     pop_text1.setText(detail.SKUAttributes.get(0).name);
                     AttributesAdapter adapter4 = new AttributesAdapter(detail.SKUAttributes.get(0).values);
-                    setColumn(pop_gv1, detail.SKUAttributes.get(0).values);
                     pop_gv1.setAdapter(adapter4);
                     pop_texts.add(pop_text1);
                     adapters.add(adapter4);
@@ -441,33 +446,10 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
         }
     }
 
-    public void setColumn(GridView gridView, List<String> list) {
-        if (list != null && !list.isEmpty()) {
-            int maxLength = 3;
-            for (String key : list) {
-                if (key.length() > maxLength) {
-                    maxLength = key.length();
-                }
-            }
-
-            if (maxLength <= 3) {
-                gridView.setNumColumns(4);
-            } else if (maxLength > 3 && maxLength <= 6) {
-                gridView.setNumColumns(3);
-            } else if (maxLength > 6&& maxLength <= 15) {
-                gridView.setNumColumns(2);
-            } else if (maxLength > 15) {
-                gridView.setNumColumns(1);
-            }
-        }
-
-
-    }
-
     /**
      * 规格适配器
      */
-    class AttributesAdapter extends BaseAdapter {
+    class AttributesAdapter extends CustomAdapter {
         private List<String> list;
         public HashMap<String, Boolean> states = new HashMap<>();
 
@@ -553,7 +535,7 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
     /**
      * 附加选项1
      */
-    class AdditionsAdapter extends BaseAdapter {
+    class AdditionsAdapter extends CustomAdapter {
         public List<GetGoodsDetail.GoodsDetail.SKUAdditions> list;
         private HashMap<String, Boolean> states = new HashMap<>();
 
@@ -1113,6 +1095,9 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
     public void setBackgroundBlack(View view, int what) {
         switch (what) {
             case 0:
+                AlphaAnimation animation =new AlphaAnimation(0.0f,1.0f);
+                animation.setDuration(150);
+                view.setAnimation(animation);
                 view.setVisibility(View.VISIBLE);
                 break;
             case 1:

@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.alibaba.fastjson.JSONArray;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -25,8 +24,8 @@ import com.ksfc.newfarmer.protocol.beans.ChangeNum;
 import com.ksfc.newfarmer.protocol.beans.GetGoodsDetail;
 import com.ksfc.newfarmer.protocol.beans.GetshopCart;
 import com.ksfc.newfarmer.protocol.beans.GetshopCart.shopCart;
-import com.ksfc.newfarmer.widget.CustomDialog;
-import com.ksfc.newfarmer.widget.CustomDialogForShopCarCount;
+import com.ksfc.newfarmer.widget.dialog.CustomDialog;
+import com.ksfc.newfarmer.widget.dialog.CustomDialogForShopCarCount;
 import com.ksfc.newfarmer.utils.ExpandViewTouch;
 import com.ksfc.newfarmer.utils.PullToRefreshUtils;
 import com.ksfc.newfarmer.utils.RndLog;
@@ -39,7 +38,6 @@ import android.graphics.Color;
 import android.text.Editable;
 import android.text.Selection;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 

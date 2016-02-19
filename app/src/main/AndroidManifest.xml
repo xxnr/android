@@ -3,7 +3,7 @@
     package="com.ksfc.newfarmer"
     android:versionCode="10"
     android:versionName="2.1.6">
-    <!-- 拨打电话的权限 -->
+    <!-- app本身及友盟需要的权限 -->
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
@@ -23,15 +23,17 @@
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <!--友盟社会化分享 权限-->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-
+    <uses-permission android:name="android.permission.READ_LOGS" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.SET_DEBUG_APP" />
     <!--友盟推送权限 必选 -->
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-
-    <!--【友盟推送权限 必选】用以设置前台是否显示通知-->
-    <uses-permission android:name="android.permission.GET_TASKS" />
 
 
     <application
@@ -73,7 +75,9 @@
             android:name=".activitys.ShangpinDetailActivity"
             android:windowSoftInputMode="adjustResize" />
         <!-- 商品详情的大图 -->
-        <activity android:name=".activitys.BigImageActivity" android:process=":picture"/>
+        <activity
+            android:name=".activitys.BigImageActivity"
+            android:process=":picture" />
         <!-- 用户协议 -->
         <activity android:name=".activitys.AgreeMentActivity" />
         <!-- 我的账户 -->
@@ -105,10 +109,9 @@
         <!-- 待付款 -->
         <activity
             android:name=".activitys.WaitingPayActivity"
-            android:launchMode="singleTask"
-            />
+            android:launchMode="singleTask" />
         <!-- 订单信息 -->
-        <activity android:name=".activitys.OrderDetailActivity"  />
+        <activity android:name=".activitys.OrderDetailActivity" />
         <!-- 修改密码 -->
         <activity android:name=".activitys.ChangePasswordActivity" />
         <!-- 轮播 -->
@@ -308,6 +311,39 @@
         <activity
             android:name="com.umeng.update.UpdateDialogActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <!-- 社会化分享-->
+        <!--增加一个activity-->
+        <activity
+            android:name="com.umeng.socialize.editorpage.ShareActivity"
+            android:excludeFromRecents="true"
+            android:theme="@style/Theme.UMDefault" />
+        <!--微信平台-->
+        <activity
+            android:name=".wxapi.WXEntryActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <!--QQ、Qzone-->
+        <activity
+            android:name="com.tencent.tauth.AuthActivity"
+            android:launchMode="singleTask"
+            android:noHistory="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="tencent100424468" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.tencent.connect.common.AssistActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
 
     </application>
 

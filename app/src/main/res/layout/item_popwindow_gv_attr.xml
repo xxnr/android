@@ -12,7 +12,6 @@
         android:background="@drawable/btn_selector_orange_gary_round"
         android:button="@null"
         android:gravity="center"
-        android:minWidth="74dp"
         android:singleLine="true"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"

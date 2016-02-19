@@ -10,14 +10,12 @@ import com.ksfc.newfarmer.protocol.RequestParams;
 import com.ksfc.newfarmer.protocol.beans.LoginResult;
 import com.ksfc.newfarmer.protocol.beans.PersonalData;
 import com.ksfc.newfarmer.protocol.beans.PersonalData.Data;
-import com.ksfc.newfarmer.utils.RndLog;
-import com.ksfc.newfarmer.widget.CustomDialog;
+import com.ksfc.newfarmer.widget.dialog.CustomDialog;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.SPUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.HeadImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.readystatesoftware.viewbadger.BadgeView;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -76,11 +74,8 @@ public class MineActivity extends BaseActivity {
         // userId
         // showProgressDialog("正在加载中..");
         RequestParams params = new RequestParams();
-        final String userId = this.isLogin() ? Store.User.queryMe().userid
-                : "8089f4e36e";
-        params.put("locationUserId", userId);
-        params.put("userId", userId);
-        params.put("flags", "address");
+        params.put("locationUserId", Store.User.queryMe().userid);
+        params.put("userId", Store.User.queryMe().userid);
         execApi(ApiType.PERSONAL_CENTER, params);
         showProgressDialog();
     }

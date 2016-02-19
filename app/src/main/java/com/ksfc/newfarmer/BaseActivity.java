@@ -12,7 +12,7 @@ import com.ksfc.newfarmer.protocol.OnApiDataReceivedCallback;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
 import com.ksfc.newfarmer.protocol.beans.LoginResult.UserInfo;
-import com.ksfc.newfarmer.widget.CustomProgressDialog;
+import com.ksfc.newfarmer.widget.dialog.CustomProgressDialog;
 import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.SPUtils;
 import com.umeng.analytics.MobclickAgent;

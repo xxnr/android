@@ -89,18 +89,20 @@
                     android:visibility="gone" />
 
 
-                <com.ksfc.newfarmer.widget.GridViewWithHeaderAndFooter
-                    android:id="@+id/pop_gv_1"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="10dp"
-                    android:horizontalSpacing="10dp"
-                    android:listSelector="@null"
-                    android:numColumns="4"
-                    android:scrollbars="none"
-                    android:visibility="gone"
-                    android:stretchMode="columnWidth"
-                    android:verticalSpacing="10dp" />
+                    android:layout_height="wrap_content"
+                    android:gravity="top|left"
+                    android:orientation="vertical">
+
+                    <com.custom.vg.list.CustomListView
+                        android:id="@+id/pop_gv_1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:visibility="gone" />
+                </LinearLayout>
+
 
                 <TextView
                     android:id="@+id/pop_text2"
@@ -115,18 +117,19 @@
                     android:visibility="gone" />
 
 
-                <com.ksfc.newfarmer.widget.GridViewWithHeaderAndFooter
-                    android:id="@+id/pop_gv_2"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="10dp"
-                    android:horizontalSpacing="20dp"
-                    android:listSelector="@null"
-                    android:visibility="gone"
-                    android:numColumns="4"
-                    android:scrollbars="none"
-                    android:stretchMode="columnWidth"
-                    android:verticalSpacing="15dp" />
+                    android:layout_height="wrap_content"
+                    android:gravity="top|left"
+                    android:orientation="vertical">
+
+                    <com.custom.vg.list.CustomListView
+                        android:id="@+id/pop_gv_2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:visibility="gone" />
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/pop_text3"
@@ -141,18 +144,19 @@
                     android:visibility="gone" />
 
 
-                <com.ksfc.newfarmer.widget.GridViewWithHeaderAndFooter
-                    android:id="@+id/pop_gv_3"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="10dp"
-                    android:horizontalSpacing="10dp"
-                    android:listSelector="@null"
-                    android:visibility="gone"
-                    android:numColumns="4"
-                    android:scrollbars="none"
-                    android:stretchMode="columnWidth"
-                    android:verticalSpacing="10dp" />
+                    android:layout_height="wrap_content"
+                    android:gravity="top|left"
+                    android:orientation="vertical">
+
+                    <com.custom.vg.list.CustomListView
+                        android:id="@+id/pop_gv_3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:visibility="gone" />
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/pop_text4"
@@ -167,18 +171,19 @@
                     android:visibility="gone" />
 
 
-                <com.ksfc.newfarmer.widget.GridViewWithHeaderAndFooter
-                    android:id="@+id/pop_gv_4"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="10dp"
-                    android:horizontalSpacing="10dp"
-                    android:listSelector="@null"
-                    android:numColumns="4"
-                    android:visibility="gone"
-                    android:scrollbars="none"
-                    android:stretchMode="columnWidth"
-                    android:verticalSpacing="10dp" />
+                    android:layout_height="wrap_content"
+                    android:gravity="top|left"
+                    android:orientation="vertical">
+
+                    <com.custom.vg.list.CustomListView
+                        android:id="@+id/pop_gv_4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:visibility="gone" />
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/pop_text5"
@@ -193,18 +198,19 @@
                     android:visibility="gone" />
 
 
-                <com.ksfc.newfarmer.widget.GridViewWithHeaderAndFooter
-                    android:id="@+id/pop_gv_5"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="10dp"
-                    android:horizontalSpacing="10dp"
-                    android:listSelector="@null"
-                    android:numColumns="auto_fit"
-                    android:visibility="gone"
-                    android:scrollbars="none"
-                    android:stretchMode="columnWidth"
-                    android:verticalSpacing="10dp" />
+                    android:layout_height="wrap_content"
+                    android:gravity="top|left"
+                    android:orientation="vertical">
+
+                    <com.custom.vg.list.CustomListView
+                        android:id="@+id/pop_gv_5"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:visibility="gone" />
+                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/pop_discount_lin"

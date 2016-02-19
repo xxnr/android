@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.ksfc.newfarmer.utils.CrashHandler;
+import com.ksfc.newfarmer.widget.dialog.CustomProgressDialog;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
@@ -14,10 +15,13 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.umeng.message.PushAgent;
+import com.umeng.socialize.Config;
+import com.umeng.socialize.PlatformConfig;
 import com.umeng.update.UmengUpdateAgent;
 
 import android.app.Activity;
 import android.app.Application;
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.media.SoundPool;
@@ -48,10 +52,22 @@ public class RndApplication extends Application {
         applicationContext = this;
         instance = this;
         App.setApp(this);
+        //初始化图片加载器
         initImageLoader(this, null);
+        //初始化CrashHandler
         CrashHandler.getInstance().init(this);
+        //初始化推送
         PushAgent mPushAgent = PushAgent.getInstance(this);
         mPushAgent.enable();
+        //初始化社会化分享
+        initSocialShare();
+    }
+
+    public void initSocialShare() {
+        //微信 appid appsecret
+        PlatformConfig.setWeixin("wx46173e821f28d05a", "919a7e2cb7e1483393797f15bf53dcb9");
+        // QQ和Qzone appid appkey
+        PlatformConfig.setQQZone("1104752635", "giwjla40jiDQNuzI");
 
     }
 
