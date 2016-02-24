@@ -98,7 +98,7 @@
                         android:layout_marginLeft="16dp"
                         android:text=""
                         android:textColor="@color/black"
-                        android:textSize="16sp" />
+                         />
 
                     <TextView
                         android:id="@+id/product_price"
@@ -115,7 +115,7 @@
                         android:layout_marginLeft="10dp"
                         android:text="订金："
                         android:textColor="@color/black"
-                        android:textSize="16sp"
+
                         android:visibility="gone" />
 
                     <TextView
@@ -160,7 +160,6 @@
                     android:singleLine="true"
                     android:layout_marginRight="35dp"
                     android:text="请选择商品属性"
-                    android:textColor="@color/black_goods_titile"
                     android:textSize="14sp" />
 
                 <ImageView

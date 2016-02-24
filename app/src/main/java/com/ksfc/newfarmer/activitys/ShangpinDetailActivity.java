@@ -28,6 +28,7 @@ import com.ksfc.newfarmer.protocol.beans.addtoCart;
 import com.ksfc.newfarmer.utils.ExpandViewTouch;
 import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.StringUtil;
+import com.ksfc.newfarmer.utils.PopWindowUtils;
 import com.ksfc.newfarmer.widget.dialog.CustomDialog;
 import com.ksfc.newfarmer.widget.VerticalViewPager;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -50,7 +51,6 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
-import android.view.animation.AlphaAnimation;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -273,15 +273,15 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
         pop_gv5 = (CustomListView) popupWindow_view.findViewById(R.id.pop_gv_5);
 
         pop_gv1.setDividerHeight(20);
-        pop_gv1.setDividerWidth(20);
+        pop_gv1.setDividerWidth(30);
         pop_gv2.setDividerHeight(20);
-        pop_gv2.setDividerWidth(20);
+        pop_gv2.setDividerWidth(30);
         pop_gv3.setDividerHeight(20);
-        pop_gv3.setDividerWidth(20);
+        pop_gv3.setDividerWidth(30);
         pop_gv4.setDividerHeight(20);
-        pop_gv4.setDividerWidth(20);
+        pop_gv4.setDividerWidth(30);
         pop_gv5.setDividerHeight(20);
-        pop_gv5.setDividerWidth(20);
+        pop_gv5.setDividerWidth(30);
 
         pop_text1 = (TextView) popupWindow_view.findViewById(R.id.pop_text1);
         pop_text2 = (TextView) popupWindow_view.findViewById(R.id.pop_text2);
@@ -343,7 +343,7 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
         popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
-                setBackgroundBlack(shangpin_detail_bg, 1);
+                PopWindowUtils.setBackgroundBlack(shangpin_detail_bg, 1);
             }
         });
 
@@ -674,7 +674,7 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
         toSoft_ll.getViewTreeObserver().addOnGlobalLayoutListener(this);
 
         //设置背景及展示
-        setBackgroundBlack(shangpin_detail_bg, 0);
+        PopWindowUtils.setBackgroundBlack(shangpin_detail_bg, 0);
         popupWindow.showAtLocation(parent, Gravity.BOTTOM, 0, 0);
     }
 
@@ -1086,22 +1086,6 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
         }
     }
 
-    /**
-     * popupWindow时控制背景变暗 0变暗 1变亮
-     */
-    public void setBackgroundBlack(View view, int what) {
-        switch (what) {
-            case 0:
-                AlphaAnimation animation =new AlphaAnimation(0.0f,1.0f);
-                animation.setDuration(150);
-                view.setAnimation(animation);
-                view.setVisibility(View.VISIBLE);
-                break;
-            case 1:
-                view.setVisibility(View.GONE);
-                break;
-        }
-    }
 
     /**
      * 去掉double类型尾部的0

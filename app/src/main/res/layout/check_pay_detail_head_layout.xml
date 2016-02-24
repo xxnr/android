@@ -21,8 +21,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginTop="14dp"
             android:text="订单号：201509090"
-            android:textColor="@color/black_goods_titile"
-            android:textSize="16sp" />
+             />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -37,8 +36,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_weight="1"
                 android:text="阶段二：尾款"
-                android:textColor="@color/black_goods_titile"
-                android:textSize="16sp" />
+                 />
 
 
             <TextView
@@ -48,7 +46,7 @@
                 android:layout_marginRight="16dp"
                 android:text="部分付款"
                 android:textColor="@color/orange"
-                android:textSize="16sp" />
+                 />
         </LinearLayout>
 
         <LinearLayout
@@ -133,8 +131,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="16dp"
             android:text="支付详情"
-            android:textColor="@color/black_goods_titile"
-            android:textSize="16sp" />
+             />
 
     </LinearLayout>
 

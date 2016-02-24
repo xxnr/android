@@ -17,6 +17,7 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.umeng.message.PushAgent;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
+import com.umeng.socialize.utils.Log;
 import com.umeng.update.UmengUpdateAgent;
 
 import android.app.Activity;
@@ -68,7 +69,8 @@ public class RndApplication extends Application {
         PlatformConfig.setWeixin("wx46173e821f28d05a", "919a7e2cb7e1483393797f15bf53dcb9");
         // QQ和Qzone appid appkey
         PlatformConfig.setQQZone("1104752635", "giwjla40jiDQNuzI");
-
+        Log.LOG = false;
+        Config.IsToastTip = false;
     }
 
 

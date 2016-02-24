@@ -32,7 +32,7 @@
                 android:layout_toRightOf="@+id/btn_check_item"
                 android:text=""
                 android:textColor="@color/black"
-                android:textSize="16sp" />
+                 />
 
             <TextView
                 android:id="@+id/address_phone_tv"
@@ -42,7 +42,7 @@
                 android:layout_toRightOf="@+id/address_name_tv"
                 android:text=""
                 android:textColor="@color/black"
-                android:textSize="16sp" />
+                 />
 
 
             <TextView
@@ -70,7 +70,7 @@
                 android:singleLine="true"
                 android:text=""
                 android:textColor="@color/main_index_gary"
-                android:textSize="16sp" />
+                 />
         </RelativeLayout>
 
 

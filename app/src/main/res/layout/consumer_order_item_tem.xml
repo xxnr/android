@@ -20,8 +20,7 @@
             android:layout_marginRight="10dp"
             android:text="中化 好苗子有机肥"
             android:singleLine="true"
-            android:textColor="@color/black_goods_titile"
-            android:textSize="16sp" />
+             />
 
         <TextView
             android:id="@+id/product_count"
@@ -30,7 +29,7 @@
             android:layout_marginRight="16dp"
             android:text="X 1000"
             android:textColor="@color/deep_gray"
-            android:textSize="16sp" />
+             />
 
     </LinearLayout>
 

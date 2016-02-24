@@ -107,8 +107,7 @@
                     android:ellipsize="end"
                     android:maxLines="2"
                     android:text=""
-                    android:textColor="@color/black_goods_titile"
-                    android:textSize="16sp" />
+                     />
 
                 <ImageView
                     android:id="@+id/ordering_now_delete"
@@ -139,7 +138,7 @@
                 android:layout_marginTop="105dp"
                 android:text=""
                 android:textColor="@color/orange_goods_price"
-                android:textSize="16sp" />
+                 />
 
 
         </RelativeLayout>
@@ -183,8 +182,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
             android:text=""
-            android:textColor="@color/black_goods_titile"
-            android:textSize="16sp" />
+             />
 
     </LinearLayout>
 
@@ -212,7 +210,6 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="38dp"
                 android:text="阶段一：订金"
-                android:textColor="@color/black_goods_titile"
                 android:textSize="14sp" />
 
             <TextView
@@ -246,7 +243,6 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="38dp"
                 android:text="阶段二：尾款"
-                android:textColor="@color/black_goods_titile"
                 android:textSize="14sp" />
 
             <TextView
@@ -257,7 +253,6 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="12dp"
                 android:text=""
-                android:textColor="@color/black_goods_titile"
                 android:textSize="14sp" />
         </RelativeLayout>
 

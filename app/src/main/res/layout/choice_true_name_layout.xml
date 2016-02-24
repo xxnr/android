@@ -37,7 +37,7 @@
         android:background="#e0e0e0"
         android:gravity="center"
         android:padding="10dp"
-        android:text="保存"
+        android:text="@string/save"
         android:textColor="@color/white" />
 
 </LinearLayout>

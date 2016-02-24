@@ -13,7 +13,6 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -58,6 +57,7 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
         listView.setOnRefreshListener(this);
         listView.setOnScrollListener(this);
 
+
         //设置刷新的文字
         PullToRefreshUtils.setFreshText(listView);
         return_top = (ImageView) findViewById(R.id.return_top);
@@ -77,7 +77,7 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
                     intent.putExtra("articleUrl", entity.getUrl());
                     intent.putExtra("urlImage", entity.getImage());
                     intent.putExtra("urlTitle", entity.getTitle());
-                    intent.putExtra("newsabstract", entity.getNewsabstract());
+                    intent.putExtra("newsAbstract", entity.getNewsabstract());
                     startActivity(intent);
                 }
 
@@ -124,7 +124,7 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
 
                             } else {
                                 showToast("没有更多资讯");
-                                if (page!=1){
+                                if (page != 1) {
                                     page--;
                                 }
 
@@ -257,5 +257,9 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
         }
 
     }
+
+
+
+
 
 }

@@ -27,7 +27,7 @@
                 android:layout_marginTop="17dp"
                 android:paddingLeft="17dp"
                 android:textColor="@color/umeng_socialize_list_item_textcolor"
-                android:textSize="16sp" />
+                 />
 
             <LinearLayout
                 android:id="@+id/umeng_socialize_first_area"
@@ -47,7 +47,7 @@
                 android:layout_marginTop="18dp"
                 android:paddingLeft="26dp"
                 android:textColor="@color/umeng_socialize_list_item_textcolor"
-                android:textSize="16sp" />
+                 />
 
             <LinearLayout
                 android:id="@+id/umeng_socialize_second_area"

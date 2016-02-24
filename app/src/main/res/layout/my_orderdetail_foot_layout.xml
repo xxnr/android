@@ -17,9 +17,8 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/my_order_detail_price"
-            android:text="合计："
-            android:textColor="@color/black_goods_titile"
-            android:textSize="16sp" />
+            android:text="@string/amounts"
+             />
 
         <TextView
             android:id="@+id/my_order_detail_price"

@@ -27,7 +27,7 @@ import java.util.List;
 import uk.co.senab.photoview.PhotoView;
 
 /**
- * Created by CAI on 2015/12/7.
+ * Created by HePeng on 2015/12/7.
  */
 public class BigImageActivity extends BaseActivity {
 

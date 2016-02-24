@@ -19,8 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="12dp"
             android:text=""
-            android:textColor="@color/black_goods_titile"
-            android:textSize="16sp" />
+             />
     </LinearLayout>
 
     <include layout="@layout/line_lay" />
@@ -48,7 +47,6 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="12dp"
-            android:textColor="@color/black_goods_titile"
             android:textSize="14sp" />
 
         <TextView
@@ -57,7 +55,7 @@
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/good_list_small_price"
             android:text="价格合计："
-            android:textColor="@color/black_goods_titile" />
+            />
 
         <TextView
             android:id="@+id/good_list_small_price"

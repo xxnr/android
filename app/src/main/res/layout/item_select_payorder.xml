@@ -23,7 +23,6 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="16dp"
             android:text="订单号:d798798798"
-            android:textColor="@color/black_goods_titile"
             android:textSize="18sp" />
 
         <TextView
@@ -51,7 +50,6 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:text="待付金额："
-            android:textColor="@color/black_goods_titile"
             android:textSize="14dp" />
 
         <TextView
@@ -75,7 +73,6 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:text="订单总额："
-            android:textColor="@color/black_goods_titile"
             android:textSize="14dp" />
 
         <TextView

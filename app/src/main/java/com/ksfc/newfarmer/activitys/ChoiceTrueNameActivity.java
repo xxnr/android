@@ -23,7 +23,7 @@ import com.ksfc.newfarmer.utils.StringUtil;
 import net.yangentao.util.msg.MsgCenter;
 
 /**
- * Created by CAI on 2015/12/10.
+ * Created by HePeng on 2015/12/10.
  */
 public class ChoiceTrueNameActivity extends BaseActivity {
     private EditText et_modify;

@@ -34,7 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Created by CAI on 2015/12/4.
+ * Created by HePeng on 2015/12/4.
  */
 public class ChooseAddressActivity extends BaseActivity {
     private ListView address_list;

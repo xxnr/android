@@ -31,7 +31,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Created by CAI on 2016/2/1.
+ * Created by HePeng on 2016/2/1.
  */
 public class PotentialCustomer extends BaseFragment implements PullToRefreshBase.OnRefreshListener2 {
     private int page = 1;

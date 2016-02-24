@@ -44,7 +44,6 @@
                     android:maxLines="2"
                     android:maxEms="16"
                     android:text=""
-                    android:textColor="@color/black_goods_titile"
                     android:textSize="14sp" />
 
                 <TextView
@@ -88,7 +87,6 @@
                 android:layout_marginLeft="4dp"
                 android:layout_marginTop="10dp"
                 android:text=""
-                android:textColor="@color/black_goods_titile"
                 android:textSize="14sp" />
 
 
@@ -102,8 +100,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="5dp"
                 android:text=""
-                android:textColor="@color/black_goods_titile"
-                android:textSize="16sp" />
+                 />
         </RelativeLayout>
     </LinearLayout>
 
@@ -141,8 +138,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
             android:text=""
-            android:textColor="@color/black_goods_titile"
-            android:textSize="16sp" />
+             />
     </LinearLayout>
 
     <ListView
@@ -181,7 +177,6 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="16dp"
                 android:text="阶段一：订金"
-                android:textColor="@color/black_goods_titile"
                 android:textSize="14sp" />
 
             <TextView
@@ -192,7 +187,6 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="12dp"
                 android:text=""
-                android:textColor="@color/black_goods_titile"
                 android:textSize="14sp" />
 
 
@@ -215,7 +209,6 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="16dp"
                 android:text="阶段二：尾款"
-                android:textColor="@color/black_goods_titile"
                 android:textSize="14sp" />
 
             <TextView
@@ -226,7 +219,6 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="12dp"
                 android:text=""
-                android:textColor="@color/black_goods_titile"
                 android:textSize="14sp" />
         </RelativeLayout>
     </LinearLayout>

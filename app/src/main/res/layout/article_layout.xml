@@ -13,27 +13,13 @@
         android:layout_height="match_parent"
         android:scrollbars="none" />
 
-    <LinearLayout
-        android:id="@+id/social_share_ll"
+
+    <RelativeLayout
+        android:id="@+id/share_dialog_bg"
+        android:visibility="gone"
+        android:background="@color/eight_transparent"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/half_green"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <include layout="@layout/line_lay" />
-
-        <Button
-            android:id="@+id/social_share"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/circle_orange_bg"
-            android:text="分享" />
-
-    </LinearLayout>
+        android:layout_height="match_parent"/>
 
 
 </RelativeLayout>

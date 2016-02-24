@@ -26,8 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:text="地区："
-            android:textColor="@color/black_goods_titile"
-            android:textSize="16sp" />
+             />
 
         <TextView
             android:id="@+id/choice_city_text"
@@ -35,8 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:hint="请选择地区"
-            android:textColor="@color/black_goods_titile"
-            android:textSize="16sp" />
+             />
 
     </LinearLayout>
 
@@ -55,8 +53,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:text="街道："
-            android:textColor="@color/black_goods_titile"
-            android:textSize="16sp" />
+             />
 
         <TextView
             android:id="@+id/choice_town_text"
@@ -64,8 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:hint="请选择街道"
-            android:textColor="@color/black_goods_titile"
-            android:textSize="16sp" />
+             />
 
     </LinearLayout>
 
@@ -82,7 +78,7 @@
         android:background="#e0e0e0"
         android:gravity="center"
         android:padding="10dp"
-        android:text="保存"
+        android:text="@string/save"
         android:textColor="@color/white" />
 
 </LinearLayout>

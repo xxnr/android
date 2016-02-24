@@ -24,7 +24,7 @@
             android:singleLine="true"
             android:text="该好友未填姓名"
             android:textColor="@color/main_index_gary"
-            android:textSize="16sp" />
+             />
 
         <TextView
             android:id="@+id/my_inviter_nickname_remind_dot"
@@ -45,7 +45,7 @@
             android:layout_marginRight="16dp"
             android:text="15201532357"
             android:textColor="@color/green"
-            android:textSize="16sp" />
+             />
 
     </RelativeLayout>
 </RelativeLayout>

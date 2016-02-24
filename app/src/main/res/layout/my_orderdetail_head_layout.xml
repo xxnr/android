@@ -30,8 +30,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
                 android:text="订单号："
-                android:textColor="@color/black_goods_titile"
-                android:textSize="16sp" />
+                 />
         </LinearLayout>
 
         <LinearLayout
@@ -46,8 +45,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
                 android:text="订单状态："
-                android:textColor="@color/black_goods_titile"
-                android:textSize="16sp" />
+                 />
 
             <TextView
                 android:id="@+id/pay_state"
@@ -55,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:text=""
                 android:textColor="@color/orange"
-                android:textSize="16sp" />
+                 />
         </LinearLayout>
 
         <include layout="@layout/line_lay" />
@@ -89,8 +87,7 @@
                 android:layout_marginLeft="40dp"
                 android:layout_marginTop="15dp"
                 android:text="陈大明  13800000000"
-                android:textColor="@color/black_goods_titile"
-                android:textSize="16sp" />
+                 />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -145,8 +142,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="16dp"
             android:text="支付信息"
-            android:textColor="@color/black_goods_titile"
-            android:textSize="16sp" />
+             />
 
     </LinearLayout>
 
@@ -177,8 +173,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="16dp"
             android:text="商品清单"
-            android:textColor="@color/black_goods_titile"
-            android:textSize="16sp" />
+             />
 
     </LinearLayout>
 

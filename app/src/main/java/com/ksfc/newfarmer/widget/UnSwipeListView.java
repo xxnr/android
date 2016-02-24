@@ -7,7 +7,7 @@ import android.util.AttributeSet;
 import android.widget.ListView;
 
 /**
- * Created by CAI on 2015/12/4.
+ * Created by HePeng on 2015/12/4.
  */
 public class UnSwipeListView extends ListView {
 

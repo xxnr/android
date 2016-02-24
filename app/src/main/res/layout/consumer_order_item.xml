@@ -19,7 +19,6 @@
             android:layout_marginLeft="16dp"
             android:layout_weight="1"
             android:text="下单时间：2015-11-15 08:43:12"
-            android:textColor="@color/black_goods_titile"
             android:textSize="14sp" />
 
         <TextView
@@ -29,7 +28,7 @@
             android:layout_marginRight="16dp"
             android:text="待付款"
             android:textColor="@color/orange"
-            android:textSize="16sp" />
+             />
 
     </LinearLayout>
 
@@ -56,8 +55,7 @@
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/consumer_item_orderPrice"
             android:text="订单金额："
-            android:textColor="@color/black_goods_titile"
-            android:textSize="16sp" />
+             />
 
         <TextView
             android:id="@+id/consumer_item_orderPrice"

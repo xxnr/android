@@ -35,7 +35,6 @@
                 android:layout_alignParentBottom="true"
                 android:layout_marginLeft="16dp"
                 android:text="版本更新"
-                android:textColor="@color/black_goods_titile"
                 android:textSize="18sp" />
 
             <Button

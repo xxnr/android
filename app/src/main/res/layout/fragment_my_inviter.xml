@@ -27,7 +27,7 @@
             android:layout_marginTop="15dp"
             android:text="我的代表"
             android:textColor="@color/main_index_gary"
-            android:textSize="16sp" />
+             />
 
         <include layout="@layout/line_lay" />
 
@@ -51,7 +51,7 @@
                 android:singleLine="true"
                 android:text="该好友未填姓名"
                 android:textColor="@color/main_index_gary"
-                android:textSize="16sp" />
+                 />
 
             <TextView
                 android:id="@+id/my_inviter_phone"
@@ -62,7 +62,7 @@
                 android:layout_marginRight="16dp"
                 android:text="15201532357"
                 android:textColor="@color/green"
-                android:textSize="16sp" />
+                 />
         </RelativeLayout>
 
         <include layout="@layout/line_lay" />
@@ -90,7 +90,7 @@
             android:layout_marginTop="15dp"
             android:text="您还没有设置新农代表"
             android:textColor="@color/main_index_gary"
-            android:textSize="16sp" />
+             />
 
         <EditText
             android:id="@+id/my_inviter_fragment_edittext"
@@ -105,7 +105,7 @@
             android:maxLength="11"
             android:textColor="@color/main_index_gary"
             android:textColorHint="@color/deep_gray"
-            android:textSize="16sp" />
+             />
 
         <TextView
             android:layout_width="wrap_content"

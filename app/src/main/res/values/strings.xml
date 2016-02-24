@@ -23,8 +23,7 @@
     <string name="setVerificationCode">验证码</string>
     <string name="getVerificationCode">获取验证码</string>
     <string name="readAndAgree">我已阅读并同意</string>
-    <string name="jingXieYi">京少爷用户协议</string>
-    <string name="complete">完成</string>
+
     <!-- 设置密码 -->
     <string name="nicheng">您的昵称</string>
     <string name="newPasswork">新密码</string>
@@ -35,5 +34,9 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <!--用户信息和订单操作-->
+    <string name="save">保存</string>
+    <string name="complete">完成</string>
+    <string name="amounts">合计：</string>
 
 </resources>

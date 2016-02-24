@@ -34,7 +34,7 @@
                 android:layout_marginLeft="40dp"
                 android:text="化肥专场"
                 android:textColor="#66ccee"
-                android:textSize="16sp" />
+                 />
 
             <ImageView
                 android:layout_width="35dp"
@@ -65,7 +65,7 @@
                 android:layout_marginLeft="40dp"
                 android:text="汽车专场"
                 android:textColor="#ff7700"
-                android:textSize="16sp" />
+                 />
 
             <ImageView
                 android:layout_width="35dp"
@@ -105,8 +105,8 @@
             android:layout_marginLeft="6dp"
             android:layout_toRightOf="@id/head_bottom_bar"
             android:text="汽车精选"
-            android:textSize="16sp"
-            android:textColor="@color/black_goods_titile" />
+
+             />
 
         <ImageView
             android:id="@+id/head_bottom_bar_qianjin"
@@ -125,7 +125,6 @@
             android:paddingRight="6dp"
             android:layout_toLeftOf="@id/head_bottom_bar_qianjin"
             android:text="更多产品"
-            android:textColor="@color/black_goods_titile"
             android:textSize="14sp" />
     </RelativeLayout>
 

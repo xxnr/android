@@ -20,7 +20,7 @@ import android.widget.CheckBox;
 import com.ksfc.newfarmer.R;
 
 /**
- * Created by CAI on 2015/12/7.
+ * Created by HePeng on 2015/12/7.
  */
 public class CustomCheckBox extends CheckBox {
     /** 画笔 */

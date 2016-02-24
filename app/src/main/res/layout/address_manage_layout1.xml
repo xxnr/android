@@ -42,7 +42,7 @@
             android:layout_width="wrap_content"
             android:text="您还没有收货地址哦，添加一个吧~"
             android:textColor="@color/deep_gray"
-            android:textSize="16sp"
+
             android:layout_height="wrap_content" />
 
 

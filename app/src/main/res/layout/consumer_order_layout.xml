@@ -20,7 +20,6 @@
             android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"
             android:text="姓名："
-            android:textColor="@color/black_goods_titile"
             android:textSize="14dp" />
 
         <TextView
@@ -32,7 +31,6 @@
             android:layout_marginLeft="16dp"
             android:layout_marginTop="15dp"
             android:text="手机号："
-            android:textColor="@color/black_goods_titile"
             android:textSize="14dp" />
 
 
@@ -42,7 +40,6 @@
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/consumer_count"
             android:text="订单数："
-            android:textColor="@color/black_goods_titile"
             android:textSize="14dp" />
 
 

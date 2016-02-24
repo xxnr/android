@@ -170,7 +170,6 @@
             android:layout_marginLeft="10dp"
             android:layout_weight="1"
             android:text="我的订单"
-            android:textColor="@color/black_goods_titile"
             android:textSize="18sp" />
 
         <TextView
@@ -216,7 +215,6 @@
                 android:drawableTop="@drawable/daifukuan_gary"
                 android:gravity="center"
                 android:text="待付款"
-                android:textColor="@color/black_goods_titile"
                 android:textSize="14sp" />
         </RelativeLayout>
 
@@ -236,7 +234,6 @@
                 android:drawableTop="@drawable/daifahuo_gary"
                 android:gravity="center"
                 android:text="待发货"
-                android:textColor="@color/black_goods_titile"
                 android:textSize="14sp" />
         </RelativeLayout>
 
@@ -256,7 +253,6 @@
                 android:drawableTop="@drawable/yifahuo_gary"
                 android:gravity="center"
                 android:text="已发货"
-                android:textColor="@color/black_goods_titile"
                 android:textSize="14sp" />
         </RelativeLayout>
 
@@ -276,7 +272,6 @@
                 android:drawableTop="@drawable/yiwancheng"
                 android:gravity="center"
                 android:text="已完成"
-                android:textColor="@color/black_goods_titile"
                 android:textSize="14sp" />
 
         </RelativeLayout>
@@ -305,7 +300,6 @@
             android:layout_marginLeft="10dp"
             android:layout_weight="1"
             android:text="我的积分"
-            android:textColor="@color/black_goods_titile"
             android:textSize="18sp" />
     </LinearLayout>
 
@@ -344,7 +338,6 @@
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@id/invite_icon"
             android:text="新农代表"
-            android:textColor="@color/black_goods_titile"
             android:textSize="18sp" />
     </RelativeLayout>
 
@@ -369,7 +362,6 @@
             android:layout_marginLeft="10dp"
             android:layout_weight="1"
             android:text="QQ客服"
-            android:textColor="@color/black_goods_titile"
             android:textSize="18sp" />
     </LinearLayout>
 
@@ -395,7 +387,6 @@
             android:layout_marginLeft="10dp"
             android:layout_weight="1"
             android:text="客服电话"
-            android:textColor="@color/black_goods_titile"
             android:textSize="18sp" />
 
 
@@ -431,7 +422,6 @@
             android:layout_marginLeft="10dp"
             android:layout_weight="1"
             android:text="设置"
-            android:textColor="@color/black_goods_titile"
             android:textSize="18sp" />
     </LinearLayout>
 

@@ -23,7 +23,7 @@
                 android:layout_margin="12dp"
                 android:text=""
                 android:textColor="@color/black"
-                android:textSize="16sp" />
+                 />
 
             <TextView
                 android:id="@+id/address_phone_tv"
@@ -33,7 +33,7 @@
                 android:layout_margin="12dp"
                 android:text=""
                 android:textColor="@color/black"
-                android:textSize="16sp" />
+                 />
 
             <TextView
                 android:id="@+id/address_tv"
@@ -44,7 +44,7 @@
                 android:singleLine="true"
                 android:text=""
                 android:textColor="@color/main_index_gary"
-                android:textSize="16sp" />
+                 />
         </RelativeLayout>
 
         <include layout="@layout/line_lay" />
@@ -69,7 +69,6 @@
                 android:layout_marginLeft="5dp"
                 android:layout_toRightOf="@+id/btn_check_item"
                 android:text="设为默认地址"
-                android:textColor="@color/black_goods_titile"
                 android:textSize="16dp" />
 
 

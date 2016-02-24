@@ -32,7 +32,7 @@
         android:layout_marginTop="12dp"
         android:singleLine="true"
         android:text="限6个汉字或12个英文字符"
-        android:textColor="@color/black_goods_titile" />
+        />
 
     <TextView
         android:id="@+id/name_submit_tv"
@@ -44,7 +44,7 @@
         android:background="#e0e0e0"
         android:gravity="center"
         android:padding="10dp"
-        android:text="保存"
+        android:text="@string/save"
         android:textColor="@color/white" />
 
 </LinearLayout>

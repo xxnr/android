@@ -17,8 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:text="收货地址"
-            android:textColor="@color/black_goods_titile"
-            android:textSize="16sp" />
+             />
 
 
     </LinearLayout>
@@ -50,8 +49,7 @@
                 android:layout_marginLeft="40dp"
                 android:layout_marginTop="15dp"
                 android:text=""
-                android:textColor="@color/black_goods_titile"
-                android:textSize="16sp" />
+                 />
 
             <LinearLayout
                 android:layout_width="match_parent"

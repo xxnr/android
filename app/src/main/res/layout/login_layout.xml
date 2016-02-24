@@ -38,7 +38,7 @@
                 android:layout_toRightOf="@+id/login_layout_icon"
                 android:background="@null"
                 android:hint="请输入您的手机号"
-                android:textSize="16sp"
+
                 android:inputType="number"
                 android:maxLength="11" />
 
@@ -68,7 +68,7 @@
                 android:layout_toRightOf="@+id/login_layout_icon1"
                 android:background="@null"
                 android:hint="请输入您的密码"
-                android:textSize="16sp"
+
                 android:inputType="textPassword"
                 android:maxLength="16" />
         </RelativeLayout>
@@ -81,7 +81,7 @@
             android:layout_below="@+id/login_layout"
             android:layout_marginTop="5dp"
             android:text="忘记密码？"
-            android:textSize="16sp"
+
             android:textColor="@color/qianlv" />
 
         <TextView
@@ -110,7 +110,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="还没有帐号？"
-                android:textSize="16sp"
+
                 android:textColor="@color/white" />
 
             <TextView
@@ -118,7 +118,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="立即注册"
-                android:textSize="16sp"
+
                 android:textColor="@color/qianlv" />
         </LinearLayout>
     </RelativeLayout>

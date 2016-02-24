@@ -45,7 +45,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by CAI on 2015/12/10.
+ * Created by HePeng on 2015/12/10.
  */
 public class AddPotentialActivity extends BaseActivity {
     private EditText name;

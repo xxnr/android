@@ -18,7 +18,6 @@
             android:layout_marginRight="30dp"
             android:layout_marginTop="15dp"
             android:gravity="center"
-            android:textColor="@color/black_goods_titile"
             android:textSize="18sp" />
 
         <TextView
@@ -48,7 +47,7 @@
                 android:drawableLeft="@drawable/local_pic"
                 android:gravity="left|center_vertical"
                 android:textColor="@color/black"
-                android:textSize="16sp" />
+                 />
 
             <include layout="@layout/line_lay" />
 
@@ -63,7 +62,7 @@
                 android:gravity="left|center_vertical"
                 android:text="拍照上传"
                 android:textColor="@color/black"
-                android:textSize="16sp" />
+                 />
 
             <include layout="@layout/line_lay" />
 
@@ -74,7 +73,7 @@
                 android:background="@drawable/list_bg_selector"
                 android:gravity="center"
                 android:textColor="@color/black"
-                android:textSize="16sp" />
+                 />
 
 
         </LinearLayout>

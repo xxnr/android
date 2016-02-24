@@ -40,7 +40,7 @@
                 android:paddingLeft="18dp"
                 android:text="我的客户"
                 android:textColor="@color/tab_selector_invite_textcolor"
-                android:textSize="16sp" />
+                 />
 
             <TextView
                 android:layout_width="1px"
@@ -59,7 +59,7 @@
                 android:paddingLeft="16dp"
                 android:text="我的代表"
                 android:textColor="@color/tab_selector_invite_textcolor"
-                android:textSize="16sp" />
+                 />
 
 
             <TextView
@@ -79,7 +79,7 @@
                 android:paddingLeft="16dp"
                 android:text="客户登记"
                 android:textColor="@color/tab_selector_invite_textcolor"
-                android:textSize="16sp"
+
                 android:visibility="gone" />
         </RadioGroup>
     </LinearLayout>

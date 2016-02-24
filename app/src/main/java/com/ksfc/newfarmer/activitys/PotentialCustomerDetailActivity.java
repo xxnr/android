@@ -14,7 +14,7 @@ import com.ksfc.newfarmer.protocol.beans.PotentialCustomerDetailResult;
 import com.ksfc.newfarmer.utils.StringUtil;
 
 /**
- * Created by CAI on 2016/2/2.
+ * Created by HePeng on 2016/2/2.
  */
 public class PotentialCustomerDetailActivity extends BaseActivity {
     private TextView name, phone, choice_city_text, choice_town_text, intent_product_text;

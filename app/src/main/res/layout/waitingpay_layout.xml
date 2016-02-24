@@ -17,7 +17,8 @@
         android:layout_marginRight="12dp"
         app:tabIndicatorColor="@color/green"
         app:tabSelectedTextColor="@color/green"
-        app:tabTextColor="@color/black_goods_titile" />
+        app:tabTextColor="@color/black_goods_titile"
+        />
 
     <include layout="@layout/line_lay" />
 

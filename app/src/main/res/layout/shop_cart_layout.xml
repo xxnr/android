@@ -128,8 +128,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="10dp"
                     android:text="全选"
-                    android:textColor="@color/black_goods_titile"
-                    android:textSize="16sp" />
+                     />
 
                 <LinearLayout
                     android:id="@+id/goods_car_price_lin"
@@ -143,8 +142,7 @@
                         android:id="@+id/ordering_fenshu"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="合计："
-                        android:textColor="@color/black_goods_titile"
+                        android:text="@string/amounts"
                         android:textSize="14sp" />
 
                     <TextView

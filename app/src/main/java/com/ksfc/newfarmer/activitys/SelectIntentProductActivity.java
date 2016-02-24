@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by CAI on 2016/2/2.
+ * Created by HePeng on 2016/2/2.
  */
 public class SelectIntentProductActivity extends BaseActivity {
     private ListView listView;

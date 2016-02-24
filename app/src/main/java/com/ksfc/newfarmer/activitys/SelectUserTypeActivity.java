@@ -47,7 +47,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Created by CAI on 2015/12/9.
+ * Created by HePeng on 2015/12/9.
  */
 public class SelectUserTypeActivity extends BaseActivity implements AdapterView.OnItemClickListener {
     private ListView listView;

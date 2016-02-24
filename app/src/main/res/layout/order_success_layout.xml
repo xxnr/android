@@ -40,7 +40,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="支付金额："
-                android:textColor="@color/black_goods_titile"
                 android:textSize="14sp" />
 
         </LinearLayout>

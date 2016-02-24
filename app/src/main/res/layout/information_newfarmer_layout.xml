@@ -27,7 +27,7 @@
                 android:layout_centerInParent="true"
                 android:text="综合"
                 android:textColor="@color/orange_goods_price"
-                android:textSize="16sp" />
+                 />
         </RelativeLayout>
 
         <TextView
@@ -47,8 +47,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="价格"
-                android:textColor="@color/black_goods_titile"
-                android:textSize="16sp" />
+                 />
 
             <ImageView
                 android:id="@+id/goods_jiage_rel_image"
@@ -78,8 +77,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="筛选"
-                android:textColor="@color/black_goods_titile"
-                android:textSize="16sp" />
+                 />
 
             <ImageView
                 android:id="@+id/goods_shaixuan_rel_image"
@@ -125,7 +123,7 @@
                 android:layout_marginTop="30dp"
                 android:text="抱歉，没有找到合适的商品"
                 android:textColor="@color/deep_gray"
-                android:textSize="16sp" />
+                 />
 
         </RelativeLayout>
 

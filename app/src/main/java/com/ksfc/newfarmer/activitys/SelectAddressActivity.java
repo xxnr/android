@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by CAI on 2015/12/9.
+ * Created by HePeng on 2015/12/9.
  */
 public class SelectAddressActivity extends BaseActivity implements AdapterView.OnItemClickListener {
     private ListView listView;

@@ -6,7 +6,7 @@ import com.ksfc.newfarmer.protocol.ResponseResult;
 import java.util.List;
 
 /**
- * Created by CAI on 2016/2/1.
+ * Created by HePeng on 2016/2/1.
  */
 public class PotentialListResult extends ResponseResult {
 

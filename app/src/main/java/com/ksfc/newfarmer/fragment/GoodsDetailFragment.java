@@ -31,7 +31,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import java.util.List;
 
 /**
- * Created by CAI on 2016/1/7.
+ * Created by HePeng on 2016/1/7.
  */
 public class GoodsDetailFragment extends BaseFragment implements View.OnClickListener, ViewPager.OnPageChangeListener {
     private GetGoodsDetail.GoodsDetail detail;

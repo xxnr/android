@@ -5,7 +5,7 @@ import android.view.TouchDelegate;
 import android.view.View;
 
 /**
- * Created by CAI on 2015/12/9.
+ * Created by HePeng on 2015/12/9.
  */
 public class ExpandViewTouch {
 

@@ -11,7 +11,7 @@ import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.StringUtil;
 
 /**
- * Created by CAI on 2015/12/29.
+ * Created by HePeng on 2015/12/29.
  */
 public class AboutUsActivity extends BaseActivity {
     @Override

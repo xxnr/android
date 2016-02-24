@@ -18,7 +18,6 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:text="完善个人资料可以获得"
-            android:textColor="@color/black_goods_titile"
             android:textSize="16dp" />
 
         <TextView
@@ -32,7 +31,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="积分哟"
-            android:textColor="@color/black_goods_titile"
             android:textSize="16dp" />
 
     </LinearLayout>
@@ -50,8 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:text="姓名："
-            android:textColor="@color/black_goods_titile"
-            android:textSize="16sp" />
+             />
 
 
         <EditText
@@ -64,8 +61,7 @@
             android:hint="请输入您的真实姓名"
             android:maxLength="12"
             android:singleLine="true"
-            android:textColor="@color/black_goods_titile"
-            android:textSize="16sp" />
+             />
     </LinearLayout>
 
     <include layout="@layout/line_lay" />
@@ -81,8 +77,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:text="性别："
-            android:textColor="@color/black_goods_titile"
-            android:textSize="16sp" />
+             />
 
 
         <CheckBox
@@ -104,7 +99,6 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:text="男"
-            android:textColor="@color/black_goods_titile"
             android:textSize="18sp" />
 
 
@@ -127,7 +121,6 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:text="女"
-            android:textColor="@color/black_goods_titile"
             android:textSize="18sp" />
 
 
@@ -147,8 +140,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:text="地区："
-            android:textColor="@color/black_goods_titile"
-            android:textSize="16sp" />
+             />
 
         <TextView
             android:id="@+id/choice_city_text"
@@ -156,8 +148,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:hint="请选择地区"
-            android:textColor="@color/black_goods_titile"
-            android:textSize="16sp" />
+             />
 
     </LinearLayout>
 
@@ -175,8 +166,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:text="街道："
-            android:textColor="@color/black_goods_titile"
-            android:textSize="16sp" />
+             />
 
         <TextView
             android:id="@+id/choice_town_text"
@@ -184,8 +174,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:hint="请选择街道"
-            android:textColor="@color/black_goods_titile"
-            android:textSize="16sp" />
+             />
 
     </LinearLayout>
 
@@ -203,8 +192,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:text="类型："
-            android:textColor="@color/black_goods_titile"
-            android:textSize="16sp" />
+             />
 
         <TextView
             android:id="@+id/choice_type_text"
@@ -212,8 +200,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:hint="请选择类型"
-            android:textColor="@color/black_goods_titile"
-            android:textSize="16sp" />
+             />
 
 
     </LinearLayout>
@@ -267,7 +254,7 @@
                 android:gravity="center"
                 android:padding="10dp"
                 android:textSize="18sp"
-                android:text="保存"
+                android:text="@string/save"
                 android:textColor="@color/white" />
         </LinearLayout>
     </LinearLayout>

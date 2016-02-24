@@ -26,7 +26,6 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:text="订单号："
-            android:textColor="@color/black_goods_titile"
             android:textSize="18sp" />
 
         <TextView
@@ -35,7 +34,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text=""
-            android:textColor="@color/black_goods_titile"
             android:textSize="18sp" />
 
 
@@ -80,7 +78,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
                     android:text="待付金额："
-                    android:textColor="@color/black_goods_titile"
                     android:textSize="14sp" />
 
                 <TextView
@@ -89,7 +86,7 @@
                     android:layout_height="wrap_content"
                     android:text=""
                     android:textColor="@color/orange_goods_price"
-                    android:textSize="16sp" />
+                     />
 
             </LinearLayout>
 
@@ -105,7 +102,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
                     android:text="订单总额："
-                    android:textColor="@color/black_goods_titile"
                     android:textSize="14sp" />
 
                 <TextView
@@ -114,7 +110,7 @@
                     android:layout_height="wrap_content"
                     android:text=""
                     android:textColor="@color/orange_goods_price"
-                    android:textSize="16sp" />
+                     />
 
             </LinearLayout>
         </LinearLayout>
@@ -148,8 +144,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="16dp"
                 android:text="支付方式"
-                android:textColor="@color/black_goods_titile"
-                android:textSize="16sp" />
+                 />
         </LinearLayout>
 
         <include layout="@layout/line_lay" />
@@ -179,7 +174,7 @@
                     android:layout_centerInParent="true"
                     android:text="全额支付"
                     android:textColor="@color/orange"
-                    android:textSize="16sp" />
+                     />
 
             </RelativeLayout>
 
@@ -203,7 +198,7 @@
                     android:layout_centerInParent="true"
                     android:text="分次支付"
                     android:textColor="@color/main_index_gary"
-                    android:textSize="16sp" />
+                     />
             </RelativeLayout>
 
         </LinearLayout>
@@ -317,7 +312,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="可调节金额，幅度"
-                    android:textColor="@color/black_goods_titile"
                     android:textSize="9sp" />
 
                 <TextView
@@ -331,7 +325,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="元，最低调至"
-                    android:textColor="@color/black_goods_titile"
                     android:textSize="9sp" />
 
                 <TextView
@@ -345,7 +338,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="元，不足按实际金额支付"
-                    android:textColor="@color/black_goods_titile"
                     android:textSize="9sp" />
 
             </LinearLayout>
@@ -375,8 +367,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="16dp"
                 android:text="付款方式"
-                android:textColor="@color/black_goods_titile"
-                android:textSize="16sp" />
+                 />
         </LinearLayout>
 
         <include layout="@layout/line_lay" />

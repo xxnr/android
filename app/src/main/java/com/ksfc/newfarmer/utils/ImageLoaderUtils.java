@@ -7,7 +7,7 @@ import com.ksfc.newfarmer.R;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
 /**
- * Created by CAI on 2015/12/18.
+ * Created by HePeng on 2015/12/18.
  */
 public class ImageLoaderUtils {
 

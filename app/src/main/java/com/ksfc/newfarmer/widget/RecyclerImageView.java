@@ -7,7 +7,7 @@ import android.util.AttributeSet;
 import android.widget.ImageView;
 
 /**
- * Created by CAI on 2016/1/29.
+ * Created by HePeng on 2016/1/29.
  */
 public class RecyclerImageView extends ImageView {
     public RecyclerImageView(Context context) {

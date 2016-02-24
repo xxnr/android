@@ -11,7 +11,7 @@ import com.ksfc.newfarmer.protocol.beans.GetGoodsDetail;
 import com.ksfc.newfarmer.utils.RndLog;
 
 /**
- * Created by CAI on 2015/11/23. 商品详情的适配器
+ * Created by HePeng on 2015/11/23. 商品详情的适配器
  */
 public class GoodsDetailAdapter extends FragmentPagerAdapter {
     private int count;

@@ -42,7 +42,6 @@
             android:layout_marginLeft="7dp"
             android:layout_weight="1"
             android:text="消息通知"
-            android:textColor="@color/black_goods_titile"
             android:textSize="18sp" />
 
         <com.ksfc.newfarmer.widget.CustomCheckBox
@@ -92,7 +91,6 @@
             android:layout_marginLeft="7dp"
             android:layout_weight="1"
             android:text="清除缓存"
-            android:textColor="@color/black_goods_titile"
             android:textSize="18sp" />
 
 
@@ -133,7 +131,6 @@
             android:layout_marginLeft="7dp"
             android:layout_weight="1"
             android:text="版本更新"
-            android:textColor="@color/black_goods_titile"
             android:textSize="18sp" />
 
         <TextView
@@ -143,7 +140,7 @@
             android:layout_marginRight="10dp"
             android:text="v2.0"
             android:textColor="@color/gray"
-            android:textSize="16sp" />
+             />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -187,7 +184,6 @@
             android:layout_marginLeft="7dp"
             android:layout_weight="1"
             android:text="关于"
-            android:textColor="@color/black_goods_titile"
             android:textSize="18sp" />
 
 

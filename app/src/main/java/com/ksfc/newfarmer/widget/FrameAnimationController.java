@@ -1,7 +1,7 @@
 package com.ksfc.newfarmer.widget;
 
 /**
- * Created by CAI on 2015/12/7.
+ * Created by HePeng on 2015/12/7.
  */
 import android.os.Handler;
 import android.os.Message;

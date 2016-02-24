@@ -50,7 +50,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Created by CAI on 2015/12/3.
+ * Created by HePeng on 2015/12/3.
  */
 public class MyDetailFragment extends BaseFragment implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2 {
 

@@ -1,7 +1,7 @@
 package com.ksfc.newfarmer.widget;
 
 /**
- * Created by CAI on 2015/11/27.
+ * Created by HePeng on 2015/11/27.
  */
 import android.content.Context;
 import android.util.AttributeSet;

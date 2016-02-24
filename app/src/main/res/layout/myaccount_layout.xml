@@ -42,8 +42,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="50dp"
             android:text="我的头像"
-            android:textColor="@color/black_goods_titile"
-            android:textSize="16sp" />
+             />
 
 
         <com.ksfc.newfarmer.widget.HeadImageView
@@ -97,8 +96,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="50dp"
             android:text="我的昵称"
-            android:textColor="@color/black_goods_titile"
-            android:textSize="16sp" />
+             />
 
 
         <TextView
@@ -110,7 +108,7 @@
             android:layout_toLeftOf="@+id/nickName_ll_qianjin"
             android:text=""
             android:textColor="@color/main_index_gary"
-            android:textSize="16sp" />
+             />
 
 
         <ImageView
@@ -152,8 +150,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="50dp"
             android:text="地址管理"
-            android:textColor="@color/black_goods_titile"
-            android:textSize="16sp" />
+             />
 
 
         <RelativeLayout
@@ -171,7 +168,7 @@
                 android:maxLength="16"
                 android:maxLines="2"
                 android:textColor="@color/main_index_gary"
-                android:textSize="16sp" />
+                 />
 
         </RelativeLayout>
 
@@ -223,8 +220,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="50dp"
             android:text="姓名"
-            android:textColor="@color/black_goods_titile"
-            android:textSize="16sp" />
+             />
 
 
         <RelativeLayout
@@ -244,7 +240,7 @@
                 android:maxLines="1"
                 android:text=""
                 android:textColor="@color/main_index_gary"
-                android:textSize="16sp" />
+                 />
 
         </RelativeLayout>
 
@@ -288,8 +284,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="50dp"
             android:text="性别"
-            android:textColor="@color/black_goods_titile"
-            android:textSize="16sp" />
+             />
 
 
         <RelativeLayout
@@ -309,7 +304,7 @@
                 android:maxLines="1"
                 android:text=""
                 android:textColor="@color/main_index_gary"
-                android:textSize="16sp" />
+                 />
 
         </RelativeLayout>
 
@@ -353,8 +348,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="50dp"
             android:text="所在地区"
-            android:textColor="@color/black_goods_titile"
-            android:textSize="16sp" />
+             />
 
 
         <RelativeLayout
@@ -372,7 +366,7 @@
                 android:maxLength="16"
                 android:maxLines="2"
                 android:textColor="@color/main_index_gary"
-                android:textSize="16sp" />
+                 />
 
         </RelativeLayout>
 
@@ -416,8 +410,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="50dp"
             android:text="类型"
-            android:textColor="@color/black_goods_titile"
-            android:textSize="16sp" />
+             />
 
 
         <RelativeLayout
@@ -436,7 +429,7 @@
                 android:maxLength="16"
                 android:maxLines="2"
                 android:textColor="@color/main_index_gary"
-                android:textSize="16sp" />
+                 />
 
         </RelativeLayout>
 
@@ -490,8 +483,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="50dp"
             android:text="修改密码"
-            android:textColor="@color/black_goods_titile"
-            android:textSize="16sp" />
+             />
 
 
         <TextView
@@ -504,7 +496,7 @@
             android:maxLines="2"
             android:text="修改"
             android:textColor="@color/main_index_gary"
-            android:textSize="16sp" />
+             />
 
 
         <ImageView

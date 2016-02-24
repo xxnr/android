@@ -8,7 +8,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 /**
- * Created by CAI on 2015/12/18.
+ * Created by HePeng on 2015/12/18.
  */
 public class PullToRefreshUtils {
 

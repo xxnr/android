@@ -1,7 +1,7 @@
 package com.ksfc.newfarmer.widget;
 
 /**
- * Created by CAI on 2016/1/11.
+ * Created by HePeng on 2016/1/11.
  */
 
 import android.widget.RadioGroup;

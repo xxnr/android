@@ -24,8 +24,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:text="姓名"
-                android:textColor="@color/black_goods_titile"
-                android:textSize="16sp" />
+                 />
         </LinearLayout>
 
 
@@ -38,8 +37,7 @@
             android:hint="请填写客户的真实姓名"
             android:maxLength="12"
             android:singleLine="true"
-            android:textColor="@color/black_goods_titile"
-            android:textSize="16sp" />
+             />
     </LinearLayout>
 
     <include layout="@layout/line_lay" />
@@ -59,8 +57,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:text="手机号"
-                android:textColor="@color/black_goods_titile"
-                android:textSize="16sp" />
+                 />
         </LinearLayout>
 
         <EditText
@@ -73,8 +70,7 @@
             android:inputType="number"
             android:maxLength="11"
             android:singleLine="true"
-            android:textColor="@color/black_goods_titile"
-            android:textSize="16sp" />
+             />
     </LinearLayout>
 
     <include layout="@layout/line_lay" />
@@ -136,8 +132,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:text="性别"
-                android:textColor="@color/black_goods_titile"
-                android:textSize="16sp" />
+                 />
         </LinearLayout>
 
         <CheckBox
@@ -158,7 +153,6 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:text="男"
-            android:textColor="@color/black_goods_titile"
             android:textSize="18sp" />
 
 
@@ -181,7 +175,6 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:text="女"
-            android:textColor="@color/black_goods_titile"
             android:textSize="18sp" />
 
 
@@ -205,8 +198,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:text="地区"
-                android:textColor="@color/black_goods_titile"
-                android:textSize="16sp" />
+                 />
 
         </LinearLayout>
 
@@ -215,8 +207,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="选择所在省市区"
-            android:textColor="@color/black_goods_titile"
-            android:textSize="16sp" />
+             />
 
     </LinearLayout>
 
@@ -238,8 +229,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:text="街道"
-                android:textColor="@color/black_goods_titile"
-                android:textSize="16sp" />
+                 />
         </LinearLayout>
 
 
@@ -248,8 +238,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="选择所在街道或乡镇"
-            android:textColor="@color/black_goods_titile"
-            android:textSize="16sp" />
+             />
 
     </LinearLayout>
 
@@ -272,8 +261,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:text="意向产品"
-                android:textColor="@color/black_goods_titile"
-                android:textSize="16sp" />
+                 />
         </LinearLayout>
 
 
@@ -282,8 +270,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="选择客户想买的商品"
-            android:textColor="@color/black_goods_titile"
-            android:textSize="16sp" />
+             />
 
 
     </LinearLayout>
@@ -305,7 +292,7 @@
         android:background="@drawable/login_roate"
         android:gravity="center"
         android:padding="10dp"
-        android:text="保存"
+        android:text="@string/save"
         android:textColor="@color/white"
         android:textSize="18sp" />
 </LinearLayout>
