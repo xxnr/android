@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import android.util.Log;
 
 public class StringUtil {
 
@@ -24,6 +23,7 @@ public class StringUtil {
         if ("null".equals(str)) {
             return false;
         }
+
         return true;
     }
 
@@ -115,6 +115,20 @@ public class StringUtil {
             return true;
         }
         return false;
+
+    }
+
+
+    /**
+     * 去掉double类型尾部的0
+     */
+    public static String reduceDouble(double price) {
+        int i = (int) price;
+        if (i == price) {
+            return i + "";
+        } else {
+            return StringUtil.toTwoString(price + "");
+        }
 
     }
 

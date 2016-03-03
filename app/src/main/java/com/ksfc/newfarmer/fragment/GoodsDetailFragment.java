@@ -2,8 +2,8 @@ package com.ksfc.newfarmer.fragment;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
@@ -15,6 +15,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -78,6 +79,9 @@ public class GoodsDetailFragment extends BaseFragment implements View.OnClickLis
             TextView product_description = (TextView) view.findViewById(R.id.product_description);//描述
             TextView product_dingjing_name = (TextView) view.findViewById(R.id.product_dingjin_name);//"定金"
             RelativeLayout detail_detail = (RelativeLayout) view.findViewById(R.id.goods_detail_detail);//继续上滑，可以加载更多
+            LinearLayout market_price_ll = (LinearLayout) view.findViewById(R.id.market_price_ll);//市场价 lin
+            TextView market_price_tv = (TextView) view.findViewById(R.id.market_price_tv);//市场价
+            market_price_tv.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);//市场价的中划线
             TextView product_newFarmer_price = (TextView) view.findViewById(R.id.product_newFarmer_price);//新农价
             RelativeLayout circlePageIndicator_rel = (RelativeLayout) view.findViewById(R.id.circlePageIndicator_rel);//商品多个主图时Indicator的背景
             if (StringUtil.checkStr(detail.name)) {
@@ -127,6 +131,7 @@ public class GoodsDetailFragment extends BaseFragment implements View.OnClickLis
                 product_newFarmer_price.setTextColor(Color.GRAY);
                 product_newFarmer_price.setText("即将上线");
             } else {
+                //新农价
                 if (detail.SKUPrice != null && detail.online) {
                     if (StringUtil.checkStr(detail.SKUPrice.min) && StringUtil.checkStr(detail.SKUPrice.max)) {
                         if (!detail.SKUPrice.min.equals(detail.SKUPrice.max)) {
@@ -145,6 +150,24 @@ public class GoodsDetailFragment extends BaseFragment implements View.OnClickLis
                     }
                 }
             }
+
+            //市场价
+
+            if (detail.SKUMarketPrice != null
+                    && StringUtil.checkStr(detail.SKUMarketPrice.min)
+                    && StringUtil.checkStr(detail.SKUMarketPrice.max)
+                    && !detail.SKUMarketPrice.min.equals("0")
+                    && !detail.SKUMarketPrice.max.equals("0")) {
+                market_price_ll.setVisibility(View.VISIBLE);
+                if (!detail.SKUMarketPrice.min.equals(detail.SKUMarketPrice.max)) {
+                    market_price_tv.setText("¥" + detail.SKUMarketPrice.min + "-" + detail.SKUMarketPrice.max);
+                } else {
+                    market_price_tv.setText("¥" + detail.SKUMarketPrice.min);
+                }
+            } else {
+                market_price_ll.setVisibility(View.GONE);
+            }
+
             return view;
         } else {
 

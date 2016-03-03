@@ -42,6 +42,7 @@ public class MyIntegralActivity extends BaseActivity implements
 	List<Jifen> list;
 	private MyIntegralAdapter1 jifenAdapter;
 	private List<Jifen> rows;
+	private TextView myintegral_tv;
 
 	@Override
 	public int getLayout() {
@@ -84,6 +85,7 @@ public class MyIntegralActivity extends BaseActivity implements
 		myintergral_pull = (PullToRefreshView) findViewById(R.id.myintergral_pull);
 		myintegral_lv = (ListView) findViewById(R.id.myintegral_lv);
 		myintegral_count = (TextView) findViewById(R.id.myintegral_count);
+		myintegral_tv=(TextView) findViewById(R.id.myintegral_tv);
 	}
 
 	@Override
@@ -98,6 +100,7 @@ public class MyIntegralActivity extends BaseActivity implements
 			JifenData res = (JifenData) req.getData();
 			rows = res.datas.rows;
 			int sumJifen = res.datas.pointLaterTrade;
+			myintegral_tv.setVisibility(View.VISIBLE);
 			myintegral_count.setText(sumJifen + "");
 
 			if (rows.size() > 0) {

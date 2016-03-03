@@ -11,7 +11,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.widget.ImageView;
 
-import com.ksfc.newfarmer.widget.CirclePageIndicator;
 
 /**
  * 三张启动页

@@ -25,8 +25,16 @@ public class RemainGoodsAttr extends ResponseResult {
         }
 
         public Price price;
+        public Market_price market_price;
+
 
         public class Price implements Serializable {
+
+            public String min;
+            public String max;
+        }
+
+        public class Market_price implements Serializable {
 
             public String min;
             public String max;
@@ -40,14 +48,13 @@ public class RemainGoodsAttr extends ResponseResult {
             public List<String> values;
         }
 
-        public class SKU implements Serializable{
+        public class SKU implements Serializable {
             public String _id;
 
         }
 
 
     }
-
 
 
 }

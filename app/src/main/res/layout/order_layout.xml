@@ -40,16 +40,19 @@
 
 
         <LinearLayout
+            android:baselineAligned="false"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
             <LinearLayout
+                android:baselineAligned="false"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="2">
 
                 <LinearLayout
+                    android:baselineAligned="false"
                     android:id="@+id/goods_car_price_lin"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"

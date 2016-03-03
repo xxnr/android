@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.ksfc.newfarmer.protocol.ResponseResult;
-import com.ksfc.newfarmer.utils.StringUtil;
 
 public class MyOrderDetailResult extends ResponseResult {
 

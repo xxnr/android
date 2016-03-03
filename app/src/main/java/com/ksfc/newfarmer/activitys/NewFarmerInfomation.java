@@ -28,6 +28,7 @@ import com.ksfc.newfarmer.protocol.beans.InformationResult.DatasEntity.ItemsEnti
 import com.ksfc.newfarmer.utils.DateFormatUtils;
 import com.ksfc.newfarmer.utils.ExpandViewTouch;
 import com.ksfc.newfarmer.utils.PullToRefreshUtils;
+import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.ScreenUtil;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -75,6 +76,7 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
                         ArticleActivity.class);
                 if (!TextUtils.isEmpty(entity.getUrl())) {
                     intent.putExtra("articleUrl", entity.getUrl());
+                    intent.putExtra("shareUrl", entity.getShareurl());
                     intent.putExtra("urlImage", entity.getImage());
                     intent.putExtra("urlTitle", entity.getTitle());
                     intent.putExtra("newsAbstract", entity.getNewsabstract());
@@ -101,12 +103,15 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
 
                     @Override
                     public void onFailure(HttpException arg0, String arg1) {
+                        disMissDialog();
+                        showToast("您的网络不太顺畅，重试或检查下网络吧~");
                         listView.onRefreshComplete();
                     }
 
                     @Override
                     public void onSuccess(ResponseInfo<String> arg0) {
                         disMissDialog();
+                        RndLog.v(TAG, arg0.result);
                         listView.onRefreshComplete();
                         InformationResult info = null;
                         info = JSON.parseObject(arg0.result,
@@ -231,14 +236,19 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
                 convertView.setTag(new ViewHolder(convertView));
             }
             ViewHolder holder = (ViewHolder) convertView.getTag();
-            if (!TextUtils.isEmpty(items.get(position).getImage())) {
-                ImageLoader.getInstance().displayImage(items.get(position).getImage(),
-                        holder.image_iv);
+
+            ItemsEntity itemsEntity = items.get(position);
+            if (itemsEntity!=null){
+                if (!TextUtils.isEmpty(itemsEntity.getImage())) {
+                    ImageLoader.getInstance().displayImage(items.get(position).getImage(),
+                            holder.image_iv);
+                }
+                holder.title_tv.setText(items.get(position).getTitle());
+                //格式化时间
+                String time = DateFormatUtils.convertTime(items.get(position).getDatecreated());
+                holder.time_tv.setText(time);
             }
-            holder.title_tv.setText(items.get(position).getTitle());
-            //格式化时间
-            String time = DateFormatUtils.convertTime(items.get(position).getDatecreated());
-            holder.time_tv.setText(time);
+
             return convertView;
         }
 
@@ -258,8 +268,14 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
 
     }
 
-
-
-
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!(adapter!=null&&adapter.getCount()>0)){
+            showProgressDialog();
+            items.clear();
+            page=1;
+            getData();
+        }
+    }
 }

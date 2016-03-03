@@ -17,11 +17,11 @@ public class PreferenceUtil {
 	}
 
 	public void clear() {
-		sp.edit().clear().commit();
+		sp.edit().clear().apply();
 	}
 
 	public void putBool(String key, boolean value) {
-		sp.edit().putBoolean(key, value).commit();
+		sp.edit().putBoolean(key, value).apply();
 	}
 
 	public boolean getBool(String key, boolean defValue) {
@@ -29,7 +29,7 @@ public class PreferenceUtil {
 	}
 
 	public void putInt(String key, int value) {
-		sp.edit().putInt(key, value).commit();
+		sp.edit().putInt(key, value).apply();
 	}
 
 	public int getInt(String key, int defValue) {
@@ -37,7 +37,7 @@ public class PreferenceUtil {
 	}
 
 	public void putLong(String key, long value) {
-		sp.edit().putLong(key, value).commit();
+		sp.edit().putLong(key, value).apply();
 	}
 
 	public long getLong(String key, long defValue) {
@@ -45,7 +45,7 @@ public class PreferenceUtil {
 	}
 
 	public void putString(String key, String value) {
-		sp.edit().putString(key, value).commit();
+		sp.edit().putString(key, value).apply();
 	}
 
 	public String getString(String key, String defValue) {
@@ -57,7 +57,7 @@ public class PreferenceUtil {
 	}
 
 	public void putStringSet(String key, Set<String> value) {
-		sp.edit().putStringSet(key, value).commit();
+		sp.edit().putStringSet(key, value).apply();
 	}
 
 	public float getFloat(String key, float defValue) {
@@ -65,7 +65,7 @@ public class PreferenceUtil {
 	}
 
 	public void putFloat(String key, float value) {
-		sp.edit().putFloat(key, value).commit();
+		sp.edit().putFloat(key, value).apply();
 	}
 
 }

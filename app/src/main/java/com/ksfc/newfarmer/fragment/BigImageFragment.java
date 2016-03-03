@@ -2,14 +2,12 @@ package com.ksfc.newfarmer.fragment;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.utils.StringUtil;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.picasso.Picasso;
 
 import uk.co.senab.photoview.PhotoView;

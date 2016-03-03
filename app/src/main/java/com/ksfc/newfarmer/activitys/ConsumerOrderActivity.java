@@ -1,13 +1,9 @@
 package com.ksfc.newfarmer.activitys;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.BaseAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -18,7 +14,6 @@ import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
-import com.ksfc.newfarmer.protocol.ResponseResult;
 import com.ksfc.newfarmer.protocol.beans.ConsumerOrderResult;
 import com.ksfc.newfarmer.protocol.beans.InviteeResult;
 import com.ksfc.newfarmer.utils.DateFormatUtils;
@@ -29,7 +24,6 @@ import com.ksfc.newfarmer.widget.WidgetUtil;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.TimeZone;
 
 /**
  * Created by HePeng on 2015/12/24.

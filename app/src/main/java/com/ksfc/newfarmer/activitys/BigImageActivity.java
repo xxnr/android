@@ -4,27 +4,18 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.ksfc.newfarmer.BaseActivity;
-import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.fragment.BigImageFragment;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.beans.GetGoodsDetail;
-import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.CirclePageIndicator;
 import com.ksfc.newfarmer.widget.HackyViewPager;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.List;
 
-import uk.co.senab.photoview.PhotoView;
 
 /**
  * Created by HePeng on 2015/12/7.

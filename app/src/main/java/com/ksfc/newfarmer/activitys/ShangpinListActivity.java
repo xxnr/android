@@ -11,13 +11,11 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.view.animation.AlphaAnimation;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -36,11 +34,11 @@ import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.RndApplication;
-import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.ApiType.RequestMethod;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
+import com.ksfc.newfarmer.protocol.ResponseResult;
 import com.ksfc.newfarmer.protocol.beans.AttrSelectResult;
 import com.ksfc.newfarmer.protocol.beans.BrandsResult;
 import com.ksfc.newfarmer.protocol.beans.GetGoodsData;
@@ -52,6 +50,11 @@ import com.ksfc.newfarmer.utils.SPUtils;
 import com.ksfc.newfarmer.utils.ScreenUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.GridViewWithHeaderAndFooter;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.HttpUtils;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class ShangpinListActivity extends BaseActivity implements OnItemClickListener, PullToRefreshBase.OnRefreshListener2, AbsListView.OnScrollListener {
@@ -96,9 +99,12 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
     private List<Map<String, Object>> attributesList;
 
     private List<String> lastBrands = new ArrayList<>(); //点击确定后保存上一次的品牌数据
+    private List<String> levelAttr = new ArrayList<>(); //点击确定后保存车型级别数据
     private List<String> lastAttr = new ArrayList<>(); //点击确定后保存上一次的attr数据
     private int lastPrice = -1; //点击确定后保存上一次价格
     private boolean isReset = false;
+    private List<String> commonAttr = new ArrayList<>();
+
 
     @Override
     public int getLayout() {
@@ -123,6 +129,7 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
         initView();
         showProgressDialog();
         getData();
+        getCommonAttr();
     }
 
     public void initView() {
@@ -457,6 +464,7 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
                 entry.getValue().notifyDataSetChanged();
             }
         }
+        levelAttr.clear();
         adapter_price.states.clear();
         adapter_price.notifyDataSetChanged();
         bransAdapter.states.clear();
@@ -465,6 +473,41 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
         brandBuilder = null;
         reservePrice = null;
         getAttrsData();
+    }
+
+    //获取公共属性的title  如车型级别 品类
+
+    private void getCommonAttr() {
+        com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
+        HttpUtils http = new HttpUtils();
+        http.send(HttpRequest.HttpMethod.POST, ApiType.GET_GOODS_ATTR.getOpt() + "?brand=" + "0" + "&category=" + classId, params,
+                new RequestCallBack<String>() {
+                    @Override
+                    public void onFailure(HttpException arg0, String arg1) {
+                        commonAttr.add("车型级别");
+                        commonAttr.add("品类");
+                    }
+
+                    @Override
+                    public void onSuccess(ResponseInfo<String> arg0) {
+                        Gson gson = new Gson();
+                        AttrSelectResult attrSelectResult = gson.fromJson(arg0.result, AttrSelectResult.class);
+                        if (attrSelectResult.getStatus().equals("1000")) {
+                            if (!attrSelectResult.attributes.isEmpty()) {
+                                for (int i = 0; i < attrSelectResult.attributes.size(); i++) {
+                                    if (attrSelectResult.attributes.get(i)._id != null) {
+                                        if (StringUtil.checkStr(attrSelectResult.attributes.get(i)._id.name)) {
+                                            commonAttr.add(attrSelectResult.attributes.get(i)._id.name);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+
+                });
+
     }
 
 
@@ -496,10 +539,12 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
                         goods_none_view_rel.setVisibility(View.VISIBLE);
                         return_top.setVisibility(View.GONE);
                     } else {
-                        showToast("没有数据了");
+                        showToast("没有更多商品");
                         page--;
                     }
-                    goodsListAdapter.notifyDataSetChanged();
+                    if (goodsListAdapter!=null){
+                        goodsListAdapter.notifyDataSetChanged();
+                    }
                 }
             }
             //商品品牌
@@ -548,21 +593,21 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
                         case 5:
                             popwindow_text5.setVisibility(View.VISIBLE);
                             pop_gv5.setVisibility(View.VISIBLE);
-                            AttrAdapter attrAdapter5 = new AttrAdapter(data.attributes.get(4).values);
+                            AttrAdapter attrAdapter5 = new AttrAdapter(data.attributes.get(4).values, data.attributes.get(4)._id.name);
                             popwindow_text5.setText(data.attributes.get(4)._id.name);
                             pop_gv5.setAdapter(attrAdapter5);
                             attrAdapterMap.put(data.attributes.get(4)._id.name, attrAdapter5);
                         case 4:
                             popwindow_text4.setVisibility(View.VISIBLE);
                             pop_gv4.setVisibility(View.VISIBLE);
-                            AttrAdapter attrAdapter4 = new AttrAdapter(data.attributes.get(3).values);
+                            AttrAdapter attrAdapter4 = new AttrAdapter(data.attributes.get(3).values, data.attributes.get(3)._id.name);
                             popwindow_text4.setText(data.attributes.get(3)._id.name);
                             pop_gv4.setAdapter(attrAdapter4);
                             attrAdapterMap.put(data.attributes.get(3)._id.name, attrAdapter4);
                         case 3:
                             popwindow_text3.setVisibility(View.VISIBLE);
                             pop_gv3.setVisibility(View.VISIBLE);
-                            AttrAdapter attrAdapter3 = new AttrAdapter(data.attributes.get(2).values);
+                            AttrAdapter attrAdapter3 = new AttrAdapter(data.attributes.get(2).values, data.attributes.get(2)._id.name);
                             popwindow_text3.setText(data.attributes.get(2)._id.name);
                             pop_gv3.setAdapter(attrAdapter3);
                             attrAdapterMap.put(data.attributes.get(2)._id.name, attrAdapter3);
@@ -570,14 +615,14 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
                         case 2:
                             popwindow_text2.setVisibility(View.VISIBLE);
                             pop_gv2.setVisibility(View.VISIBLE);
-                            AttrAdapter attrAdapter2 = new AttrAdapter(data.attributes.get(1).values);
+                            AttrAdapter attrAdapter2 = new AttrAdapter(data.attributes.get(1).values, data.attributes.get(1)._id.name);
                             popwindow_text2.setText(data.attributes.get(1)._id.name);
                             pop_gv2.setAdapter(attrAdapter2);
                             attrAdapterMap.put(data.attributes.get(1)._id.name, attrAdapter2);
                         case 1:
                             popwindow_text1.setVisibility(View.VISIBLE);
                             pop_gv1.setVisibility(View.VISIBLE);
-                            AttrAdapter attrAdapter1 = new AttrAdapter(data.attributes.get(0).values);
+                            AttrAdapter attrAdapter1 = new AttrAdapter(data.attributes.get(0).values, data.attributes.get(0)._id.name);
                             popwindow_text1.setText(data.attributes.get(0)._id.name);
                             pop_gv1.setAdapter(attrAdapter1);
                             attrAdapterMap.put(data.attributes.get(0)._id.name, attrAdapter1);
@@ -587,10 +632,15 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
                 //初始化 保存的attr
                 for (Map.Entry<String, AttrAdapter> entry : attrAdapterMap.entrySet()) {
                     for (Map.Entry<String, Boolean> entry1 : entry.getValue().states.entrySet()) {
+                        //非公共属性
                         if (lastAttr.contains(entry1.getKey())) {
                             if (!isReset) {
                                 entry1.setValue(true);
                             }
+                        }
+                        //共有属性
+                        if (levelAttr.contains(entry1.getKey())) {
+                            entry1.setValue(true);
                         }
                     }
                     entry.getValue().notifyDataSetChanged();
@@ -669,6 +719,7 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
                     });
             boolean res;
 
+
             if (states.get(list.get(position)._id) != null && states.get(list.get(position)._id)) {
                 res = true;
             } else {
@@ -694,11 +745,13 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
     //popWindow中的属性
     class AttrAdapter extends BaseAdapter {
         private List<String> list;
+        private String tag;
         // 用于记录每个RadioButton的状态，并保证只可选一个
         HashMap<String, Boolean> states = new HashMap<String, Boolean>();
 
-        public AttrAdapter(List<String> list) {
+        public AttrAdapter(List<String> list, String tag) {
             this.list = list;
+            this.tag = tag;
 
             for (String key : list) {
                 states.put(key, false);
@@ -742,6 +795,13 @@ public class ShangpinListActivity extends BaseActivity implements OnItemClickLis
                         public void onClick(View v) {
                             states.put(list.get(position),
                                     holder.brands_name_tv.isChecked());
+                            if (commonAttr.contains(tag)) {
+                                if (holder.brands_name_tv.isChecked()) {
+                                    levelAttr.add(list.get(position));
+                                } else {
+                                    levelAttr.remove(list.get(position));
+                                }
+                            }
                         }
                     });
 

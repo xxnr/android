@@ -115,7 +115,6 @@
                         android:layout_marginLeft="10dp"
                         android:text="订金："
                         android:textColor="@color/black"
-
                         android:visibility="gone" />
 
                     <TextView
@@ -125,6 +124,32 @@
                         android:text=""
                         android:textColor="@color/orange_goods_price"
                         android:textSize="20sp" />
+                </LinearLayout>
+                
+                <LinearLayout
+                    android:id="@+id/market_price_ll"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp">
+
+                    <TextView
+                        android:layout_marginLeft="16dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="市场价 "
+                        android:textColor="@color/gray"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/market_price_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textColor="@color/gray"
+                        android:textSize="14sp" />
+
                 </LinearLayout>
             </LinearLayout>
 

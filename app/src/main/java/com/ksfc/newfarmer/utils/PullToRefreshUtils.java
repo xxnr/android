@@ -1,11 +1,14 @@
 package com.ksfc.newfarmer.utils;
 
+import android.content.Context;
 import android.os.Handler;
-import android.widget.ListView;
+import android.widget.Toast;
 
 import com.handmark.pulltorefresh.library.ILoadingLayout;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
+
+import net.yangentao.util.app.App;
 
 /**
  * Created by HePeng on 2015/12/18.
@@ -33,8 +36,10 @@ public class PullToRefreshUtils {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                View.onRefreshComplete();
+                if (View.isRefreshing()) {
+                    View.onRefreshComplete();
+                }
             }
-        }, 10000);
+        }, 12 * 1000);
     }
 }

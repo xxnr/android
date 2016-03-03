@@ -71,133 +71,32 @@
 
 
             <LinearLayout
+                android:layout_marginLeft="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/pop_text1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginTop="24dp"
-                    android:text="品牌"
-                    android:textColor="@color/main_index_gary"
-
-                    android:visibility="gone" />
-
 
                 <LinearLayout
+                    android:id="@+id/add_sku_tv_gv_ll"
+                    android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="top|left"
-                    android:orientation="vertical">
+                    android:layout_height="wrap_content">
 
-                    <com.custom.vg.list.CustomListView
-                        android:id="@+id/pop_gv_1"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:visibility="gone" />
-                </LinearLayout>
-
-
-                <TextView
-                    android:id="@+id/pop_text2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginTop="10dp"
-                    android:text=""
-                    android:textColor="@color/main_index_gary"
-
-                    android:visibility="gone" />
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="top|left"
-                    android:orientation="vertical">
-
-                    <com.custom.vg.list.CustomListView
-                        android:id="@+id/pop_gv_2"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:visibility="gone" />
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/pop_text3"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginTop="10dp"
-                    android:text=""
-                    android:textColor="@color/main_index_gary"
-
-                    android:visibility="gone" />
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="top|left"
-                    android:orientation="vertical">
-
-                    <com.custom.vg.list.CustomListView
-                        android:id="@+id/pop_gv_3"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:visibility="gone" />
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/pop_text4"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginTop="10dp"
-                    android:text=""
-                    android:textColor="@color/main_index_gary"
-
-                    android:visibility="gone" />
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="top|left"
-                    android:orientation="vertical">
-
-                    <com.custom.vg.list.CustomListView
-                        android:id="@+id/pop_gv_4"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:visibility="gone" />
                 </LinearLayout>
 
                 <TextView
                     android:id="@+id/pop_text5"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="15dp"
                     android:text="附加项目"
                     android:textColor="@color/main_index_gary"
-
                     android:visibility="gone" />
 
 
                 <LinearLayout
+                    android:layout_marginTop="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="top|left"
@@ -207,11 +106,11 @@
                         android:id="@+id/pop_gv_5"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
                         android:visibility="gone" />
                 </LinearLayout>
 
                 <LinearLayout
+                    android:layout_marginTop="20dp"
                     android:id="@+id/pop_discount_lin"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
@@ -221,7 +120,6 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="16dp"
                         android:text="数量"
                         android:textColor="@color/main_index_gary"
                          />
@@ -265,9 +163,7 @@
                             android:scaleType="centerCrop" />
 
                     </LinearLayout>
-
                 </LinearLayout>
-
 
                 <TextView
                     android:layout_width="match_parent"

@@ -32,7 +32,7 @@ public class SPUtils {
 			sharedPreferences = context.getSharedPreferences(CONFIG,
 					Context.MODE_PRIVATE);
 		}
-		sharedPreferences.edit().putBoolean(key, value).commit();
+		sharedPreferences.edit().putBoolean(key, value).apply();
 	}
 
 	public static boolean getBooleanData(Context context, String key,

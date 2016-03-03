@@ -1,26 +1,17 @@
 package com.ksfc.newfarmer.fragment;
 
 import android.content.Intent;
-import android.nfc.Tag;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.sax.RootElement;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.handmark.pulltorefresh.library.ILoadingLayout;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
-import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.activitys.MyOrderDetailActivity;
@@ -34,7 +25,6 @@ import com.ksfc.newfarmer.protocol.beans.LoginResult;
 import com.ksfc.newfarmer.protocol.beans.WaitingPay;
 import com.ksfc.newfarmer.utils.ExpandViewTouch;
 import com.ksfc.newfarmer.utils.PullToRefreshUtils;
-import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.RecyclerImageView;
 import com.ksfc.newfarmer.widget.UnSwipeListView;
@@ -104,7 +94,7 @@ public class MyDetailFragment extends BaseFragment implements View.OnClickListen
     private void getData(int page) {
         RequestParams params = new RequestParams();
         LoginResult.UserInfo userInfo = Store.User.queryMe();
-        if (userInfo!=null){
+        if (userInfo != null) {
             params.put("userId", userInfo.userid);
         }
         params.put("page", page);
@@ -522,9 +512,9 @@ public class MyDetailFragment extends BaseFragment implements View.OnClickListen
     @Override
     public void onResume() {
         super.onResume();
-//        if (TYPE == 1 || TYPE == 0) {
-//            page = 1;
-//            getData(page);
-//        }
+        if (!(adapter != null && adapter.getCount() > 0)) {
+            page = 1;
+            getData(page);
+        }
     }
 }

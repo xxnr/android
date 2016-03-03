@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 22
+    compileSdkVersion 23
     buildToolsVersion "20"
 
     defaultConfig {
         applicationId "com.ksfc.newfarmer"
         minSdkVersion 14
-        targetSdkVersion 19
+        targetSdkVersion 23
 
 
     }
@@ -30,6 +30,8 @@ android {
     lintOptions {
         abortOnError false
     }
+
+    useLibrary 'org.apache.http.legacy'
 }
 
 

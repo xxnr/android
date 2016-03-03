@@ -29,6 +29,7 @@ import com.ksfc.newfarmer.utils.ExpandViewTouch;
 import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.utils.PopWindowUtils;
+import com.ksfc.newfarmer.utils.Utils;
 import com.ksfc.newfarmer.widget.dialog.CustomDialog;
 import com.ksfc.newfarmer.widget.VerticalViewPager;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -72,8 +73,8 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
     private ImageView pop_image;
     private TextView pop_price;
     private TextView pop_title;
-    private CustomListView pop_gv1, pop_gv2, pop_gv3, pop_gv4, pop_gv5;
-    private TextView pop_text1, pop_text2, pop_text3, pop_text4, pop_text5;
+    private CustomListView pop_gv5;
+    private TextView pop_text5;
     private ArrayList<AttributesAdapter> adapters;
     private ArrayList<TextView> pop_texts;
     private boolean pop_flag = false;//如果从点击购物车 或者立即购买进入popWindow pop_flag_为true ,否则false;
@@ -87,8 +88,11 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
     private LinearLayout pop_discount_lin;
     private String SKUId;
     private TextView product_price;//商品价格
+    private TextView market_price_tv;//商品市场价
     private TextView product_attribute;//商品已选择的属性
     private AdditionsAdapter additionsAdapter;
+    private LinearLayout add_sku_tv_gv_ll;//动态添加sku的父布局
+    private LinearLayout market_price_ll;//商品市场价lin
 
 
     @Override
@@ -265,30 +269,11 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
         pop_image = ((ImageView) popupWindow_view.findViewById(R.id.pop_image));
         pop_price = ((TextView) popupWindow_view.findViewById(R.id.pop_price));
         pop_title = ((TextView) popupWindow_view.findViewById(R.id.pop_title));
-
-        pop_gv1 = (CustomListView) popupWindow_view.findViewById(R.id.pop_gv_1);
-        pop_gv2 = (CustomListView) popupWindow_view.findViewById(R.id.pop_gv_2);
-        pop_gv3 = (CustomListView) popupWindow_view.findViewById(R.id.pop_gv_3);
-        pop_gv4 = (CustomListView) popupWindow_view.findViewById(R.id.pop_gv_4);
-        pop_gv5 = (CustomListView) popupWindow_view.findViewById(R.id.pop_gv_5);
-
-        pop_gv1.setDividerHeight(20);
-        pop_gv1.setDividerWidth(30);
-        pop_gv2.setDividerHeight(20);
-        pop_gv2.setDividerWidth(30);
-        pop_gv3.setDividerHeight(20);
-        pop_gv3.setDividerWidth(30);
-        pop_gv4.setDividerHeight(20);
-        pop_gv4.setDividerWidth(30);
-        pop_gv5.setDividerHeight(20);
-        pop_gv5.setDividerWidth(30);
-
-        pop_text1 = (TextView) popupWindow_view.findViewById(R.id.pop_text1);
-        pop_text2 = (TextView) popupWindow_view.findViewById(R.id.pop_text2);
-        pop_text3 = (TextView) popupWindow_view.findViewById(R.id.pop_text3);
-        pop_text4 = (TextView) popupWindow_view.findViewById(R.id.pop_text4);
         //附加选项
         pop_text5 = (TextView) popupWindow_view.findViewById(R.id.pop_text5);
+        pop_gv5 = (CustomListView) popupWindow_view.findViewById(R.id.pop_gv_5);
+        pop_gv5.setDividerHeight(Utils.dip2px(getApplicationContext(), 10));
+        pop_gv5.setDividerWidth(Utils.dip2px(getApplicationContext(), 10));
 
         pop_jingqingqidai_bar = (TextView) popupWindow_view.findViewById(R.id.pop_jingqingqidai_bar);
         pop_bottom_bar = (LinearLayout) popupWindow_view.findViewById(R.id.pop_detail_bottom_bar);
@@ -296,6 +281,7 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
         pop_add_to_shopcart = (LinearLayout) popupWindow_view.findViewById(R.id.pop_add_to_shopcart);
         pop_sure = (LinearLayout) popupWindow_view.findViewById(R.id.pop_sure);
         pop_discount_lin = (LinearLayout) popupWindow_view.findViewById(R.id.pop_discount_lin);
+        add_sku_tv_gv_ll = (LinearLayout) popupWindow_view.findViewById(R.id.add_sku_tv_gv_ll);
 
 
         ImageView pop_discount_jian = (ImageView) popupWindow_view.findViewById(R.id.pop_discount_jian);
@@ -383,56 +369,55 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
         }
         if (detail.SKUAdditions != null && !detail.SKUAdditions.isEmpty()) {
             pop_text5.setVisibility(View.GONE);
-            additionsAdapter = new AdditionsAdapter(detail.SKUAdditions);
             pop_gv5.setVisibility(View.GONE);
+            additionsAdapter = new AdditionsAdapter(detail.SKUAdditions);
             pop_gv5.setAdapter(additionsAdapter);
         }
 
-        //设置规格属性
+        //动态设置sku列表
         if (detail.SKUAttributes != null && !detail.SKUAttributes.isEmpty()) {
             adapters = new ArrayList<>();
             pop_texts = new ArrayList<>();
-            switch (detail.SKUAttributes.size()) {
-                case 4:
-                    pop_text4.setVisibility(View.VISIBLE);
-                    pop_gv4.setVisibility(View.VISIBLE);
-                    pop_text4.setText(detail.SKUAttributes.get(3).name);
-                    AttributesAdapter adapter1 = new AttributesAdapter(detail.SKUAttributes.get(3).values);
-                    pop_gv4.setAdapter(adapter1);
-                    adapters.add(adapter1);
-                    pop_texts.add(pop_text4);
-                case 3:
-                    pop_text3.setVisibility(View.VISIBLE);
-                    pop_gv3.setVisibility(View.VISIBLE);
-                    pop_text3.setText(detail.SKUAttributes.get(2).name);
-                    AttributesAdapter adapter2 = new AttributesAdapter(detail.SKUAttributes.get(2).values);
-                    pop_gv3.setAdapter(adapter2);
-                    pop_texts.add(pop_text3);
-                    adapters.add(adapter2);
-                case 2:
-                    pop_text2.setVisibility(View.VISIBLE);
-                    pop_gv2.setVisibility(View.VISIBLE);
-                    pop_text2.setText(detail.SKUAttributes.get(1).name);
-                    AttributesAdapter adapter3 = new AttributesAdapter(detail.SKUAttributes.get(1).values);
-                    pop_gv2.setAdapter(adapter3);
-                    pop_texts.add(pop_text2);
-                    adapters.add(adapter3);
-                case 1:
-                    pop_text1.setVisibility(View.VISIBLE);
-                    pop_gv1.setVisibility(View.VISIBLE);
-                    pop_text1.setText(detail.SKUAttributes.get(0).name);
-                    AttributesAdapter adapter4 = new AttributesAdapter(detail.SKUAttributes.get(0).values);
-                    pop_gv1.setAdapter(adapter4);
-                    pop_texts.add(pop_text1);
-                    adapters.add(adapter4);
-                    break;
+
+
+            for (int i = 0; i < detail.SKUAttributes.size(); i++) {
+                //设置sku的title
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+                lp.setMargins(0, Utils.dip2px(getApplicationContext(), 15), 0, 0);
+                TextView popTitle = new TextView(getApplicationContext());
+                popTitle.setLayoutParams(lp);
+                popTitle.setText(detail.SKUAttributes.get(i).name);
+                popTitle.setTextSize(16);
+                popTitle.setTextColor(getResources().getColor(R.color.main_index_gary));
+                add_sku_tv_gv_ll.addView(popTitle);
+                pop_texts.add(popTitle);
+
+                //设置sku的list
+                LinearLayout.LayoutParams lp1 = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+                lp1.setMargins(0, Utils.dip2px(getApplicationContext(), 10), Utils.dip2px(getApplicationContext(), 10), 0);
+                CustomListView customListView = new CustomListView(getApplicationContext(), null);
+                customListView.setLayoutParams(lp1);
+                customListView.setDividerHeight(Utils.dip2px(getApplicationContext(), 10));
+                customListView.setDividerWidth(Utils.dip2px(getApplicationContext(), 10));
+                AttributesAdapter adapter = new AttributesAdapter(detail.SKUAttributes.get(i).values);
+                customListView.setAdapter(adapter);
+                adapters.add(adapter);
+
+                LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+                LinearLayout linearLayout = new LinearLayout(getApplicationContext());
+                linearLayout.setLayoutParams(lp2);
+                linearLayout.setOrientation(LinearLayout.VERTICAL);
+                linearLayout.addView(customListView);
+                add_sku_tv_gv_ll.addView(linearLayout);
+
             }
+
         }
         //如果单项为1时，默认选中
         try {
             for (int i = 0; i < adapters.size(); i++) {
                 if (adapters.get(i).getCount() == 1) {
-                    adapters.get(i).states.put(detail.SKUAttributes.get(adapters.size() - (i + 1)).values.get(0), true);
+                    adapters.get(i).states.put(detail.SKUAttributes.get(i).values.get(0), true);
                 }
             }
             getRemainAttr();
@@ -553,6 +538,10 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
             AdditionsAdapter.this.notifyDataSetChanged();
         }
 
+        public void clear() {
+            list.clear();
+            AdditionsAdapter.this.notifyDataSetChanged();
+        }
 
         @Override
         public int getCount() {
@@ -703,7 +692,7 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
                 RequestParams params = new RequestParams();
                 Gson gson = new Gson();
                 Map<String, Object> map = new HashMap<>();
-                if (isLogin()){
+                if (isLogin()) {
                     map.put("token", Store.User.queryMe().token);
                 }
                 map.put("quantity", fenshu);
@@ -886,6 +875,8 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
             if (fragment != null) {
                 View view = fragment.getView().findViewById(R.id.product_attribute_rel);
                 product_price = (TextView) fragment.getView().findViewById(R.id.product_price);
+                market_price_ll = (LinearLayout) fragment.getView().findViewById(R.id.market_price_ll);//市场价 lin
+                market_price_tv = (TextView) fragment.getView().findViewById(R.id.market_price_tv);
                 product_attribute = (TextView) fragment.getView().findViewById(R.id.product_attribute);
                 //如果是下架的商品 不展示sku
                 if (view != null) {
@@ -918,7 +909,7 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
             RemainGoodsAttr remainGoodsAttr = (RemainGoodsAttr) req.getData();
             if ("1000".equals(remainGoodsAttr.getStatus())) {
                 //更新popWindow中和商品详情中的的价格区间
-                if (StringUtil.checkStr(remainGoodsAttr.data.price.min) && StringUtil.checkStr(remainGoodsAttr.data.price.max)) {
+                if (remainGoodsAttr.data.price != null && StringUtil.checkStr(remainGoodsAttr.data.price.min) && StringUtil.checkStr(remainGoodsAttr.data.price.max)) {
                     if (!detail.presale) {
 
                         if (remainGoodsAttr.data.price.min.equals(remainGoodsAttr.data.price.max)) {
@@ -943,8 +934,8 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
 
                                 try {
                                     double price_total = Double.parseDouble(remainGoodsAttr.data.price.min) + price;
-                                    pop_price.setText("¥" + reduceDouble(price_total));
-                                    product_price.setText("¥" + reduceDouble(price_total));
+                                    pop_price.setText("¥" + StringUtil.reduceDouble(price_total));
+                                    product_price.setText("¥" + StringUtil.reduceDouble(price_total));
                                 } catch (Exception e) {
                                     pop_price.setText("¥" + remainGoodsAttr.data.price.min);
                                     product_price.setText("¥" + remainGoodsAttr.data.price.min);
@@ -979,8 +970,8 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
                                 try {
                                     double price_min = Double.parseDouble(remainGoodsAttr.data.price.min) + price;
                                     double price_max = Double.parseDouble(remainGoodsAttr.data.price.max) + price;
-                                    pop_price.setText("¥" + reduceDouble(price_min) + "-" + reduceDouble(price_max));
-                                    product_price.setText("¥" + reduceDouble(price_min) + "-" + reduceDouble(price_max));
+                                    pop_price.setText("¥" + StringUtil.reduceDouble(price_min) + "-" + StringUtil.reduceDouble(price_max));
+                                    product_price.setText("¥" + StringUtil.reduceDouble(price_min) + "-" + StringUtil.reduceDouble(price_max));
                                 } catch (Exception e) {
                                     pop_price.setText
                                             ("¥" + remainGoodsAttr.data.price.min + "-" + remainGoodsAttr.data.price.max);
@@ -996,10 +987,90 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
                         }
                     }
                 }
+                //更新popWindow中和商品详情中的的参考价 价格区间
+
+                if (remainGoodsAttr.data.market_price != null
+                        && StringUtil.checkStr(remainGoodsAttr.data.market_price.min)
+                        && StringUtil.checkStr(remainGoodsAttr.data.market_price.max)
+                        &&!remainGoodsAttr.data.market_price.min.equals("0")
+                        &&!remainGoodsAttr.data.market_price.max.equals("0")){
+                    market_price_ll.setVisibility(View.VISIBLE);
+                    if (remainGoodsAttr.data.market_price.min.equals(remainGoodsAttr.data.market_price.max)) {
+                        //加入规格的价钱
+                        if (additionsAdapter != null) {
+                            float price = 0;
+                            List<String> list1 = new ArrayList<>();
+                            for (Map.Entry<String, Boolean> entry : additionsAdapter.states.entrySet()) {
+                                if (entry.getValue()) {
+                                    list1.add(entry.getKey());
+                                }
+                            }
+                            for (int i = 0; i < additionsAdapter.list.size(); i++) {
+                                if (list1.contains(additionsAdapter.list.get(i)._id)) {
+                                    try {
+                                        price += Double.parseDouble(additionsAdapter.list.get(i).price);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+
+                            try {
+                                double price_total = Double.parseDouble(remainGoodsAttr.data.market_price.min) + price;
+                                market_price_tv.setText("¥" + StringUtil.reduceDouble(price_total));
+                            } catch (Exception e) {
+                                market_price_tv.setText("¥" + remainGoodsAttr.data.market_price.min);
+                            }
+
+                        } else {
+                            market_price_tv.setText("¥" + remainGoodsAttr.data.market_price.min);
+                        }
+
+
+                    } else {
+                        //加入规格的价钱
+                        if (additionsAdapter != null) {
+                            float price = 0;
+                            List<String> list1 = new ArrayList<>();
+                            for (Map.Entry<String, Boolean> entry : additionsAdapter.states.entrySet()) {
+                                if (entry.getValue()) {
+                                    list1.add(entry.getKey());
+                                }
+                            }
+                            for (int i = 0; i < additionsAdapter.list.size(); i++) {
+                                if (list1.contains(additionsAdapter.list.get(i)._id)) {
+                                    try {
+                                        price += Double.parseDouble(additionsAdapter.list.get(i).price);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+
+                            try {
+                                double price_min = Double.parseDouble(remainGoodsAttr.data.market_price.min) + price;
+                                double price_max = Double.parseDouble(remainGoodsAttr.data.market_price.max) + price;
+                                market_price_tv.setText("¥" + StringUtil.reduceDouble(price_min) + "-" + StringUtil.reduceDouble(price_max));
+                            } catch (Exception e) {
+                                market_price_tv.setText
+                                        ("¥" + remainGoodsAttr.data.market_price.min + "-" + remainGoodsAttr.data.market_price.max);
+                            }
+                        } else {
+
+                            market_price_tv.setText
+                                    ("¥" + remainGoodsAttr.data.market_price.min + "-" + remainGoodsAttr.data.market_price.max);
+                        }
+                    }
+                } else {
+
+                    market_price_ll.setVisibility(View.GONE);
+                }
+
+
                 //已选的SKU
                 StringBuilder stringBuilder = new StringBuilder();
                 stringBuilder.append("已选择");
-                for (int i = adapters.size() - 1; i >= 0; i--) {
+                for (int i = 0; i < adapters.size(); i++) {
                     for (Map.Entry<String, Boolean> entry : adapters.get(i).states.entrySet()) {
                         if (entry.getValue()) {
                             if (!entry.getKey().equals("")) {
@@ -1016,9 +1087,12 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
                 }
                 if (remainGoodsAttr.data.SKU != null) {
                     SKUId = remainGoodsAttr.data.SKU._id;
-                    if (additionsAdapter != null && additionsAdapter.getCount() > 0) {
+                    if (remainGoodsAttr.data.additions != null && !remainGoodsAttr.data.additions.isEmpty()) {
                         pop_text5.setVisibility(View.VISIBLE);
                         pop_gv5.setVisibility(View.VISIBLE);
+                    } else {
+                        pop_text5.setVisibility(View.GONE);
+                        pop_gv5.setVisibility(View.GONE);
                     }
                 } else {
                     pop_text5.setVisibility(View.GONE);
@@ -1059,17 +1133,27 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
                         stringArrayList.add(additions._id);
                     }
 
-
-                    Iterator<Map.Entry<String, Boolean>> it = additionsAdapter.states.entrySet().iterator();
-                    while (it.hasNext()) {
-                        Map.Entry<String, Boolean> entry = it.next();
-                        if (!stringArrayList.contains(entry.getKey())) {
-                            it.remove();
-                        }
-                        additionsAdapter.notifyDataSetChanged();
-                    }
                     if (additionsAdapter != null) {
+                        Iterator<Map.Entry<String, Boolean>> it = additionsAdapter.states.entrySet().iterator();
+                        while (it.hasNext()) {
+                            Map.Entry<String, Boolean> entry = it.next();
+                            if (!stringArrayList.contains(entry.getKey())) {
+                                it.remove();
+                            }
+                            additionsAdapter.notifyDataSetChanged();
+                        }
                         additionsAdapter.addAll(list);
+                    }
+                } else {
+
+                    if (additionsAdapter != null) {
+                        additionsAdapter.clear();
+                        Iterator<Map.Entry<String, Boolean>> it = additionsAdapter.states.entrySet().iterator();
+                        while (it.hasNext()) {
+                            it.next();
+                            it.remove();
+                            additionsAdapter.notifyDataSetChanged();
+                        }
                     }
                 }
             }
@@ -1087,16 +1171,4 @@ public class ShangpinDetailActivity extends BaseActivity implements ViewTreeObse
     }
 
 
-    /**
-     * 去掉double类型尾部的0
-     */
-    public String reduceDouble(double price) {
-        int i = (int) price;
-        if (i == price) {
-            return i + "";
-        } else {
-            return StringUtil.toTwoString(price + "");
-        }
-
-    }
 }

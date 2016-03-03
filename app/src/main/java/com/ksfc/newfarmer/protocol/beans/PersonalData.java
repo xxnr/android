@@ -30,7 +30,6 @@ public class PersonalData extends ResponseResult implements Serializable {
         public String name;
         public boolean sex;
         public Address defaultAddress;
-        public float score;
 
         public UserAddress address;
 

@@ -28,7 +28,7 @@
             android:background="@color/white"
             android:orientation="horizontal">
 
-            <RadioButton
+            <com.ksfc.newfarmer.widget.DrawableCenterTextView
                 android:id="@+id/radio_button1"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -36,8 +36,7 @@
                 android:background="@drawable/tab_selector_invite"
                 android:button="@null"
                 android:drawableLeft="@drawable/tab_selsect_button_invite1"
-                android:drawablePadding="3dp"
-                android:paddingLeft="18dp"
+                android:drawablePadding="5dp"
                 android:text="我的客户"
                 android:textColor="@color/tab_selector_invite_textcolor"
                  />
@@ -47,7 +46,7 @@
                 android:layout_height="match_parent"
                 android:background="@color/gray" />
 
-            <RadioButton
+            <com.ksfc.newfarmer.widget.DrawableCenterTextView
                 android:id="@+id/radio_button2"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -55,8 +54,7 @@
                 android:background="@drawable/tab_selector_invite"
                 android:button="@null"
                 android:drawableLeft="@drawable/tab_selsect_button_invite2"
-                android:drawablePadding="3dp"
-                android:paddingLeft="16dp"
+                android:drawablePadding="5dp"
                 android:text="我的代表"
                 android:textColor="@color/tab_selector_invite_textcolor"
                  />
@@ -67,7 +65,7 @@
                 android:layout_height="match_parent"
                 android:background="@color/gray" />
 
-            <RadioButton
+            <com.ksfc.newfarmer.widget.DrawableCenterTextView
                 android:id="@+id/radio_button3"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -75,8 +73,7 @@
                 android:background="@drawable/tab_selector_invite"
                 android:button="@null"
                 android:drawableLeft="@drawable/tab_selsect_button_invite3"
-                android:drawablePadding="3dp"
-                android:paddingLeft="16dp"
+                android:drawablePadding="5dp"
                 android:text="客户登记"
                 android:textColor="@color/tab_selector_invite_textcolor"
 

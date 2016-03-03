@@ -9,7 +9,6 @@ import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.activitys.ConsumerOrderActivity;
 import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.protocol.ApiType;
-import com.ksfc.newfarmer.protocol.OnApiDataReceivedCallback;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
 import com.ksfc.newfarmer.protocol.beans.InviteeResult;
@@ -20,14 +19,11 @@ import com.ksfc.newfarmer.utils.StringUtil;
 import android.content.Intent;
 import android.graphics.Color;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 public class InviteFriendsList extends BaseFragment implements PullToRefreshBase.OnRefreshListener2 {

@@ -105,7 +105,7 @@ public class ArraysUtil {
 
 	@SuppressWarnings("null")
 	public static <T> void reverse(List<T> list) {
-		if (null == list && list.size() <= 0) {
+		if (null == list ||list.size() <= 0) {
 			return;
 		}
 		int size = list.size();

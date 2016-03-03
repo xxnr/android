@@ -6,9 +6,6 @@ import com.ksfc.newfarmer.protocol.Request;
 
 import android.os.Bundle;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 public class QiandaoActivity extends BaseActivity {
 

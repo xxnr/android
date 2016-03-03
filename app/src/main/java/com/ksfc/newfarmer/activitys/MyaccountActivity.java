@@ -69,6 +69,7 @@ public class MyaccountActivity extends BaseActivity {
         setTitle("我");
         me = Store.User.queryMe();
         initView();
+        //通知“我的”更新数据
         setLeftClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,6 +84,7 @@ public class MyaccountActivity extends BaseActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+            //通知“我的”更新数据
             MsgCenter.fireNull(MsgID.UPDATE_USER, "update");
             finish();
             return true;

@@ -19,6 +19,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import net.yangentao.util.sql.SQLiteHelper;
@@ -295,6 +296,7 @@ public class SerialMap implements SortedMap<String, String> {
 
 	}
 
+	@NonNull
 	@Override
 	public Set<Entry<String, String>> entrySet() {
 		TreeSet<Entry<String, String>> s = new TreeSet<Entry<String, String>>();
@@ -326,6 +328,7 @@ public class SerialMap implements SortedMap<String, String> {
 		return jo.optString("key", null);
 	}
 
+	@NonNull
 	@Override
 	public Collection<String> values() {
 		JSONArray jarr = dbHelper.queryTableMulti(tableName, null);
@@ -369,12 +372,14 @@ public class SerialMap implements SortedMap<String, String> {
 		return m;
 	}
 
+	@NonNull
 	@Override
 	public SortedMap<String, String> headMap(String toKey) {
 		JSONArray arr = dbHelper.queryTableMulti(tableName, "key<?", toKey);
 		return toSortedMap(arr);
 	}
 
+	@NonNull
 	@Override
 	public SortedMap<String, String> subMap(String fromKey, String toKey) {
 		JSONArray arr = dbHelper.queryTableMulti(tableName, "key>=? and key<?",
@@ -382,6 +387,7 @@ public class SerialMap implements SortedMap<String, String> {
 		return toSortedMap(arr);
 	}
 
+	@NonNull
 	@Override
 	public SortedMap<String, String> tailMap(String fromKey) {
 		JSONArray arr = dbHelper.queryTableMulti(tableName, "key>=?", fromKey);

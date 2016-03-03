@@ -183,4 +183,6 @@ public class BitmapUtil {
 		return (int) sdFreeMB;
 	}
 
+
+
 }

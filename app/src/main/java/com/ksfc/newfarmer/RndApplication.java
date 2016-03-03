@@ -6,7 +6,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.ksfc.newfarmer.utils.CrashHandler;
-import com.ksfc.newfarmer.widget.dialog.CustomProgressDialog;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
@@ -18,18 +17,17 @@ import com.umeng.message.PushAgent;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.utils.Log;
-import com.umeng.update.UmengUpdateAgent;
 
 import android.app.Activity;
 import android.app.Application;
-import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.media.SoundPool;
 import android.os.Environment;
 import android.widget.Toast;
 
 import net.yangentao.util.app.App;
+
+import org.apache.http.client.HttpClient;
 
 public class RndApplication extends Application {
 
@@ -62,6 +60,11 @@ public class RndApplication extends Application {
         mPushAgent.enable();
         //初始化社会化分享
         initSocialShare();
+
+
+        System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog");
+        System.setProperty("org.apache.commons.logging.simplelog.showdatetime", "true");
+        System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient", "stdout");
     }
 
     public void initSocialShare() {
@@ -125,7 +128,7 @@ public class RndApplication extends Application {
     }
 
 
-    private Toast toast;
+    public  Toast toast;
 
     /**
      * 短时间显示Toast 作用:不重复弹出Toast,如果当前有toast正在显示，则先取消

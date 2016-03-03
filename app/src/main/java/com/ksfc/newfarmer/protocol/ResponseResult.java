@@ -2,7 +2,6 @@ package com.ksfc.newfarmer.protocol;
 
 import java.io.Serializable;
 
-import com.alibaba.fastjson.annotation.JSONField;
 
 /**
  * 请求数据结果的基类

@@ -1,6 +1,7 @@
 package com.ksfc.newfarmer.activitys;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -12,7 +13,6 @@ import android.webkit.WebViewClient;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
@@ -21,39 +21,48 @@ import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.utils.PopWindowUtils;
 import com.ksfc.newfarmer.widget.dialog.CustomProgressDialog;
+import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.media.UMImage;
 
+
 @SuppressLint("SetJavaScriptEnabled")
 public class ArticleActivity extends BaseActivity {
-    private UMImage image;
-    private String urlImage;
-    private String urlTitle;
-    private String url;
-    private String newsAbstract;
+    private UMImage image;      //分享内容的图片
+    private String urlImage;    //分享内容的图片
+    private String urlTitle;    //分享内容的标题
+    private String url;         //webView加载的url
+    private String shareUrl;        //分享内容的url
+    private String newsAbstract;    //分享内容的摘要
     private PopupWindow popupWindow;
-    private RelativeLayout share_dialog_bg;
-
+    private RelativeLayout share_dialog_bg;//分享dialog的背景
+    //友盟分享的回调
     private UMShareListener umShareListener = new UMShareListener() {
         @Override
         public void onResult(SHARE_MEDIA platform) {
-            Toast.makeText(ArticleActivity.this, platform + " 分享成功啦", Toast.LENGTH_SHORT).show();
+            showToast("分享成功");
+            //分享成功次数统计
+            MobclickAgent.onEvent(ArticleActivity.this, "_shareSuccessCount");
+            //分享成功后关闭对话框
+            if (popupWindow.isShowing()) {
+                popupWindow.dismiss();
+            }
         }
-
         @Override
         public void onError(SHARE_MEDIA platform, Throwable t) {
-            Toast.makeText(ArticleActivity.this, platform + " 分享失败", Toast.LENGTH_SHORT).show();
+            showToast("抱歉，分享失败");
         }
 
         @Override
         public void onCancel(SHARE_MEDIA platform) {
-            Toast.makeText(ArticleActivity.this, platform + " 取消了分享", Toast.LENGTH_SHORT).show();
+            showToast("分享取消");
         }
-    };
 
+    };
 
 
     @Override
@@ -67,29 +76,23 @@ public class ArticleActivity extends BaseActivity {
     public void OnActCreate(Bundle savedInstanceState) {
         setTitle("资讯详情");
         url = getIntent().getStringExtra("articleUrl");
+        shareUrl = getIntent().getStringExtra("shareUrl");
         urlImage = getIntent().getStringExtra("urlImage");
         urlTitle = getIntent().getStringExtra("urlTitle");
         newsAbstract = getIntent().getStringExtra("newsAbstract");
-
+        //默认分享的标题 和图片 摘要
         if (!StringUtil.checkStr(urlTitle)) {
-            urlTitle = "新新农人";
+            urlTitle = "新农资讯";
         }
-        if (!StringUtil.checkStr(url)) {
-            url = "http://www.xinxinnongren.com";
-        }
-
         if (StringUtil.checkStr(urlImage)) {
             image = new UMImage(ArticleActivity.this, urlImage);
         } else {
-            image = new UMImage(ArticleActivity.this, R.drawable.ic_launcher);
+            image = new UMImage(ArticleActivity.this, R.drawable.share_app_icon);
         }
-
         if (!StringUtil.checkStr(newsAbstract)) {
-            newsAbstract = "新新农人";
+            newsAbstract = "分享自@新新农人";
         }
-
-        share_dialog_bg=(RelativeLayout)findViewById(R.id.share_dialog_bg);
-
+        share_dialog_bg = (RelativeLayout) findViewById(R.id.share_dialog_bg);
         WebView web = (WebView) findViewById(R.id.webView);
         // 允许运行js脚本
         web.getSettings().setJavaScriptEnabled(true);
@@ -104,6 +107,7 @@ public class ArticleActivity extends BaseActivity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
+                disMissDialog();
                 setRightImage(R.drawable.share_icon);
                 showRightImage();
                 setRightViewListener(new View.OnClickListener() {
@@ -116,6 +120,7 @@ public class ArticleActivity extends BaseActivity {
         });
         if (StringUtil.checkStr(url)) {
             RndLog.d(TAG, url);
+            showProgressDialog();
             web.loadUrl(url);
         }
 
@@ -123,22 +128,31 @@ public class ArticleActivity extends BaseActivity {
 
     @Override
     public void OnViewClick(View v) {
-        switch (v.getId()) {
-            case R.id.wechat_friends:
-                share(SHARE_MEDIA.WEIXIN);
-                break;
-            case R.id.wechat_circle:
-                share(SHARE_MEDIA.WEIXIN_CIRCLE);
-                break;
-            case R.id.qq_share:
-                share(SHARE_MEDIA.QQ);
-                break;
-            case R.id.qq_zone_share:
-                share(SHARE_MEDIA.QZONE);
-                break;
-
+        if (StringUtil.checkStr(shareUrl)) {
+            switch (v.getId()) {
+                case R.id.wechat_friends:
+                    share(SHARE_MEDIA.WEIXIN);
+                    break;
+                case R.id.wechat_circle:
+                    share(SHARE_MEDIA.WEIXIN_CIRCLE);
+                    break;
+                case R.id.qq_share:
+                    share(SHARE_MEDIA.QQ);
+                    break;
+                case R.id.qq_zone_share:
+                    share(SHARE_MEDIA.QZONE);
+                    break;
+            }
+        } else {
+            switch (v.getId()) {
+                case R.id.wechat_friends:
+                case R.id.wechat_circle:
+                case R.id.qq_share:
+                case R.id.qq_zone_share:
+                    showToast("抱歉，分享失败");
+                    break;
+            }
         }
-
     }
 
     @Override
@@ -146,21 +160,19 @@ public class ArticleActivity extends BaseActivity {
 
     }
 
-
+    //初始化popWindow
     public void initPopWindow() {
         View popupWindow_view = getLayoutInflater().inflate(
                 R.layout.pop_layout_share_dialog, null);
-
         TextView wechat_friends = (TextView) popupWindow_view.findViewById(R.id.wechat_friends);
         TextView wechat_circle = (TextView) popupWindow_view.findViewById(R.id.wechat_circle);
         TextView qq = (TextView) popupWindow_view.findViewById(R.id.qq_share);
         TextView qq_zone = (TextView) popupWindow_view.findViewById(R.id.qq_zone_share);
-
+        //增加按纽点击样式
         wechat_friends.setOnClickListener(this);
         wechat_circle.setOnClickListener(this);
         qq.setOnClickListener(this);
         qq_zone.setOnClickListener(this);
-
 
         // 创建PopupWindow实例,200,LayoutParams.MATCH_PARENT分别是宽度和高度
         popupWindow = new PopupWindow(popupWindow_view,
@@ -173,11 +185,13 @@ public class ArticleActivity extends BaseActivity {
         popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
-                PopWindowUtils.setBackgroundBlack(share_dialog_bg,1);
+                PopWindowUtils.setBackgroundBlack(share_dialog_bg, 1);
             }
         });
 
-        Config.dialog = CustomProgressDialog.createLoadingDialog(this, "");
+
+
+
     }
 
     //显示popWindow
@@ -187,27 +201,50 @@ public class ArticleActivity extends BaseActivity {
         } else {
             initPopWindow();
         }
-        PopWindowUtils.setBackgroundBlack(share_dialog_bg,0);
+        PopWindowUtils.setBackgroundBlack(share_dialog_bg, 0);
         popupWindow.showAtLocation(parent, Gravity.BOTTOM, 0, 0);
 
     }
 
-
-    public void share(SHARE_MEDIA share_media) {
-        try {
-            new ShareAction(this)
-                    .setPlatform(share_media)
-                    .setCallback(umShareListener)
-                    .withText(newsAbstract)
-                    .withTitle(urlTitle)
-                    .withTargetUrl(url)
-                    .withMedia(image)
-                    .share();
-        } catch (Exception e) {
-            showToast("分享失败");
+    /**
+     * 分享到不同的第三方平台
+     *
+     * @param share_media 第三方平台
+     */
+    public synchronized void share(SHARE_MEDIA share_media) {
+        //修改分享默认的dialog
+        Config.dialog = CustomProgressDialog.createLoadingDialog(this, "分享中...", Color.parseColor("#FFFFFF"));
+        boolean install;
+        if (share_media == SHARE_MEDIA.QZONE) {
+            install = UMShareAPI.get(this).isInstall(this, SHARE_MEDIA.QQ);
+        } else {
+            install = UMShareAPI.get(this).isInstall(this, share_media);
         }
-
+        if (install) {
+            try {
+                new ShareAction(this)
+                        .setPlatform(share_media)
+                        .setCallback(umShareListener)
+                        .withText(newsAbstract)
+                        .withTitle(urlTitle)
+                        .withTargetUrl(shareUrl)
+                        .withMedia(image)
+                        .share();
+            } catch (Exception e) {
+                showToast("抱歉，分享失败");
+            }
+        } else {
+            if (share_media == SHARE_MEDIA.WEIXIN || share_media == SHARE_MEDIA.WEIXIN_CIRCLE) {
+                showToast("尚未安装微信客户端");
+            } else if (share_media == SHARE_MEDIA.QQ || share_media == SHARE_MEDIA.QZONE) {
+                showToast("尚未安装QQ客户端");
+            }
+        }
     }
 
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
+    }
 }

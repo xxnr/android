@@ -17,9 +17,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,7 +27,7 @@ import net.yangentao.util.app.App;
 @TargetApi(Build.VERSION_CODES.GINGERBREAD)
 public class RetrievePasswordActivity extends BaseActivity {
     private EditText backedit1, backyanzhengma, backnewpassword, confimPasword;
-    private TextView backgetVerificationCode, backdengLubutton;
+    private TextView backgetVerificationCode;
     private String mobile;
     private String password, smsCode;
 
@@ -40,7 +38,6 @@ public class RetrievePasswordActivity extends BaseActivity {
 
     @Override
     public void OnActCreate(Bundle savedInstanceState) {
-        backdengLubutton = (TextView) findViewById(R.id.backdengLubutton);
         backgetVerificationCode = (TextView) findViewById(R.id.backgetVerificationCode);
         backedit1 = (EditText) findViewById(R.id.backedit1);
         backyanzhengma = (EditText) findViewById(R.id.backyanzhengma);

@@ -3,7 +3,6 @@ package com.ksfc.newfarmer;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URL;
 
 import com.ksfc.newfarmer.utils.IoUtils;
 
@@ -19,7 +18,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.MediaStore.MediaColumns;
-import android.util.Log;
 import android.widget.Toast;
 import net.yangentao.util.TaskUtil;
 import net.yangentao.util.TaskUtil.BackFore;

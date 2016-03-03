@@ -29,8 +29,10 @@ import com.ksfc.newfarmer.protocol.beans.InviteeResult;
 import com.ksfc.newfarmer.protocol.beans.IsPotentialCustomerResult;
 import com.ksfc.newfarmer.protocol.beans.JifenData;
 import com.ksfc.newfarmer.protocol.beans.LoginResult;
+import com.ksfc.newfarmer.protocol.beans.MinPayPriceResult;
 import com.ksfc.newfarmer.protocol.beans.MyInviteResult;
 import com.ksfc.newfarmer.protocol.beans.MyOrderDetailResult;
+import com.ksfc.newfarmer.protocol.beans.NominatedInviterResult;
 import com.ksfc.newfarmer.protocol.beans.Payback;
 import com.ksfc.newfarmer.protocol.beans.PersonalData;
 import com.ksfc.newfarmer.protocol.beans.PointResult;
@@ -254,7 +256,7 @@ public enum ApiType {
      */
     UPDATE_ADDRESS("/api/v2.0/user/updateUserAddress", ResponseResult.class),
     /**
-     *    选择配送地址接口
+     * 选择配送地址接口
      */
     SELECT_ADDRESS("/app/order/addBuildingUserId", ResponseResult.class),
     /**
@@ -339,9 +341,16 @@ public enum ApiType {
      * 用户报备 获取潜在客户详情
      */
     GET_POTENTIAL_CUSTOMER_DETAIL("/api/v2.1/potentialCustomer/get", PotentialCustomerDetailResult.class),
-
+    /**
+     * 用户相关 获取推荐的新农代表:
+     */
+    GET_RECOMMEND_INVITER("/api/v2.1/user/getNominatedInviter", NominatedInviterResult.class),
+    /**
+     * 订单相关 获取最小支付金额:
+     */
+    GET_MIN_PAY_PRICE("/api/v2.0/getMinPayPrice/", MinPayPriceResult.class),
     TEST("", ResponseResult.class);
-         private static String server_url = "http://api.xinxinnongren.com";
+             private static String server_url = "http://api.xinxinnongren.com";
 //    private static String server_url = "http://101.200.194.203";
 //     private static String server_url = "http://192.168.1.15";
 
@@ -365,13 +374,6 @@ public enum ApiType {
     private ApiType(String opt, Class<? extends ResponseResult> clazz) {
         this.opt = opt;
         this.clazz = clazz;
-    }
-
-    private ApiType(String opt, Class<? extends ResponseResult> clazz,
-                    String server_url) {
-        this.opt = opt;
-        this.clazz = clazz;
-        // this.server_url = server_url;
     }
 
     private ApiType(String opt, RequestMethod requestMethod) {

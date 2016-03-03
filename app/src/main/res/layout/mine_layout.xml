@@ -190,6 +190,7 @@
 
 
     <LinearLayout
+        android:baselineAligned="false"
         android:id="@+id/my_order_open_ll"
         android:layout_width="match_parent"
         android:layout_height="65dp"

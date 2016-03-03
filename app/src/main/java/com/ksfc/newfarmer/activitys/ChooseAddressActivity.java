@@ -38,7 +38,7 @@ import java.util.List;
  */
 public class ChooseAddressActivity extends BaseActivity {
     private ListView address_list;
-    HashMap<String, Integer> map = new HashMap<String, Integer>();
+    HashMap<String, Integer> map = new HashMap<>();
     private final int reqestcode = 1;
     private addressAdapter adapter;
     private List<AddressList.Address> rows;

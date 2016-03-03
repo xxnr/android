@@ -83,7 +83,6 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
         RequestParams params1 = new RequestParams();
         execApi(ApiType.GETHOMEPIC, params1);
         showProgressDialog();
-        scrollView.setRefreshing();
         getNyc();
         getData();
         getClassId();
@@ -491,5 +490,20 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
         // 获取首页轮播图
         RequestParams params1 = new RequestParams();
         execApi(ApiType.GETHOMEPIC, params1);
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (!(qcAdapter!=null
+                &&qcAdapter.getCount()>0
+                &&hfAdapter!=null
+                &&huafei_gv.getCount()>0)){
+            showProgressDialog();
+            getNyc();
+            getData();
+        }
     }
 }

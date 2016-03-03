@@ -41,7 +41,7 @@ public class HttpUtil {
 
 	public static String httpGetTextUtf8(String url, String argName,
 			String argValue) {
-		List<NameValuePair> args = new ArrayList<NameValuePair>();
+		List<NameValuePair> args = new ArrayList<>();
 		args.add(new BasicNameValuePair(argName, argValue));
 		return httpGetTextUtf8(url, args);
 	}

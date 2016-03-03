@@ -40,7 +40,8 @@ public class LoginActivity extends BaseActivity {
     private String phoneNumber;
     private String phonePassword;
     private int id; // 获取页面跳转过来的id,登陆之后跳转回到哪一页面
-
+    private boolean isFromReg=false; // 获取页面跳转过来的id,登陆之后跳转回到哪一页面
+    private String reg_phone;
     @Override
     public int getLayout() {
         return R.layout.login_layout;
@@ -49,6 +50,19 @@ public class LoginActivity extends BaseActivity {
     @Override
     public void OnActCreate(Bundle savedInstanceState) {
         id = getIntent().getIntExtra("id", 1);
+        //接收注册的号码
+        Bundle bundle = getIntent().getExtras();
+        if (bundle!=null){
+            isFromReg=bundle.getBoolean("from_reg",false);
+            reg_phone=bundle.getString("reg_phone");
+        }
+
+        initView();
+    }
+
+
+    public void initView(){
+
         login_layout_phone = (EditText) findViewById(R.id.login_layout_phone);
         login_layoutpassword = (EditText) findViewById(R.id.login_layoutpassword);
         setViewClick(R.id.login_layout_complete);
@@ -56,15 +70,22 @@ public class LoginActivity extends BaseActivity {
         setViewClick(R.id.login_layoutReg);
         setTitle("登录");
 
-        //获取上次保存再本地的手机号
-        PreferenceUtil pu = new PreferenceUtil();
-        pu.init(this, "config");
-        String lastPhoneNumber = pu.getString("lastPhoneNumber", "");
-        if (!StringUtil.empty(lastPhoneNumber)) {
-            login_layout_phone.setText(lastPhoneNumber);
+        if (isFromReg&&StringUtil.checkStr(reg_phone)){
+            login_layout_phone.setText(reg_phone);
             login_layout_phone.clearFocus();
             login_layoutpassword.requestFocus();
+        }else {
+            //获取上次保存再本地的手机号
+            PreferenceUtil pu = new PreferenceUtil();
+            pu.init(this, "config");
+            String lastPhoneNumber = pu.getString("lastPhoneNumber", "");
+            if (StringUtil.checkStr(lastPhoneNumber)) {
+                login_layout_phone.setText(lastPhoneNumber);
+                login_layout_phone.clearFocus();
+                login_layoutpassword.requestFocus();
+            }
         }
+
 
         setLeftClickListener(new OnClickListener() {
 
@@ -83,6 +104,25 @@ public class LoginActivity extends BaseActivity {
             }
         });
 
+    }
+
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+            if (id == 0) {
+                disMissDialog();
+                finish();
+            } else {
+                disMissDialog();
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.putExtra("id", id);
+                startActivity(intent);
+                finish();
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override
@@ -120,23 +160,7 @@ public class LoginActivity extends BaseActivity {
         }
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-            if (id == 0) {
-                disMissDialog();
-                finish();
-            } else {
-                disMissDialog();
-                Intent intent = new Intent(this, MainActivity.class);
-                intent.putExtra("id", id);
-                startActivity(intent);
-                finish();
-            }
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
-    }
+
 
     @Override
     public void onResponsed(Request req) {

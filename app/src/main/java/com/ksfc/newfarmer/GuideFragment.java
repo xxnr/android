@@ -1,6 +1,5 @@
 package com.ksfc.newfarmer;
 
-import com.ksfc.newfarmer.activitys.LoginActivity;
 
 import android.content.Intent;
 import android.os.Bundle;

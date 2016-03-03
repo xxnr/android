@@ -31,7 +31,7 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/titleview"
         android:layout_centerInParent="true"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/myself_userImg_1"
@@ -45,6 +45,7 @@
         <TextView
             android:id="@+id/shop_text1"
             android:layout_width="wrap_content"
+            android:textColor="@color/main_index_gary"
             android:layout_height="wrap_content"
             android:layout_below="@id/myself_userImg_1"
             android:layout_centerHorizontal="true"
@@ -53,6 +54,7 @@
 
         <TextView
             android:id="@+id/shop_text2"
+            android:textColor="@color/main_index_gary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/shop_text1"
@@ -103,6 +105,7 @@
         <include layout="@layout/line_lay"/>
 
         <LinearLayout
+            android:baselineAligned="false"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">

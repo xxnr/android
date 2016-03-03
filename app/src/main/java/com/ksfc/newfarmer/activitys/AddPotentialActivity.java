@@ -3,10 +3,7 @@ package com.ksfc.newfarmer.activitys;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.Selection;
-import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -16,30 +13,18 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.ksfc.newfarmer.BaseActivity;
-import com.ksfc.newfarmer.MainActivity;
-import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
 import com.ksfc.newfarmer.protocol.beans.IsPotentialCustomerResult;
-import com.ksfc.newfarmer.protocol.beans.LoginResult;
-import com.ksfc.newfarmer.protocol.beans.TownList;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.MaxLengthWatcher;
 import com.ksfc.newfarmer.utils.StringUtil;
-import com.lidroid.xutils.HttpUtils;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
 
 import net.yangentao.util.msg.MsgCenter;
 
-import org.apache.http.entity.StringEntity;
-
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -285,7 +270,7 @@ public class AddPotentialActivity extends BaseActivity {
         }
 
         map1.put("buyIntentions", productIdList);
-        if (isLogin()){
+        if (isLogin()) {
             map1.put("token", Store.User.queryMe().token);
         }
         Gson gson = new Gson();

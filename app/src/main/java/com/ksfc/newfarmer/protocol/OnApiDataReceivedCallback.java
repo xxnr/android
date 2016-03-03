@@ -1,6 +1,5 @@
 package com.ksfc.newfarmer.protocol;
 
-import android.content.Context;
 
 /**
  * 接口数据的回调

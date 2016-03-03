@@ -378,6 +378,7 @@ public class ShoppingCartActivity extends BaseActivity {
             String jsonString = gson.toJson(map);
             params.put("JSON", jsonString);
             execApi(ApiType.GET_LOCAL_SHOPCART_LIST.setMethod(ApiType.RequestMethod.POSTJSON), params);
+            showProgressDialog();
             if (adapter == null) {
                 adapter = new shopCartAdapter();
                 shopCart_list.setAdapter(adapter);
@@ -1394,6 +1395,8 @@ public class ShoppingCartActivity extends BaseActivity {
         inCartMap.clear();
         inShopMap.clear();
         notifyCheckedChanged();
+        null_shop_cart_layout
+                .setVisibility(View.GONE);
         showProgressDialog();
         getData();
     }

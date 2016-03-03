@@ -27,7 +27,6 @@
         android:id="@+id/wv_date"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
-        gravity="center_vertical"
         android:background="@color/white" />
 
     <View

@@ -28,8 +28,8 @@
                 <TextView
                     android:id="@+id/tv_guid1"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.0"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
                     android:gravity="center"
                     android:text="商品描述"
                     android:textColor="@color/main_index_gary"
@@ -61,7 +61,7 @@
                 <TextView
                     android:id="@+id/tv_guid2"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_weight="1.0"
                     android:gravity="center"
                     android:text="详细参数"
@@ -94,7 +94,7 @@
                 <TextView
                     android:id="@+id/tv_guid3"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_weight="1.0"
                     android:gravity="center"
                     android:text="服务说明 "

@@ -1,13 +1,11 @@
 package com.ksfc.newfarmer.activitys;
 
-import java.security.acl.Group;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
@@ -25,7 +23,6 @@ import com.ksfc.newfarmer.protocol.RequestParams;
 import com.ksfc.newfarmer.protocol.beans.PotentialListResult;
 
 import net.yangentao.util.PreferenceUtil;
-import net.yangentao.util.msg.MsgCenter;
 
 public class NewFramerInvite extends BaseActivity implements
         OnCheckedChangeListener {
@@ -92,12 +89,9 @@ public class NewFramerInvite extends BaseActivity implements
         friendsList = new InviteFriendsList();
         myInviter = new MyInviter();
         potentialCustomer = new PotentialCustomer();
-
         fragmentManager = getSupportFragmentManager();
         FragmentTransaction tanTransaction = fragmentManager.beginTransaction();
         tanTransaction.add(R.id.newframentfragment, friendsList);
-        tanTransaction.add(R.id.newframentfragment, myInviter);
-        tanTransaction.add(R.id.newframentfragment, potentialCustomer);
         tanTransaction.commit();
 
         RadioButton radioButton = (RadioButton) findViewById(R.id.radio_button3);//客户登记按钮
@@ -110,11 +104,7 @@ public class NewFramerInvite extends BaseActivity implements
         // 设置默认选中
         radioGroup = (RadioGroup) findViewById(R.id.radioGroup_invite);
         radioGroup.setOnCheckedChangeListener(this);
-
         radioGroup.check(R.id.radio_button1);
-
-
-        setViewClick(R.id.customer_reg_bg);
         setViewClick(R.id.customer_reg_bg_button);
     }
 
@@ -123,9 +113,6 @@ public class NewFramerInvite extends BaseActivity implements
         // TODO Auto-generated method stub
 
         switch (v.getId()) {
-
-            case R.id.customer_reg_bg:
-                break;
             case R.id.customer_reg_bg_button:
                 customer_bg.setVisibility(View.GONE);
                 break;
@@ -154,11 +141,15 @@ public class NewFramerInvite extends BaseActivity implements
             tanTransaction.hide(myInviter);
             tanTransaction.hide(potentialCustomer);
         } else if (checkedId == R.id.radio_button2) {
+            if (!fragmentManager.getFragments().contains(myInviter)){
+                tanTransaction.add(R.id.newframentfragment, myInviter);
+            }
             tanTransaction.show(myInviter);
             tanTransaction.hide(friendsList);
             tanTransaction.hide(potentialCustomer);
         } else if (checkedId == R.id.radio_button3) {
             //是否是第一次到客户登记tab 如果是的话展示引导
+
             PreferenceUtil pu = new PreferenceUtil();
             pu.init(this, "config");
             boolean isFirst = pu.getBool("first3", true);
@@ -167,6 +158,9 @@ public class NewFramerInvite extends BaseActivity implements
             }
             pu.putBool("first3", false);
 
+            if (!fragmentManager.getFragments().contains(potentialCustomer)){
+                tanTransaction.add(R.id.newframentfragment, potentialCustomer);
+            }
             tanTransaction.show(potentialCustomer);
             tanTransaction.hide(myInviter);
             tanTransaction.hide(friendsList);

@@ -58,7 +58,6 @@
                 android:layout_weight="1"
                 android:background="@drawable/dialog_btn_right_bg_selector"
                 android:gravity="center"
-                android:onClick="ok"
                 android:textColor="@color/green"
                  />
         </LinearLayout>

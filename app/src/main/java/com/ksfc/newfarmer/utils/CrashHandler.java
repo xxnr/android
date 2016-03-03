@@ -37,7 +37,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
 	// 程序的Context对象
 	private Context mContext;
 	// 用来存储设备信息和异常信息
-	private Map<String, String> infos = new HashMap<String, String>();
+	private Map<String, String> infos = new HashMap<>();
 	// 用于格式化日期,作为日志文件名的一部分
 	private DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
 
@@ -172,11 +172,11 @@ public class CrashHandler implements UncaughtExceptionHandler {
 	 * @return 返回文件名称,便于将文件传送到服务器
 	 */
 	private String saveCatchInfo2File(Throwable ex) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		for (Map.Entry<String, String> entry : infos.entrySet()) {
 			String key = entry.getKey();
 			String value = entry.getValue();
-			sb.append(key + "=" + value + "\n");
+			sb.append(key).append("=").append(value).append("\n");
 		}
 		Writer writer = new StringWriter();
 		PrintWriter printWriter = new PrintWriter(writer);

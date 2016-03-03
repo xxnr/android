@@ -8,7 +8,7 @@ import java.util.List;
 public class GetGoodsDetail extends ResponseResult implements Serializable {
     public GoodsDetail datas;
 
-    public  static class GoodsDetail implements Serializable {
+    public static class GoodsDetail implements Serializable {
 
         public Boolean istop;
         public String deposit;
@@ -53,12 +53,19 @@ public class GetGoodsDetail extends ResponseResult implements Serializable {
 
         public SKUPrice SKUPrice;
 
+        public SKUMarketPrice SKUMarketPrice;
+
         public static class SKUPrice implements Serializable {
 
             public String min;
             public String max;
 
 
+        }
+
+        public static class SKUMarketPrice implements Serializable {
+            public String min;
+            public String max;
         }
 
         public List<SKUAdditions> SKUAdditions;//附加选项
@@ -74,7 +81,7 @@ public class GetGoodsDetail extends ResponseResult implements Serializable {
 
         public List<SKUAttributes> SKUAttributes;//商品下的sku属性
 
-        public  static class SKUAttributes implements Serializable {
+        public static class SKUAttributes implements Serializable {
 
             public String _id;
             public String name;
@@ -83,7 +90,7 @@ public class GetGoodsDetail extends ResponseResult implements Serializable {
 
         public Brand brand;
 
-        public  static class Brand implements Serializable {
+        public static class Brand implements Serializable {
 
             public String _id;
             public String name;

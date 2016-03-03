@@ -3,13 +3,9 @@
  */
 package com.ksfc.newfarmer.activitys;
 
-import java.util.Timer;
-import java.util.TimerTask;
 
 import com.ksfc.newfarmer.BaseActivity;
-import com.ksfc.newfarmer.MainActivity;
 import com.ksfc.newfarmer.R;
-import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.ApiType.RequestMethod;
 import com.ksfc.newfarmer.protocol.Request;
@@ -24,9 +20,7 @@ import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -245,7 +239,10 @@ public class RegisterActivity extends BaseActivity {
                 // }
                 // }
                 showToast("注册成功");
-                IntentUtil.activityForward(this, LoginActivity.class, null,
+                Bundle bundle =new Bundle();
+                bundle.putBoolean("from_reg",true);
+                bundle.putString("reg_phone", phoneNumber);
+                IntentUtil.activityForward(this, LoginActivity.class, bundle,
                         true);
                 finish();
 

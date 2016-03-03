@@ -42,7 +42,7 @@ import net.yangentao.util.msg.MsgCenter;
  */
 public class AddressmanageActivity extends BaseActivity {
     private ListView address_list;
-    HashMap<String, Integer> map = new HashMap<String, Integer>();//创建一个map集合用于存放  是否是默认地址
+    HashMap<String, Integer> map = new HashMap<>();//创建一个map集合用于存放  是否是默认地址
     private final int reqestcode = 1;
     private addressAdapter adapter;
     private List<AddressList.Address> rows;

@@ -8,7 +8,7 @@ import android.util.Log;
  */
 public class RndLog {
 
-	public static boolean DEBUG_MODE = true;
+	public static boolean DEBUG_MODE = false;
 
 	public static String getPrefix() {
 		// Show thread info if in debugging mode

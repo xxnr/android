@@ -160,6 +160,7 @@ public class InformationResult extends ResponseResult {
             private String title;
             private String datecreated;
             private String url;
+            private String shareurl;
             private String newsabstract;
 
             public void setImage(String image) {
@@ -180,6 +181,10 @@ public class InformationResult extends ResponseResult {
 
             public void setUrl(String url) {
                 this.url = url;
+            }
+
+            public void setShareurl(String shareurl) {
+                this.shareurl = shareurl;
             }
 
             public void setNewsabstract(String newsabstract) {
@@ -204,6 +209,10 @@ public class InformationResult extends ResponseResult {
 
             public String getUrl() {
                 return url;
+            }
+
+            public String getShareurl() {
+                return shareurl;
             }
 
             public String getNewsabstract() {

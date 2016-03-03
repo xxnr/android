@@ -79,7 +79,7 @@ public class Utils {
 				.getDefaultSharedPreferences(context);
 		Editor editor = sp.edit();
 		editor.putString("bind_flag", flagStr);
-		editor.commit();
+		editor.apply();
 	}
 
 	public static List<String> getTagsList(String originalText) {
@@ -112,7 +112,7 @@ public class Utils {
 				.getDefaultSharedPreferences(context);
 		Editor editor = sp.edit();
 		editor.putString("log_text", text);
-		editor.commit();
+		editor.apply();
 	}
 
 	/**

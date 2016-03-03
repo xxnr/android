@@ -96,7 +96,6 @@
                 android:layout_weight="1"
                 android:background="@drawable/login_roate"
                 android:gravity="center"
-                android:onClick="ok"
                 android:text="确定"
                 android:textColor="#fff"
                  />

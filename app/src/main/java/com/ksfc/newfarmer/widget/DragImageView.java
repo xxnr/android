@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.AttributeSet;
-import android.util.FloatMath;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.animation.ScaleAnimation;
@@ -24,6 +23,7 @@ import android.widget.ImageView;
  * @author zhangjia
  * 
  */
+@SuppressWarnings("ALL")
 public class DragImageView extends ImageView {
 
 	private Activity mActivity;
@@ -250,7 +250,7 @@ public class DragImageView extends ImageView {
 		float x = event.getX(0) - event.getX(1);
 		float y = event.getY(0) - event.getY(1);
 
-		return FloatMath.sqrt(x * x + y * y);
+		return (float) Math.sqrt(x * x + y * y);
 	}
 
 	/** 实现处理拖动 **/

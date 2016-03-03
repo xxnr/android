@@ -1,6 +1,5 @@
 package com.ksfc.newfarmer.utils;
 
-import java.io.IOException;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
@@ -20,9 +19,7 @@ public class RSAUtil {
 							.getBytes(), android.util.Base64.DEFAULT));
 			KeyFactory keyFactory = KeyFactory.getInstance("RSA");
 			publicKey = keyFactory.generatePublic(publicKeySpec);
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		} catch (InvalidKeySpecException e) {
+		} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
 			e.printStackTrace();
 		}
 		return (RSAPublicKey) publicKey;
@@ -183,7 +180,7 @@ public class RSAUtil {
 		StringBuilder sb = new StringBuilder();
 		while (i < lines.length) {
 			if (lines[i].charAt(0) != '-') {
-				sb.append(lines[i] + "\r");
+				sb.append(lines[i]).append("\r");
 			}
 			i++;
 		}

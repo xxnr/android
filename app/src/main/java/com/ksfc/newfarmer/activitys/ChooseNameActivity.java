@@ -3,7 +3,6 @@ package com.ksfc.newfarmer.activitys;
 import net.yangentao.util.msg.MsgCenter;
 
 import com.ksfc.newfarmer.BaseActivity;
-import com.ksfc.newfarmer.MainActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.db.Store;
@@ -15,12 +14,10 @@ import com.ksfc.newfarmer.utils.MaxLengthWatcher;
 import com.ksfc.newfarmer.utils.StringUtil;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Selection;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;

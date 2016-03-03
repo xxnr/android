@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.Selection;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.CheckBox;
@@ -26,7 +25,6 @@ import com.ksfc.newfarmer.protocol.beans.LoginResult;
 import com.ksfc.newfarmer.protocol.beans.TownList;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.MaxLengthWatcher;
-import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -370,7 +368,7 @@ public class ImprovePersonActivity extends BaseActivity {
                     @Override
                     public void onSuccess(ResponseInfo<String> arg0) {
 
-                        if (arg0.result.toString().contains("1000")) {
+                        if (arg0.result.contains("1000")) {
                             showToast("保存成功！");
                             MsgCenter.fireNull(MsgID.UPDATE_USER, "update");
                             Intent intent = new Intent(ImprovePersonActivity.this, MainActivity.class);

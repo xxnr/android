@@ -36,8 +36,6 @@ public class MineActivity extends BaseActivity {
     private RelativeLayout titleView, titleview_login;
     private ImageView isVerified;
 
-    private boolean isXXNRAgent = false;
-
 
     @Override
     public int getLayout() {
@@ -50,14 +48,13 @@ public class MineActivity extends BaseActivity {
         setTitle("我的新农人");
         hideLeft();
         initView();
-
+        setData();
         titleview_login = (RelativeLayout) findViewById(R.id.titleview_login);
         titleView = (RelativeLayout) findViewById(R.id.titleview);
-
         if (isLogin()) {
-            getData();
             titleview_login.setVisibility(View.VISIBLE);
             titleView.setVisibility(View.GONE);
+            getData();
         } else {
             titleView.setVisibility(View.VISIBLE);
             titleview_login.setVisibility(View.GONE);
@@ -65,20 +62,85 @@ public class MineActivity extends BaseActivity {
 
     }
 
+    //先展示数据库的信息
+    private void setData() {
+        if (isLogin()) {
+
+            LoginResult.UserInfo userInfo = Store.User.queryMe();
+            if (userInfo != null) {
+
+                //下载并存储头像
+                final String imgUrl = userInfo.photo;
+                if (!StringUtil.empty(imgUrl)) {
+                    ImageLoader.getInstance().displayImage(MsgID.IP + imgUrl,
+                            myself_userImg);
+                } else {
+                    myself_userImg.setImageResource(R.drawable.mine_account_head_default_head);
+                }
+
+                if (!StringUtil.empty(userInfo.nickname)) {
+                    nickname = userInfo.nickname;
+                    nickName_mine.setText("昵称：" + nickname);
+                } else {
+                    nickName_mine.setText("昵称：" + "新新农人");
+                }
+                if (!StringUtil.empty(userInfo.userTypeInName)) {
+                    mine_type.setText("类型：" + userInfo.userTypeInName);
+                } else {
+                    mine_type.setText("类型：还没填写呦~");
+                }
+
+                if (userInfo.isVerified) {
+                    isVerified.setVisibility(View.VISIBLE);
+                } else {
+                    isVerified.setVisibility(View.GONE);
+                }
+
+                if (userInfo.userAddress != null) {
+
+                    String province = "";
+                    String city = "";
+                    String county = "";
+                    String town = "";
+                    if (userInfo.userAddress.province != null) {
+                        province = userInfo.userAddress.province.name;
+                    }
+                    if (userInfo.userAddress.city != null) {
+                        city = userInfo.userAddress.city.name;
+                    }
+                    if (userInfo.userAddress.county != null) {
+                        county = userInfo.userAddress.county.name;
+                    }
+                    if (userInfo.userAddress.town != null) {
+                        town = userInfo.userAddress.town.name;
+                    }
+
+                    String address = StringUtil.checkBufferStr
+                            (province, city, county, town);
+                    if (address.equals("")) {
+                        userAaddress_mine.setText("所在地区：还没填写呦~");
+                    } else {
+                        userAaddress_mine.setText("所在地区：" + address);
+                    }
+                } else {
+                    userAaddress_mine.setText("所在地区：还没填写呦~");
+                }
+            }
+        }
+
+
+    }
+
     /**
-     *
+     * 获取个人信息
      */
     private void getData() {
-        // app/user/personalCenter
-        // locationUserId:
-        // userId
-        // showProgressDialog("正在加载中..");
         RequestParams params = new RequestParams();
-        if (isLogin()){
+        if (isLogin()) {
             params.put("userId", Store.User.queryMe().userid);
         }
+        params.put("flags", "address");
         execApi(ApiType.PERSONAL_CENTER, params);
-        showProgressDialog();
     }
 
     private void initView() {
@@ -103,14 +165,37 @@ public class MineActivity extends BaseActivity {
         setViewClick(R.id.mine_button4);
         setViewClick(R.id.mine_button5);
 
-
+        //修改用信息通知
         MsgCenter.addListener(new MsgListener() {
 
             @Override
             public void onMsg(Object sender, String msg, Object... args) {
-                getData();
+                if (isLogin()) {
+                    getData();
+                    titleview_login.setVisibility(View.VISIBLE);
+                    titleView.setVisibility(View.GONE);
+                } else {
+                    titleView.setVisibility(View.VISIBLE);
+                    titleview_login.setVisibility(View.GONE);
+                }
             }
         }, MsgID.UPDATE_USER);
+        //登陆通知
+        MsgCenter.addListener(new MsgListener() {
+
+            @Override
+            public void onMsg(Object sender, String msg, Object... args) {
+                if (isLogin()) {
+                    titleview_login.setVisibility(View.VISIBLE);
+                    titleView.setVisibility(View.GONE);
+                    getData();
+                } else {
+                    titleView.setVisibility(View.VISIBLE);
+                    titleview_login.setVisibility(View.GONE);
+                }
+            }
+        }, MsgID.ISLOGIN);
+        //退出登录通知
         MsgCenter.addListener(new MsgListener() {
 
             @Override
@@ -259,7 +344,7 @@ public class MineActivity extends BaseActivity {
     }
 
     /**
-     *
+     * 去登陆的dialog
      */
     private void DialogShow() {
         CustomDialog.Builder builder = new CustomDialog.Builder(
@@ -313,8 +398,6 @@ public class MineActivity extends BaseActivity {
             } else {
                 nickName_mine.setText("昵称：" + "新新农人");
             }
-            isXXNRAgent = user.isXXNRAgent;
-
             if (!StringUtil.empty(user.userTypeInName)) {
                 mine_type.setText("类型：" + user.userTypeInName);
             } else {
@@ -409,4 +492,16 @@ public class MineActivity extends BaseActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!isLogin()) {
+            exitLogin();
+            titleView.setVisibility(View.VISIBLE);
+            titleview_login.setVisibility(View.GONE);
+        } else {
+            titleview_login.setVisibility(View.VISIBLE);
+            titleView.setVisibility(View.GONE);
+        }
+    }
 }

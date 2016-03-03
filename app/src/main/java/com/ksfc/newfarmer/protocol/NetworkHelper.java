@@ -1,5 +1,7 @@
 package com.ksfc.newfarmer.protocol;
 
+import android.util.Log;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -13,6 +15,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -46,9 +49,7 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 
-import android.util.Log;
 
-import com.alibaba.fastjson.JSON;
 import com.ksfc.newfarmer.utils.RndLog;
 
 /**
@@ -66,9 +67,9 @@ public class NetworkHelper {
     // ===========================================================
     private static final String TAG = "NetworkHelper";
 
-    private static final int SO_TIMEOUT = 50000;
+    private static final int SO_TIMEOUT = 10*1000;
 
-    private static final int CONNECTION_TIMEOUT = 10000;
+    private static final int CONNECTION_TIMEOUT = 10*1000;
 
     // private HttpClient httpClient;
 
@@ -176,6 +177,7 @@ public class NetworkHelper {
 
     /**
      * postJson
+     *
      * @param url
      * @param urlParams
      * @return
@@ -193,7 +195,7 @@ public class NetworkHelper {
         if (urlParams != null && !urlParams.isEmpty()) {
             String value = urlParams.get("JSON");
             RndLog.d(TAG, "postBody. parameter[" + value + "]");
-            StringEntity entity = new StringEntity(value,"UTF-8");
+            StringEntity entity = new StringEntity(value, "UTF-8");
             entity.setContentEncoding("UTF-8");
             entity.setContentType("application/json");
             post.setEntity(entity);
@@ -237,7 +239,7 @@ public class NetworkHelper {
                 HttpProtocolParams.setUseExpectContinue(params, true);
 
                 // 设置连接管理器的超时
-                ConnManagerParams.setTimeout(params, 10000);
+                ConnManagerParams.setTimeout(params, CONNECTION_TIMEOUT);
                 // 设置连接超时
                 HttpConnectionParams.setConnectionTimeout(params,
                         CONNECTION_TIMEOUT);
@@ -249,11 +251,11 @@ public class NetworkHelper {
                 schReg.register(new Scheme("http", PlainSocketFactory
                         .getSocketFactory(), 80));
                 // schReg.register(new Scheme("https", sf, 443));
-
                 ClientConnectionManager conManager = new ThreadSafeClientConnManager(
                         params, schReg);
 
                 httpClient = new DefaultHttpClient(conManager, params);
+
             } catch (Exception e) {
                 e.printStackTrace();
                 return new DefaultHttpClient();
@@ -311,5 +313,6 @@ public class NetworkHelper {
             return sslContext.getSocketFactory().createSocket();
         }
     }
+
 
 }

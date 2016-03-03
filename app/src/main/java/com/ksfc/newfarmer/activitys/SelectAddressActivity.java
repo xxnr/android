@@ -20,7 +20,6 @@ import com.ksfc.newfarmer.protocol.beans.BuildingList;
 import com.ksfc.newfarmer.protocol.beans.CityList;
 import com.ksfc.newfarmer.protocol.beans.QueueList;
 import com.ksfc.newfarmer.protocol.beans.TownList;
-import com.ksfc.newfarmer.utils.IntentUtil;
 
 import java.util.ArrayList;
 import java.util.List;

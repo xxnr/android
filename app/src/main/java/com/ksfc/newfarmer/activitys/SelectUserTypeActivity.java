@@ -1,16 +1,12 @@
 package com.ksfc.newfarmer.activitys;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -23,12 +19,7 @@ import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
-import com.ksfc.newfarmer.protocol.ResponseResult;
-import com.ksfc.newfarmer.protocol.beans.BuildingList;
-import com.ksfc.newfarmer.protocol.beans.CityList;
 import com.ksfc.newfarmer.protocol.beans.LoginResult;
-import com.ksfc.newfarmer.protocol.beans.QueueList;
-import com.ksfc.newfarmer.protocol.beans.TownList;
 import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.lidroid.xutils.HttpUtils;
@@ -39,9 +30,7 @@ import com.lidroid.xutils.http.client.HttpRequest;
 
 import net.yangentao.util.msg.MsgCenter;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -90,11 +79,11 @@ public class SelectUserTypeActivity extends BaseActivity implements AdapterView.
                     @Override
                     public void onSuccess(ResponseInfo<String> arg0) {
                         disMissDialog();
-                        if (!StringUtil.empty(arg0.result.toString())) {
+                        if (!StringUtil.empty(arg0.result)) {
                             RndLog.v(TAG, arg0.result);
                             list_key = new ArrayList<>();
                             list_value = new ArrayList<>();
-                            JSONObject jsonObject = JSON.parseObject(arg0.result.toString());
+                            JSONObject jsonObject = JSON.parseObject(arg0.result);
                             JSONObject jsonObject1 = jsonObject.getJSONObject("data");
                             Set<Map.Entry<String, Object>> entrySet = jsonObject1.entrySet();
                             for (Map.Entry<String, Object> entry : entrySet) {

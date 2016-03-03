@@ -45,7 +45,7 @@ public class UIUtil {
 	}
 
 	// 下载状态, <url, status> , status: {0:下载成功; 1:下载中; -1:下载失败}
-	private static Map<String, Integer> downloadMap = new HashMap<String, Integer>();
+	private static final Map<String, Integer> downloadMap = new HashMap<String, Integer>();
 
 	/**
 	 * 根据url填充ImageView, 所有参数非空

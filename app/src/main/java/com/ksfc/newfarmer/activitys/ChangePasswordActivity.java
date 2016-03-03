@@ -10,18 +10,14 @@ import com.ksfc.newfarmer.protocol.beans.FindPassResult;
 import com.ksfc.newfarmer.protocol.beans.PublicKeyResult;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.RSAUtil;
-import com.ksfc.newfarmer.utils.SPUtils;
 
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.EditText;
 
-import net.yangentao.util.app.App;
 
 @TargetApi(Build.VERSION_CODES.GINGERBREAD)
 public class ChangePasswordActivity extends BaseActivity {

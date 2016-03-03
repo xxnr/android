@@ -1,6 +1,5 @@
 package com.ksfc.newfarmer.protocol.beans;
 
-import java.util.List;
 
 import com.ksfc.newfarmer.protocol.ResponseResult;
 

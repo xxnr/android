@@ -1,6 +1,7 @@
 package com.ksfc.newfarmer;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -12,6 +13,7 @@ import com.ksfc.newfarmer.protocol.OnApiDataReceivedCallback;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
 import com.ksfc.newfarmer.protocol.beans.LoginResult.UserInfo;
+import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.dialog.CustomProgressDialog;
 import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.SPUtils;
@@ -22,7 +24,9 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -43,7 +47,7 @@ import net.yangentao.util.msg.MsgListener;
 public abstract class BaseActivity extends FragmentActivity implements
         OnClickListener, OnApiDataReceivedCallback {
 
-    private List<MsgListener> listeners = new ArrayList<MsgListener>(); // 应用内广播监听
+    private List<MsgListener> listeners = new ArrayList<>(); // 应用内广播监听
     public String TAG = this.getClass().getSimpleName();
 
     private boolean titleLoaded = false; // 标题是否加载成功
@@ -54,6 +58,9 @@ public abstract class BaseActivity extends FragmentActivity implements
     private TextView tvTitleRight;
     private ImageView ivTitleRight;
     private Dialog progressDialog;
+
+    private HashMap<ApiType, Boolean> isReturnData = new HashMap<>();//是否请求超时（返回数据）
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -147,7 +154,7 @@ public abstract class BaseActivity extends FragmentActivity implements
     public boolean isLogin() {
         UserInfo me = Store.User.queryMe();
         // 判断本地登录
-        if (me != null) {
+        if (me != null && StringUtil.checkStr(me.token)) {
             return true;
         }
         return false;
@@ -170,36 +177,50 @@ public abstract class BaseActivity extends FragmentActivity implements
 
     @Override
     public final void onResponse(Request req) {
-        if (req.getData().getStatus().equals("1401")) {
-            req.showErrorMsg();
-            tokenToLogin();
-        } else {
-            if (req.isSuccess()) {
-                if (!getClass().getName().equals(
-                        "com.ksfc.newfarmer.activitys.LoginActivity")) {
-                    disMissDialog();
-                }
-                onResponsed(req);
+        if (!isReturnData.get(req.getApi())) {
+            if (req.getData().getStatus().equals("1401")) {
+                req.showErrorMsg();
+                tokenToLogin();
             } else {
+                if (req.isSuccess()) {
+                    if (!getClass().getName().equals(
+                            "com.ksfc.newfarmer.activitys.LoginActivity")) {
+                        disMissDialog();
+                    }
+                    onResponsed(req);
+                } else {
                 /*
                  * if ("-2".equals(req.getData().getStatus())) {
 				 * Store.User.removeMe(); showToast("您的账号在其他地方登录,请重新登录"); Intent
 				 * intent = new Intent(this, MainActivity.class);
 				 * startActivity(intent); return; }
 				 */
-                disMissDialog();
-                req.showErrorMsg();
-                ApiType api = req.getApi();
-                ApiType type1 = ApiType.GET_HUAFEI;
-                ApiType type2 = ApiType.GET_NYC;
+                    disMissDialog();
+                    if (req.getApi() != ApiType.GET_MIN_PAY_PRICE) {
+                        req.showErrorMsg();
+                    }
+                    ApiType api = req.getApi();
+                    ApiType type1 = ApiType.GET_HUAFEI;
+                    ApiType type2 = ApiType.GET_NYC;
 
-                if (api.getOpt().equals(type1.getOpt())
-                        || api.getOpt().equals(type2.getOpt())) {
-                    onResponsedError(req);
+                    if (api.getOpt().equals(type1.getOpt())
+                            || api.getOpt().equals(type2.getOpt())) {
+                        onResponsedError(req);
+                    }
                 }
             }
-        }
+        } else {
+            if (!getClass().getName().equals(
+                    "com.ksfc.newfarmer.activitys.HomepageActivity")) {
+                App.getApp().showToast("您的网络不太顺畅，重试或检查下网络吧~");
+            } else {
+                if (req.getApi() == ApiType.GET_HUAFEI || req.getApi() == ApiType.GET_NYC) {
+                    App.getApp().showToast("您的网络不太顺畅，重试或检查下网络吧~");
+                }
+            }
 
+
+        }
     }
 
     // -------------------------------------------------------------
@@ -368,7 +389,7 @@ public abstract class BaseActivity extends FragmentActivity implements
      * @param api
      * @param params
      */
-    public void execApi(ApiType api, RequestParams params) {
+    public void execApi(final ApiType api, RequestParams params) {
 
         // 判断是不是通过验证
         if (params.containsKey("userId")) {
@@ -376,10 +397,34 @@ public abstract class BaseActivity extends FragmentActivity implements
                 params.put("token", Store.User.queryMe().token);
             }
         }
-        Request req = new Request();
+        final Request req = new Request();
         req.setApi(api);
         req.setParams(params);
         req.executeNetworkApi(this);
+
+        try {
+            //加入请求队列
+            isReturnData.put(api, false);
+            //设置刷新的文字
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        if (progressDialog != null && progressDialog.isShowing()) {
+                            progressDialog.dismiss();
+                        }
+                    } catch (IllegalArgumentException exception) {
+                        exception.printStackTrace();
+                    }
+                    //更改标记不返回数据
+                    isReturnData.put(api, true);
+                }
+            }, 20 * 1000);
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+
 
     }
 
@@ -396,14 +441,11 @@ public abstract class BaseActivity extends FragmentActivity implements
             progressDialog = null;
 
         }
-        progressDialog = CustomProgressDialog.createLoadingDialog(this, msg);
+        progressDialog = CustomProgressDialog.createLoadingDialog(this, msg, Color.parseColor("#000000"));
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setCancelable(true);
-        try {
-            progressDialog.show();
-        } catch (BadTokenException exception) {
-            exception.printStackTrace();
-        }
+        progressDialog.show();
+
     }
 
     /**
@@ -452,6 +494,7 @@ public abstract class BaseActivity extends FragmentActivity implements
         for (MsgListener listener : listeners) {
             MsgCenter.remove(listener);
         }
+
     }
 
     // 调用此方法 去登录页面

@@ -17,13 +17,11 @@ import org.apache.http.StatusLine;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.alibaba.fastjson.JSON;
 import com.google.gson.Gson;
 import com.ksfc.newfarmer.protocol.ApiType.RequestMethod;
 import com.ksfc.newfarmer.utils.RndLog;
 
 import android.text.TextUtils;
-import android.util.Log;
 
 /**
  * 服务器接口
