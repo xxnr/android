@@ -258,10 +258,12 @@ public class MyOrderDetailActivity extends BaseActivity {
                 holder.order_yet_price.setText("¥" + subOrder.paidPrice);
                 //支付类型
                 if (StringUtil.checkStr(subOrder.payType)) {
-                    holder.order_pay_type_ll.setVisibility(View.VISIBLE);
+
                     if (subOrder.payType.equals("1")) {
+                        holder.order_pay_type_ll.setVisibility(View.VISIBLE);
                         holder.order_pay_type.setText("支付宝支付");
                     } else if (subOrder.payType.equals("2")) {
+                        holder.order_pay_type_ll.setVisibility(View.VISIBLE);
                         holder.order_pay_type.setText("银联支付");
                     }
                 } else {

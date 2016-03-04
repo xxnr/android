@@ -30,6 +30,7 @@ import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.CarouselDiagramViewPager;
 import com.ksfc.newfarmer.widget.GridViewWithHeaderAndFooter;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.umeng.message.UmengRegistrar;
 import com.umeng.update.UmengUpdateAgent;
 
 import android.content.Intent;

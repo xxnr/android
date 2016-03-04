@@ -63,9 +63,9 @@
             </RelativeLayout>
 
             <View
-                android:background="@color/gary_line"
                 android:layout_width="match_parent"
-                android:layout_height="1px" />
+                android:layout_height="1px"
+                android:background="@color/gary_line" />
 
             <LinearLayout
 
@@ -97,8 +97,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="16dp"
                         android:text=""
-                        android:textColor="@color/black"
-                         />
+                        android:textColor="@color/black" />
 
                     <TextView
                         android:id="@+id/product_price"
@@ -125,19 +124,19 @@
                         android:textColor="@color/orange_goods_price"
                         android:textSize="20sp" />
                 </LinearLayout>
-                
+
                 <LinearLayout
                     android:id="@+id/market_price_ll"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:visibility="gone"
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp">
+                    android:visibility="gone">
 
                     <TextView
-                        android:layout_marginLeft="16dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
                         android:text="市场价 "
                         android:textColor="@color/gray"
                         android:textSize="14sp" />
@@ -155,16 +154,18 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="50dp"
                 android:layout_marginTop="14dp"
                 android:background="@color/bg_gary">
 
                 <TextView
+                    android:maxLines="2"
+                    android:layout_marginLeft="8dp"
                     android:id="@+id/product_description"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:text="海藻多糖尿素好 缓释长效流失少"
+                    android:text="踏板+靓条+座垫+脚垫，3月6日前APP下单可享惊爆价！"
                     android:textColor="@color/green"
                     android:textSize="14sp" />
             </RelativeLayout>
@@ -182,8 +183,8 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="16dp"
-                    android:singleLine="true"
                     android:layout_marginRight="35dp"
+                    android:singleLine="true"
                     android:text="请选择商品属性"
                     android:textSize="14sp" />
 

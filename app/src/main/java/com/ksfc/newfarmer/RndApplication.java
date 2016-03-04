@@ -14,6 +14,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.umeng.message.PushAgent;
+import com.umeng.message.UmengRegistrar;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.utils.Log;
@@ -58,13 +59,9 @@ public class RndApplication extends Application {
         //初始化推送
         PushAgent mPushAgent = PushAgent.getInstance(this);
         mPushAgent.enable();
+        mPushAgent.setNoDisturbMode(0, 0, 0, 0);
         //初始化社会化分享
         initSocialShare();
-
-
-        System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog");
-        System.setProperty("org.apache.commons.logging.simplelog.showdatetime", "true");
-        System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient", "stdout");
     }
 
     public void initSocialShare() {

@@ -66,7 +66,7 @@ public class PaywayActivity extends BaseActivity implements Runnable {
     private EditText payWay_times_price_et;//分次支付里的金额tv
     private double use_calculate = 3000.00;//分次支付里的金额 用于计算 默认3000
     private double MIN_PAY_PRICE = 3000.00;
-
+    private long backPressTime=0;
 
     private double duePrice;  //待支付金额
     private static final String mMode = "00";// 设置测试模式:01为测试 00为正式环境
@@ -357,40 +357,44 @@ public class PaywayActivity extends BaseActivity implements Runnable {
 //                tag = 4;
 //                break;
             case R.id.pay_sure_tv:
-                if (payWay_pay_times_view.getVisibility() == View.VISIBLE) {
-                    if (tag == 1) {
-                        RequestParams params3 = new RequestParams();
-                        if (isLogin()) {
-                            params3.put("userId", Store.User.queryMe().userid);
+                long current = System.currentTimeMillis();
+                if (current - backPressTime > 3000) {
+                    backPressTime = current;
+                    if (payWay_pay_times_view.getVisibility() == View.VISIBLE) {
+                        if (tag == 1) {
+                            RequestParams params3 = new RequestParams();
+                            if (isLogin()) {
+                                params3.put("userId", Store.User.queryMe().userid);
+                            }
+                            params3.put("consumer", "app");
+                            if (StringUtil.checkStr(payWay_times_price_et.getText().toString().trim())) {
+                                params3.put("price", payWay_times_price_et.getText().toString().trim());
+                            }
+                            if (orderId != null) {
+                                params3.put("orderId", orderId);
+                            }
+                            execApi(ApiType.GET_ALI, params3);
+                        } else if (tag == 2) {
+                            new Thread(this).start();
+                        } else {
+                            showToast("请选择支付方式");
                         }
-                        params3.put("consumer", "app");
-                        if (StringUtil.checkStr(payWay_times_price_et.getText().toString().trim())) {
-                            params3.put("price", payWay_times_price_et.getText().toString().trim());
-                        }
-                        if (orderId != null) {
-                            params3.put("orderId", orderId);
-                        }
-                        execApi(ApiType.GET_ALI, params3);
-                    } else if (tag == 2) {
-                        new Thread(this).start();
                     } else {
-                        showToast("请选择支付方式");
-                    }
-                } else {
-                    if (tag == 1) {
-                        RequestParams params3 = new RequestParams();
-                        if (isLogin()) {
-                            params3.put("userId", Store.User.queryMe().userid);
+                        if (tag == 1) {
+                            RequestParams params3 = new RequestParams();
+                            if (isLogin()) {
+                                params3.put("userId", Store.User.queryMe().userid);
+                            }
+                            params3.put("consumer", "app");
+                            if (orderId != null) {
+                                params3.put("orderId", orderId);
+                            }
+                            execApi(ApiType.GET_ALI, params3);
+                        } else if (tag == 2) {
+                            new Thread(this).start();
+                        } else {
+                            showToast("请选择支付方式");
                         }
-                        params3.put("consumer", "app");
-                        if (orderId != null) {
-                            params3.put("orderId", orderId);
-                        }
-                        execApi(ApiType.GET_ALI, params3);
-                    } else if (tag == 2) {
-                        new Thread(this).start();
-                    } else {
-                        showToast("请选择支付方式");
                     }
                 }
 
