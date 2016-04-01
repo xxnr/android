@@ -27,7 +27,7 @@ public class StringUtil {
         return true;
     }
 
-    // 判断字符串的合法性
+    // 判断字符串组的合法性 并拼接
     public static String checkBufferStr(String str1, String str2, String str3, String str4) {
         StringBuilder buffer = new StringBuilder();
         if (StringUtil.checkStr(str1)) {
@@ -45,8 +45,8 @@ public class StringUtil {
         return buffer.toString();
     }
 
-    // 判断字符串的合法性
-    public static String checkBufferStrWithSpace(String str1, String str2, String str3, String str4,String str5) {
+    // 判断字符串组的合法性 （带空格）
+    public static String checkBufferStrWithSpace(String str1, String str2, String str3, String str4, String str5) {
         StringBuilder buffer = new StringBuilder();
         if (StringUtil.checkStr(str1)) {
             buffer.append(str1).append(" ");
@@ -58,7 +58,7 @@ public class StringUtil {
             buffer.append(str3).append(" ");
         }
         if (StringUtil.checkStr(str4)) {
-            if (!str4.equals("undefined")){
+            if (!str4.equals("undefined")) {
                 buffer.append(str4).append(" ");
             }
         }
@@ -89,17 +89,9 @@ public class StringUtil {
     }
 
 
-
-    // 判断密码格式是否正确
+    // 判断密码格式是否正确 6-13位
     public static boolean isPassword(String password) {
-        if (password.length() >= 6) {
-            return true;
-        }
-        if (password.length() <= 13) {
-            return true;
-        }
-        return false;
-
+        return password.length() >= 6 || password.length() <= 13;
     }
 
 
@@ -113,7 +105,6 @@ public class StringUtil {
         } else {
             return StringUtil.toTwoString(price + "");
         }
-
     }
 
 
@@ -127,15 +118,6 @@ public class StringUtil {
         return param == null || param.trim().length() < 1;
     }
 
-    /**
-     * 格式化日期
-     * @param time
-     * @return
-     */
-    public static String getDateToString(long time) {
-        Date date = new Date(time);
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年MM月dd日");
-        return simpleDateFormat.format(date);
-    }
+
 
 }

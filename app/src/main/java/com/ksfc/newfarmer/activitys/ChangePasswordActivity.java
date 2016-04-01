@@ -1,6 +1,7 @@
 package com.ksfc.newfarmer.activitys;
 
 import com.ksfc.newfarmer.BaseActivity;
+import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.protocol.ApiType;
@@ -98,7 +99,7 @@ public class ChangePasswordActivity extends BaseActivity {
                 showToast("修改密码成功");
                 exitLogin();
                 //通知 "我"activity 结束
-                MsgCenter.fireNull("MyaccountActivityFinish", "finish");
+                MsgCenter.fireNull(MsgID.MyaccountActivityFinish, "finish");
                 IntentUtil.activityForward(ChangePasswordActivity.this,
                         LoginActivity.class, null, true);
             } else {

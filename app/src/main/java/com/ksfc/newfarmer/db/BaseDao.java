@@ -24,8 +24,7 @@ public abstract class BaseDao {
 		appContext = context;
 		dbOpenHelper = KsfcDBOpenHelper.getInstance(context);
 		database = dbOpenHelper.getWritableDatabase();
-		// uid = RndApplication.getInstance().getUid();
-		// initTableName(uid);
+
 	}
 
 	/**

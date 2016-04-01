@@ -102,7 +102,7 @@ public class MyOrderDetailFragment extends BaseFragment implements PullToRefresh
                 page = 1;
                 getData(page);
             }
-        }, "Pay_success");
+        }, MsgID.Pay_success);
 
         //滑动时刷新
         MsgCenter.addListener(new MsgListener() {
@@ -119,7 +119,7 @@ public class MyOrderDetailFragment extends BaseFragment implements PullToRefresh
                 }
 
             }
-        }, "swipe_reFlash");
+        }, MsgID.swipe_reFlash);
 
         getData(page);
         return view;

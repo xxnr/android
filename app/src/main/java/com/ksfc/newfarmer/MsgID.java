@@ -4,29 +4,22 @@ import com.ksfc.newfarmer.protocol.ApiType;
 
 /**
  * 广播ID
- * 
+ *
  * @author Bruce.Wang
- * 
  */
 public interface MsgID {
 
-	String IP = ApiType.url;
-	String IPUphead = ApiType.url + "/app/res/show/";
-	String EXIT = "app.exit";// 程序退出
-	String LOGIN = "user.login";
-
-	String CHANGE = "discount.change";// 选择的商品发生改变时
-	String GOODS_CHANGE = "ordering.change";// 选择的商品发生改变时
-
-	String NO_BILL = "billinfo.noBill";// 不需要发票
-	String NEED_BILL = "billinfo.needBill";// 需要发票
-	String ADD_BILL = "billinfo.addBill";// 添加发票
-
-	String ORDERING_HANDONG = "ordering.huadong";
-	String ISLOGIN = "islogin";// 用户登陆了
-	String LOGININ = "login in";// 用户登陆了
-	String UPDATE_USER = "update";// 用户登陆了
-	String CLEAR_USER = "clear";// 用户登陆了
-
-    String UPDATE_USER_TYPE="update_userType";//用户更改了类型 或者类型下的认证状态
+    String IP = ApiType.url;
+    String ISLOGIN = "islogin";// 用户登陆了
+    String UPDATE_USER = "update";// 用户信息更新
+    String CLEAR_USER = "clear";// 用户信息删除
+    String UPDATE_USER_TYPE = "update_userType";//用户更改了类型 或者类型下的认证状态
+    String rsc_swipe_reFlash = "rsc_swipe_reFlash";//rsc订单列表刷新
+    String swipe_reFlash = "swipe_reFlash";//rsc订单列表刷新
+    String MainActivity_select_tab = "MainActivity_select_tab";//MainActivity应选中的tab
+    String MSG_ADD_ADDRESS = "MSG_ADD_ADDRESS";//用户的收货地址更新
+    String MSG_Change_ADDRESS = "MSG.ADDRESS.CALL.BACK";//用户的收货地址更改
+    String add_potential_success = "add_potential_success";//添加潜在客户成功
+    String MyaccountActivityFinish = "MyaccountActivityFinish";//修改密码后通知“我的”页面关闭
+    String Pay_success = "Pay_success";//支付成功通知各个页面
 }

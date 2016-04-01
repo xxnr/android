@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.ksfc.newfarmer.BaseActivity;
+import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.adapter.RSCOrderListFragmentPagerAdapter;
 import com.ksfc.newfarmer.fragment.RscOrderDetailFragment;
@@ -73,7 +74,7 @@ public class RSCOrderListActivity extends BaseActivity implements RscOrderDetail
             @Override
             public void onPageSelected(int position) {
                 //通知 订单列表刷新
-                MsgCenter.fireNull("rsc_swipe_reFlash", position);
+                MsgCenter.fireNull(MsgID.rsc_swipe_reFlash, position);
             }
 
             @Override

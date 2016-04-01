@@ -105,7 +105,7 @@ public class LoginActivity extends BaseActivity {
             public void onClick(View v) {
                 if (isTokenError) {
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    MsgCenter.fireNull("MainActivity_select_tab", 4);
+                    MsgCenter.fireNull(MsgID.MainActivity_select_tab, 4);
                     intent.putExtra("id", 4);
                     startActivity(intent);
                 }
@@ -121,7 +121,7 @@ public class LoginActivity extends BaseActivity {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
             if (isTokenError) {
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                MsgCenter.fireNull("MainActivity_select_tab", 4);
+                MsgCenter.fireNull(MsgID.MainActivity_select_tab, 4);
                 intent.putExtra("id", 4);
                 startActivity(intent);
             }

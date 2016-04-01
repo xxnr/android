@@ -14,7 +14,6 @@ import com.ksfc.newfarmer.protocol.OnApiDataReceivedCallback;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
 import com.ksfc.newfarmer.protocol.beans.LoginResult.UserInfo;
-import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.utils.Utils;
 import com.ksfc.newfarmer.widget.dialog.CustomProgressDialog;
@@ -22,7 +21,6 @@ import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.SPUtils;
 import com.ksfc.newfarmer.widget.dialog.CustomToast;
 import com.umeng.analytics.MobclickAgent;
-import com.umeng.message.PushAgent;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -34,16 +32,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.WindowManager.BadTokenException;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 import net.yangentao.util.app.App;
@@ -53,7 +48,7 @@ import net.yangentao.util.msg.MsgListener;
 public abstract class BaseActivity extends FragmentActivity implements
         OnClickListener, OnApiDataReceivedCallback {
 
-    private List<MsgListener> listeners = new ArrayList<>(); // 应用内广播监听
+
     public String TAG = this.getClass().getSimpleName();
 
     private boolean titleLoaded = false; // 标题是否加载成功
@@ -72,8 +67,13 @@ public abstract class BaseActivity extends FragmentActivity implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //防止fragment中找不到getActivity Null空指针
+        if (savedInstanceState != null) {
+            String FRAGMENTS_TAG = "android:support:fragments";
+            savedInstanceState.remove(FRAGMENTS_TAG);
+        }
         setFullScreen(false);
-        App.getApp().unDestroyActivityList.add(this);
+        RndApplication.unDestroyActivityList.add(this);
         // 屏幕竖屏
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         if (getLayout() != 0) {
@@ -145,13 +145,6 @@ public abstract class BaseActivity extends FragmentActivity implements
 
     }
 
-    public void hideInputMethod() {
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (imm.isActive() && getCurrentFocus() != null) {
-            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
-                    InputMethodManager.HIDE_NOT_ALWAYS);
-        }
-    }
 
     /**
      * 判断当前用户是否登录
@@ -161,28 +154,19 @@ public abstract class BaseActivity extends FragmentActivity implements
     public boolean isLogin() {
         UserInfo me = Store.User.queryMe();
         // 判断本地登录
-        if (me != null && StringUtil.checkStr(me.token)) {
-            return true;
-        }
-        return false;
+        return me != null && StringUtil.checkStr(me.token);
     }
 
     @Override
     public final void onClick(View v) {
-        // 过滤要处理的控件  无法连续点击一个控件 购物车需要连续加入除外
-        if (!getClass().getName().equals(
-                "com.ksfc.newfarmer.activitys.GoodsDetailActivity")) {
-            if (Utils.isFastClick()) {
-                return;
-            }
+        if (Utils.isFastClick()) {
+            return;
         }
-
         switch (v.getId()) {
             case R.id.ll_title_left_view:
-                // 返回按钮
+                // 左上角返回按钮
                 finish();
                 break;
-
             default:
                 break;
         }
@@ -192,6 +176,7 @@ public abstract class BaseActivity extends FragmentActivity implements
     @Override
     public final void onResponse(Request req) {
         if (!isReturnData.get(req.getApi())) {
+            //token异常登出
             if (req.getData().getStatus().equals("1401")) {
                 req.showErrorMsg();
                 tokenToLogin();
@@ -201,6 +186,7 @@ public abstract class BaseActivity extends FragmentActivity implements
                     onResponsed(req);
                 } else {
                     disMissDialog();
+                    //这些Api不返回前台用户error msg
                     if (!(req.getApi() == ApiType.GET_MIN_PAY_PRICE
                             || req.getApi() == ApiType.SAVE_CONSIGNEE_INFO
                             || req.getApi() == ApiType.SURE_GET_GOODS
@@ -210,6 +196,7 @@ public abstract class BaseActivity extends FragmentActivity implements
                 }
             }
         } else {
+            //请求时间过长提示
             if (!getClass().getName().equals(
                     "com.ksfc.newfarmer.activitys.HomepageActivity")) {
                 App.getApp().showToast("您的网络不太顺畅，重试或检查下网络吧~");
@@ -367,16 +354,6 @@ public abstract class BaseActivity extends FragmentActivity implements
         startActivity(intent);
     }
 
-    /**
-     * 添加应用广播的监听，会自动在界面销毁时清除
-     *
-     * @param listener
-     * @param msgid
-     */
-    protected void addMsgListener(MsgListener listener, String... msgid) {
-        listeners.add(listener);
-        MsgCenter.addListener(listener, msgid);
-    }
 
     /**
      * 执行网络请求
@@ -400,7 +377,7 @@ public abstract class BaseActivity extends FragmentActivity implements
         try {
             //加入请求队列
             isReturnData.put(api, false);
-            //设置刷新的文字
+
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -500,21 +477,9 @@ public abstract class BaseActivity extends FragmentActivity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        App.getApp().unDestroyActivityList.remove(this);
-        for (MsgListener listener : listeners) {
-            MsgCenter.remove(listener);
-        }
-
+        RndApplication.unDestroyActivityList.remove(this);
     }
 
-    // 调用此方法 去登录页面
-    public void tokenToLogin() {
-        exitLogin();
-        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra("isTokenError", true);
-        getApplicationContext().startActivity(intent);
-    }
 
     @Override
     protected void onResume() {
@@ -543,20 +508,8 @@ public abstract class BaseActivity extends FragmentActivity implements
         return m.matches();
     }
 
-    // 判断手机号是否有效
-    public boolean isMobileValid(String mobile) {
 
-        if (TextUtils.isEmpty(mobile)) {
-            showToast("请输入手机号");
-            return false;
-        }
-        if (!isMobileNum(mobile)) {
-            showToast("手机号格式错误");
-            return false;
-        }
-        return true;
-    }
-
+    //退出登录时调用
     public void exitLogin() {
 
         UserInfo userInfo = Store.User.queryMe();
@@ -568,12 +521,13 @@ public abstract class BaseActivity extends FragmentActivity implements
         SPUtils.clear(getApplicationContext());
     }
 
-    /**
-     * 返回
-     *
-     * @param view
-     */
-    public void back(View view) {
-        finish();
+    // 调用此方法 去登录页面
+    public void tokenToLogin() {
+        exitLogin();
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("isTokenError", true);
+        getApplicationContext().startActivity(intent);
     }
+
 }

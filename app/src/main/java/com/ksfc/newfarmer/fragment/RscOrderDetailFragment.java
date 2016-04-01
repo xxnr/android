@@ -46,6 +46,7 @@ import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.PullToRefreshUtils;
 import com.ksfc.newfarmer.utils.ShowHideUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
+import com.ksfc.newfarmer.widget.KeyboardListenRelativeLayout;
 import com.ksfc.newfarmer.widget.RecyclerImageView;
 import com.ksfc.newfarmer.widget.UnSwipeGridView;
 import com.ksfc.newfarmer.widget.UnSwipeListView;
@@ -64,7 +65,7 @@ import java.util.Map;
 /**
  * Created by HePeng on 2015/12/3.
  */
-public class RscOrderDetailFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2, ViewTreeObserver.OnGlobalLayoutListener {
+public class RscOrderDetailFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2, KeyboardListenRelativeLayout.IOnKeyboardStateChangedListener {
 
     private PullToRefreshListView waitingpay_lv;
     private int page = 1;
@@ -89,18 +90,19 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
     private EditText self_delivery_code_et;
     private RelativeLayout pop_self_delivery_code_Rel;
     private boolean self_delivery_tag = false;
-    private View rootView;
+    private KeyboardListenRelativeLayout rootView;
 
 
     @Override
     public View InItView() {
         View view = inflater.inflate(R.layout.rsc_order_list_layout, null);
         waitingpay_lv = (PullToRefreshListView) view.findViewById(R.id.waitingpay_lv);
-
-
-
         waitingpay_lv.setMode(PullToRefreshBase.Mode.BOTH);
         waitingpay_lv.setOnRefreshListener(this);
+
+        rootView = (KeyboardListenRelativeLayout) view.findViewById(R.id.root_view);
+        rootView.setOnKeyboardStateChangedListener(this);
+
         //设置刷新的文字
         PullToRefreshUtils.setFreshText(waitingpay_lv);
         //无订单下的状态
@@ -128,7 +130,7 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
                 }
 
             }
-        }, "rsc_swipe_reFlash");
+        }, MsgID.rsc_swipe_reFlash);
 
         getData(page);
         getPayWay();
@@ -902,11 +904,6 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
         ImageView pop_close = (ImageView) popupWindow_view.findViewById(R.id.pop_close);
         pop_close.setOnClickListener(this);
 
-        rootView = popupWindow_view.findViewById(R.id.root_view);
-        rootView.getViewTreeObserver().addOnGlobalLayoutListener(this);
-
-
-
         pop_slef_delivery_order_title = (TextView) popupWindow_view.findViewById(R.id.pop_order_title);
         self_delivery_code_et = (EditText) popupWindow_view.findViewById(R.id.self_delivery_code_et);
         pop_self_delivery_code_Rel = (RelativeLayout) popupWindow_view.findViewById(R.id.pop_self_delivery_code_Rel);
@@ -1137,21 +1134,15 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
         void backgroundSwitch(int bg);
     }
 
+
     //监听软键盘收起时，清除editText的焦点
     @Override
-    public void onGlobalLayout() {
-//        if (self_delivery_code_et != null) {
-//            int heightDiff = rootView.getRootView().getHeight() - rootView.getHeight();
-//
-//            Log.d("RscOrderDetailFragment", "rootView.getRootView().getHeight():" + rootView.getRootView().getHeight());
-//            Log.d("RscOrderDetailFragment", "heightDiff:" + heightDiff);
-//            // 如果高度差超过100像素，就很有可能是有软键盘...
-//            if (heightDiff <= 100) {
-//                Log.d("RscOrderDetailFragment", "此处执行");
-//                self_delivery_code_et.clearFocus();
-//            }
-//        }
-
+    public void onKeyboardStateChanged(int state) {
+        if (state == KeyboardListenRelativeLayout.KEYBOARD_STATE_HIDE) {
+            if (self_delivery_code_et != null) {
+                self_delivery_code_et.clearFocus();
+            }
+        }
     }
 
 

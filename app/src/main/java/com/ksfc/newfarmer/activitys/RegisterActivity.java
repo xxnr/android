@@ -15,6 +15,7 @@ import com.ksfc.newfarmer.protocol.beans.LoginResult;
 import com.ksfc.newfarmer.protocol.beans.PublicKeyResult;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.RSAUtil;
+import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.ClearEditText;
 
 import android.content.Intent;
@@ -86,9 +87,15 @@ public class RegisterActivity extends BaseActivity {
         switch (v.getId()) {
             case R.id.backdengLubutton:
 
-                if (!isMobileValid(phoneNumber)) {
+                if (!StringUtil.checkStr(phoneNumber)) {
+                    showToast("请输入手机号");
+                    return ;
+                }
+                if (!isMobileNum(phoneNumber)){
+                    showToast("手机号格式错误");
                     return;
                 }
+
                 if (!checkBox.isChecked()) {
                     showToast("您需要同意注册协议才可继续注册哦~");
                     return;

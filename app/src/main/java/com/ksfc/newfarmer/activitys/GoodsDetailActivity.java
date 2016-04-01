@@ -29,6 +29,7 @@ import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.utils.PopWindowUtils;
 import com.ksfc.newfarmer.utils.Utils;
+import com.ksfc.newfarmer.widget.KeyboardListenRelativeLayout;
 import com.ksfc.newfarmer.widget.dialog.CustomDialog;
 import com.ksfc.newfarmer.widget.VerticalViewPager;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -63,7 +64,7 @@ import android.widget.TextView;
 
 import net.yangentao.util.msg.MsgCenter;
 
-public class GoodsDetailActivity extends BaseActivity implements ViewTreeObserver.OnGlobalLayoutListener {
+public class GoodsDetailActivity extends BaseActivity implements KeyboardListenRelativeLayout.IOnKeyboardStateChangedListener {
     private ShoppingDao dao;
     private String goodId;
     private GetGoodsDetail.GoodsDetail detail;
@@ -98,7 +99,7 @@ public class GoodsDetailActivity extends BaseActivity implements ViewTreeObserve
     private LinearLayout add_sku_tv_gv_ll;//动态添加sku的父布局
     private LinearLayout market_price_ll;//商品市场价lin
     private ScrollView scrollView;
-    private RelativeLayout activity_rootView;
+    private KeyboardListenRelativeLayout activity_rootView;
     private LinearLayout shangpin_detail_bottom;
 
 
@@ -134,8 +135,8 @@ public class GoodsDetailActivity extends BaseActivity implements ViewTreeObserve
         shangpin_detail_bottom_bar = ((LinearLayout) findViewById(R.id.shangpin_detail_bottom_bar));
         //popWindow弹出的时候用于遮挡背景
         shangpin_detail_bg = ((LinearLayout) findViewById(R.id.shangpin_detail_bg));
-        activity_rootView = (RelativeLayout) findViewById(R.id.shangpin_detail_ll);
-        activity_rootView.getViewTreeObserver().addOnGlobalLayoutListener(this);
+        activity_rootView = (KeyboardListenRelativeLayout) findViewById(R.id.shangpin_detail_ll);
+        activity_rootView.setOnKeyboardStateChangedListener(this);
 
         setRightImage(R.drawable.goods_shopping_cart_icon);
         setRightViewListener(new View.OnClickListener() {
@@ -145,7 +146,7 @@ public class GoodsDetailActivity extends BaseActivity implements ViewTreeObserve
                 intent.putExtra("id", 3);
                 startActivity(intent);
                 //通知 首页选中的位置
-                MsgCenter.fireNull("MainActivity_select_tab", 3);
+                MsgCenter.fireNull(MsgID.MainActivity_select_tab, 3);
                 finish();
             }
         });
@@ -449,6 +450,8 @@ public class GoodsDetailActivity extends BaseActivity implements ViewTreeObserve
             RndLog.v(TAG, "adapter_null");
         }
     }
+
+
 
     /**
      * 规格适配器
@@ -1188,27 +1191,23 @@ public class GoodsDetailActivity extends BaseActivity implements ViewTreeObserve
         }
     }
 
-    //监听软键盘收起时，如果输入框为“”，变为1
-    @Override
-    public void onGlobalLayout() {
-        if (pop_discount_geshu != null) {
 
+    //键盘收起时
+    @Override
+    public void onKeyboardStateChanged(int state) {
+
+        if (state == KeyboardListenRelativeLayout.KEYBOARD_STATE_HIDE) {
             String num = pop_discount_geshu.getText().toString().trim();
             if (num.equals("") || num.equals("000") || num.equals("00") || num.equals("0")) {
                 pop_discount_geshu.setText("1");
                 Editable eText = pop_discount_geshu.getText();
                 Selection.setSelection(eText, eText.length());
             }
-//            int heightDiff = activity_rootView.getRootView().getHeight() - activity_rootView.getHeight();
-//            // 如果高度差超过100像素，就很有可能是有软键盘...
-//            if (heightDiff <= 100) {
-//                pop_discount_geshu.clearFocus();
-//            }
 
-
+            if (pop_discount_geshu!=null){
+                pop_discount_geshu.clearFocus();
+            }
         }
-
-
     }
 
 

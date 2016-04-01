@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ksfc.newfarmer.BaseActivity;
+import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.adapter.CommonAdapter;
 import com.ksfc.newfarmer.adapter.CommonViewHolder;
@@ -76,7 +77,7 @@ public class ChooseAddressActivity extends BaseActivity {
         setLeftClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MsgCenter.fireNull("MSG.ADDRESS.CALL.BACK", state);
+                MsgCenter.fireNull(MsgID.MSG_Change_ADDRESS, state);
                 finish();
             }
         });
@@ -97,7 +98,7 @@ public class ChooseAddressActivity extends BaseActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-            MsgCenter.fireNull("MSG.ADDRESS.CALL.BACK", state);
+            MsgCenter.fireNull(MsgID.MSG_Change_ADDRESS, state);
             finish();
             return true;
         }
@@ -170,7 +171,7 @@ public class ChooseAddressActivity extends BaseActivity {
             }
         } else if (req.getApi() == ApiType.SELECT_ADDRESS) {
             if ("1000".equals(req.getData().getStatus())) {
-                MsgCenter.fireNull("MSG.ADDRESS.CALL.BACK",
+                MsgCenter.fireNull(MsgID.MSG_Change_ADDRESS,
                         rows.get(map.get("pos")));
                 finish();
             }
@@ -243,7 +244,7 @@ public class ChooseAddressActivity extends BaseActivity {
 
                                                 if (address.addressId.equals(state.addressId)) {
                                                     state = null;
-                                                    MsgCenter.fireNull("MSG.ADDRESS.CALL.BACK", state);
+                                                    MsgCenter.fireNull(MsgID.MSG_Change_ADDRESS, state);
                                                 }
                                                 showProgressDialog();
                                                 RequestParams params = new RequestParams();
@@ -281,7 +282,7 @@ public class ChooseAddressActivity extends BaseActivity {
                     @Override
                     public void onClick(View v) {
                         state = address;
-                        MsgCenter.fireNull("MSG.ADDRESS.CALL.BACK", state);
+                        MsgCenter.fireNull(MsgID.MSG_Change_ADDRESS, state);
                         finish();
                     }
                 });

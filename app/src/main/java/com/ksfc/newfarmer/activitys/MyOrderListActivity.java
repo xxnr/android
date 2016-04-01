@@ -7,15 +7,13 @@ import java.util.ArrayList;
 
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MainActivity;
-import com.ksfc.newfarmer.Push.App;
+import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
-import com.ksfc.newfarmer.RndApplication;
 import com.ksfc.newfarmer.adapter.MyOrderListFragmentPagerAdapter;
 import com.ksfc.newfarmer.fragment.MyOrderDetailFragment;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.utils.PopWindowUtils;
 
-import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -58,7 +56,7 @@ public class MyOrderListActivity extends BaseActivity implements MyOrderDetailFr
                     Intent intent = new Intent(MyOrderListActivity.this,
                             MainActivity.class);
                     intent.putExtra("id", 4);
-                    MsgCenter.fireNull("MainActivity_select_tab", 4);
+                    MsgCenter.fireNull(MsgID.MainActivity_select_tab, 4);
                     startActivity(intent);
                 }
                 finish();
@@ -86,7 +84,7 @@ public class MyOrderListActivity extends BaseActivity implements MyOrderDetailFr
             public void onPageSelected(int position) {
 
                 //通知 订单列表刷新
-                MsgCenter.fireNull("swipe_reFlash", position);
+                MsgCenter.fireNull(MsgID.swipe_reFlash, position);
             }
 
             @Override

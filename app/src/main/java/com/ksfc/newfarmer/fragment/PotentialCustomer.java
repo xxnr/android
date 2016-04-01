@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.activitys.AddPotentialActivity;
 import com.ksfc.newfarmer.activitys.PotentialCustomerDetailActivity;
@@ -78,7 +79,7 @@ public class PotentialCustomer extends BaseFragment implements PullToRefreshBase
                 page = 1;
                 getData();
             }
-        }, "add_potential_success");
+        }, MsgID.add_potential_success);
 
         if (isXXNRAgent) {
             getData();

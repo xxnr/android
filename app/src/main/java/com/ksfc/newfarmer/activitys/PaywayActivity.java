@@ -10,6 +10,7 @@ import com.alibaba.fastjson.JSON;
 import com.alipay.sdk.pay.demo.AlipayClass;
 import com.google.gson.Gson;
 import com.ksfc.newfarmer.BaseActivity;
+import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.RndApplication;
 import com.ksfc.newfarmer.db.Store;
@@ -550,7 +551,7 @@ public class PaywayActivity extends BaseActivity implements Runnable {
                     }
                 }
                 //通知 订单列表刷新
-                MsgCenter.fireNull("Pay_success", "price");
+                MsgCenter.fireNull(MsgID.Pay_success, "price");
                 IntentUtil.activityForward(this, OfflinePayActivity.class, bundle, false);
             }
         }

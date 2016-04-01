@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.ksfc.newfarmer.BaseActivity;
+import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.protocol.ApiType;
@@ -303,7 +304,7 @@ public class AddPotentialActivity extends BaseActivity {
         } else if (req.getApi() == ApiType.ADD_POTENTIAL_CUSTOMER) {
             if (req.getData().getStatus().equals("1000")) {
                 showToast("添加成功");
-                MsgCenter.fireNull("add_potential_success", new Object());
+                MsgCenter.fireNull(MsgID.add_potential_success, "add");
                 finish();
             }
 

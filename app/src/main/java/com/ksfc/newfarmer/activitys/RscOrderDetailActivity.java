@@ -41,6 +41,7 @@ import com.ksfc.newfarmer.utils.DateFormatUtils;
 import com.ksfc.newfarmer.utils.PopWindowUtils;
 import com.ksfc.newfarmer.utils.ShowHideUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
+import com.ksfc.newfarmer.widget.KeyboardListenRelativeLayout;
 import com.ksfc.newfarmer.widget.RecyclerImageView;
 import com.ksfc.newfarmer.widget.UnSwipeGridView;
 import com.ksfc.newfarmer.widget.UnSwipeListView;
@@ -52,7 +53,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class RscOrderDetailActivity extends BaseActivity implements ViewTreeObserver.OnGlobalLayoutListener {
+public class RscOrderDetailActivity extends BaseActivity implements KeyboardListenRelativeLayout.IOnKeyboardStateChangedListener {
 
 
     private TextView name_phone_tv, order_detail_address_tv, order_tv, pay_state_tv, total_price_tv;
@@ -87,7 +88,7 @@ public class RscOrderDetailActivity extends BaseActivity implements ViewTreeObse
     private RelativeLayout pop_self_delivery_code_Rel;
     private ListView pop_self_delivery_listView;
     private boolean self_delivery_tag = false;
-    private View rootView;
+    private KeyboardListenRelativeLayout rootView;
 
 
     @Override
@@ -116,8 +117,8 @@ public class RscOrderDetailActivity extends BaseActivity implements ViewTreeObse
         change_pay_type = (Button) findViewById(R.id.change_pay_type);
         pop_bg = (RelativeLayout) findViewById(R.id.pop_bg);
 
-        rootView = findViewById(R.id.order_detail_rl);
-        rootView.getViewTreeObserver().addOnGlobalLayoutListener(this);
+        rootView = (KeyboardListenRelativeLayout)findViewById(R.id.order_detail_rl);
+        rootView.setOnKeyboardStateChangedListener(this);
 
         //头部信息 订单号： 交易状态 送货人 地址
         View head_layout = LayoutInflater.from(RscOrderDetailActivity.this).inflate(R.layout.rsc_orderdetail_head_layout, null);
@@ -461,6 +462,7 @@ public class RscOrderDetailActivity extends BaseActivity implements ViewTreeObse
 
         }
     }
+
 
 
 
@@ -986,9 +988,7 @@ public class RscOrderDetailActivity extends BaseActivity implements ViewTreeObse
 
         //初始化组件
 
-        LinearLayout pop_discount_lin = (LinearLayout) popupWindow_view.findViewById(R.id.pop_discount_lin);
-        //软件盘监听
-        pop_discount_lin.getViewTreeObserver().addOnGlobalLayoutListener(this);
+
 
         ImageView pop_close = (ImageView) popupWindow_view.findViewById(R.id.pop_close);
         pop_close.setOnClickListener(this);
@@ -1155,18 +1155,15 @@ public class RscOrderDetailActivity extends BaseActivity implements ViewTreeObse
 
     //监听软键盘收起时，清除editText的焦点
     @Override
-    public void onGlobalLayout() {
+    public void onKeyboardStateChanged(int state) {
+        if (state == KeyboardListenRelativeLayout.KEYBOARD_STATE_HIDE) {
 
-
-//        if (self_delivery_code_et != null) {
-//            int heightDiff = rootView.getRootView().getHeight() - rootView.getHeight();
-//            // 如果高度差超过100像素，就很有可能是有软键盘...
-//            if (heightDiff <= 100) {
-//                self_delivery_code_et.clearFocus();
-//            }
-//        }
-
+            if (self_delivery_code_et!=null){
+                self_delivery_code_et.clearFocus();
+            }
+        }
     }
+
 
 
 }

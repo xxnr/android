@@ -178,7 +178,7 @@ public class AddOrderActivity extends BaseActivity implements RadioGroup.OnCheck
                     name_phone_tv.setText(name);
                 }
             }
-        }, "MSG.ADDRESS.CALL.BACK");
+        }, MsgID.MSG_Change_ADDRESS);
     }
 
 

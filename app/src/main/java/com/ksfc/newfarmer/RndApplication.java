@@ -34,20 +34,19 @@ import net.yangentao.util.app.App;
 import org.apache.http.client.HttpClient;
 
 public class RndApplication extends Application {
-
+    private static final String TAG = "RndApplication";
     public static Context applicationContext;
     private static RndApplication instance;
-    // login user name
-    private String uid = "";
-    private String pwd = "";
-    public static boolean isLogined = false;
+
     private static final String dbname = "xnrdb.db";
     public static final String DB_NAME = dbname;
-    public final String PREF_USERNAME = "username";
 
     public static List<Activity> unDestroyActivityList = new ArrayList<>();
     public static List<Activity> tempDestroyActivityList = new ArrayList<>();
-    private static final String TAG = "RndApplication";
+
+    // login user name
+    private String uid = "";
+    private String pwd = "";
 
 
     @Override
@@ -60,11 +59,11 @@ public class RndApplication extends Application {
         initImageLoader(this, null);
         //初始化CrashHandler
         CrashHandler.getInstance().init(this);
+
         //初始化推送
         PushAgent mPushAgent = PushAgent.getInstance(this);
         mPushAgent.setDebugMode(false);
         mPushAgent.enable();
-
         //初始化推送接入后台
         UmengPush.lunchActivity(this);
         //初始化社会化分享
@@ -162,24 +161,6 @@ public class RndApplication extends Application {
 
     }
 
-    //设置全局的用户名和密码
-    public void setUid(String uid) {
-        this.uid = uid;
-    }
-
-    public String getUid() {
-
-        return uid;
-    }
-
-    public void setPwd(String pwd) {
-        this.pwd = pwd;
-    }
-
-    public String getPwd() {
-        return this.pwd;
-    }
-
     /**
      * 局部退出
      */
@@ -206,6 +187,26 @@ public class RndApplication extends Application {
             }
         }
     }
+
+
+    //设置全局的用户名和密码
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public String getUid() {
+
+        return uid;
+    }
+
+    public void setPwd(String pwd) {
+        this.pwd = pwd;
+    }
+
+    public String getPwd() {
+        return this.pwd;
+    }
+
 
 
 

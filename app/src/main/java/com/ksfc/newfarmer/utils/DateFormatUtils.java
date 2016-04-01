@@ -8,6 +8,10 @@ import java.util.TimeZone;
 /**
  * Created by HePeng on 2015/12/29.
  */
+
+/**
+ * 格式化时间
+ */
 public class DateFormatUtils {
 
     public static String convertTime(String srcTime) {

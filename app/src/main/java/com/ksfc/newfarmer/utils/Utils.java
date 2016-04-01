@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -26,57 +28,12 @@ import android.os.Environment;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 public class Utils {
-    public static final String TAG = "PushDemoActivity";
-    public static final String RESPONSE_METHOD = "method";
-    public static final String RESPONSE_CONTENT = "content";
-    public static final String RESPONSE_ERRCODE = "errcode";
-    protected static final String ACTION_LOGIN = "com.baidu.pushdemo.action.LOGIN";
-    public static final String ACTION_MESSAGE = "com.baiud.pushdemo.action.MESSAGE";
-    public static final String ACTION_RESPONSE = "bccsclient.action.RESPONSE";
-    public static final String ACTION_SHOW_MESSAGE = "bccsclient.action.SHOW_MESSAGE";
-    protected static final String EXTRA_ACCESS_TOKEN = "access_token";
-    public static final String EXTRA_MESSAGE = "message";
-
-    public static String logStringCache = "";
-
     private static long lastClickTime;
 
-    // 获取ApiKey
-    public static String getMetaValue(Context context, String metaKey) {
-        Bundle metaData = null;
-        String apiKey = null;
-        if (context == null || metaKey == null) {
-            return null;
-        }
-        try {
-            ApplicationInfo ai = context.getPackageManager()
-                    .getApplicationInfo(context.getPackageName(),
-                            PackageManager.GET_META_DATA);
-            if (null != ai) {
-                metaData = ai.metaData;
-            }
-            if (null != metaData) {
-                apiKey = metaData.getString(metaKey);
-            }
-        } catch (NameNotFoundException e) {
-
-        }
-        return apiKey;
-    }
-
-    // 用share preference来实现是否绑定的开关。在ionBind且成功时设置true，unBind且成功时设置false
-    public static boolean hasBind(Context context) {
-        SharedPreferences sp = PreferenceManager
-                .getDefaultSharedPreferences(context);
-        String flag = sp.getString("bind_flag", "");
-        if ("ok".equalsIgnoreCase(flag)) {
-            return true;
-        }
-        return false;
-    }
 
     // 判断是否是手机号
     public static boolean isMobileNum(String mobiles) {
@@ -102,51 +59,6 @@ public class Utils {
     }
 
 
-    public static void setBind(Context context, boolean flag) {
-        String flagStr = "not";
-        if (flag) {
-            flagStr = "ok";
-        }
-        SharedPreferences sp = PreferenceManager
-                .getDefaultSharedPreferences(context);
-        Editor editor = sp.edit();
-        editor.putString("bind_flag", flagStr);
-        editor.apply();
-    }
-
-    public static List<String> getTagsList(String originalText) {
-        if (originalText == null || originalText.equals("")) {
-            return null;
-        }
-        List<String> tags = new ArrayList<String>();
-        int indexOfComma = originalText.indexOf(',');
-        String tag;
-        while (indexOfComma != -1) {
-            tag = originalText.substring(0, indexOfComma);
-            tags.add(tag);
-
-            originalText = originalText.substring(indexOfComma + 1);
-            indexOfComma = originalText.indexOf(',');
-        }
-
-        tags.add(originalText);
-        return tags;
-    }
-
-    public static String getLogText(Context context) {
-        SharedPreferences sp = PreferenceManager
-                .getDefaultSharedPreferences(context);
-        return sp.getString("log_text", "");
-    }
-
-    public static void setLogText(Context context, String text) {
-        SharedPreferences sp = PreferenceManager
-                .getDefaultSharedPreferences(context);
-        Editor editor = sp.edit();
-        editor.putString("log_text", text);
-        editor.apply();
-    }
-
     /**
      * 根据手机的分辨率从 dp 的单位 转成为 px(像素)
      */
@@ -163,31 +75,6 @@ public class Utils {
         return (int) (pxValue / scale + 0.5f);
     }
 
-//    /**
-//     * 锁定按纽
-//     *
-//     * @param activity
-//     * @param ResId
-//     * @param unableColor
-//     * @param msg
-//     */
-//    public static void lockButton(Activity activity, int ResId, final int unableColor, final int ableColor, final String msg, final String loadMsg) {
-//        final TextView textView = (TextView) activity.findViewById(ResId);
-//        textView.setEnabled(false);
-//        textView.setBackgroundColor(unableColor);
-//        textView.setText(loadMsg);
-//
-//        //设置刷新的文字
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                textView.setEnabled(true);
-//                textView.setBackgroundColor(ableColor);
-//                textView.setText(msg);
-//            }
-//        }, 3 * 1000);
-//
-//    }
 
     public synchronized static boolean isFastClick() {
         long time = System.currentTimeMillis();
@@ -210,7 +97,7 @@ public class Utils {
         return packageInfo != null;
     }
 
-
+    //从Assets中判断是否存在
     public static boolean copyApkFromAssets(Context context, String fileName, String path) {
         boolean copyIsFinish = false;
         try {
@@ -235,7 +122,7 @@ public class Utils {
 
     public static void addApk(final Context mContext, final String fileName) {
 
-        if (copyApkFromAssets(mContext, fileName, Environment.getExternalStorageDirectory().getAbsolutePath() + "/"+fileName)) {
+        if (copyApkFromAssets(mContext, fileName, Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + fileName)) {
             AlertDialog.Builder m = new AlertDialog.Builder(mContext)
                     .setMessage("使用ePos支付需要安装支付插件，是否继续？")
                     .setPositiveButton("继续", new DialogInterface.OnClickListener() {
@@ -243,7 +130,7 @@ public class Utils {
                         public void onClick(DialogInterface dialog, int which) {
                             Intent intent = new Intent(Intent.ACTION_VIEW);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent.setDataAndType(Uri.parse("file://" + Environment.getExternalStorageDirectory().getAbsolutePath() + "/"+fileName),
+                            intent.setDataAndType(Uri.parse("file://" + Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + fileName),
                                     "application/vnd.android.package-archive");
                             mContext.startActivity(intent);
                         }
@@ -258,6 +145,27 @@ public class Utils {
             RndLog.v("PkgInstalled", "not find pkg");
         }
 
+    }
+
+    /**
+     * 格式化日期
+     *
+     * @param time
+     * @return
+     */
+    public static String getDateToString(long time) {
+        Date date = new Date(time);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年MM月dd日");
+        return simpleDateFormat.format(date);
+    }
+
+    //隐藏输入法
+    public static void hideInputMethod(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm.isActive() && activity.getCurrentFocus() != null) {
+            imm.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(),
+                    InputMethodManager.HIDE_NOT_ALWAYS);
+        }
     }
 
 

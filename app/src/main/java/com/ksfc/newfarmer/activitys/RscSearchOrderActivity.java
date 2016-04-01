@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -47,6 +48,7 @@ import com.ksfc.newfarmer.utils.PullToRefreshUtils;
 import com.ksfc.newfarmer.utils.ShowHideUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.ClearEditText;
+import com.ksfc.newfarmer.widget.KeyboardListenRelativeLayout;
 import com.ksfc.newfarmer.widget.RecyclerImageView;
 import com.ksfc.newfarmer.widget.UnSwipeGridView;
 import com.ksfc.newfarmer.widget.UnSwipeListView;
@@ -63,7 +65,7 @@ import java.util.TimerTask;
 /**
  * Created by HePeng on 2016/3/28.
  */
-public class RscSearchOrderActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener2, ViewTreeObserver.OnGlobalLayoutListener {
+public class RscSearchOrderActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener2, KeyboardListenRelativeLayout.IOnKeyboardStateChangedListener {
     private ClearEditText rsc_search_edit;
     private TextView rsc_search_text;
     private String search;
@@ -91,7 +93,7 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
     private boolean self_delivery_tag = false;
     private OrderAdapter adapter;
     private RelativeLayout pop_bg;
-    private View rootView;
+    private KeyboardListenRelativeLayout rootView;
 
 
     @Override
@@ -106,8 +108,9 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
     }
 
     private void initView() {
-        rootView = findViewById(R.id.root_view);
-        rootView.getViewTreeObserver().addOnGlobalLayoutListener(this);
+        rootView = (KeyboardListenRelativeLayout) findViewById(R.id.root_view);
+        rootView.setOnKeyboardStateChangedListener(this);
+//        rootView.getViewTreeObserver().addOnGlobalLayoutListener(this);
 
         rsc_search_edit = (ClearEditText) findViewById(R.id.rsc_search_edit);
         rsc_search_text = (TextView) findViewById(R.id.rsc_search_text);
@@ -119,7 +122,7 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 /*判断是否是“搜索”键*/
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-					/*隐藏软键盘*/
+                    /*隐藏软键盘*/
                     InputMethodManager imm = (InputMethodManager) v
                             .getContext().getSystemService(
                                     Context.INPUT_METHOD_SERVICE);
@@ -166,7 +169,9 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
     public void OnViewClick(View v) {
         switch (v.getId()) {
             case R.id.rsc_search_text:
-                    finish();
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0); //强制隐藏键盘
+                finish();
                 break;
             case R.id.pop_close:
                 //关闭popWindow
@@ -928,12 +933,6 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
 
         ImageView pop_close = (ImageView) popupWindow_view.findViewById(R.id.pop_close);
         pop_close.setOnClickListener(this);
-
-        LinearLayout pop_discount_lin = (LinearLayout) popupWindow_view.findViewById(R.id.pop_discount_lin);
-        //软件盘监听
-        pop_discount_lin.getViewTreeObserver().addOnGlobalLayoutListener(this);
-
-
         pop_slef_delivery_order_title = (TextView) popupWindow_view.findViewById(R.id.pop_order_title);
         self_delivery_code_et = (EditText) popupWindow_view.findViewById(R.id.self_delivery_code_et);
         pop_self_delivery_code_Rel = (RelativeLayout) popupWindow_view.findViewById(R.id.pop_self_delivery_code_Rel);
@@ -1153,16 +1152,14 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
 
     //监听软键盘收起时，清除editText的焦点
     @Override
-    public void onGlobalLayout() {
+    public void onKeyboardStateChanged(int state) {
 
+        if (state == KeyboardListenRelativeLayout.KEYBOARD_STATE_HIDE) {
 
-//        if (self_delivery_code_et != null) {
-//            int heightDiff = rootView.getRootView().getHeight() - rootView.getHeight();
-//            // 如果高度差超过100像素，就很有可能是有软键盘...
-//            if (heightDiff <= 100) {
-//                self_delivery_code_et.clearFocus();
-//            }
-//        }
+            if (self_delivery_code_et!=null){
+                self_delivery_code_et.clearFocus();
+            }
+        }
 
     }
 

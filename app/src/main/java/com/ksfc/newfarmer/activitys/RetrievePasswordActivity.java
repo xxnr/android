@@ -135,7 +135,12 @@ public class RetrievePasswordActivity extends BaseActivity {
     private void getCode() {
 
         mobile = backedit1.getText().toString();
-        if (!isMobileValid(mobile)) {
+        if (!StringUtil.checkStr(mobile)) {
+            showToast("请输入手机号");
+            return ;
+        }
+        if (!isMobileNum(mobile)){
+            showToast("手机号格式错误");
             return;
         }
         sendSMS();

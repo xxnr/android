@@ -84,9 +84,6 @@ public class GuideActivity extends FragmentActivity implements ViewPager.OnPageC
 
         private List<Fragment> fragmentsList = null;
 
-        public GuideAdapter(FragmentManager fm) {
-            super(fm);
-        }
 
         public GuideAdapter(FragmentManager fm, List<Fragment> fragmentsList) {
             super(fm);

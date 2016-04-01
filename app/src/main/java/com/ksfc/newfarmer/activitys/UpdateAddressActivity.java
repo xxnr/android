@@ -4,6 +4,7 @@
 package com.ksfc.newfarmer.activitys;
 
 import com.ksfc.newfarmer.BaseActivity;
+import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.protocol.ApiType;
@@ -300,7 +301,7 @@ public class UpdateAddressActivity extends BaseActivity {
                 if (default_address.isChecked()) {
                     String addr = city + town
                             + room_edit.getEditableText().toString().trim();
-                    MsgCenter.fireNull("MSG.ADDR", addr);
+                    MsgCenter.fireNull(MsgID.MSG_ADD_ADDRESS, addr);
                     UserInfo queryMe = Store.User.queryMe();
                     if (queryMe!=null){
                         queryMe.defaultAddress = addr;

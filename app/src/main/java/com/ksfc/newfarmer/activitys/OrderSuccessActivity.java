@@ -1,6 +1,7 @@
 package com.ksfc.newfarmer.activitys;
 
 import com.ksfc.newfarmer.BaseActivity;
+import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.RndApplication;
 import com.ksfc.newfarmer.protocol.Request;
@@ -35,7 +36,7 @@ public class OrderSuccessActivity extends BaseActivity {
             price_tv.setText("支付金额：¥" + price + "元");
         }
         //通知 订单列表刷新
-        MsgCenter.fireNull("Pay_success", "price");
+        MsgCenter.fireNull(MsgID.Pay_success, "price");
         setViewClick(R.id.contact_tv);
         setViewClick(R.id.check_order_tv);
 

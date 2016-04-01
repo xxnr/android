@@ -127,7 +127,7 @@ public class MyaccountActivity extends BaseActivity {
             public void onMsg(Object sender, String msg, Object... args) {
                 finish();
             }
-        }, "MyaccountActivityFinish");
+        }, MsgID.MyaccountActivityFinish);
 
 
 

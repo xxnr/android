@@ -66,7 +66,7 @@ public class MainActivity extends TabActivity {
                 }
                 setRadioGroupCheckById(i);
             }
-        }, "MainActivity_select_tab");
+        }, MsgID.MainActivity_select_tab);
 
     }
 

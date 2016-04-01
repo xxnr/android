@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.ksfc.newfarmer.BaseActivity;
+import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.adapter.CommonAdapter;
 import com.ksfc.newfarmer.adapter.CommonViewHolder;
@@ -152,7 +153,7 @@ public class AddressmanageActivity extends BaseActivity {
             }
         } else if (req.getApi() == ApiType.SELECT_ADDRESS) {
             if ("1000".equals( req.getData().getStatus())) {
-                MsgCenter.fireNull("MSG.ADDRESS.CALL.BACK",
+                MsgCenter.fireNull(MsgID.MSG_Change_ADDRESS,
                         rows.get(map.get("pos")));
                 finish();
             }
@@ -223,7 +224,7 @@ public class AddressmanageActivity extends BaseActivity {
                                                        Store.User.saveMe(queryMe);
                                                        map.put("pos", -1);
                                                        selectedAddress = null;
-                                                       MsgCenter.fireNull("MSG.ADDR", selectedAddress);
+                                                       MsgCenter.fireNull(MsgID.MSG_ADD_ADDRESS, selectedAddress);
                                                    }
                                                }
                                                showProgressDialog();

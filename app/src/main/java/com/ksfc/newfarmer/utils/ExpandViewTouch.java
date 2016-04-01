@@ -7,6 +7,10 @@ import android.view.View;
 /**
  * Created by HePeng on 2015/12/9.
  */
+
+/**
+ * 可点击区域放大
+ */
 public class ExpandViewTouch {
 
     public static void expandViewTouchDelegate(final View view, final int top,
