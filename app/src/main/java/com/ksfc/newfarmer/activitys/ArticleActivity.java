@@ -45,8 +45,6 @@ public class ArticleActivity extends BaseActivity {
         @Override
         public void onResult(SHARE_MEDIA platform) {
             showToast("分享成功");
-            //分享成功次数统计
-            MobclickAgent.onEvent(ArticleActivity.this, "_shareSuccessCount");
             //分享成功后关闭对话框
             if (popupWindow.isShowing()) {
                 popupWindow.dismiss();

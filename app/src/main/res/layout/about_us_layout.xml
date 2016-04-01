@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/about_us_bg"
-    >
+    android:orientation="vertical">
 
-    <include
-        layout="@layout/title_lay"/>
+    <include layout="@layout/title_lay" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -14,47 +13,46 @@
 
         <ImageView
             android:id="@+id/about_us_icon"
-            android:layout_marginTop="140dp"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/about_us_icon"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="140dp"
+            android:background="@drawable/about_us_icon" />
 
         <TextView
             android:id="@+id/about_us_introduce"
-            android:text="新农业|新农村|新农人"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@id/about_us_icon"
-            android:layout_marginTop="15dp"
-            android:textColor="@color/white"
-
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_below="@id/about_us_icon"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp"
+
+            android:text="新农业|新农村|新农人"
+            android:textColor="@color/white" />
 
         <TextView
             android:id="@+id/about_us_version"
-            android:text="V2.1.4"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@id/about_us_introduce"
-            android:layout_marginTop="15dp"
-            android:textColor="@color/white"
-
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_below="@id/about_us_introduce"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp"
+
+            android:text="V2.1.4"
+            android:textColor="@color/white" />
 
         <TextView
-            android:layout_marginBottom="50dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:textColor="@color/white"
-            android:textSize="12sp"
+            android:layout_marginBottom="50dp"
             android:text="北京新新农人网络科技有限公司 版权所有"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:textColor="@color/white"
+            android:textSize="12sp" />
 
 
     </RelativeLayout>
-
 
 
 </LinearLayout>

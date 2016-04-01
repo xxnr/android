@@ -12,6 +12,8 @@ import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
+import com.ksfc.newfarmer.adapter.CommonAdapter;
+import com.ksfc.newfarmer.adapter.CommonViewHolder;
 import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.ApiType.RequestMethod;
@@ -26,41 +28,41 @@ import com.ksfc.newfarmer.protocol.beans.HomeImageResult.UserRollImage;
 import com.ksfc.newfarmer.protocol.beans.PointResult;
 import com.ksfc.newfarmer.utils.PullToRefreshUtils;
 import com.ksfc.newfarmer.utils.SPUtils;
+import com.ksfc.newfarmer.utils.ScreenUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
+import com.ksfc.newfarmer.utils.Utils;
 import com.ksfc.newfarmer.widget.CarouselDiagramViewPager;
-import com.ksfc.newfarmer.widget.GridViewWithHeaderAndFooter;
+import com.ksfc.newfarmer.widget.UnSwipeGridView;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.umeng.message.UmengRegistrar;
 import com.umeng.update.UmengUpdateAgent;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 
 public class HomepageActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener {
-    private LinearLayout headerlayout, ll_banner_container;
-    private LayoutInflater inflat;
-    private GridViewWithHeaderAndFooter huafei_gv, qiche_gv;
+    private LinearLayout ll_banner_container;
+    private UnSwipeGridView huafei_gv, qiche_gv;
     private CarouselDiagramViewPager carouselDiagramViewPager;
     private int page1 = 1;
     private int page2 = 1;
     List<SingleGood> hfList = new ArrayList<>();
     List<SingleGood> qcList = new ArrayList<>();
-    private huafeiAdapter hfAdapter;
+    private HuafeiAdapter hfAdapter;
     private RelativeLayout go_huafei;
     private RelativeLayout go_car;
-    private qicheAdapter qcAdapter;
+    private CarAdapter qcAdapter;
     private RelativeLayout car_bar_layout;
 
     private PullToRefreshScrollView scrollView;
@@ -75,8 +77,8 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
     public void OnActCreate(Bundle savedInstanceState) {
         UmengUpdateAgent.setUpdateOnlyWifi(false);
         UmengUpdateAgent.update(this);//在主页判断是否更新版本
+
         setTitle("新新农人");
-        inflat = getLayoutInflater().from(this);
         hideLeft();
         qiandao();
         initView();
@@ -124,8 +126,6 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
      *
      */
     private void getData() {
-
-
         RequestParams params = new RequestParams();
         Map<String, Object> map = new HashMap<>();
         map.put("page", page1);
@@ -154,14 +154,10 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
     }
 
     private void initView() {
-        headerlayout = (LinearLayout) inflat
-                .inflate(R.layout.homeheader1, null);
-        ll_banner_container = (LinearLayout) headerlayout
-                .findViewById(R.id.ll_banner_container);
-        go_huafei = (RelativeLayout) headerlayout
-                .findViewById(R.id.huafei_zhuanchang);
-        go_car = (RelativeLayout) headerlayout
-                .findViewById(R.id.car_zhuanchang);
+
+        ll_banner_container= (LinearLayout) findViewById(R.id.ll_banner_container);
+        go_huafei = (RelativeLayout) findViewById(R.id.huafei_zhuanchang);
+        go_car = (RelativeLayout) findViewById(R.id.car_zhuanchang);
 
         scrollView = (PullToRefreshScrollView) findViewById(R.id.pull_ll_srcoll);
         scrollView.setOnRefreshListener(this);
@@ -176,9 +172,9 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
         // 设置点击跳转监听
         go_huafei.setOnClickListener(this);
         go_car.setOnClickListener(this);
-        headerlayout.findViewById(R.id.head_bar_gengduo).setOnClickListener(
+        findViewById(R.id.head_bar_gengduo).setOnClickListener(
                 this);
-        headerlayout.findViewById(R.id.head_bottom_bar_qianjin)
+        findViewById(R.id.head_bottom_bar_qianjin)
                 .setOnClickListener(this);
         car_bar_layout = (RelativeLayout) findViewById(R.id.car_bar_layout);
 
@@ -192,7 +188,7 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
         if (isLogin()) {
             showProgressDialog("请稍后...");
             RequestParams params = new RequestParams();
-            if (isLogin()){
+            if (isLogin()) {
                 params.put("userId", Store.User.queryMe().userid);
             }
             execApi(ApiType.SIGN_IN_POINT, params);
@@ -203,10 +199,12 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
 
     private void initGv() {
         // 获取数据 填充化肥和农用车的gv
-        huafei_gv = (GridViewWithHeaderAndFooter) findViewById(R.id.huafei_gv);
-        huafei_gv.addHeaderView(headerlayout);
-        qiche_gv = (GridViewWithHeaderAndFooter) findViewById(R.id.qiche_gv);
-
+        huafei_gv = (UnSwipeGridView) findViewById(R.id.huafei_gv);
+        qiche_gv = (UnSwipeGridView) findViewById(R.id.qiche_gv);
+        huafei_gv.setFocusable(false);
+        qiche_gv.setFocusable(false);
+//        huafei_gv.setColumnWidth(Utils.dip2px(this, 158));
+//        qiche_gv.setColumnWidth(Utils.dip2px(this, 158));
     }
 
     @Override
@@ -217,7 +215,7 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
             case R.id.head_bar_gengduo:     //本为化肥
             case R.id.head_bottom_bar_qianjin://本为化肥
                 Intent intent1 = new Intent(HomepageActivity.this,
-                        ShangpinListActivity.class);
+                        GoodsListActivity.class);
                 intent1.putExtra("goods", "qiche");
                 startActivity(intent1);
                 break;
@@ -225,7 +223,7 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
             case R.id.car_bar_gengduo://本为汽车
             case R.id.car_bottom_bar_qianjin://本为汽车
                 Intent intent = new Intent(HomepageActivity.this,
-                        ShangpinListActivity.class);
+                        GoodsListActivity.class);
                 intent.putExtra("goods", "huafei");
                 startActivity(intent);
                 break;
@@ -250,15 +248,19 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
             ll_banner_container.addView(carouselDiagramViewPager.getView());
 
         } else if (req.getApi() == ApiType.GET_HUAFEI) {
-
+            scrollView.getRefreshableView().fullScroll(ScrollView.FOCUS_UP);
             GetGoodsData goodsData = (GetGoodsData) req.getData();
             List<SingleGood> huafeiList = goodsData.datas.rows;
-            if (huafeiList.size() > 0) {
+            if (huafeiList != null && huafeiList.size() > 0) {
                 if (page1 == 1) {
                     hfList.clear();
                     hfList.addAll(huafeiList);
-                    hfAdapter = new huafeiAdapter();
-                    qiche_gv.setAdapter(hfAdapter);
+                    if (hfAdapter == null) {
+                        hfAdapter = new HuafeiAdapter(this, hfList);
+                        qiche_gv.setAdapter(hfAdapter);
+                    } else {
+                        hfAdapter.notifyDataSetChanged();
+                    }
                 } else {
                     hfList.addAll(huafeiList);
                     hfAdapter.notifyDataSetChanged();
@@ -268,17 +270,23 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
             }
             disMissDialog();
         } else if (req.getApi() == ApiType.GET_NYC) {
-
+            scrollView.getRefreshableView().fullScroll(ScrollView.FOCUS_UP);
             GetGoodsData goodsData = (GetGoodsData) req.getData();
-            List<SingleGood> nongyongcheList = goodsData.datas.rows;
-            if (nongyongcheList.size() > 0) {
+            List<SingleGood> carList = goodsData.datas.rows;
+            if (carList != null && carList.size() > 0) {
                 car_bar_layout.setVisibility(View.VISIBLE);
                 if (page2 == 1) {
                     qcList.clear();
-                    qcList.addAll(nongyongcheList);
-                    qcAdapter = new qicheAdapter();
-                    huafei_gv.setAdapter(qcAdapter);
+                    qcList.addAll(carList);
+                    if (qcAdapter == null) {
+                        qcAdapter = new CarAdapter(this, qcList);
+                        huafei_gv.setAdapter(qcAdapter);
+
+                    } else {
+                        qcAdapter.notifyDataSetChanged();
+                    }
                 } else {
+                    qcList.addAll(carList);
                     qcAdapter.notifyDataSetChanged();
                 }
             } else {
@@ -326,160 +334,101 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
     }
 
 
-    public class huafeiAdapter extends BaseAdapter {
+    class HuafeiAdapter extends CommonAdapter<SingleGood> {
 
-        @Override
-        public int getCount() {
-            return hfList.size() > 0 ? hfList.size() : 0;
+
+        public HuafeiAdapter(Context context, List<SingleGood> data) {
+            super(context, data, R.layout.home_gv_item);
         }
 
         @Override
-        public Object getItem(int position) {
-            return hfList.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(final int position, View convertView,
-                            ViewGroup parent) {
-            if (convertView == null) {
-                convertView = LayoutInflater.from(HomepageActivity.this).inflate(
-                        R.layout.home_gv_item, parent, false);
-                convertView.setTag(new ViewHolder(convertView));
-
-            }
-            ViewHolder holder = (ViewHolder) convertView.getTag();
-
-
-            //商品图
-            ImageLoader.getInstance().displayImage(MsgID.IP + hfList.get(position).imgUrl, holder.huafei_img);
-            //商品名
-            if (StringUtil.checkStr(hfList.get(position).goodsName)) {
-                holder.huafei_name_tv.setText(hfList.get(position).goodsName);
-            }
-            //商品是否预售
-            if (hfList.get(position).presale) {
-                holder.huafei_xianjia.setTextColor(Color.GRAY);
-                holder.huafei_xianjia
-                        .setText("即将上线");
-            } else {
-                //商品价格
-                holder.huafei_xianjia.setTextColor(Color.parseColor("#ff4e00"));
-                if (StringUtil.checkStr(hfList.get(position).unitPrice)) {
-                    holder.huafei_xianjia
-                            .setText("¥" + hfList.get(position).unitPrice);
+        public void convert(CommonViewHolder holder, final SingleGood singleGood) {
+            if (singleGood != null) {
+                //商品图
+                ImageLoader.getInstance().displayImage(MsgID.IP + singleGood.imgUrl,
+                        ((ImageView) holder.getView(R.id.huafei_img)));
+                //商品名
+                if (StringUtil.checkStr(singleGood.goodsName)) {
+                    holder.setText(R.id.huafei_name_tv, singleGood.goodsName);
                 }
+                //商品是否预售
+                if (singleGood.presale) {
+                    TextView huafei_xianjia = (TextView) holder.getView(R.id.huafei_xianjia);
+                    huafei_xianjia.setTextColor(Color.GRAY);
+                    huafei_xianjia.setText("即将上线");
+                } else {
+                    //商品价格
+                    TextView huafei_xianjia = (TextView) holder.getView(R.id.huafei_xianjia);
+                    huafei_xianjia.setTextColor(getResources().getColor(R.color.orange_goods_price));
+                    if (StringUtil.checkStr(singleGood.unitPrice)) {
+                        huafei_xianjia
+                                .setText("¥" + singleGood.unitPrice);
+                    }
 
-            }
-
-            convertView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // 带商品的id过去
-                    Intent intent = new Intent(HomepageActivity.this,
-                            ShangpinDetailActivity.class);
-                    intent.putExtra("goodId", hfList.get(position).goodsId);
-                    startActivity(intent);
                 }
-            });
+                holder.getConvertView().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // 带商品的id过去
+                        Intent intent = new Intent(HomepageActivity.this,
+                                GoodsDetailActivity.class);
+                        intent.putExtra("goodId", singleGood.goodsId);
+                        startActivity(intent);
+                    }
+                });
 
-            return convertView;
-
-
-        }
-
-        class ViewHolder {
-
-            private TextView huafei_name_tv;
-            private TextView huafei_xianjia;
-            private ImageView huafei_img;
-
-            public ViewHolder(View convertView) {
-                huafei_name_tv = (TextView) convertView
-                        .findViewById(R.id.huafei_name_tv);
-                huafei_xianjia = (TextView) convertView
-                        .findViewById(R.id.huafei_xianjia);
-                huafei_img = (ImageView) convertView
-                        .findViewById(R.id.huafei_img);
             }
 
         }
-
     }
 
-    public class qicheAdapter extends BaseAdapter {
-        @Override
-        public int getCount() {
-            return qcList.size() > 0 ? qcList.size() : 0;
+
+    class CarAdapter extends CommonAdapter<SingleGood> {
+
+        public CarAdapter(Context context, List<SingleGood> data) {
+            super(context, data, R.layout.home_gv_item);
         }
 
         @Override
-        public Object getItem(int position) {
-            return qcList.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(final int position, View convertView,
-                            ViewGroup parent) {
-
-            if (convertView == null) {
-                convertView = LayoutInflater.from(HomepageActivity.this).inflate(
-                        R.layout.home_gv_item, parent, false);
-                convertView.setTag(new ViewHolder(convertView));
-
-            }
-            ViewHolder holder = (ViewHolder) convertView.getTag();
-            holder.huafei_img.setScaleType(ScaleType.CENTER_CROP);
-            ImageLoader.getInstance().displayImage(MsgID.IP + qcList.get(position).imgUrl, holder.huafei_img);
-
-            if (StringUtil.checkStr(qcList.get(position).goodsName)) {
-                holder.huafei_name_tv.setText(qcList.get(position).goodsName);
-            }
-            if (StringUtil.checkStr(qcList.get(position).unitPrice)) {
-                holder.huafei_xianjia.setText("¥" + qcList.get(position).unitPrice);
-            }
-
-            convertView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // 带商品的id过去
-                    Intent intent = new Intent(HomepageActivity.this,
-                            ShangpinDetailActivity.class);
-                    intent.putExtra("goodId", qcList.get(position).goodsId);
-                    startActivity(intent);
+        public void convert(CommonViewHolder holder, final SingleGood singleGood) {
+            if (singleGood != null) {
+                //商品图
+                ImageView carImage = (ImageView) holder.getView(R.id.huafei_img);
+                carImage.setScaleType(ScaleType.CENTER_CROP);
+                ImageLoader.getInstance().displayImage(MsgID.IP + singleGood.imgUrl, carImage);
+                //商品名
+                if (StringUtil.checkStr(singleGood.goodsName)) {
+                    holder.setText(R.id.huafei_name_tv, singleGood.goodsName);
                 }
-            });
+                //商品是否预售
+                if (singleGood.presale) {
+                    TextView huafei_xianjia = (TextView) holder.getView(R.id.huafei_xianjia);
+                    huafei_xianjia.setTextColor(Color.GRAY);
+                    huafei_xianjia.setText("即将上线");
+                } else {
+                    //商品价格
+                    TextView huafei_xianjia = (TextView) holder.getView(R.id.huafei_xianjia);
+                    huafei_xianjia.setTextColor(getResources().getColor(R.color.orange_goods_price));
+                    if (StringUtil.checkStr(singleGood.unitPrice)) {
+                        huafei_xianjia
+                                .setText("¥" + singleGood.unitPrice);
+                    }
 
-            return convertView;
+                }
+                holder.getConvertView().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // 带商品的id过去
+                        Intent intent = new Intent(HomepageActivity.this,
+                                GoodsDetailActivity.class);
+                        intent.putExtra("goodId", singleGood.goodsId);
+                        startActivity(intent);
+                    }
+                });
 
-        }
-
-        class ViewHolder {
-
-            private TextView huafei_name_tv;
-            private TextView huafei_xianjia;
-            private ImageView huafei_img;
-
-            public ViewHolder(View convertView) {
-                huafei_name_tv = (TextView) convertView
-                        .findViewById(R.id.huafei_name_tv);
-                huafei_xianjia = (TextView) convertView
-                        .findViewById(R.id.huafei_xianjia);
-                huafei_img = (ImageView) convertView
-                        .findViewById(R.id.huafei_img);
             }
 
         }
-
     }
 
 
@@ -498,13 +447,14 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
     protected void onResume() {
         super.onResume();
 
-        if (!(qcAdapter!=null
-                &&qcAdapter.getCount()>0
-                &&hfAdapter!=null
-                &&huafei_gv.getCount()>0)){
+        if (!(qcAdapter != null
+                && qcAdapter.getCount() > 0
+                && hfAdapter != null
+                && huafei_gv.getCount() > 0)) {
             showProgressDialog();
             getNyc();
             getData();
         }
+
     }
 }

@@ -58,7 +58,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="16dp"
-                android:text="15201532357"
+                android:text=""
                 android:textColor="@color/green" />
         </RelativeLayout>
 
@@ -97,7 +97,7 @@
                 android:gravity="center"
                 android:hint="请输入代表人手机号添加"
                 android:inputType="number"
-                android:maxLength="11"
+                android:maxLength="20"
                 android:textColor="@color/main_index_gary"
                 android:textColorHint="@color/b0_gray" />
 

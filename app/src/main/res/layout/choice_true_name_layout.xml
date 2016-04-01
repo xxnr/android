@@ -34,7 +34,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="40dp"
-        android:background="#e0e0e0"
+        android:background="@drawable/login_roate"
         android:gravity="center"
         android:padding="10dp"
         android:text="@string/save"

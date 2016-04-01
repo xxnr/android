@@ -14,16 +14,8 @@ public class JifenData extends ResponseResult {
 	public Data datas;
 
 	public static class Data {
-		public int total;
-		public String userId;
-		public int pointLaterTrade;
-		public List<Jifen> rows;
-		public float score;
+		public String pointLaterTrade;
 	}
 
-	public static class Jifen {
-		public long createTime;
-		public String pointAction;
-		public int pointNum;
-	}
+
 }

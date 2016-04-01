@@ -61,8 +61,9 @@ public class NewFramerInvite extends BaseActivity implements
     private void getData() {
         RequestParams params = new RequestParams();
         if (isLogin()){
-            execApi(ApiType.GET_POTENTIAL_CUSTOMER_LIST.setMethod(ApiType.RequestMethod.GET)
-                    .setOpt("/api/v2.1/potentialCustomer/query" + "?token=" + Store.User.queryMe().token + "&page=" + 1), params);
+            params.put("userId", Store.User.queryMe().userid);
+            params.put("page",1);
+            execApi(ApiType.GET_POTENTIAL_CUSTOMER_LIST.setMethod(ApiType.RequestMethod.GET), params);
         }
     }
 

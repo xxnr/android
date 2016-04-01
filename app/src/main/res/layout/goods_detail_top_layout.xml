@@ -80,7 +80,7 @@
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
                     android:layout_marginTop="11dp"
-                    android:text="中化好苗子有机肥"
+                    android:text=""
                     android:textColor="@color/black"
                     android:textSize="18sp" />
 
@@ -153,6 +153,7 @@
             </LinearLayout>
 
             <RelativeLayout
+                android:id="@+id/product_description_rel"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="14dp"
@@ -165,7 +166,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:text="踏板+靓条+座垫+脚垫，3月6日前APP下单可享惊爆价！"
+                    android:text=""
                     android:textColor="@color/green"
                     android:textSize="14sp" />
             </RelativeLayout>

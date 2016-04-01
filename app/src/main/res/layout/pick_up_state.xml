@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/default_act_bg"
+    android:orientation="vertical">
+
+
+    <include layout="@layout/title_lay" />
+
+
+    <ScrollView
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="23dp"
+                android:paddingTop="24dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:text="商品已配送至服务网点,请凭自提码到网点提货"
+                    android:textColor="@color/main_index_gary" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:text="自提码："
+                        android:textColor="@color/main_index_gary" />
+
+                    <TextView
+                        android:id="@+id/pick_up_code"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textColor="@color/orange_goods_price"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <include layout="@layout/line_lay" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:background="@color/default_act_bg" />
+
+            <include layout="@layout/line_lay" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:background="@color/white"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:singleLine="true"
+                    android:text="服务网点"
+                    android:textColor="@color/main_index_gary" />
+
+            </LinearLayout>
+
+            <include layout="@layout/line_lay" />
+
+            <LinearLayout
+                android:id="@+id/state_info_ll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:background="@color/white"
+                    android:gravity="center_vertical">
+
+
+                    <LinearLayout
+                        android:layout_width="93dp"
+                        android:layout_height="wrap_content">
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="16dp"
+                            android:singleLine="true"
+                            android:text="网店名称"
+                            android:textColor="@color/main_index_gary" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/RSC_companyName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="16dp"
+                        android:textIsSelectable="true"
+                        android:singleLine="true"
+                        android:text="" />
+
+                </LinearLayout>
+
+                <include layout="@layout/line_lay" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:gravity="center_vertical"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp">
+
+                    <LinearLayout
+                        android:layout_width="93dp"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="16dp"
+                            android:singleLine="true"
+                            android:text="地址"
+
+                            android:textColor="@color/main_index_gary" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/RSC_Address"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="16dp"
+                        android:textIsSelectable="true"
+                        android:text="" />
+
+
+                </LinearLayout>
+
+                <include layout="@layout/line_lay" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:background="@color/white"
+                    android:gravity="center_vertical">
+
+                    <LinearLayout
+                        android:layout_width="93dp"
+                        android:layout_height="wrap_content">
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="16dp"
+                            android:singleLine="true"
+                            android:text="电话"
+                            android:textColor="@color/main_index_gary" />
+
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/RSC_phone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="16dp"
+                        android:textIsSelectable="true"
+                        android:text="" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <include layout="@layout/line_lay" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:background="@color/default_act_bg" />
+
+            <include layout="@layout/line_lay" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:background="@color/loginback"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:singleLine="true"
+                    android:text="可自提商品"
+                    android:textColor="@color/main_index_gary" />
+
+            </LinearLayout>
+
+            <include layout="@layout/line_lay" />
+
+
+            <com.ksfc.newfarmer.widget.UnSwipeListView
+                android:id="@+id/pick_up_listView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="@color/gray"
+                android:dividerHeight="1px" />
+
+            <include layout="@layout/line_lay" />
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+
+</LinearLayout>

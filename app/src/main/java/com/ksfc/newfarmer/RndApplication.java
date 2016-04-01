@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.ksfc.newfarmer.Push.UmengPush;
+import com.ksfc.newfarmer.activitys.HomepageActivity;
 import com.ksfc.newfarmer.utils.CrashHandler;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
@@ -13,6 +15,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.umeng.message.ALIAS_TYPE;
 import com.umeng.message.PushAgent;
 import com.umeng.message.UmengRegistrar;
 import com.umeng.socialize.Config;
@@ -42,9 +45,10 @@ public class RndApplication extends Application {
     public static final String DB_NAME = dbname;
     public final String PREF_USERNAME = "username";
 
-    public static List<Activity> unDestroyActivityList = new ArrayList<Activity>();
-    public static List<Activity> tempDestroyActivityList = new ArrayList<Activity>();
+    public static List<Activity> unDestroyActivityList = new ArrayList<>();
+    public static List<Activity> tempDestroyActivityList = new ArrayList<>();
     private static final String TAG = "RndApplication";
+
 
     @Override
     public void onCreate() {
@@ -58,12 +62,17 @@ public class RndApplication extends Application {
         CrashHandler.getInstance().init(this);
         //初始化推送
         PushAgent mPushAgent = PushAgent.getInstance(this);
+        mPushAgent.setDebugMode(false);
         mPushAgent.enable();
-        mPushAgent.setNoDisturbMode(0, 0, 0, 0);
+
+        //初始化推送接入后台
+        UmengPush.lunchActivity(this);
         //初始化社会化分享
         initSocialShare();
     }
 
+
+    //社会化分享初始化
     public void initSocialShare() {
         //微信 appid appsecret
         PlatformConfig.setWeixin("wx46173e821f28d05a", "919a7e2cb7e1483393797f15bf53dcb9");
@@ -76,16 +85,13 @@ public class RndApplication extends Application {
 
     /**
      * 初始化图片加载器
-     *
-     * @param mContext
-     * @param defaultOptions
      */
     public static void initImageLoader(Context mContext,
                                        DisplayImageOptions defaultOptions) {
 
-        if (defaultOptions == null)
-            defaultOptions = buildImageOptions(mContext);
-
+        if (defaultOptions == null) {
+            defaultOptions = buildImageOptions();
+        }
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
                 mContext)
                 .threadPoolSize(5)
@@ -106,11 +112,8 @@ public class RndApplication extends Application {
 
     /**
      * 创建图片参数
-     *
-     * @param mContext
-     * @return
      */
-    private static DisplayImageOptions buildImageOptions(Context mContext) {
+    private static DisplayImageOptions buildImageOptions() {
         DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
                 .showImageOnLoading(null)
                 .showImageForEmptyUri(R.drawable.error).bitmapConfig(Bitmap.Config.RGB_565)
@@ -124,8 +127,7 @@ public class RndApplication extends Application {
         return instance;
     }
 
-
-    public  Toast toast;
+    public Toast toast;
 
     /**
      * 短时间显示Toast 作用:不重复弹出Toast,如果当前有toast正在显示，则先取消
@@ -160,6 +162,7 @@ public class RndApplication extends Application {
 
     }
 
+    //设置全局的用户名和密码
     public void setUid(String uid) {
         this.uid = uid;
     }
@@ -203,4 +206,8 @@ public class RndApplication extends Application {
             }
         }
     }
+
+
+
+
 }

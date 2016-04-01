@@ -14,6 +14,7 @@ import com.ksfc.newfarmer.protocol.RequestParams;
 import com.ksfc.newfarmer.protocol.beans.AddressList;
 import com.ksfc.newfarmer.protocol.beans.CameraResult;
 import com.ksfc.newfarmer.protocol.beans.LoginResult.UserInfo;
+import com.ksfc.newfarmer.utils.ShowHideUtils;
 import com.ksfc.newfarmer.widget.dialog.CustomDialog;
 import com.ksfc.newfarmer.widget.dialog.CustomDialogForHead;
 import com.ksfc.newfarmer.widget.dialog.CustomDialogForSex;
@@ -46,7 +47,7 @@ import net.yangentao.util.msg.MsgListener;
 public class MyaccountActivity extends BaseActivity {
     private HeadImageView myself_userImg;
     private String path;
-    private TextView nickName, address_songhuo;
+    private TextView nickName;
     private final int nameCode = 1;
     private final int trueNameCode = 2;
     private final int honeAddress = 3;
@@ -57,6 +58,8 @@ public class MyaccountActivity extends BaseActivity {
     private TextView address_home;
     private TextView type;
     private boolean flag = false;//性别
+    private TextView choose_type_Certified_tv;
+    private View choose_type_Certified_ll; //展示县级经销商的lin
 
 
     @Override
@@ -94,13 +97,15 @@ public class MyaccountActivity extends BaseActivity {
 
     private void initView() {
         nickName = (TextView) findViewById(R.id.nickName);
-        address_songhuo = (TextView) findViewById(R.id.address_songhuo);
         myself_userImg = (HeadImageView) findViewById(R.id.myself_userImg);
 
         name = (TextView) findViewById(R.id.name_tv);
         sex = (TextView) findViewById(R.id.sex_tv);
         address_home = (TextView) findViewById(R.id.home_address_tv);
         type = (TextView) findViewById(R.id.type_tv);
+        choose_type_Certified_tv = (TextView) findViewById(R.id.choose_type_Certified_tv);
+
+        choose_type_Certified_ll = findViewById(R.id.choose_type_Certified_ll);//申请县级经销商的提示
 
 
         setViewClick(R.id.header_image_ll);
@@ -113,22 +118,46 @@ public class MyaccountActivity extends BaseActivity {
         setViewClick(R.id.choose_sex_ll);
         setViewClick(R.id.choose_home_address_ll);
         setViewClick(R.id.choose_type_ll);
+        setViewClick(R.id.choose_type_Certified_ll);//申请县级网店认证
+
+
+        //修改密码成功销毁此活动
+        MsgCenter.addListener(new MsgListener() {
+            @Override
+            public void onMsg(Object sender, String msg, Object... args) {
+                finish();
+            }
+        }, "MyaccountActivityFinish");
+
 
 
         MsgCenter.addListener(new MsgListener() {
             @Override
             public void onMsg(Object sender, String msg, Object... args) {
-                AddressList.Address address = (AddressList.Address) args[0];
-                if (address != null) {
-                    address_songhuo.setText(StringUtil.checkBufferStr(address.areaName + address.cityName
-                            , address.countyName
-                            , address.townName
-                            , address.address));
+                me = Store.User.queryMe();
+                if (me == null) {
+                    return;
+                }
+                if (me.userType.equals("5")) {
+                    ShowHideUtils.showFadeOut(choose_type_Certified_ll);
+                    choose_type_Certified_ll.setVisibility(View.VISIBLE);
+                    if (me.RSCInfoVerifing) {
+                        choose_type_Certified_tv.setText("资料审核中，请耐心稍后");
+                    } else {
+                        if (me.isRSC) {
+                            choose_type_Certified_tv.setText("查看认证信息");
+                        } else {
+                            choose_type_Certified_tv.setText("想成为新新农人的县级网点？去申请认证吧");
+                        }
+                    }
                 } else {
-                    address_songhuo.setText("");
+                    choose_type_Certified_ll.setVisibility(View.GONE);
+                    ShowHideUtils.hideFadeIn(choose_type_Certified_ll);
                 }
             }
-        }, "MSG.ADDR");
+        }, MsgID.UPDATE_USER_TYPE);
+
+
 
 
         if (me == null) {
@@ -141,8 +170,6 @@ public class MyaccountActivity extends BaseActivity {
                     myself_userImg);
         }
         nickName.setText(TextUtils.isEmpty(me.nickname) ? "" : me.nickname);
-        address_songhuo
-                .setText(TextUtils.isEmpty(me.defaultAddress) ? "" : me.defaultAddress);
         if (me.sex) {
             sex.setText("女");
         } else {
@@ -156,10 +183,17 @@ public class MyaccountActivity extends BaseActivity {
         } else {
             type.setText("还没填写呦~");
         }
+
+        MsgCenter.fireNull(MsgID.UPDATE_USER_TYPE);
     }
 
     @Override
     public void OnViewClick(View v) {
+
+        if(!isLogin()){
+            IntentUtil.activityForward(MyaccountActivity.this,
+                    LoginActivity.class, null,true);
+        }
         switch (v.getId()) {
             case R.id.header_image_ll:
                 // 点击上传头像
@@ -193,7 +227,7 @@ public class MyaccountActivity extends BaseActivity {
                                                         int which) {
                                         dialog.dismiss();
                                         RequestParams params = new RequestParams();
-                                        if (isLogin()){
+                                        if (isLogin()) {
                                             params.put("userId", Store.User.queryMe().userid);
                                         }
                                         params.put("sex", "0");
@@ -215,7 +249,7 @@ public class MyaccountActivity extends BaseActivity {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
                                 RequestParams params = new RequestParams();
-                                if (isLogin()){
+                                if (isLogin()) {
                                     params.put("userId", Store.User.queryMe().userid);
                                 }
                                 params.put("sex", "1");
@@ -236,6 +270,10 @@ public class MyaccountActivity extends BaseActivity {
                 bundle2.putBoolean("flag", true);
                 IntentUtil.startActivityForResult(this, SelectUserTypeActivity.class,
                         userCode, bundle2);
+                break;
+            case R.id.choose_type_Certified_ll:
+                IntentUtil.activityForward(MyaccountActivity.this,
+                        CertifiedRSCActivity.class, null, false);
                 break;
             case R.id.save_userInfo:
                 if (isLogin()) {
@@ -379,7 +417,7 @@ public class MyaccountActivity extends BaseActivity {
         params.addQueryStringParameter(name, value);
         params.addBodyParameter(path.replace("/", ""), new File(path),
                 "image/jpeg");
-        if (isLogin()){
+        if (isLogin()) {
             params.addBodyParameter("token", Store.User.queryMe().token);
         }
         HttpUtils http = new HttpUtils();

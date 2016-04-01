@@ -28,4 +28,5 @@ public interface MsgID {
 	String UPDATE_USER = "update";// 用户登陆了
 	String CLEAR_USER = "clear";// 用户登陆了
 
+    String UPDATE_USER_TYPE="update_userType";//用户更改了类型 或者类型下的认证状态
 }

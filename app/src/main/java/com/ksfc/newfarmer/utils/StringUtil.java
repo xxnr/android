@@ -71,7 +71,7 @@ public class StringUtil {
 
     // 将float转换成浮点型保留两位小数的字符串
     public static String toTwoString(String str) {
-        float v = Float.parseFloat(str);
+        Double v = Double.parseDouble(str);
         DecimalFormat df = new DecimalFormat("0.00");
         return String.valueOf(df.format(v));
     }
@@ -88,23 +88,7 @@ public class StringUtil {
         return true;
     }
 
-    // 判断电话号码格式是否正确
-    public static boolean isMobileNO(String mobiles) {
 
-		/*
-         * Pattern p = Pattern
-		 * 
-		 * .compile("^((13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$");
-		 */
-
-        if (!checkStr(mobiles))
-            return false;
-        Pattern p = Pattern.compile("[0-9]*");
-        Matcher m = p.matcher(mobiles);
-
-        return m.matches() & mobiles.trim().length() == 11;
-
-    }
 
     // 判断密码格式是否正确
     public static boolean isPassword(String password) {
@@ -132,37 +116,6 @@ public class StringUtil {
 
     }
 
-    // <!-- 吐司提示 -->
-    // <string name="acountnull">号码不能为空</string>
-    // <string name="passwordnull">密码不能为空</string>
-    // <string name="acountformat">号码格式有误,请输入正确的电话号码</string>
-    // <string name="passwordformat">密码格式有误,请输入6到13位数字</string>
-
-    // 判断密码账号格式正确性
-    // public static boolean checkPassword(String password, Context context) {
-    // if (!StringUtil.checkStr(password)) {
-    // ToastUtil.showToast(context, R.string.passwordnull, null, false);
-    // return false;
-    // } else if (!StringUtil.isPassword(password)) {
-    // ToastUtil.showToast(context, R.string.passwordformat, null, false);
-    // return false;
-    // }
-    //
-    // return true;
-    //
-    // }
-
-    // public static boolean checkAcount(String acount, Context context) {
-    // if (!StringUtil.checkStr(acount)) {
-    // ToastUtil.showToast(context, R.string.acountnull, null, false);
-    // return false;
-    // } else if (!StringUtil.isMobileNO(acount)) {
-    // ToastUtil.showToast(context, R.string.acountformat, null, false);
-    // return false;
-    // }
-    // return true;
-    //
-    // }
 
     /**
      * 验证字符串是否为空
@@ -174,6 +127,11 @@ public class StringUtil {
         return param == null || param.trim().length() < 1;
     }
 
+    /**
+     * 格式化日期
+     * @param time
+     * @return
+     */
     public static String getDateToString(long time) {
         Date date = new Date(time);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年MM月dd日");

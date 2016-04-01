@@ -43,7 +43,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="16dp"
-            android:text="15201532357"
+            android:text=""
             android:textColor="@color/green"
              />
 

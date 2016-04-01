@@ -7,6 +7,8 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.activitys.ConsumerOrderActivity;
+import com.ksfc.newfarmer.adapter.CommonAdapter;
+import com.ksfc.newfarmer.adapter.CommonViewHolder;
 import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.Request;
@@ -16,6 +18,7 @@ import com.ksfc.newfarmer.protocol.beans.LoginResult;
 import com.ksfc.newfarmer.utils.PullToRefreshUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.text.TextUtils;
@@ -35,6 +38,11 @@ public class InviteFriendsList extends BaseFragment implements PullToRefreshBase
     private InviteAdapter adapter;
     private int page = 1;
 
+
+    @Override
+    public void OnViewClick(View v) {
+
+    }
 
     @Override
     public View InItView() {
@@ -82,7 +90,7 @@ public class InviteFriendsList extends BaseFragment implements PullToRefreshBase
                     List<InviteeResult.Invitee> list = data.invitee;
                     if (page == 1) {
                         if (adapter == null) {
-                            adapter = new InviteAdapter(list);
+                            adapter = new InviteAdapter(getActivity(),list);
                             listView.setAdapter(adapter);
                         } else {
                             adapter.clear();
@@ -117,6 +125,61 @@ public class InviteFriendsList extends BaseFragment implements PullToRefreshBase
         }
     }
 
+    class InviteAdapter extends CommonAdapter<InviteeResult.Invitee>{
+
+
+
+        public InviteAdapter(Context context, List<InviteeResult.Invitee> data) {
+            super(context, data, R.layout.item_invite_list);
+        }
+
+        @Override
+        public void convert(final CommonViewHolder holder, final InviteeResult.Invitee invitee) {
+
+            if (invitee!=null){
+                TextView nickname_tv = (TextView) holder.getView(R.id.my_inviter_nickname);
+                if (!TextUtils.isEmpty(invitee.name)) {
+                    nickname_tv.setText(invitee.name);
+                    nickname_tv.setTextColor(Color.WHITE);
+                    nickname_tv.setBackgroundResource(R.drawable.login_roateup);
+                } else {
+                    nickname_tv.setText("该好友未填姓名");
+                    nickname_tv.setTextColor(getResources().getColor(R.color.main_index_gary));
+                    nickname_tv.setBackgroundResource(R.drawable.gethaoyouweishezhinicheng);
+                }
+
+                final TextView dotView = (TextView) holder.getView(R.id.my_inviter_nickname_remind_dot);
+                if (invitee.newOrdersNumber != 0) {
+                    if (invitee.newOrdersNumber > 0) {
+                        dotView.setVisibility(View.VISIBLE);
+                    } else {
+                        dotView.setVisibility(View.GONE);
+                    }
+                } else {
+                    dotView.setVisibility(View.GONE);
+                }
+                if (StringUtil.checkStr(invitee.account)) {
+                    holder.setText(R.id.my_inviter_phone, invitee.account);
+                }
+
+                holder.getConvertView().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dotView.setVisibility(View.GONE);
+                        Intent intent = new Intent(getActivity(), ConsumerOrderActivity.class);
+                        intent.putExtra("consumer", invitee);
+                        startActivity(intent);
+                    }
+                });
+
+
+            }
+        }
+    }
+
+
+
+
     //加载更多
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
@@ -132,100 +195,5 @@ public class InviteFriendsList extends BaseFragment implements PullToRefreshBase
         getData();
     }
 
-
-    class InviteAdapter extends BaseAdapter {
-
-        private List<InviteeResult.Invitee> list;
-
-        public InviteAdapter(List<InviteeResult.Invitee> list) {
-            this.list = list;
-        }
-
-        public void clear() {
-            list.clear();
-            notifyDataSetChanged();
-        }
-
-        public void addAll(Collection<? extends InviteeResult.Invitee> collection) {
-            list.addAll(collection);
-            notifyDataSetChanged();
-        }
-
-        @Override
-        public int getCount() {
-            return list.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return list.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                convertView = LayoutInflater.from(getActivity()).inflate(
-                        R.layout.item_invite_list, null);
-                convertView.setTag(new ViewHolder(convertView));
-            }
-            final ViewHolder holder = (ViewHolder) convertView.getTag();
-            if (!TextUtils.isEmpty(list.get(position).name)) {
-                holder.nickname_tv.setText(list.get(position).name);
-                holder.nickname_tv.setTextColor(Color.WHITE);
-                holder.nickname_tv.setBackgroundResource(R.drawable.login_roateup);
-            } else {
-                holder.nickname_tv.setText("该好友未填姓名");
-                holder.nickname_tv.setTextColor(getResources().getColor(R.color.main_index_gary));
-                holder.nickname_tv.setBackgroundResource(R.drawable.gethaoyouweishezhinicheng);
-            }
-            if (list.get(position).newOrdersNumber != 0) {
-
-                if (list.get(position).newOrdersNumber > 0) {
-                    holder.remind_dot.setVisibility(View.VISIBLE);
-                } else {
-                    holder.remind_dot.setVisibility(View.GONE);
-                }
-
-            } else {
-                holder.remind_dot.setVisibility(View.GONE);
-            }
-            if (StringUtil.checkStr(list.get(position).account)) {
-                holder.phone_tv.setText(list.get(position).account);
-            }
-            convertView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    holder.remind_dot.setVisibility(View.GONE);
-                    InviteeResult.Invitee consumer = (InviteeResult.Invitee) adapter.getItem(position);
-                    Intent intent = new Intent(getActivity(), ConsumerOrderActivity.class);
-                    intent.putExtra("consumer", consumer);
-                    startActivity(intent);
-                }
-            });
-
-            return convertView;
-        }
-
-        class ViewHolder {
-            private TextView phone_tv;
-            private TextView nickname_tv;
-            private TextView remind_dot;
-
-            ViewHolder(View view) {
-                phone_tv = (TextView) view
-                        .findViewById(R.id.my_inviter_phone);
-                nickname_tv = (TextView) view
-                        .findViewById(R.id.my_inviter_nickname);
-                remind_dot = (TextView) view
-                        .findViewById(R.id.my_inviter_nickname_remind_dot);
-            }
-        }
-
-    }
 
 }

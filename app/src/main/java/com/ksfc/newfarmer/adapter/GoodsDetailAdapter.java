@@ -44,4 +44,5 @@ public class GoodsDetailAdapter extends FragmentPagerAdapter {
     public void destroyItem(ViewGroup container, int position, Object object) {
 
     }
+
 }

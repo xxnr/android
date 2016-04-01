@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+
+        <CheckBox
+            android:enabled="false"
+            android:id="@+id/btn_consignees_item"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginLeft="16dp"
+            android:background="@drawable/selector_check_box_circle_green"
+            android:button="@null"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/name_consignees_item"
+            android:layout_marginLeft="16dp"
+            android:textColor="@color/main_index_gary"
+            android:text=""
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+        <TextView
+            android:id="@+id/phone_consignees_item"
+            android:layout_marginLeft="16dp"
+            android:textColor="@color/main_index_gary"
+            android:text=""
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

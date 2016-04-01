@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_weight="1"
-            android:text="下单时间：2015-11-15 08:43:12"
+            android:text="下单时间："
             android:textSize="14sp" />
 
         <TextView
@@ -26,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="16dp"
-            android:text="待付款"
+            android:text=""
             android:textColor="@color/orange"
              />
 
@@ -64,7 +64,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="16dp"
-            android:text="¥3999.00"
+            android:text=""
             android:textColor="@color/orange_goods_price"
             android:textSize="18dp" />
 

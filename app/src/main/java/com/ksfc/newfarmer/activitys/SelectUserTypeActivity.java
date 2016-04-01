@@ -1,5 +1,6 @@
 package com.ksfc.newfarmer.activitys;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,6 +16,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
+import com.ksfc.newfarmer.adapter.CommonAdapter;
+import com.ksfc.newfarmer.adapter.CommonViewHolder;
 import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.Request;
@@ -63,7 +66,7 @@ public class SelectUserTypeActivity extends BaseActivity implements AdapterView.
         getData();
     }
 
-    //加载用户类型
+    //加载用户类型 因数据类型问题采用Xutils
     private void getData() {
 
         HttpUtils http = new HttpUtils();
@@ -90,7 +93,7 @@ public class SelectUserTypeActivity extends BaseActivity implements AdapterView.
                                 list_value.add((String) entry.getValue());
                                 list_key.add(entry.getKey());
                             }
-                            adapter = new AddressAdapter(list_value);
+                            adapter = new AddressAdapter(SelectUserTypeActivity.this,list_value);
                             listView.setAdapter(adapter);
                         }
                     }
@@ -112,8 +115,9 @@ public class SelectUserTypeActivity extends BaseActivity implements AdapterView.
                 queryMe.userType = select;
                 Store.User.saveMe(queryMe);
             }
-            showToast("保存成功！");
+            showToast("保存成功");
             MsgCenter.fireNull(MsgID.UPDATE_USER, "update");
+            MsgCenter.fireNull(MsgID.UPDATE_USER_TYPE);
             finish();
         }
 
@@ -142,56 +146,24 @@ public class SelectUserTypeActivity extends BaseActivity implements AdapterView.
     }
 
 
-    class AddressAdapter extends BaseAdapter {
-        private List<String> list;
+    class AddressAdapter extends CommonAdapter<String>{
 
-        public AddressAdapter(List<String> list) {
-            this.list = list;
+
+        public AddressAdapter(Context context, List<String> data) {
+            super(context, data, R.layout.city);
         }
 
         @Override
-        public int getCount() {
-            return list.size();
-        }
+        public void convert(CommonViewHolder holder, String s) {
+            if (StringUtil.checkStr(s)){
 
-        @Override
-        public Object getItem(int position) {
-            return list.get(position);
-        }
+                holder.setText(R.id.cityTextView,s);
 
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                convertView = LayoutInflater.from(SelectUserTypeActivity.this).inflate(R.layout.city, null);
-                convertView.setTag(new ViewHolder(convertView));
             }
-
-            ViewHolder holder = (ViewHolder) convertView.getTag();
-            holder.name.setText(list.get(position));
-            return convertView;
         }
-
-        public void clear() {
-            list.clear();
-            notifyDataSetChanged();
-        }
-
-
-        class ViewHolder {
-            private TextView name;
-
-            ViewHolder(View convertView) {
-                name = ((TextView) convertView.findViewById(R.id.cityTextView));
-            }
-
-        }
-
     }
+
+
 
 
 }

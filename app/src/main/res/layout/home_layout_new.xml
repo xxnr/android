@@ -7,17 +7,16 @@
 
     <include layout="@layout/title_lay" />
 
-    <com.handmark.pulltorefresh.library.PullToRefreshScrollView
-        xmlns:ptr="http://schemas.android.com/apk/res-auto"
+    <com.handmark.pulltorefresh.library.PullToRefreshScrollView xmlns:ptr="http://schemas.android.com/apk/res-auto"
         android:id="@+id/pull_ll_srcoll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:scrollbars="none"
         ptr:ptrAnimationStyle="rotate"
         ptr:ptrDrawable="@drawable/loader"
         ptr:ptrHeaderBackground="@color/re_flash"
         ptr:ptrListViewExtrasEnabled="false"
-        ptr:ptrScrollingWhileRefreshingEnabled="true"
-        android:scrollbars="none">
+        ptr:ptrScrollingWhileRefreshingEnabled="true">
 
         <LinearLayout
             android:id="@+id/pull_ll"
@@ -25,22 +24,28 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <com.ksfc.newfarmer.widget.GridViewWithHeaderAndFooter
+            <include layout="@layout/homeheader1" />
+
+
+            <com.ksfc.newfarmer.widget.UnSwipeGridView
                 android:id="@+id/huafei_gv"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
                 android:columnWidth="90dp"
                 android:gravity="center"
+                android:horizontalSpacing="12dp"
                 android:listSelector="@null"
                 android:numColumns="2"
                 android:scrollbars="none"
-                android:stretchMode="columnWidth" />
+                android:stretchMode="columnWidth"
+                android:verticalSpacing="15dp" />
 
             <RelativeLayout
                 android:id="@+id/car_bar_layout"
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
-                android:layout_marginTop="-50dp"
                 android:visibility="gone">
 
                 <TextView
@@ -57,8 +62,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="6dp"
                     android:layout_toRightOf="@id/head_bottom_bar"
-                    android:text="化肥精选"
-                     />
+                    android:text="化肥精选" />
 
                 <ImageView
                     android:id="@+id/car_bottom_bar_qianjin"
@@ -80,16 +84,20 @@
                     android:textSize="14sp" />
             </RelativeLayout>
 
-            <com.ksfc.newfarmer.widget.GridViewWithHeaderAndFooter
+            <com.ksfc.newfarmer.widget.UnSwipeGridView
                 android:id="@+id/qiche_gv"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
                 android:columnWidth="90dp"
                 android:gravity="center"
+                android:horizontalSpacing="12dp"
                 android:listSelector="@null"
                 android:numColumns="2"
                 android:scrollbars="none"
-                android:stretchMode="columnWidth" />
+                android:stretchMode="columnWidth"
+                android:verticalSpacing="15dp" />
         </LinearLayout>
     </com.handmark.pulltorefresh.library.PullToRefreshScrollView>
 

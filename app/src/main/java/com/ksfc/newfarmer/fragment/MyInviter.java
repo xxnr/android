@@ -8,7 +8,6 @@ import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
 import com.ksfc.newfarmer.protocol.ResponseResult;
 import com.ksfc.newfarmer.protocol.beans.LoginResult;
-import com.ksfc.newfarmer.protocol.beans.MyInviteResult;
 import com.ksfc.newfarmer.protocol.beans.NominatedInviterResult;
 import com.ksfc.newfarmer.protocol.beans.PersonalData;
 import com.ksfc.newfarmer.protocol.beans.PersonalData.Data;
@@ -27,14 +26,13 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
-public class MyInviter extends BaseFragment implements OnClickListener {
+public class MyInviter extends BaseFragment {
 
     private EditText edit;//输入代表人的手机号
     private Button addInvite;//添加代表
@@ -81,8 +79,9 @@ public class MyInviter extends BaseFragment implements OnClickListener {
         return view;
     }
 
+
     @Override
-    public void onClick(View v) {
+    public void OnViewClick(View v) {
         phoneNumber = edit.getText().toString();
         switch (v.getId()) {
 
@@ -107,7 +106,6 @@ public class MyInviter extends BaseFragment implements OnClickListener {
                 execApi(ApiType.FIND_USER, params);
                 break;
         }
-
     }
 
 
@@ -117,8 +115,7 @@ public class MyInviter extends BaseFragment implements OnClickListener {
 
         // TODO Auto-generated method stub
         if (req.getApi() == ApiType.GET_BINDINVITER) {
-            MyInviteResult data = (MyInviteResult) req.getData();
-            if (data.getStatus().equals("1000")) {
+            if (req.getData().getStatus().equals("1000")) {
                 showToast("绑定成功");
                 //绑定成功后 获取一次个人信息用于展示
                 centerLin.setVisibility(View.GONE);
@@ -129,8 +126,6 @@ public class MyInviter extends BaseFragment implements OnClickListener {
                     params.put("userId", userId);
                 }
                 execApi(ApiType.PERSONAL_CENTER, params);
-            } else {
-                showToast(data.getMessage());
             }
         } else if (req.getApi() == ApiType.PERSONAL_CENTER) {
             PersonalData data = (PersonalData) req.getData();
@@ -200,19 +195,19 @@ public class MyInviter extends BaseFragment implements OnClickListener {
     /**
      * 获取推荐代表
      */
-    public void getRecommend(){
+    public void getRecommend() {
         HttpUtils http = new HttpUtils();
         com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
         params.addQueryStringParameter("token", Store.User.queryMe().token);
-        http.send(HttpRequest.HttpMethod.GET, ApiType.GET_RECOMMEND_INVITER.getOpt(),params, new RequestCallBack<String>() {
+        http.send(HttpRequest.HttpMethod.GET, ApiType.GET_RECOMMEND_INVITER.getOpt(), params, new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
 
-                RndLog.v("MyInviter",responseInfo.result);
-                NominatedInviterResult result=null;
-                Gson gson =new Gson();
-                result= gson.fromJson(responseInfo.result,NominatedInviterResult.class);
-                if (result!=null&&result.getStatus().equals("1000")){
+                RndLog.v("MyInviter", responseInfo.result);
+                NominatedInviterResult result = null;
+                Gson gson = new Gson();
+                result = gson.fromJson(responseInfo.result, NominatedInviterResult.class);
+                if (result != null && result.getStatus().equals("1000")) {
                     final NominatedInviterResult.Datas datas = result.nominated_inviter;
                     if (datas != null) {
                         if (StringUtil.checkStr(datas.phone) && StringUtil.checkStr(datas.name)) {
@@ -249,7 +244,7 @@ public class MyInviter extends BaseFragment implements OnClickListener {
 
             @Override
             public void onFailure(HttpException e, String s) {
-                RndLog.v("MyInviter","获取推荐代表失败");
+                RndLog.v("MyInviter", "获取推荐代表失败");
             }
         });
 

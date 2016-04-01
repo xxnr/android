@@ -5,17 +5,17 @@ import java.util.List;
 
 import com.ksfc.newfarmer.protocol.ResponseResult;
 
-public class MyOrderDetailResult extends ResponseResult {
+public class MyOrderDetailResult extends ResponseResult implements Serializable{
 
     public Datas datas;
 
-    public static class Datas {
+    public static class Datas implements Serializable {
         public String total;
         public String locationUserId;
         public Rows rows;
     }
 
-    public static class Rows {
+    public static class Rows implements Serializable {
         public String id;// 订单ID
         public String orderNo;// 订单编码   用于2.1.4及一下版本
         public String deposit; // 订单下次付款金额或者0（用于2.1.4及一下版本）
@@ -40,6 +40,23 @@ public class MyOrderDetailResult extends ResponseResult {
         public Payment payment;
         public List<OrderGood> orderGoodsList;
         public List<SKUS> SKUList;
+
+        public RSCInfoEntity RSCInfo;
+        public DeliveryType deliveryType;
+
+
+        public static class DeliveryType implements Serializable {
+            public int type; // 1  2
+            public String value;//网点自提 送货到户
+
+        }
+
+        public static class RSCInfoEntity implements Serializable {
+            public String RSC; //RSC Id
+            public String RSCAddress;//RSC 地址
+            public String companyName;//RSC 网店名
+            public String RSCPhone;//RSC 手机
+        }
 
         public static class Order implements Serializable {
             public String totalPrice;// 总价
@@ -94,11 +111,12 @@ public class MyOrderDetailResult extends ResponseResult {
             public float price;// 商品价格
             public String orderSubType;
             public String orderSubNo;
+            public String ref;
             public String goodsId; //商品id
             public String imgs; //skuID
             public float deposit;// 商品定金
             public String category; //商品分类
-            public String deliverStatus; //SKU简称
+            public String deliverStatus; //发货状态
             public String productName; //SKU简称
             public List<Additions> additions; //附加选项
             public List<Attributes> attributes; //属性
@@ -119,6 +137,7 @@ public class MyOrderDetailResult extends ResponseResult {
 
         }
     }
+
     //用于2.1.4及以下适配
     public static class OrderGood implements Serializable {
         public String imgs;

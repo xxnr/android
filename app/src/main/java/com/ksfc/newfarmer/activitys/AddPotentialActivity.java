@@ -34,8 +34,8 @@ import java.util.Map;
  */
 public class AddPotentialActivity extends BaseActivity {
     private EditText name;
-    private final int cityrequestCode = 1;//省市区
-    private final int townrequestCode = 2;//乡镇
+    private final int cityRequestCode = 1;//省市区
+    private final int townRequestCode = 2;//乡镇
 
     private TextView choice_city_text;
     private TextView choice_town_text;
@@ -80,7 +80,7 @@ public class AddPotentialActivity extends BaseActivity {
 
     private void intView() {
         name = (EditText) findViewById(R.id.name_tv);
-        //设置最对输的字数
+        //限制字数
         name.addTextChangedListener(new MaxLengthWatcher(12, name, AddPotentialActivity.this));
         phone = (EditText) findViewById(R.id.phone_tv);
         phone_error = (TextView) findViewById(R.id.phone_error);
@@ -111,11 +111,11 @@ public class AddPotentialActivity extends BaseActivity {
                 if (isMobileNum(s.toString())) {
                     RequestParams params = new RequestParams();
                     if (isLogin()) {
+                        params.put("userId", Store.User.queryMe().userid);
+                        params.put("phone", s.toString().trim());
                         execApi(ApiType.IS_POTENTIAL_CUSTOMER
-                                .setMethod(ApiType.RequestMethod.GET)
-                                .setOpt("/api/v2.1/potentialCustomer/isAvailable" + "?token=" + Store.User.queryMe().token + "&phone=" + s.toString().trim()), params);
+                                .setMethod(ApiType.RequestMethod.GET), params);
                     }
-
                 } else {
                     if (s.length() == 11) {
                         showToast("请输入正确的手机号");
@@ -161,7 +161,7 @@ public class AddPotentialActivity extends BaseActivity {
     protected void onActivityResult(int arg0, int arg1, Intent arg2) {
         if (arg1 == RESULT_OK) {
             switch (arg0) {
-                case cityrequestCode:
+                case cityRequestCode:
                     city = arg2.getExtras().getString("city");
                     cityareaid = arg2.getExtras().getString("cityareaid");
                     queueid = arg2.getExtras().getString("queueid");
@@ -176,6 +176,7 @@ public class AddPotentialActivity extends BaseActivity {
 
                     townid = "";
                     town = "";
+
                     //预加载乡镇
                     RequestParams params = new RequestParams();
                     params.put("countyId", buildid);
@@ -184,7 +185,7 @@ public class AddPotentialActivity extends BaseActivity {
                     showProgressDialog();
 
                     break;
-                case townrequestCode:
+                case townRequestCode:
                     town = arg2.getExtras().getString("town");
                     townid = arg2.getExtras().getString("townid");
                     townid2 = arg2.getExtras().getString("townid2");
@@ -210,7 +211,7 @@ public class AddPotentialActivity extends BaseActivity {
                 bundle1.putInt("tag", 0);
                 bundle1.putBoolean("isUse_Id", true);
                 IntentUtil.startActivityForResult(this, SelectAddressActivity.class,
-                        cityrequestCode, bundle1);
+                        cityRequestCode, bundle1);
                 break;
             case R.id.choice_town_layout:
                 if (StringUtil.checkStr(choice_city_text.getText().toString().trim())) {
@@ -219,7 +220,7 @@ public class AddPotentialActivity extends BaseActivity {
                     bundle.putString("queueid", queueid);
                     bundle.putString("buildid", buildid);
                     IntentUtil.startActivityForResult(this, SelectAddressActivity.class,
-                            townrequestCode, bundle);
+                            townRequestCode, bundle);
                 } else {
                     showToast("请先选择地区");
                 }

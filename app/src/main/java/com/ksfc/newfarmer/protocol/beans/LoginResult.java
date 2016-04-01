@@ -23,6 +23,8 @@ public class LoginResult extends ResponseResult {
         public UserAddress userAddress;// :用户默认送货地址
         public boolean isVerified;//是否认证
         public boolean isUserInfoFullFilled;//信息是否完整
+        public boolean isRSC;//是否认证为县级经销商
+        public boolean RSCInfoVerifing; //是否正在认证县级经销商
 
         //需要保存的东西
         public String defaultAddress;// :用户默认送货地址

@@ -43,10 +43,10 @@ public class ChoiceHomeAddress extends BaseActivity {
     private TextView choice_city_text;
     private TextView choice_town_text;
 
-    private String cityareaid="";
+    private String cityareaid = "";
     private String queueid = "";
     private String buildid = "";
-    private String townid="";
+    private String townid = "";
     private String city;
     private String town;
 
@@ -65,7 +65,7 @@ public class ChoiceHomeAddress extends BaseActivity {
         setTitle("修改所在地区");
         me = Store.User.queryMe();
         initView();
-        if (me!=null){
+        if (me != null) {
             setData();
         }
     }
@@ -79,7 +79,7 @@ public class ChoiceHomeAddress extends BaseActivity {
         setViewClick(R.id.choice_city_layout);
         setViewClick(R.id.choice_town_layout);
         setViewClick(R.id.name_submit_tv);
-        name_submit_tv.setClickable(false);
+        name_submit_tv.setEnabled(false);
 
     }
 
@@ -93,7 +93,7 @@ public class ChoiceHomeAddress extends BaseActivity {
         city = me.addressCity;
         town = me.addressTown;
 
-        if (StringUtil.checkStr(buildid)||StringUtil.checkStr(queueid)){
+        if (StringUtil.checkStr(buildid) || StringUtil.checkStr(queueid)) {
             //预加载乡镇
             RequestParams params = new RequestParams();
             params.put("countyId", buildid);
@@ -136,7 +136,7 @@ public class ChoiceHomeAddress extends BaseActivity {
                     Gson gson = new Gson();
                     Map<String, Object> map1 = new HashMap<>();
                     map1.put("address", map);
-                    if (isLogin()){
+                    if (isLogin()) {
                         map1.put("userId", Store.User.queryMe().userid);
                         map1.put("token", Store.User.queryMe().token);
                     }
@@ -166,7 +166,7 @@ public class ChoiceHomeAddress extends BaseActivity {
                     choice_town_text.setText("");
                     townid = "";
                     town = "";
-                    if (StringUtil.checkStr(buildid)||StringUtil.checkStr(queueid)){
+                    if (StringUtil.checkStr(buildid) || StringUtil.checkStr(queueid)) {
                         //预加载乡镇
                         RequestParams params = new RequestParams();
                         params.put("countyId", buildid);
@@ -174,15 +174,13 @@ public class ChoiceHomeAddress extends BaseActivity {
                         execApi(ApiType.QUERYTOWNID, params);
                         showProgressDialog();
                     }
-                    name_submit_tv.setBackgroundColor(getResources().getColor(R.color.green));
-                    name_submit_tv.setClickable(true);
+                    name_submit_tv.setEnabled(true);
                     break;
                 case townRequestCode:
                     town = arg2.getExtras().getString("town");
                     townid = arg2.getExtras().getString("townid");
                     choice_town_text.setText(town);
-                    name_submit_tv.setBackgroundColor(getResources().getColor(R.color.green));
-                    name_submit_tv.setClickable(true);
+                    name_submit_tv.setEnabled(true);
                     break;
                 default:
                     break;
@@ -210,11 +208,30 @@ public class ChoiceHomeAddress extends BaseActivity {
                     });
                 } else {
                     choice_town_text.setText(town);
-
                     findViewById(R.id.choice_town_layout).setOnClickListener(null);
                     setViewClick(R.id.choice_town_layout);
                 }
             }
+        } else if (req.getApi() == ApiType.SAVE_MYUSER) {
+            if (req.getData().getStatus().equals("1000")) {
+                LoginResult.UserInfo queryMe = Store.User.queryMe();
+                if (queryMe != null) {
+                    queryMe.addressCity = city;
+                    queryMe.addressTown = town;
+                    queryMe.provinceid = cityareaid;
+                    queryMe.cityid = queueid;
+                    queryMe.countyid = buildid;
+                    queryMe.townid = townid;
+                    Store.User.saveMe(queryMe);
+                }
+                showToast("保存成功");
+                Intent intent = new Intent();
+                intent.putExtra("str", city + town);
+                setResult(0x13, intent);
+                MsgCenter.fireNull(MsgID.UPDATE_USER, "update");
+                finish();
+            }
+
         }
 
 
@@ -222,48 +239,11 @@ public class ChoiceHomeAddress extends BaseActivity {
 
 
     private void upAddress(String value) {
-        com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
-        try {
-            RndLog.d(TAG, value);
-            StringEntity entity = new StringEntity(value);
-            params.setBodyEntity(entity);
-            params.setContentType("application/json");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        HttpUtils http = new HttpUtils();
-        http.send(HttpRequest.HttpMethod.POST, ApiType.SAVE_MYUSER.getOpt(), params,
-                new RequestCallBack<String>() {
-                    @Override
-                    public void onFailure(HttpException arg0, String arg1) {
 
-                    }
+        RequestParams params = new RequestParams();
+        params.put("JSON", value);
+        execApi(ApiType.SAVE_MYUSER.setMethod(ApiType.RequestMethod.POSTJSON), params);
 
-                    @Override
-                    public void onSuccess(ResponseInfo<String> arg0) {
-
-                        if (arg0.result.contains("1000")) {
-                            LoginResult.UserInfo queryMe = Store.User.queryMe();
-                            if (queryMe != null) {
-                                queryMe.addressCity = city;
-                                queryMe.addressTown = town;
-                                queryMe.provinceid = cityareaid;
-                                queryMe.cityid = queueid;
-                                queryMe.countyid = buildid;
-                                queryMe.townid = townid;
-                                Store.User.saveMe(queryMe);
-                            }
-                            showToast("保存成功！");
-                            Intent intent = new Intent();
-                            intent.putExtra("str", city + town);
-                            setResult(0x13, intent);
-                            MsgCenter.fireNull(MsgID.UPDATE_USER, "update");
-                            finish();
-                        }
-
-                    }
-
-                });
     }
 
 }

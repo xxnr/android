@@ -68,7 +68,7 @@
             android:ellipsize="end"
             android:hint="请填写客户的联系方式"
             android:inputType="number"
-            android:maxLength="11"
+            android:maxLength="20"
             android:singleLine="true"
              />
     </LinearLayout>
@@ -206,7 +206,7 @@
             android:id="@+id/choice_city_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="选择所在省市区"
+            android:hint="选择所在省市区县"
              />
 
     </LinearLayout>

@@ -16,7 +16,6 @@ import android.webkit.WebView;
  * 修改备注：
  */
 public class AgreeMentActivity extends BaseActivity {
-	private WebView web;
 
 	@Override
 	public int getLayout() {
@@ -25,7 +24,7 @@ public class AgreeMentActivity extends BaseActivity {
 	}
 
 	private void initView() {
-		web = (WebView) findViewById(R.id.webView);
+		WebView web = (WebView) findViewById(R.id.webView);
 		web.loadUrl("file:///android_asset/yonghuxieyi.html");
 
 	}

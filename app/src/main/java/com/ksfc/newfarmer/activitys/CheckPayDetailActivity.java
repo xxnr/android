@@ -1,6 +1,8 @@
 package com.ksfc.newfarmer.activitys;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +12,8 @@ import android.widget.TextView;
 
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
+import com.ksfc.newfarmer.adapter.CommonAdapter;
+import com.ksfc.newfarmer.adapter.CommonViewHolder;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.beans.MyOrderDetailResult;
 import com.ksfc.newfarmer.utils.DateFormatUtils;
@@ -59,10 +63,10 @@ public class CheckPayDetailActivity extends BaseActivity {
                 orderState_tv.setText("部分付款");
             }
             //应支付金额
-            to_pay_price_tv.setText("¥"+subOrder.price);
+            to_pay_price_tv.setText("¥" + subOrder.price);
             //已支付金额
-            order_yet_tv.setText("¥"+subOrder.paidPrice);
-            PayInfoAdapter payInfoAdapter = new PayInfoAdapter(subOrder.payments);
+            order_yet_tv.setText("¥" + subOrder.paidPrice);
+            PayInfoAdapter payInfoAdapter = new PayInfoAdapter(CheckPayDetailActivity.this, subOrder.payments);
             listView.setAdapter(payInfoAdapter);
         }
 
@@ -90,74 +94,49 @@ public class CheckPayDetailActivity extends BaseActivity {
 
     }
 
+    class PayInfoAdapter extends CommonAdapter<MyOrderDetailResult.Rows.SubOrders.Payments> {
 
-    class PayInfoAdapter extends BaseAdapter {
-        private List<MyOrderDetailResult.Rows.SubOrders.Payments> payments;
 
-        public PayInfoAdapter(List<MyOrderDetailResult.Rows.SubOrders.Payments> payments) {
-            this.payments = payments;
+        public PayInfoAdapter(Context context, List<MyOrderDetailResult.Rows.SubOrders.Payments> data) {
+            super(context, data, R.layout.item_payinfo_detail);
         }
 
         @Override
-        public int getCount() {
-            return payments.size();
-        }
+        public void convert(CommonViewHolder holder, MyOrderDetailResult.Rows.SubOrders.Payments payments) {
+            if (payments != null) {
+                //文本内容
+                if (payments.payType == 1) {
+                    holder.setText(R.id.order_pay_type, "支付宝支付");
+                } else if (payments.payType == 2) {
+                    holder.setText(R.id.order_pay_type, "银联支付");
+                } else if (payments.payType == 3) {
+                    holder.setText(R.id.order_pay_type, "现金");
+                } else if (payments.payType == 4) {
+                    holder.setText(R.id.order_pay_type, "线下POS机");
+                }
+                //支付金额
+                if (StringUtil.checkStr(payments.price)) {
+                    holder.setText(R.id.pay_price, "¥" + payments.price);
+                }
+                //支付时间
+                if (StringUtil.checkStr(payments.datePaid)) {
+                    holder.setText(R.id.order_pay_time, DateFormatUtils.convertTime(payments.datePaid));
+                }
+                //支付结果
+                if (payments.payStatus == 1) {
+                    holder.getView(R.id.item_payInfo_times).setVisibility(View.GONE);
+                } else if (payments.payStatus == 2) {
+                    holder.setText(R.id.item_payInfo_state, "支付成功");
+                }
 
-        @Override
-        public Object getItem(int position) {
-            return payments.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                convertView = LayoutInflater.from(CheckPayDetailActivity.this).inflate(R.layout.item_payinfo_detail, null);
-                convertView.setTag(new ViewHolder(convertView));
-            }
-            ViewHolder holder = (ViewHolder) convertView.getTag();
-            MyOrderDetailResult.Rows.SubOrders.Payments payment = this.payments.get(position);
-            //支付类型
-            if (payment.payType == 1) {
-                holder.pay_way.setText("支付宝支付");
-            } else if (payment.payType == 2) {
-                holder.pay_way.setText("银联支付");
-            }
-            //支付金额
-            if (StringUtil.checkStr(payment.price)) {
-                holder.pay_price.setText(payment.price);
-            }
-            //支付时间
-            if (StringUtil.checkStr(payment.dateCreated)) {
-                holder.pay_time.setText(DateFormatUtils.convertTime(payment.dateCreated));
-            }
-            //支付结果
-            if (payment.payStatus == 1) {
-                holder.pay_time.setVisibility(View.GONE);
-            } else if (payment.payStatus == 2) {
-                holder.pay_result.setText("支付成功");
-            }
-            //第几次付款
-            holder.pay_times.setText("第" + payment.slice + "次");
-            return convertView;
-        }
-
-        class ViewHolder {
-            private TextView pay_times, pay_price, pay_time, pay_way, pay_result;
-
-            ViewHolder(View convertView) {
-                pay_times = (TextView) convertView.findViewById(R.id.item_payInfo_times);
-                pay_price = (TextView) convertView.findViewById(R.id.pay_price);
-                pay_time = (TextView) convertView.findViewById(R.id.order_pay_time);
-                pay_way = (TextView) convertView.findViewById(R.id.order_pay_type);
-                pay_result = (TextView) convertView.findViewById(R.id.item_payInfo_state);
+                //第几次付款
+                holder.setText(R.id.item_payInfo_times, "第" + payments.slice + "次");
 
             }
+
 
         }
     }
+
+
 }

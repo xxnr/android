@@ -3,63 +3,33 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <include layout="@layout/title_lay" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
         android:orientation="horizontal"
-        android:padding="10dp" >
-
+        android:gravity="center_vertical"
+        >
         <TextView
             android:id="@+id/myintegral_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_weight="1"
-            android:visibility="invisible"
+            android:layout_marginLeft="16dp"
             android:text="我的积分"
              />
 
-        <!-- <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_marginRight="10dp"
-            android:gravity="right"
-            android:text="如何赚取积分?"
-            android:textColor="@color/black"
-            android:textSize="17sp" /> -->
     </LinearLayout>
 
     <TextView
         android:id="@+id/myintegral_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginLeft="16dp"
         android:textColor="@color/green"
         android:textSize="30sp" />
-
-    <com.ksfc.newfarmer.widget.PullToRefreshView
-        android:id="@+id/myintergral_pull"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_margin="10dp"
-        android:background="@color/white"
-        android:visibility="gone"
-        android:orientation="vertical" >
-
-        <ListView
-            android:id="@+id/myintegral_lv"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@color/default_act_bg"
-            android:dividerHeight="1dp"
-            android:scrollbars="none" />
-    </com.ksfc.newfarmer.widget.PullToRefreshView>
 
 </LinearLayout>

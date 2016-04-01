@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="16dp"
-            android:text="订单号:d798798798"
+            android:text="订单号:"
             android:textSize="18sp" />
 
         <TextView
@@ -32,7 +32,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="16dp"
-            android:text="订单总额"
+            android:text=""
             android:textColor="@color/main_index_gary"
             android:textSize="14sp" />
     </RelativeLayout>
@@ -56,7 +56,7 @@
             android:id="@+id/to_pay_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="72940.00"
+            android:text=""
             android:textColor="@color/orange_goods_price"
             android:textSize="16dp" />
 
@@ -79,7 +79,7 @@
             android:id="@+id/order_total_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="72940.00"
+            android:text=""
             android:textColor="@color/orange_goods_price"
             android:textSize="16dp" />
 
@@ -111,7 +111,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="12dp"
             android:singleLine="true"
-            android:text="中化好苗子有机肥 -1件，中化好苗子有机肥 -1件，中化好苗子有机肥 -1件，中化好苗子有机肥 -1件"
+            android:text=""
             android:textColor="@color/main_index_gary"
             android:textSize="14sp" />
 

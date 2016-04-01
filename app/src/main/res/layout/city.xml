@@ -5,6 +5,7 @@
     tools:context=".MainActivity" >
 
     <LinearLayout
+        android:id="@+id/city_ll"
         android:background="@drawable/list_bg_selector"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

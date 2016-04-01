@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/login_bg"
@@ -7,117 +7,127 @@
 
     <include layout="@layout/title_lay" />
 
-    <RelativeLayout
+
+    <LinearLayout
+
+        android:id="@+id/login_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
-        android:padding="15dp">
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="40dp"
+        android:background="@color/white"
+        android:orientation="vertical">
 
-        <RelativeLayout
-            android:id="@+id/login_layout"
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/login_regbutton"
-            android:paddingBottom="5dp"
-            android:paddingTop="5dp">
+            android:layout_height="60dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/login_layout_icon"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
-                android:padding="10dp"
                 android:scaleType="center"
                 android:src="@drawable/login_phone" />
 
-            <EditText
+            <com.ksfc.newfarmer.widget.ClearEditText
                 android:id="@+id/login_layout_phone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/login_layout_icon"
-                android:layout_alignTop="@+id/login_layout_icon"
-                android:layout_toRightOf="@+id/login_layout_icon"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:background="@null"
+                android:drawableRight="@drawable/delete_selector"
                 android:hint="请输入您的手机号"
                 android:inputType="number"
-                android:maxLength="11" />
+                android:maxLength="11"
+                android:singleLine="true" />
+        </LinearLayout>
+
+        <include layout="@layout/line_lay" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/login_line"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@+id/login_layout_icon"
-                android:background="@color/default_act_bg" />
-
-            <ImageView
-                android:id="@+id/login_layout_icon1"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
-                android:layout_below="@+id/login_layout_icon"
-                android:padding="10dp"
                 android:scaleType="center"
                 android:src="@drawable/login_code" />
 
-            <EditText
+            <com.ksfc.newfarmer.widget.ClearEditText
                 android:id="@+id/login_layoutpassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/login_layout_icon1"
-                android:layout_alignTop="@+id/login_layout_icon1"
-                android:layout_below="@+id/login_line"
-                android:layout_toRightOf="@+id/login_layout_icon1"
+                android:layout_marginRight="10dp"
                 android:background="@null"
+                android:drawableRight="@drawable/delete_selector"
                 android:hint="请输入您的密码"
+                android:layout_marginLeft="10dp"
                 android:inputType="textPassword"
-                android:maxLength="16" />
-        </RelativeLayout>
+                android:maxLength="16"
+                android:singleLine="true" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/transparent">
 
         <TextView
             android:id="@+id/login_layoutforgetpassword"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_below="@+id/login_layout"
-            android:layout_marginTop="5dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
             android:text="忘记密码？"
-
             android:textColor="@color/qianlv" />
 
-        <TextView
-            android:id="@+id/login_layout_complete"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/login_layoutforgetpassword"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/login_roate"
-            android:gravity="center"
-            android:padding="10dp"
-            android:text="确认登录"
-            android:textColor="@color/white"
-            android:textSize="18sp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/login_layout_complete"
-            android:layout_marginTop="20dp"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="还没有帐号？"
-
-                android:textColor="@color/white" />
-
-            <TextView
-                android:id="@+id/login_layoutReg"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="立即注册"
-
-                android:textColor="@color/qianlv" />
-        </LinearLayout>
     </RelativeLayout>
 
-</RelativeLayout>
+
+    <TextView
+        android:id="@+id/login_layout_complete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/login_roate"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="确认登录"
+        android:textColor="@color/white"
+        android:textSize="18sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="还没有帐号？"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/login_layoutReg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="立即注册"
+            android:textColor="@color/qianlv" />
+    </LinearLayout>
+
+</LinearLayout>

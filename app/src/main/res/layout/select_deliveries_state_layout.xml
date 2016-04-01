@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/default_act_bg"
+    android:orientation="vertical">
+
+    <include layout="@layout/title_lay" />
+
+    <LinearLayout
+        android:id="@+id/state_shaixuan_lin"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:orientation="horizontal"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:id="@+id/state_province_rel"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/state_province_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="全部地区" />
+
+            <ImageView
+                android:id="@+id/state_province_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="7dp"
+                android:background="@drawable/bottom_arrow" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:background="@color/gray" />
+
+        <LinearLayout
+            android:id="@+id/state_city_rel"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/state_city_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="全部地区" />
+
+            <ImageView
+                android:id="@+id/state_city_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="7dp"
+                android:background="@drawable/bottom_arrow" />
+
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:background="@color/gray" />
+
+        <LinearLayout
+            android:id="@+id/state_county_rel"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/state_county_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="全部地区" />
+
+            <ImageView
+                android:id="@+id/state_county_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="7dp"
+                android:background="@drawable/bottom_arrow" />
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp">
+
+        <View
+            android:id="@+id/state_province_bar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/orange_goods_price"
+            android:visibility="invisible" />
+
+        <View
+            android:id="@+id/state_city_bar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/orange_goods_price"
+            android:visibility="invisible" />
+
+        <View
+            android:id="@+id/state_county_bar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/orange_goods_price"
+            android:visibility="invisible" />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/shaixuan_bar_separatrix"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/gray" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <com.handmark.pulltorefresh.library.PullToRefreshListView xmlns:ptr="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/select_state_listView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@color/gray"
+            android:dividerHeight="1px"
+            android:scrollbars="none"
+            ptr:ptrAnimationStyle="rotate"
+            ptr:ptrDrawable="@drawable/loader"
+            ptr:ptrHeaderBackground="@color/re_flash"
+            ptr:ptrListViewExtrasEnabled="false"
+            ptr:ptrScrollingWhileRefreshingEnabled="true" />
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="bottom"
+            android:background="@color/white">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_alignParentTop="true"
+                android:background="@color/gray" />
+
+            <TextView
+                android:id="@+id/save_userInfo"
+                android:layout_width="81dp"
+                android:layout_height="25dp"
+                android:layout_centerInParent="true"
+                android:background="@drawable/login_roate_orange"
+                android:gravity="center"
+                android:text="确定"
+                android:textColor="@color/white" />
+
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/pop_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/eight_transparent"
+            android:visibility="gone" />
+
+
+    </FrameLayout>
+
+
+</LinearLayout>

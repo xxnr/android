@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.ksfc.newfarmer.Push.UmengPush;
 import com.ksfc.newfarmer.activitys.LoginActivity;
 import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.protocol.ApiType;
@@ -13,11 +14,15 @@ import com.ksfc.newfarmer.protocol.OnApiDataReceivedCallback;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
 import com.ksfc.newfarmer.protocol.beans.LoginResult.UserInfo;
+import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
+import com.ksfc.newfarmer.utils.Utils;
 import com.ksfc.newfarmer.widget.dialog.CustomProgressDialog;
 import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.SPUtils;
+import com.ksfc.newfarmer.widget.dialog.CustomToast;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.message.PushAgent;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -38,6 +43,7 @@ import android.view.WindowManager.BadTokenException;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import net.yangentao.util.app.App;
@@ -60,6 +66,7 @@ public abstract class BaseActivity extends FragmentActivity implements
     private Dialog progressDialog;
 
     private HashMap<ApiType, Boolean> isReturnData = new HashMap<>();//是否请求超时（返回数据）
+    private CustomToast customToast;
 
 
     @Override
@@ -162,7 +169,14 @@ public abstract class BaseActivity extends FragmentActivity implements
 
     @Override
     public final void onClick(View v) {
-        // 过滤要处理的控件
+        // 过滤要处理的控件  无法连续点击一个控件 购物车需要连续加入除外
+        if (!getClass().getName().equals(
+                "com.ksfc.newfarmer.activitys.GoodsDetailActivity")) {
+            if (Utils.isFastClick()) {
+                return;
+            }
+        }
+
         switch (v.getId()) {
             case R.id.ll_title_left_view:
                 // 返回按钮
@@ -183,29 +197,15 @@ public abstract class BaseActivity extends FragmentActivity implements
                 tokenToLogin();
             } else {
                 if (req.isSuccess()) {
-                    if (!getClass().getName().equals(
-                            "com.ksfc.newfarmer.activitys.LoginActivity")) {
-                        disMissDialog();
-                    }
+                    disMissDialog();
                     onResponsed(req);
                 } else {
-                /*
-                 * if ("-2".equals(req.getData().getStatus())) {
-				 * Store.User.removeMe(); showToast("您的账号在其他地方登录,请重新登录"); Intent
-				 * intent = new Intent(this, MainActivity.class);
-				 * startActivity(intent); return; }
-				 */
                     disMissDialog();
-                    if (req.getApi() != ApiType.GET_MIN_PAY_PRICE) {
+                    if (!(req.getApi() == ApiType.GET_MIN_PAY_PRICE
+                            || req.getApi() == ApiType.SAVE_CONSIGNEE_INFO
+                            || req.getApi() == ApiType.SURE_GET_GOODS
+                    )) {
                         req.showErrorMsg();
-                    }
-                    ApiType api = req.getApi();
-                    ApiType type1 = ApiType.GET_HUAFEI;
-                    ApiType type2 = ApiType.GET_NYC;
-
-                    if (api.getOpt().equals(type1.getOpt())
-                            || api.getOpt().equals(type2.getOpt())) {
-                        onResponsedError(req);
                     }
                 }
             }
@@ -213,13 +213,8 @@ public abstract class BaseActivity extends FragmentActivity implements
             if (!getClass().getName().equals(
                     "com.ksfc.newfarmer.activitys.HomepageActivity")) {
                 App.getApp().showToast("您的网络不太顺畅，重试或检查下网络吧~");
-            } else {
-                if (req.getApi() == ApiType.GET_HUAFEI || req.getApi() == ApiType.GET_NYC) {
-                    App.getApp().showToast("您的网络不太顺畅，重试或检查下网络吧~");
-                }
             }
-
-
+            onResponsedError(req);
         }
     }
 
@@ -449,6 +444,21 @@ public abstract class BaseActivity extends FragmentActivity implements
     }
 
     /**
+     * 显示大号提示框
+     */
+    public void showCustomToast(String msg, int imgRes) {
+
+        if (customToast != null) {
+            customToast.cancel();
+        }
+        CustomToast.Builder builder = new CustomToast.Builder(this);
+        customToast = builder.setMessage(msg).setMessageImage(imgRes).create();
+        customToast.show();
+
+    }
+
+
+    /**
      * 取消对话框显示
      */
     public void disMissDialog() {
@@ -502,7 +512,7 @@ public abstract class BaseActivity extends FragmentActivity implements
         exitLogin();
         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        App.getApp().exit();
+        intent.putExtra("isTokenError", true);
         getApplicationContext().startActivity(intent);
     }
 
@@ -548,6 +558,12 @@ public abstract class BaseActivity extends FragmentActivity implements
     }
 
     public void exitLogin() {
+
+        UserInfo userInfo = Store.User.queryMe();
+        if (userInfo != null) {
+            //解除推送alias
+            UmengPush.removeAlias(this, userInfo.userid);
+        }
         Store.User.removeMe();
         SPUtils.clear(getApplicationContext());
     }

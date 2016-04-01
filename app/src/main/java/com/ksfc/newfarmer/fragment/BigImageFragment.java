@@ -18,7 +18,6 @@ import uk.co.senab.photoview.PhotoViewAttacher;
  */
 public class BigImageFragment extends BaseFragment {
 
-
     @Override
     public View InItView() {
         View view = inflater.inflate(R.layout.pic_layout_scale, null);
@@ -40,6 +39,11 @@ public class BigImageFragment extends BaseFragment {
 
     @Override
     public void onResponsed(Request req) {
+
+    }
+
+    @Override
+    public void OnViewClick(View v) {
 
     }
 }

@@ -13,7 +13,6 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/topay_ll"
         android:layout_below="@+id/titleview"
-        android:layout_marginTop="10dp"
         android:orientation="vertical">
 
         <include layout="@layout/line_lay" />

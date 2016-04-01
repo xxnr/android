@@ -69,4 +69,5 @@
         <attr name="emojiconTextStart" format="integer"/>
         <attr name="emojiconTextLength" format="integer"/>
     </declare-styleable>
+
 </resources>

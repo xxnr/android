@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="19dp"
-            android:text="瑞风S3"
+            android:text=""
              />
 
     </LinearLayout>

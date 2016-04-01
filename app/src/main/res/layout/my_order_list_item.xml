@@ -50,52 +50,68 @@
         android:layout_height="40dp">
 
         <TextView
-            android:id="@+id/my_order_pay_type"
+            android:id="@+id/my_order_delivery_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="12dp"
+            android:layout_marginLeft="16dp"
             android:text=""
-            android:visibility="gone"
-            android:textSize="12sp" />
+            android:textSize="14sp" />
 
         <TextView
-            android:layout_toLeftOf="@+id/my_order_pay_price"
-            android:layout_centerVertical="true"
             android:layout_width="wrap_content"
-
-            android:text="@string/amounts"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/my_order_pay_price"
+            android:text="@string/amounts" />
 
         <TextView
             android:id="@+id/my_order_pay_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="12dp"
             android:layout_centerVertical="true"
+            android:layout_marginRight="12dp"
             android:text=""
-            android:textColor="@color/orange_goods_price"
-             />
+            android:textColor="@color/orange_goods_price" />
     </RelativeLayout>
 
     <include layout="@layout/line_lay" />
 
     <RelativeLayout
         android:id="@+id/go_to_pay_rel"
-        android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="40dp">
+        android:layout_height="40dp"
+        android:visibility="gone">
+
+        <Button
+            android:visibility="gone"
+            android:id="@+id/change_pay_type"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:layout_toLeftOf="@+id/go_to_pay"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="12dp"
+            android:background="@drawable/selector_change_pay_type"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="修改支付方式"
+            android:textColor="@color/white_orange_text_selector"
+            android:textSize="12sp" />
+
+
 
         <Button
             android:id="@+id/go_to_pay"
-            android:layout_width="50dp"
+            android:layout_width="wrap_content"
             android:layout_height="25dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="12dp"
             android:background="@drawable/login_roate_orange"
-            android:text="去付款"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text=""
             android:textColor="@color/white"
             android:textSize="12sp" />
     </RelativeLayout>

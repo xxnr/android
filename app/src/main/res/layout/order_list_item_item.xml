@@ -25,67 +25,71 @@
                 android:layout_height="90dp"
                 android:background="@drawable/round_line_gary_write"
                 android:padding="1dp"
-                android:scaleType="centerCrop"
-               />
+                android:scaleType="centerCrop" />
 
-
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp">
+                android:layout_marginLeft="10dp"
+                android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/ordering_item_name"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginRight="16dp"
-                    android:ellipsize="end"
-                    android:maxLines="2"
-                    android:maxEms="16"
-                    android:text=""
-                    android:textSize="14sp" />
+                    android:paddingTop="5dp">
 
-                <TextView
-                    android:id="@+id/ordering_item_orderType"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="4dp"
-                    android:layout_marginTop="5dp"
-                    android:text="待发货"
-                    android:textColor="@color/orange"
-                    android:textSize="14sp"
-                    android:visibility="gone" />
+                    <TextView
+                        android:id="@+id/ordering_item_name"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="16dp"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:maxEms="16"
+                        android:maxLines="2"
+                        android:text=""
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/ordering_item_orderType"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textColor="@color/orange"
+                        android:textSize="14sp"
+                        android:visibility="gone" />
+
+
+                </LinearLayout>
 
 
                 <TextView
                     android:id="@+id/ordering_item_attr"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/ordering_item_name"
                     android:layout_marginRight="16dp"
                     android:layout_marginTop="7dp"
                     android:text=""
                     android:textColor="@color/deep_gray"
                     android:textSize="14sp" />
 
-            </RelativeLayout>
+            </LinearLayout>
+
+
         </LinearLayout>
 
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="10dp">
 
             <TextView
                 android:id="@+id/ordering_item_geshu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
                 android:layout_marginLeft="4dp"
-                android:layout_marginTop="10dp"
                 android:text=""
                 android:textSize="14sp" />
 
@@ -94,13 +98,8 @@
                 android:id="@+id/ordering_now_pri"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="5dp"
-                android:text=""
-                 />
+                android:text="" />
         </RelativeLayout>
     </LinearLayout>
 
@@ -108,43 +107,34 @@
         android:id="@+id/additions_lin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
         android:gravity="center_vertical"
+        android:layout_marginLeft="12dp"
         android:visibility="gone">
 
-        <LinearLayout
-            android:layout_width="230dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:padding="5dp">
-
-            <TextView
-                android:id="@+id/additions_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="32423"
-                android:textColor="@color/main_index_gary"
-                android:textSize="14sp" />
-        </LinearLayout>
 
         <TextView
+            android:id="@+id/additions_text"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:layout_height="wrap_content"
+            android:maxLines="2"
+            android:layout_weight="1"
+            android:layout_marginRight="10dp"
+            android:text=""
+            android:textColor="@color/main_index_gary"
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/additions_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:text=""
-             />
+            android:layout_marginRight="12dp"
+            android:text="" />
     </LinearLayout>
 
-    <ListView
+    <com.ksfc.newfarmer.widget.UnSwipeListView
         android:id="@+id/additions_listView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:divider="@null"
         android:dividerHeight="2dp"
         android:listSelector="@color/transparent"

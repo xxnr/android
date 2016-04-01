@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:orientation="vertical">
 
 
@@ -9,22 +10,60 @@
         android:id="@+id/contact_ll"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:background="@color/white"
         android:gravity="center_vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
-            android:text="收货地址"
-             />
+            android:text="配送收货" />
 
 
     </LinearLayout>
 
-    <include layout="@layout/line_lay" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="16dp"
+        android:background="@color/gray" />
+
+
+    <RadioGroup
+        android:id="@+id/deliveries_way_radioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/deliveries_way_self"
+            android:layout_width="85dp"
+            android:layout_height="27dp"
+            android:layout_marginLeft="16dp"
+            android:background="@drawable/btn_selsector_for_deliveries"
+            android:button="@null"
+            android:gravity="center"
+            android:text="网点自提"
+            android:textColor="@color/black_goods_titile" />
+
+
+        <RadioButton
+            android:id="@+id/deliveries_way_home"
+            android:layout_width="85dp"
+            android:layout_height="27dp"
+            android:layout_marginLeft="16dp"
+            android:background="@drawable/btn_selsector_for_deliveries"
+            android:button="@null"
+            android:gravity="center"
+            android:text="配送到户"
+            android:textColor="@color/black_goods_titile" />
+
+    </RadioGroup>
+
+    <include layout="@layout/line_lay"/>
 
     <LinearLayout
+        android:id="@+id/address_shouhuo_ll"
         android:layout_width="match_parent"
         android:layout_height="90dp"
         android:background="@color/order_bg"
@@ -36,7 +75,7 @@
             android:background="@drawable/address_line" />
 
         <RelativeLayout
-            android:id="@+id/address_shouhuo_ll"
+
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
@@ -48,15 +87,15 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="40dp"
                 android:layout_marginTop="15dp"
-                android:text=""
-                 />
+                android:text="" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/order_detail_name_tv"
                 android:layout_marginTop="10dp"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -94,4 +133,179 @@
     </LinearLayout>
 
 
+    <LinearLayout
+        android:id="@+id/add_address_shouhuo_ll"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/order_bg"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="@drawable/address_line" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/add_address"
+                android:background="@drawable/address_location" />
+
+            <TextView
+                android:id="@+id/add_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:text="添加收货地址" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="16dp"
+                android:background="@drawable/common_icon_qianjin" />
+
+        </RelativeLayout>
+
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="@drawable/address_line" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/select_state_address_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/order_bg"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="@drawable/address_line" />
+
+
+        <LinearLayout
+            android:id="@+id/select_state_address_ll_state"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:background="@drawable/address_location" />
+
+
+            <TextView
+                android:id="@+id/select_state_address_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="14dp"
+                android:layout_marginRight="16dp"
+                android:hint="订单中的商品将配送至服务站，请选择自提网点"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="16dp"
+            android:background="@color/gray" />
+
+
+        <LinearLayout
+            android:id="@+id/select_state_address_ll_person"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:background="@drawable/contact_icon" />
+
+
+            <TextView
+                android:id="@+id/select_state_person_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="11dp"
+                android:hint="请填写收货人信息"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="@drawable/address_line" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/none_state_address_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/order_bg"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="@drawable/address_line" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:background="@drawable/prinpt_error" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="50dp"
+                android:text="您选择的商品不能在同一个网点自提，请返回购物车重新选择"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="@drawable/address_line" />
+    </LinearLayout>
 </LinearLayout>

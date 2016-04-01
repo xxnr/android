@@ -1,5 +1,6 @@
 package com.ksfc.newfarmer.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,8 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.activitys.AddPotentialActivity;
 import com.ksfc.newfarmer.activitys.PotentialCustomerDetailActivity;
+import com.ksfc.newfarmer.adapter.CommonAdapter;
+import com.ksfc.newfarmer.adapter.CommonViewHolder;
 import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.Request;
@@ -34,10 +37,11 @@ public class PotentialCustomer extends BaseFragment implements PullToRefreshBase
     private int page = 1;
     private TextView count_left, count_total;
     private PullToRefreshListView listView;
-    private MyAdapter adapter;
+    private PotentialCustomerAdapter adapter;
     private ImageView add_icon;
 
     private boolean isToast = false;//正常时候不提示没有客户的情况 防止当前fragment隐藏的时候提示
+
 
     @Override
     public View InItView() {
@@ -86,8 +90,10 @@ public class PotentialCustomer extends BaseFragment implements PullToRefreshBase
     private void getData() {
         RequestParams params = new RequestParams();
         if (Store.User.queryMe() != null) {
+            params.put("userId", Store.User.queryMe().userid);
+            params.put("page", page);
             execApi(ApiType.GET_POTENTIAL_CUSTOMER_LIST.setMethod(ApiType.RequestMethod.GET)
-                    .setOpt("/api/v2.1/potentialCustomer/query" + "?token=" + Store.User.queryMe().token + "&page=" + page), params);
+                    , params);
         }
     }
 
@@ -110,7 +116,7 @@ public class PotentialCustomer extends BaseFragment implements PullToRefreshBase
 
                 if (data.potentialCustomers != null && !data.potentialCustomers.isEmpty()) {
                     if (adapter == null) {
-                        adapter = new MyAdapter(data.potentialCustomers);
+                        adapter = new PotentialCustomerAdapter(getActivity(),data.potentialCustomers);
                         listView.setAdapter(adapter);
                     } else {
                         if (page == 1) {
@@ -136,6 +142,11 @@ public class PotentialCustomer extends BaseFragment implements PullToRefreshBase
 
     }
 
+    @Override
+    public void OnViewClick(View v) {
+
+    }
+
     //上拉，下拉刷新
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
@@ -151,85 +162,50 @@ public class PotentialCustomer extends BaseFragment implements PullToRefreshBase
         getData();
     }
 
-    class MyAdapter extends BaseAdapter {
-        private List<PotentialListResult.PotentialCustomers> list;
 
-        public MyAdapter(List<PotentialListResult.PotentialCustomers> list) {
-            this.list = list;
+    class PotentialCustomerAdapter extends CommonAdapter<PotentialListResult.PotentialCustomers>{
+
+
+        public PotentialCustomerAdapter(Context context, List<PotentialListResult.PotentialCustomers> data) {
+            super(context, data, R.layout.item_already_customr_layout);
         }
 
         @Override
-        public int getCount() {
-            return list.size();
-        }
+        public void convert(CommonViewHolder holder, final PotentialListResult.PotentialCustomers potentialCustomers) {
 
-        @Override
-        public Object getItem(int position) {
-            return list.get(position);
-        }
+            if (potentialCustomers!=null){
+                holder.setText(R.id.item_already_customer_name, potentialCustomers.name);
 
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
+                ImageView sex_icon = (ImageView) holder.getView(R.id.item_already_customer_sex);
+                if (potentialCustomers.sex) {
+                    sex_icon.setBackgroundResource(R.drawable.girl_icon);
+                } else {
+                    sex_icon.setBackgroundResource(R.drawable.boy_icon);
+                }
 
-        public void addAll(Collection<? extends PotentialListResult.PotentialCustomers> collection) {
-            list.addAll(collection);
-            notifyDataSetChanged();
-        }
 
-        public void clear() {
-            list.clear();
-            notifyDataSetChanged();
-        }
-
-        @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                convertView = LayoutInflater.from(getActivity()).inflate(R.layout.item_already_customr_layout, null);
-                convertView.setTag(new ViewHolder(convertView));
-            }
-            ViewHolder holder = (ViewHolder) convertView.getTag();
-            holder.name.setText(list.get(position).name);
-            if (list.get(position).sex) {
-                holder.sex_icon.setBackgroundResource(R.drawable.girl_icon);
-            } else {
-                holder.sex_icon.setBackgroundResource(R.drawable.boy_icon);
+                if (potentialCustomers.isRegistered) {
+                    holder.getView(R.id.item_already_customer_register).setVisibility(View.VISIBLE);
+                } else {
+                    holder.getView(R.id.item_already_customer_register).setVisibility(View.GONE);
+                }
             }
 
-            if (list.get(position).isRegistered) {
-                holder.Register.setVisibility(View.VISIBLE);
-            } else {
-                holder.Register.setVisibility(View.GONE);
-            }
-
-            convertView.setOnClickListener(new View.OnClickListener() {
+            holder.getConvertView().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getActivity(), PotentialCustomerDetailActivity.class);
-                    if (StringUtil.checkStr(list.get(position)._id)) {
-                        intent.putExtra("_id", list.get(position)._id);
+                    if (StringUtil.checkStr(potentialCustomers._id)) {
+                        intent.putExtra("_id", potentialCustomers._id);
                         startActivity(intent);
                     }
 
                 }
             });
-            return convertView;
-        }
-
-        class ViewHolder {
-            private TextView name;
-            private TextView Register;
-            private ImageView sex_icon;
-
-            ViewHolder(View convertView) {
-
-                this.name = (TextView) convertView.findViewById(R.id.item_already_customer_name);
-                this.Register = (TextView) convertView.findViewById(R.id.item_already_customer_register);
-                this.sex_icon = (ImageView) convertView.findViewById(R.id.item_already_customer_sex);
-            }
         }
     }
+
+
 
 
 }

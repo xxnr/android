@@ -3,7 +3,10 @@ package com.ksfc.newfarmer.utils;
 import android.content.Context;
 import android.view.Display;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.BaseAdapter;
+import android.widget.GridView;
 
 /**
  * 屏幕工具类--获取手机屏幕信息
@@ -37,6 +40,7 @@ public class ScreenUtil {
         Display display = manager.getDefaultDisplay();
         return display.getHeight();
     }
+
 
     /**
      * 获取屏幕中控件顶部位置的高度--即控件顶部的Y点
@@ -73,7 +77,6 @@ public class ScreenUtil {
     public static int getScreenViewRightHeight(View view) {
         return view.getRight();
     }
-
 
 
 }

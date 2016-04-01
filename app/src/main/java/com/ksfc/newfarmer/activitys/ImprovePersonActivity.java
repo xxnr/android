@@ -316,7 +316,7 @@ public class ImprovePersonActivity extends BaseActivity {
         disMissDialog();
         if (req.getApi() == ApiType.SAVE_MYUSER) {
             if (req.getData().getStatus().equals("1000")) {
-                showToast("保存成功！");
+                showToast("保存成功");
                 MsgCenter.fireNull(MsgID.UPDATE_USER, "update");
                 Intent intent = new Intent(ImprovePersonActivity.this, MainActivity.class);
                 intent.putExtra("id", 4);
@@ -348,38 +348,9 @@ public class ImprovePersonActivity extends BaseActivity {
     }
 
     private void upAddress(String value) {
-        com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
-        try {
-            StringEntity entity = new StringEntity(value, "UTF-8");
-            params.setBodyEntity(entity);
-
-            params.setContentType("application/json");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        HttpUtils http = new HttpUtils();
-        http.send(HttpRequest.HttpMethod.POST, ApiType.SAVE_MYUSER.getOpt(), params,
-                new RequestCallBack<String>() {
-                    @Override
-                    public void onFailure(HttpException arg0, String arg1) {
-                        showToast("保存失败");
-                    }
-
-                    @Override
-                    public void onSuccess(ResponseInfo<String> arg0) {
-
-                        if (arg0.result.contains("1000")) {
-                            showToast("保存成功！");
-                            MsgCenter.fireNull(MsgID.UPDATE_USER, "update");
-                            Intent intent = new Intent(ImprovePersonActivity.this, MainActivity.class);
-                            intent.putExtra("id", 4);
-                            startActivity(intent);
-                            finish();
-                        }
-
-                    }
-
-                });
+        RequestParams params = new RequestParams();
+        params.put("JSON",value);
+        execApi(ApiType.SAVE_MYUSER.setMethod(ApiType.RequestMethod.POSTJSON),params);
     }
 
 }

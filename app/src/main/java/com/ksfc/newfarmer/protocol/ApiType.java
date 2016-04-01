@@ -7,17 +7,16 @@ import com.ksfc.newfarmer.protocol.beans.AlipayResult;
 import com.ksfc.newfarmer.protocol.beans.AttrSelectResult;
 import com.ksfc.newfarmer.protocol.beans.BannerResult;
 import com.ksfc.newfarmer.protocol.beans.BrandsResult;
-import com.ksfc.newfarmer.protocol.beans.BrandsShaixuan;
 import com.ksfc.newfarmer.protocol.beans.BuildingList;
 import com.ksfc.newfarmer.protocol.beans.CameraResult;
-import com.ksfc.newfarmer.protocol.beans.ChangeNum;
 import com.ksfc.newfarmer.protocol.beans.CityList;
 import com.ksfc.newfarmer.protocol.beans.ClassIDResult;
 import com.ksfc.newfarmer.protocol.beans.CommentResult;
+import com.ksfc.newfarmer.protocol.beans.ConsigneeResult;
 import com.ksfc.newfarmer.protocol.beans.ConsumerOrderResult;
+import com.ksfc.newfarmer.protocol.beans.DeliveriesResult;
+import com.ksfc.newfarmer.protocol.beans.DeliveryCodeResult;
 import com.ksfc.newfarmer.protocol.beans.EvaluateList;
-import com.ksfc.newfarmer.protocol.beans.FindPassResult;
-import com.ksfc.newfarmer.protocol.beans.GetCodeResult;
 import com.ksfc.newfarmer.protocol.beans.GetGoodsData;
 import com.ksfc.newfarmer.protocol.beans.GetGoodsDetail;
 import com.ksfc.newfarmer.protocol.beans.GetshopCart;
@@ -30,9 +29,9 @@ import com.ksfc.newfarmer.protocol.beans.IsPotentialCustomerResult;
 import com.ksfc.newfarmer.protocol.beans.JifenData;
 import com.ksfc.newfarmer.protocol.beans.LoginResult;
 import com.ksfc.newfarmer.protocol.beans.MinPayPriceResult;
-import com.ksfc.newfarmer.protocol.beans.MyInviteResult;
 import com.ksfc.newfarmer.protocol.beans.MyOrderDetailResult;
 import com.ksfc.newfarmer.protocol.beans.NominatedInviterResult;
+import com.ksfc.newfarmer.protocol.beans.OfflinePayWayResult;
 import com.ksfc.newfarmer.protocol.beans.Payback;
 import com.ksfc.newfarmer.protocol.beans.PersonalData;
 import com.ksfc.newfarmer.protocol.beans.PointResult;
@@ -41,13 +40,17 @@ import com.ksfc.newfarmer.protocol.beans.PotentialListResult;
 import com.ksfc.newfarmer.protocol.beans.ProFileResult;
 import com.ksfc.newfarmer.protocol.beans.PublicKeyResult;
 import com.ksfc.newfarmer.protocol.beans.QueueList;
+import com.ksfc.newfarmer.protocol.beans.RSCInfoResult;
+import com.ksfc.newfarmer.protocol.beans.RSCAddressListResult;
+import com.ksfc.newfarmer.protocol.beans.RSCStateInfoResult;
 import com.ksfc.newfarmer.protocol.beans.RemainGoodsAttr;
+import com.ksfc.newfarmer.protocol.beans.RscOrderDetailResult;
+import com.ksfc.newfarmer.protocol.beans.RscOrderResult;
 import com.ksfc.newfarmer.protocol.beans.SaveAdressList;
 import com.ksfc.newfarmer.protocol.beans.SureOrderResult;
 import com.ksfc.newfarmer.protocol.beans.TownList;
 import com.ksfc.newfarmer.protocol.beans.UnipayResult;
 import com.ksfc.newfarmer.protocol.beans.WaitingPay;
-import com.ksfc.newfarmer.protocol.beans.addtoCart;
 import com.ksfc.newfarmer.protocol.beans.saveAddress;
 
 /**
@@ -138,15 +141,15 @@ public enum ApiType {
     /**
      * 找回密码
      */
-    FIND_PASSWORD("/api/v2.0/user/resetpwd", FindPassResult.class),
+    FIND_PASSWORD("/api/v2.0/user/resetpwd", ResponseResult.class),
     /**
      * 修改密码
      */
-    CHANGE_PASSWORD("/api/v2.0/user/modifypwd", FindPassResult.class),
+    CHANGE_PASSWORD("/api/v2.0/user/modifypwd", ResponseResult.class),
     /**
      * 短信验证
      */
-    SEND_SMS(null, GetCodeResult.class),
+    SEND_SMS("/api/v2.0/sms", ResponseResult.class),
     /**
      * 注册
      */
@@ -218,7 +221,7 @@ public enum ApiType {
     /**
      * 购物车修改数目
      */
-    CHANGE_NUM("/api/v2.1/cart/changeNum", ChangeNum.class),
+    CHANGE_NUM("/api/v2.1/cart/changeNum", ResponseResult.class),
     /**
      * 修改个人信息
      */
@@ -230,7 +233,7 @@ public enum ApiType {
     /**
      * 首页添加到购物车
      */
-    ADDTOCART("/api/v2.1/cart/addToCart", addtoCart.class),
+    ADDTOCART("/api/v2.1/cart/addToCart", ResponseResult.class),
     /**
      * 生成订单
      */
@@ -278,19 +281,11 @@ public enum ApiType {
     /**
      * 用户相关 我的邀请人
      */
-    GET_BINDINVITER("/api/v2.0/user/bindInviter", MyInviteResult.class),
+    GET_BINDINVITER("/api/v2.0/user/bindInviter", ResponseResult.class),
     /**
      * 新农资讯
      */
     GET_INFORMATION("/api/v2.0/news", InformationResult.class),
-    /**
-     * 筛选相关 商品类型筛选
-     */
-    GET_ATTRIBUTENAME(null, BrandsShaixuan.class),
-    /**
-     * 筛选相关 筛选后的商品列表
-     */
-    GET_SHAIXUAN_LIST(null, GetGoodsData.class),
     /**
      * 商品相关 化肥或者汽车的classID
      */
@@ -298,6 +293,7 @@ public enum ApiType {
     /**
      * 订单相关 更新订单支付方式
      */
+    @Deprecated
     GET_UPDATPAYWAY("/api/v2.0/order/updateOrderPaytype", ResponseResult.class),
     /**
      * 用户相关 查找有无此用户
@@ -349,10 +345,103 @@ public enum ApiType {
      * 订单相关 获取最小支付金额:
      */
     GET_MIN_PAY_PRICE("/api/v2.0/getMinPayPrice/", MinPayPriceResult.class),
+    /**
+     * 县级经销商 认证县级经销商:
+     */
+    ADD_RSC_INFO("/api/v2.2/RSC/info/fill", ResponseResult.class),
+
+    /**
+     * 县级经销商 查看认证信息:
+     */
+    GET_RSC_INFO("/api/v2.2/RSC/info/get", RSCInfoResult.class),
+
+    /**
+     * 订单配送 获取配送方式:
+     */
+    GET_DELIVERIES("/api/v2.2/cart/getDeliveries", DeliveriesResult.class),
+
+
+    /**
+     * 订单配送 获取自提网点:
+     */
+    GET_RSC_STATE_INFO("/api/v2.2/RSC", RSCStateInfoResult.class),
+
+    /**
+     * 订单配送 获取自提地区（省）:
+     */
+    GET_RSC_ADDRESS_PROVINCE("/api/v2.2/RSC/address/province", RSCAddressListResult.class),
+
+    /**
+     * 订单配送 获取自提地区（市）:
+     */
+    GET_RSC_ADDRESS_CITY("/api/v2.2/RSC/address/city", RSCAddressListResult.class),
+    /**
+     * 订单配送 获取自提地区（县）:
+     */
+    GET_RSC_ADDRESS_COUNTY("/api/v2.2/RSC/address/county", RSCAddressListResult.class),
+
+    /**
+     * 订单配送 获取自提地区（区镇）:
+     */
+    GET_RSC_ADDRESS_TOWN("/api/v2.2/RSC/address/town", RSCAddressListResult.class),
+
+    /**
+     * 用户选择 自提方式时保存收货人信息:
+     */
+    SAVE_CONSIGNEE_INFO("/api/v2.2/user/saveConsignees", ResponseResult.class),
+
+    /**
+     * 用户选择自提方式时 获取收货人列表信息:
+     */
+    GET_CONSIGNEE_INFO("/api/v2.2/user/queryConsignees", ConsigneeResult.class),
+
+    /**
+     * 订单相关 线下支付:
+     */
+    OFFLINE_PAY("/offlinepay", ResponseResult.class),
+
+    /**
+     * 订单相关 线下支付方式:
+     */
+    GET_OFFLINE_PAY_WAY("/api/v2.2/getOfflinePayType", OfflinePayWayResult.class),
+
+    /**
+     * 订单相关 获取自提码:
+     */
+    GET_DELIVERY_CODE("/api/v2.2/order/getDeliveryCode", DeliveryCodeResult.class),
+
+    /**
+     * 订单相关 确认收货:
+     */
+    SURE_GET_GOODS("/api/v2.2/order/confirmSKUReceived", ResponseResult.class),
+
+    /**
+     * RSC 订单列表:
+     */
+    GET_RSC_ORDER_LIST("/api/v2.2/RSC/orders", RscOrderResult.class),
+    /**
+     * RSC 订单详情:
+     */
+    GET_RSC_ORDER_Detail("/api/v2.2/RSC/orderDetail/", RscOrderDetailResult.class),
+
+    /**
+     * RSC 审核付款:
+     */
+    CONFIRM_OFFLINE_PAY("/api/v2.2/RSC/confirmOfflinePay", ResponseResult.class),
+
+    /**
+     * RSC 网点发货:
+     */
+    RSC_ORDER_DELIVERING("/api/v2.2/RSC/order/deliverStatus/delivering", ResponseResult.class),
+    /**
+     * RSC 网点自提:
+     */
+    RSC_ORDER_SELF_DELIVERY("/api/v2.2/RSC/order/selfDelivery", ResponseResult.class),
+
     TEST("", ResponseResult.class);
              private static String server_url = "http://api.xinxinnongren.com";
 //    private static String server_url = "http://101.200.194.203";
-//     private static String server_url = "http://192.168.1.15";
+//    private static String server_url = "http://192.168.1.15";
 
 
     public static final String url = server_url + "/";

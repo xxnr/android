@@ -12,7 +12,7 @@
         android:layout_height="88dp"
         android:background="@color/default_act_bg"
         android:orientation="vertical"
-        android:paddingBottom="12dp"
+        android:paddingBottom="10dp"
         android:paddingTop="10dp">
 
         <include layout="@layout/line_lay" />
@@ -29,8 +29,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
-                android:text="订单号："
-                 />
+                android:text="订单号：" />
         </LinearLayout>
 
         <LinearLayout
@@ -44,16 +43,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
-                android:text="订单状态："
-                 />
+                android:text="订单状态：" />
 
             <TextView
                 android:id="@+id/pay_state"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=""
-                android:textColor="@color/orange"
-                 />
+                android:textColor="@color/orange" />
         </LinearLayout>
 
         <include layout="@layout/line_lay" />
@@ -63,38 +60,71 @@
 
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_weight="1"
+            android:text="配送方式" />
+
+        <ImageView
+            android:id="@+id/delivery_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:visibility="gone"
+            android:background="@drawable/home_delivery_icon" />
+
+        <TextView
+            android:id="@+id/delivery_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="16dp"
+            android:text="网点自提"
+            android:visibility="gone"
+            android:textColor="@color/main_index_gary"
+            android:textSize="14sp" />
+
+
+    </LinearLayout>
+
+
+    <include layout="@layout/line_lay" />
+
+    <LinearLayout
+        android:id="@+id/address_shouhuo_ll"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/order_bg"
         android:orientation="vertical">
-
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="3dp"
             android:background="@drawable/address_line" />
 
-        <RelativeLayout
-            android:id="@+id/address_shouhuo_ll"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp">
 
 
             <TextView
                 android:id="@+id/order_detail_name_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="40dp"
-                android:layout_marginTop="15dp"
-                android:text="陈大明  13800000000"
-                 />
+                android:layout_marginLeft="40dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/order_detail_name_tv"
-                android:layout_marginBottom="15dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="15dp"
                 android:gravity="center_vertical">
 
                 <ImageView
@@ -111,13 +141,121 @@
                     android:layout_marginRight="52dp"
                     android:maxLength="50"
                     android:maxLines="3"
-                    android:text="河南省 郑州市 郑东新区 "
                     android:textColor="@color/deep_gray"
                     android:textSize="15sp" />
 
             </LinearLayout>
 
-        </RelativeLayout>
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="@drawable/address_line" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/select_state_address_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/order_bg"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="@drawable/address_line" />
+
+
+        <LinearLayout
+            android:id="@+id/select_state_address_ll_state"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:background="@drawable/address_location" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/select_state_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:textSize="14sp" />
+
+
+                <TextView
+                    android:id="@+id/select_state_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="5dp"
+                    android:maxLines="2"
+                    android:textColor="@color/main_index_gary"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/select_state_phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="2dp"
+                    android:maxLines="2"
+                    android:textColor="@color/main_index_gary"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="16dp"
+            android:background="@color/gray" />
+
+
+        <LinearLayout
+            android:id="@+id/select_state_address_ll_person"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:background="@drawable/contact_icon" />
+
+
+            <TextView
+                android:id="@+id/select_state_person_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="14dp"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
 
         <ImageView
             android:layout_width="match_parent"
@@ -141,8 +279,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="16dp"
-            android:text="支付信息"
-             />
+            android:text="支付信息" />
 
     </LinearLayout>
 
@@ -150,11 +287,11 @@
 
     <com.ksfc.newfarmer.widget.UnSwipeListView
         android:id="@+id/pay_info_listView"
-        android:dividerHeight="0dp"
-        android:divider="@null"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white" />
+        android:background="@color/white"
+        android:divider="@null"
+        android:dividerHeight="0dp" />
 
     <ImageView
         android:layout_width="match_parent"
@@ -172,8 +309,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="16dp"
-            android:text="商品清单"
-             />
+            android:text="商品清单" />
 
     </LinearLayout>
 

@@ -42,7 +42,7 @@ public class ChoiceTrueNameActivity extends BaseActivity {
         setTitle("修改姓名");
 
         name_submit_tv = (TextView) findViewById(R.id.name_submit_tv);
-        name_submit_tv.setClickable(false);
+        name_submit_tv.setEnabled(false);
 
         et_modify = (EditText) findViewById(R.id.et_modify);
         LoginResult.UserInfo me = Store.User.queryMe();
@@ -63,8 +63,7 @@ public class ChoiceTrueNameActivity extends BaseActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                name_submit_tv.setBackgroundColor(getResources().getColor(R.color.green));
-                name_submit_tv.setClickable(true);
+                name_submit_tv.setEnabled(true);
             }
 
             @Override
@@ -107,7 +106,7 @@ public class ChoiceTrueNameActivity extends BaseActivity {
                 queryMe.name = str;
                 Store.User.saveMe(queryMe);
             }
-            showToast("保存成功！");
+            showToast("保存成功");
             //保存用户
             Intent intent = new Intent();
             intent.putExtra("str", str);

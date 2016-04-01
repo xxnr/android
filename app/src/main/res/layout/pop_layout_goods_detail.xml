@@ -2,6 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:id="@+id/pop_root_layout"
     android:background="@color/transparent"
     android:orientation="vertical">
 
@@ -61,6 +62,7 @@
 
 
         <ScrollView
+            android:id="@+id/pop_scrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/pop_detail_bottom"
@@ -96,13 +98,12 @@
 
 
                 <LinearLayout
-                    android:layout_marginTop="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="top|left"
                     android:orientation="vertical">
 
                     <com.custom.vg.list.CustomListView
+                        android:layout_marginTop="10dp"
                         android:id="@+id/pop_gv_5"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -110,7 +111,6 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_marginTop="20dp"
                     android:id="@+id/pop_discount_lin"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"

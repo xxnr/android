@@ -34,7 +34,7 @@ import java.util.List;
 /**
  * Created by HePeng on 2016/1/7.
  */
-public class GoodsDetailFragment extends BaseFragment implements View.OnClickListener, ViewPager.OnPageChangeListener {
+public class GoodsDetailFragment extends BaseFragment implements ViewPager.OnPageChangeListener {
     private GetGoodsDetail.GoodsDetail detail;
     private VerticalScrollView scrollView;
     private WebView web;
@@ -76,6 +76,7 @@ public class GoodsDetailFragment extends BaseFragment implements View.OnClickLis
             current_count = (TextView) view.findViewById(R.id.current_count);//当前Viewpager/item
             TextView good_name = (TextView) view.findViewById(R.id.good_name); //商品名
             TextView product_dingjing = (TextView) view.findViewById(R.id.product_dingjin_price);//定金
+            RelativeLayout product_description_rel = (RelativeLayout) view.findViewById(R.id.product_description_rel);//描述rel
             TextView product_description = (TextView) view.findViewById(R.id.product_description);//描述
             TextView product_dingjing_name = (TextView) view.findViewById(R.id.product_dingjin_name);//"定金"
             RelativeLayout detail_detail = (RelativeLayout) view.findViewById(R.id.goods_detail_detail);//继续上滑，可以加载更多
@@ -89,6 +90,8 @@ public class GoodsDetailFragment extends BaseFragment implements View.OnClickLis
             }
             if (StringUtil.checkStr(detail.description)) {
                 product_description.setText(detail.description);
+            }else {
+                product_description_rel.setVisibility(View.GONE);
             }
             if (detail.pictures != null) {
 
@@ -210,8 +213,10 @@ public class GoodsDetailFragment extends BaseFragment implements View.OnClickLis
 
     }
 
+
+
     @Override
-    public void onClick(View v) {
+    public void OnViewClick(View v) {
         switch (v.getId()) {
             case R.id.tv_guid1:
                 guild_1.setTextColor(getActivity().getResources().getColor(R.color.green));

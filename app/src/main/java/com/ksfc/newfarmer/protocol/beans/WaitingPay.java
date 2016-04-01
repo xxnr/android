@@ -43,7 +43,7 @@ public class WaitingPay extends ResponseResult {
     }
 
 
-    public static class Order implements Serializable{
+    public static class Order implements Serializable {
         public String totalPrice;// 总价
         public String deposit;   // 定金（没有定金时为0）
         public String dateCreated;  // 下单时间
@@ -51,14 +51,20 @@ public class WaitingPay extends ResponseResult {
         public String dateDelivered;  // 发货时间
         public String dateCompleted;  // 完成时间
         public OrderStatus orderStatus;
+        public DeliveryType deliveryType;
 
 
-        public class OrderStatus implements Serializable{
+
+        public class OrderStatus implements Serializable {
             public int type;// 订单目前状态类型 0:交易关闭 1:待付款 2:部分付款 3:待发货 4:部分发货 5:已发货 6:已完成
             public String value;// 订单状态的展示
         }
-    }
 
+        public class DeliveryType implements Serializable {
+            public int type;// 订单目前状态类型 1:网点自提 2：用户自取
+            public String value;// 订单状态的展示
+        }
+    }
 
 
     public static class Product implements Serializable {
@@ -73,7 +79,7 @@ public class WaitingPay extends ResponseResult {
 
     }
 
-    public static class SKUS implements Serializable{
+    public static class SKUS implements Serializable {
         public String ref; //skuID
         public String productId; //商品id
         public float deposit;// 商品定金
@@ -81,12 +87,13 @@ public class WaitingPay extends ResponseResult {
         public String productName; //SKU简称
         public String name; //SKU名称
         public String thumbnail; //商品略缩图
+        public int deliverStatus; //商品的发货状态
         public int count; //商品数量
         public String category; //商品分类
         public List<Additions> additions; //附加选项
         public List<Attributes> attributes; //属性
 
-        public static class Additions implements Serializable{
+        public static class Additions implements Serializable {
             public float price;//附加选项价格
             public String name;// 附加选项名称
             public String ref;//附加选项_id
@@ -94,7 +101,7 @@ public class WaitingPay extends ResponseResult {
         }
 
 
-        public static class Attributes implements Serializable{
+        public static class Attributes implements Serializable {
             public String value;
             public String name;
             public String ref;
@@ -111,7 +118,6 @@ public class WaitingPay extends ResponseResult {
         public String _id;// 类别 化肥 汽车
         public String payStatus;// / 子订单付款状态1:待付款, 2:已付款, 3:部分付款
     }
-
 
 
 }

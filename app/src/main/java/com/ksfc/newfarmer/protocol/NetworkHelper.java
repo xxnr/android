@@ -67,9 +67,9 @@ public class NetworkHelper {
     // ===========================================================
     private static final String TAG = "NetworkHelper";
 
-    private static final int SO_TIMEOUT = 10*1000;
+    private static final int SO_TIMEOUT = 10 * 1000;
 
-    private static final int CONNECTION_TIMEOUT = 10*1000;
+    private static final int CONNECTION_TIMEOUT = 10 * 1000;
 
     // private HttpClient httpClient;
 
@@ -77,19 +77,21 @@ public class NetworkHelper {
             throws NetworkException {
 
         RndLog.d(TAG, "performGet. url=" + url);
-
         final HttpClient client = getHttpClient();
-        HttpGet httpGet = new HttpGet(url);
-        // httpGet.setHeader("Accept-Encoding", "gzip");
+        HttpGet httpGet;
+//         httpGet.setHeader("Accept-Encoding", "gzip");
         if (urlParams != null && !urlParams.isEmpty()) {
+            StringBuilder urlBuilder = new StringBuilder();
+            urlBuilder.append(url).append("?");
             for (String key : urlParams.keySet()) {
-                httpGet.addHeader(key, urlParams.get(key));
-
+                urlBuilder.append(key).append("=").append(urlParams.get(key)).append("&");
                 RndLog.d(TAG, key + " = " + urlParams.get(key));
             }
-
+            String subUrl = urlBuilder.substring(0, urlBuilder.length() - 1);
+            httpGet = new HttpGet(subUrl);
+        } else {
+            httpGet = new HttpGet(url);
         }
-
         return execute(client, httpGet);
     }
 

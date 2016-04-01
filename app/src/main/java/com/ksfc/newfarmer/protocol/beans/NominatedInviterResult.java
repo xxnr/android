@@ -3,7 +3,7 @@ package com.ksfc.newfarmer.protocol.beans;
 import com.ksfc.newfarmer.protocol.ResponseResult;
 
 /**
- * Created by CAI on 2016/2/25.
+ * Created by HePeng on 2016/2/25.
  */
 public class NominatedInviterResult extends ResponseResult {
 

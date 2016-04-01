@@ -22,6 +22,7 @@ import com.ksfc.newfarmer.protocol.beans.AlipayResult;
 import com.ksfc.newfarmer.protocol.beans.MinPayPriceResult;
 import com.ksfc.newfarmer.protocol.beans.MyOrderDetailResult;
 import com.ksfc.newfarmer.protocol.beans.UnionPayResponse;
+import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.lidroid.xutils.HttpUtils;
@@ -42,17 +43,20 @@ import android.os.Message;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import net.yangentao.util.app.App;
+import net.yangentao.util.msg.MsgCenter;
 
 
 public class PaywayActivity extends BaseActivity implements Runnable {
-    private ImageView alipay_img, bank_img, dianhui_img, pos_img;
+    private ImageView alipay_img, bank_img, offline_img, pos_img;
     private int tag;
     private int order_type;//支付类型
     private String orderId;
@@ -66,7 +70,14 @@ public class PaywayActivity extends BaseActivity implements Runnable {
     private EditText payWay_times_price_et;//分次支付里的金额tv
     private double use_calculate = 3000.00;//分次支付里的金额 用于计算 默认3000
     private double MIN_PAY_PRICE = 3000.00;
-    private long backPressTime=0;
+
+    private TextView pay_sure_tv;
+
+    private LinearLayout bank_dianhui_ll;//线下支付
+    private TextView separatrix_line;//分界线
+
+    private MyOrderDetailResult.Datas datas;//订单详情
+
 
     private double duePrice;  //待支付金额
     private static final String mMode = "00";// 设置测试模式:01为测试 00为正式环境
@@ -104,17 +115,10 @@ public class PaywayActivity extends BaseActivity implements Runnable {
                     doStartUnionPayPlugin(PaywayActivity.this, tn, mMode);
                 }
             }
+            disMissDialog();
         }
     };
 
-
-    /**
-     * 启动支付界面
-     */
-    public void doStartUnionPayPlugin(Activity activity, String tn, String mode) {
-        UPPayAssistEx.startPayByJAR(activity, PayActivity.class, null, null,
-                tn, mode);
-    }
 
     @Override
     public int getLayout() {
@@ -133,8 +137,10 @@ public class PaywayActivity extends BaseActivity implements Runnable {
     private void initView() {
         alipay_img = (ImageView) findViewById(R.id.alipay_img);
         bank_img = (ImageView) findViewById(R.id.bank_img);
-        dianhui_img = (ImageView) findViewById(R.id.dianhui_img);
+        offline_img = (ImageView) findViewById(R.id.dianhui_img);
         pos_img = (ImageView) findViewById(R.id.pos_img);
+        pay_sure_tv = (TextView) findViewById(R.id.pay_sure_tv);
+
 
         //应付金额 订单号 订单总额 订单状态
         payway_sumPrice_tv = (TextView) findViewById(R.id.payway_sumPrice);
@@ -159,30 +165,33 @@ public class PaywayActivity extends BaseActivity implements Runnable {
         payWay_discount_jia = (ImageView) findViewById(R.id.payWay_discount_jia);
         describe_min_pay_price_tv = (TextView) findViewById(R.id.describe_min_pay_price);
 
+
+        bank_dianhui_ll = (LinearLayout) findViewById(R.id.bank_dianhui_ll);
+        separatrix_line = (TextView) findViewById(R.id.separatrix_line);
+
         orderId = getIntent().getStringExtra("orderId");
         order_type = getIntent().getIntExtra("payType", 1);
 
         if (StringUtil.checkStr(orderId)) {
             //获取最小支付金额
             getMinPayPrice();
-            //获取订单详情
             showProgressDialog();
+            //获取订单详情
             getOrderDetail();
             //获取白名单
             getWriteList();
         }
-
-
         payWay_order_id_tv.setText(orderId);
         setViewClick(R.id.alipay_ll);
         setViewClick(R.id.bank_ll);
         setViewClick(R.id.pay_sure_tv);
         setViewClick(R.id.payWay_pay_total_rel);
         setViewClick(R.id.payWay_pay_times_rel);
-//        setViewClick(R.id.bank_dianhui_ll);
+        setViewClick(R.id.bank_dianhui_ll);
 //        setViewClick(R.id.pos_ll);
 
-        init();
+        pay_sure_tv.setEnabled(false);
+        initCircle();
         switch (order_type) {
             case 1:
                 // 支付宝支付
@@ -194,16 +203,13 @@ public class PaywayActivity extends BaseActivity implements Runnable {
                 bank_img.setBackgroundResource(R.drawable.circle_orange);
                 tag = 2;
                 break;
-//            case 3:
-//                // 银行电汇
-//                dianhui_img.setBackgroundResource(R.drawable.circle_green);
-//                tag = 3;
-//                break;
-//            case 4:
-//                // pos支付
-//                pos_img.setBackgroundResource(R.drawable.circle_green);
-//                tag = 4;
-//                break;
+            // 现金支付 3 Pos机支付 4
+            case 3:
+            case 4:
+                // 银行电汇
+                offline_img.setBackgroundResource(R.drawable.circle_orange);
+                tag = 3;
+                break;
             default:
                 // 默认选中支付宝支付
                 alipay_img.setBackgroundResource(R.drawable.circle_orange);
@@ -213,8 +219,8 @@ public class PaywayActivity extends BaseActivity implements Runnable {
         }
     }
 
+    //获取最小支付金额
     private void getMinPayPrice() {
-        //获取最小支付金额
         RequestParams params1 = new RequestParams();
         if (isLogin()) {
             params1.put("userId", Store.User.queryMe().userid);
@@ -223,10 +229,9 @@ public class PaywayActivity extends BaseActivity implements Runnable {
         execApi(ApiType.GET_MIN_PAY_PRICE, params1);
     }
 
-
+    //获取订单详情
     private void getOrderDetail() {
         showProgressDialog();
-        //获取订单详情
         RequestParams params = new RequestParams();
         if (isLogin()) {
             params.put("userId", Store.User.queryMe().userid);
@@ -272,11 +277,16 @@ public class PaywayActivity extends BaseActivity implements Runnable {
                                 @Override
                                 public void afterTextChanged(Editable s) {
                                     if (StringUtil.checkStr(s.toString())) {
-                                        double price = Double.parseDouble(s.toString());
-                                        if (price > duePrice) {
-                                            payWay_times_price_et.setText(StringUtil.toTwoString(duePrice + ""));
-                                        } else if (price == 0) {
-                                            payWay_times_price_et.setText(StringUtil.toTwoString("0.01"));
+                                        double price;
+                                        try {
+                                            price=Double.parseDouble(s.toString());
+                                            if (price > duePrice) {
+                                                payWay_times_price_et.setText(StringUtil.toTwoString(duePrice + ""));
+                                            } else if (price == 0) {
+                                                payWay_times_price_et.setText(StringUtil.toTwoString("0.01"));
+                                            }
+                                        } catch (NumberFormatException e) {
+                                            e.printStackTrace();
                                         }
                                     } else {
                                         payWay_times_price_et.setText("0.01");
@@ -302,6 +312,10 @@ public class PaywayActivity extends BaseActivity implements Runnable {
                 payWay_pay_times_bar_tv.setVisibility(View.INVISIBLE);
                 payWay_pay_times_text_tv.setTextColor(getResources().getColor(R.color.main_index_gary));
                 payWay_pay_total_text_tv.setTextColor(getResources().getColor(R.color.orange));
+
+                bank_dianhui_ll.setVisibility(View.VISIBLE);
+                separatrix_line.setVisibility(View.VISIBLE);
+
                 break;
             case R.id.payWay_pay_times_rel://分次支付
                 payWay_pay_total_view.setVisibility(View.GONE);
@@ -310,6 +324,13 @@ public class PaywayActivity extends BaseActivity implements Runnable {
                 payWay_pay_times_bar_tv.setVisibility(View.VISIBLE);
                 payWay_pay_times_text_tv.setTextColor(getResources().getColor(R.color.orange));
                 payWay_pay_total_text_tv.setTextColor(getResources().getColor(R.color.main_index_gary));
+                bank_dianhui_ll.setVisibility(View.GONE);
+                separatrix_line.setVisibility(View.GONE);
+                if (tag == 3) {
+                    initCircle();
+                    alipay_img.setBackgroundResource(R.drawable.circle_orange);
+                    tag = 1;
+                }
                 break;
             case R.id.payWay_discount_jia:
                 changePayPrice(true);
@@ -318,86 +339,92 @@ public class PaywayActivity extends BaseActivity implements Runnable {
                 changePayPrice(false);
                 break;
             case R.id.alipay_ll://支付宝
-                init();
+                initCircle();
                 alipay_img.setBackgroundResource(R.drawable.circle_orange);
                 tag = 1;
-                RequestParams params = new RequestParams();
-                if (isLogin()) {
-                    params.put("userId", Store.User.queryMe().userid);
-                }
-                if (orderId != null) {
-                    params.put("orderId", orderId);
-                }
-                params.put("payType", tag);
-                execApi(ApiType.GET_UPDATPAYWAY, params);
-
                 break;
             case R.id.bank_ll://银联
-                init();
+                initCircle();
                 bank_img.setBackgroundResource(R.drawable.circle_orange);
                 tag = 2;
-                RequestParams params1 = new RequestParams();
-                if (isLogin()) {
-                    params1.put("userId", Store.User.queryMe().userid);
-                }
-                if (orderId != null) {
-                    params1.put("orderId", orderId);
-                }
-                params1.put("payType", tag);
-                execApi(ApiType.GET_UPDATPAYWAY, params1);
                 break;
-//            case R.id.bank_dianhui_ll://银行电汇
-//                init();
-//                dianhui_img.setBackgroundResource(R.drawable.circle_green);
-//                tag = 3;
-//                break;
+            case R.id.bank_dianhui_ll://线下支付
+                initCircle();
+                offline_img.setBackgroundResource(R.drawable.circle_orange);
+                tag = 3;
+                break;
 //            case R.id.pos_ll://POS机
-//                init();
-//                pos_img.setBackgroundResource(R.drawable.circle_green);
+//                initCircle();
+//                pos_img.setBackgroundResource(R.drawable.circle_orange);
 //                tag = 4;
 //                break;
             case R.id.pay_sure_tv:
-                long current = System.currentTimeMillis();
-                if (current - backPressTime > 3000) {
-                    backPressTime = current;
-                    if (payWay_pay_times_view.getVisibility() == View.VISIBLE) {
-                        if (tag == 1) {
-                            RequestParams params3 = new RequestParams();
-                            if (isLogin()) {
-                                params3.put("userId", Store.User.queryMe().userid);
-                            }
-                            params3.put("consumer", "app");
-                            if (StringUtil.checkStr(payWay_times_price_et.getText().toString().trim())) {
-                                params3.put("price", payWay_times_price_et.getText().toString().trim());
-                            }
-                            if (orderId != null) {
-                                params3.put("orderId", orderId);
-                            }
-                            execApi(ApiType.GET_ALI, params3);
-                        } else if (tag == 2) {
-                            new Thread(this).start();
-                        } else {
-                            showToast("请选择支付方式");
+                //当分次付款时，执行
+                if (payWay_pay_times_view.getVisibility() == View.VISIBLE) {
+                    if (tag == 1) {
+                        //确认支付宝支付金额
+                        RequestParams params3 = new RequestParams();
+                        if (isLogin()) {
+                            params3.put("userId", Store.User.queryMe().userid);
                         }
+                        params3.put("consumer", "app");
+                        if (StringUtil.checkStr(payWay_times_price_et.getText().toString().trim())) {
+                            params3.put("price", payWay_times_price_et.getText().toString().trim());
+                        }
+                        if (orderId != null) {
+                            params3.put("orderId", orderId);
+                        }
+                        showProgressDialog();
+                        execApi(ApiType.GET_ALI, params3);
+                    } else if (tag == 2) {
+                        showProgressDialog();
+                        new Thread(this).start();
                     } else {
-                        if (tag == 1) {
-                            RequestParams params3 = new RequestParams();
-                            if (isLogin()) {
-                                params3.put("userId", Store.User.queryMe().userid);
-                            }
-                            params3.put("consumer", "app");
-                            if (orderId != null) {
-                                params3.put("orderId", orderId);
-                            }
-                            execApi(ApiType.GET_ALI, params3);
-                        } else if (tag == 2) {
-                            new Thread(this).start();
-                        } else {
-                            showToast("请选择支付方式");
+                        disMissDialog();
+                        showToast("请选择支付方式");
+                    }
+                    //当全额支付时，执行
+                } else {
+                    if (tag == 1) {
+                        //确认支付宝支付金额
+                        RequestParams params3 = new RequestParams();
+                        if (isLogin()) {
+                            params3.put("userId", Store.User.queryMe().userid);
                         }
+                        params3.put("consumer", "app");
+                        if (orderId != null) {
+                            params3.put("orderId", orderId);
+                        }
+                        showProgressDialog();
+                        execApi(ApiType.GET_ALI, params3);
+                    } else if (tag == 2) {
+                        showProgressDialog();
+                        new Thread(this).start();
+                    } else if (tag == 3) {
+
+
+                        Log.d("PaywayActivity", "线下支付");
+                        //线下支付
+                        showProgressDialog();
+                        RequestParams params = new RequestParams();
+                        if (isLogin()) {
+                            params.put("userId", Store.User.queryMe().userid);
+                        }
+                        if (orderId != null) {
+                            params.put("orderId", orderId);
+                        }
+                        if (datas != null) {
+                            if (datas.rows != null && datas.rows.payment != null) {
+                                params.put("price", datas.rows.payment.price);
+                            }
+                        }
+                        execApi(ApiType.OFFLINE_PAY.setMethod(ApiType.RequestMethod.GET), params);
+
+                    } else {
+                        disMissDialog();
+                        showToast("请选择支付方式");
                     }
                 }
-
                 break;
             default:
                 break;
@@ -427,32 +454,22 @@ public class PaywayActivity extends BaseActivity implements Runnable {
     }
 
 
-    /**
-     * 调用支付宝支付
-     */
-    @SuppressWarnings("unused")
-    private void getAliPay(HashMap<String, String> map) {
-        new AlipayClass(map, this);
-    }
-
-    private void init() {
+    //初始化 circle图标
+    private void initCircle() {
         alipay_img.setBackgroundResource(R.drawable.circle_gray);
         bank_img.setBackgroundResource(R.drawable.circle_gray);
-        dianhui_img.setBackgroundResource(R.drawable.circle_gray);
+        offline_img.setBackgroundResource(R.drawable.circle_gray);
         pos_img.setBackgroundResource(R.drawable.circle_gray);
     }
 
     @Override
     public void onResponsed(Request req) {
         disMissDialog();
-        if (ApiType.GET_UPDATPAYWAY == req.getApi()) {
-            if (req.getData().getStatus().equals("1000")) {
-                RndLog.i(TAG, "更改支付方式成功");
-            }
-        } else if (ApiType.GET_ORDER_DETAILS == req.getApi()) {
+        if (ApiType.GET_ORDER_DETAILS == req.getApi()) {
             MyOrderDetailResult data = (MyOrderDetailResult) req.getData();
             if (data.getStatus().equals("1000")) {
-                MyOrderDetailResult.Datas datas = data.datas;
+                pay_sure_tv.setEnabled(true);
+                datas = data.datas;
                 if (datas != null) {
                     if (datas.rows != null) {
                         //订单ID
@@ -500,9 +517,7 @@ public class PaywayActivity extends BaseActivity implements Runnable {
                             }
                         }
                     }
-
                 }
-
             }
         } else if (req.getApi() == ApiType.GET_ALI) {
             AlipayResult data = (AlipayResult) req.getData();
@@ -517,7 +532,6 @@ public class PaywayActivity extends BaseActivity implements Runnable {
             }
         } else if (req.getApi() == ApiType.GET_MIN_PAY_PRICE) {
 
-
             MinPayPriceResult data = (MinPayPriceResult) req.getData();
             if (data != null && data.getStatus().equals("1000")) {
                 MIN_PAY_PRICE = data.payprice;
@@ -526,9 +540,43 @@ public class PaywayActivity extends BaseActivity implements Runnable {
             }
             use_calculate = MIN_PAY_PRICE;//用于加减计算的金额
             describe_min_pay_price_tv.setText(StringUtil.reduceDouble(MIN_PAY_PRICE));
+        } else if (req.getApi() == ApiType.OFFLINE_PAY) {
+            if (req.getData().getStatus().equals("1000")) {
+                Bundle bundle = new Bundle();
+                if (datas != null) {
+                    bundle.putString("orderId", orderId);
+                    if (datas.rows != null && datas.rows.payment != null) {
+                        bundle.putString("payPrice", datas.rows.payment.price);
+                    }
+                }
+                //通知 订单列表刷新
+                MsgCenter.fireNull("Pay_success", "price");
+                IntentUtil.activityForward(this, OfflinePayActivity.class, bundle, false);
+            }
         }
     }
 
+    /**
+     * 调用支付宝支付
+     */
+    @SuppressWarnings("unused")
+    private void getAliPay(HashMap<String, String> map) {
+        new AlipayClass(map, this);
+    }
+
+
+    /**
+     * 启动银联支付界面
+     */
+    public void doStartUnionPayPlugin(Activity activity, String tn, String mode) {
+        UPPayAssistEx.startPayByJAR(activity, PayActivity.class, null, null,
+                tn, mode);
+    }
+
+
+    /**
+     * 银联的异步支付请求
+     */
     @Override
     public void run() {
         // TODO Auto-generated method stub

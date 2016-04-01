@@ -3,39 +3,32 @@ package com.ksfc.newfarmer.activitys;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.alibaba.fastjson.JSON;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
+import com.ksfc.newfarmer.adapter.CommonAdapter;
+import com.ksfc.newfarmer.adapter.CommonViewHolder;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.Request;
+import com.ksfc.newfarmer.protocol.RequestParams;
 import com.ksfc.newfarmer.protocol.beans.InformationResult;
 import com.ksfc.newfarmer.protocol.beans.InformationResult.DatasEntity.ItemsEntity;
 import com.ksfc.newfarmer.utils.DateFormatUtils;
 import com.ksfc.newfarmer.utils.ExpandViewTouch;
 import com.ksfc.newfarmer.utils.PullToRefreshUtils;
-import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.ScreenUtil;
-import com.lidroid.xutils.HttpUtils;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
+
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBase.OnRefreshListener2, AbsListView.OnScrollListener {
@@ -74,12 +67,12 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
                 ItemsEntity entity = (ItemsEntity) adapter.getItem(position);
                 Intent intent = new Intent(NewFarmerInfomation.this,
                         ArticleActivity.class);
-                if (!TextUtils.isEmpty(entity.getUrl())) {
-                    intent.putExtra("articleUrl", entity.getUrl());
-                    intent.putExtra("shareUrl", entity.getShareurl());
-                    intent.putExtra("urlImage", entity.getImage());
-                    intent.putExtra("urlTitle", entity.getTitle());
-                    intent.putExtra("newsAbstract", entity.getNewsabstract());
+                if (!TextUtils.isEmpty(entity.url)) {
+                    intent.putExtra("articleUrl", entity.url);
+                    intent.putExtra("shareUrl", entity.shareurl);
+                    intent.putExtra("urlImage", entity.image);
+                    intent.putExtra("urlTitle", entity.title);
+                    intent.putExtra("newsAbstract", entity.newsabstract);
                     startActivity(intent);
                 }
 
@@ -87,58 +80,18 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
         });
         setTitle("新农资讯");
         hideLeft();
-        items = new ArrayList<InformationResult.DatasEntity.ItemsEntity>();
+        items = new ArrayList<>();
         showProgressDialog();
         getData();
     }
 
     private void getData() {
 
-        HttpUtils http = new HttpUtils();
-        final RequestParams params = new RequestParams();
-        params.addQueryStringParameter("max", "20");
-        params.addQueryStringParameter("page", String.valueOf(page));
-        http.send(HttpMethod.GET, ApiType.GET_INFORMATION.getOpt(), params,
-                new RequestCallBack<String>() {
+        RequestParams params = new RequestParams();
+        params.put("max", "20");
+        params.put("page", String.valueOf(page));
+        execApi(ApiType.GET_INFORMATION.setMethod(ApiType.RequestMethod.GET), params);
 
-                    @Override
-                    public void onFailure(HttpException arg0, String arg1) {
-                        disMissDialog();
-                        showToast("您的网络不太顺畅，重试或检查下网络吧~");
-                        listView.onRefreshComplete();
-                    }
-
-                    @Override
-                    public void onSuccess(ResponseInfo<String> arg0) {
-                        disMissDialog();
-                        RndLog.v(TAG, arg0.result);
-                        listView.onRefreshComplete();
-                        InformationResult info = null;
-                        info = JSON.parseObject(arg0.result,
-                                InformationResult.class);
-                        if (info.getCode().equals("1000")) {
-                            if (info.getDatas().getItems().size() > 0) {
-                                List<ItemsEntity> list = info.getDatas()
-                                        .getItems();
-                                items.addAll(list);
-                                if (adapter == null) {
-                                    adapter = new InformationAdapter();
-                                    listView.setAdapter(adapter);
-                                }
-                                adapter.notifyDataSetChanged();
-
-                            } else {
-                                showToast("没有更多资讯");
-                                if (page != 1) {
-                                    page--;
-                                }
-
-
-                            }
-                        }
-                    }
-
-                });
     }
 
     @Override
@@ -150,7 +103,31 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
 
     @Override
     public void onResponsed(Request req) {
+        listView.onRefreshComplete();
+        disMissDialog();
+        if (req.getApi() == ApiType.GET_INFORMATION) {
+            if (req.getData().getStatus().equals("1000")) {
+                InformationResult data = (InformationResult) req.getData();
+                if (data.datas!= null
+                        && data.datas.items != null
+                        && data.datas.items.size() > 0) {
+                    List<ItemsEntity> list = data.datas.items;
+                    items.addAll(list);
+                    if (adapter == null) {
+                        adapter = new InformationAdapter(this, items);
+                        listView.setAdapter(adapter);
+                    }
+                    adapter.notifyDataSetChanged();
 
+                } else {
+                    showToast("没有更多资讯");
+                    if (page != 1) {
+                        page--;
+                    }
+                }
+            }
+
+        }
     }
 
     //上拉，下拉刷新
@@ -191,7 +168,8 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
     }
 
     @Override
-    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
+                         int totalItemCount) {
         // 当开始滑动且ListView底部的Y轴点超出屏幕最大范围时，显示或隐藏顶部按钮
         if (getScrollY() >= ScreenUtil
                 .getScreenHeight(NewFarmerInfomation.this)) {
@@ -200,6 +178,7 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
     }
 
     //获得lisView的滚动高度
+
     public int getScrollY() {
         View c = listView.getRefreshableView().getChildAt(0);
         if (c == null) {
@@ -210,71 +189,39 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
         return -top + firstVisiblePosition * c.getHeight();
     }
 
+    class InformationAdapter extends CommonAdapter<ItemsEntity> {
 
-    class InformationAdapter extends BaseAdapter {
 
-        @Override
-        public int getCount() {
-            return items.size();
+        public InformationAdapter(Context context, List<ItemsEntity> data) {
+            super(context, data, R.layout.item_information_layout);
         }
 
         @Override
-        public Object getItem(int position) {
-            return items.get(position);
-        }
+        public void convert(CommonViewHolder holder, ItemsEntity itemsEntity) {
+            if (itemsEntity != null) {
 
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
 
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                convertView = LayoutInflater.from(NewFarmerInfomation.this)
-                        .inflate(R.layout.item_information_layout, null);
-                convertView.setTag(new ViewHolder(convertView));
-            }
-            ViewHolder holder = (ViewHolder) convertView.getTag();
-
-            ItemsEntity itemsEntity = items.get(position);
-            if (itemsEntity!=null){
-                if (!TextUtils.isEmpty(itemsEntity.getImage())) {
-                    ImageLoader.getInstance().displayImage(items.get(position).getImage(),
-                            holder.image_iv);
+                if (!TextUtils.isEmpty(itemsEntity.image)) {
+                    ImageLoader.getInstance().displayImage(itemsEntity.image,
+                            ((ImageView) holder.getView(R.id.information_image)));
                 }
-                holder.title_tv.setText(items.get(position).getTitle());
+                holder.setText(R.id.information_title, itemsEntity.title);
                 //格式化时间
-                String time = DateFormatUtils.convertTime(items.get(position).getDatecreated());
-                holder.time_tv.setText(time);
-            }
-
-            return convertView;
-        }
-
-        class ViewHolder {
-            private ImageView image_iv;
-            private TextView title_tv, time_tv;
-
-            public ViewHolder(View view) {
-                image_iv = (ImageView) view
-                        .findViewById(R.id.information_image);
-                title_tv = (TextView) view.findViewById(R.id.information_title);
-                time_tv = (TextView) view.findViewById(R.id.information_time);
+                String time = DateFormatUtils.convertTime(itemsEntity.datecreated);
+                holder.setText(R.id.information_time, time);
 
             }
-
         }
-
     }
+
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (!(adapter!=null&&adapter.getCount()>0)){
+        if (!(adapter != null && adapter.getCount() > 0)) {
             showProgressDialog();
             items.clear();
-            page=1;
+            page = 1;
             getData();
         }
     }

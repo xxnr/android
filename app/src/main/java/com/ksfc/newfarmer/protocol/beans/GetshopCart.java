@@ -45,6 +45,7 @@ public class GetshopCart extends ResponseResult implements Serializable{
         public List<Attributes> attributes;
         public List<Additions> additions;
         public boolean online;
+        public String product_id;
 
         public static class Attributes implements Serializable{
             public String order;

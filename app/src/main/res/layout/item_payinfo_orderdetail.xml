@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="16dp"
-            android:text="阶段一：订金"
+            android:text=""
             android:textSize="14sp" />
 
         <TextView
@@ -27,7 +27,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="16dp"
-            android:text="已付款"
+            android:text=""
             android:textSize="14sp" />
     </RelativeLayout>
 
@@ -59,7 +59,7 @@
             android:id="@+id/to_pay_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="72940.00"
+            android:text=""
             android:textColor="@color/main_index_gary"
             android:textSize="16dp" />
 
@@ -67,6 +67,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/order_yet_price_ll"
         android:layout_width="match_parent"
         android:layout_height="35dp"
         android:gravity="center_vertical"
@@ -85,7 +86,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="72940.00"
+            android:text=""
             android:textColor="@color/main_index_gary"
             android:textSize="16dp" />
 
@@ -119,7 +120,7 @@
             android:id="@+id/order_pay_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="银联支付"
+            android:text=""
             android:textColor="@color/main_index_gary"
             android:textSize="14dp" />
 

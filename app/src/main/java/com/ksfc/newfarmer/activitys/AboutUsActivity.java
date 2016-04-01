@@ -31,6 +31,7 @@ public class AboutUsActivity extends BaseActivity {
             RndLog.d(TAG, versionName);
             version.setText("V" + versionName);
         }
+
     }
 
     @Override

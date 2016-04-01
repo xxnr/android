@@ -7,535 +7,578 @@
 
     <include layout="@layout/title_lay" />
 
-    <ImageView
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/line_chang" />
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="34dp"
-        android:background="#fff1e5"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:text="订单号："
-            android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/payWay_order_id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text=""
-            android:textSize="18sp" />
-
-
-        <TextView
-            android:id="@+id/payWay_order_type"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="16dp"
-            android:text=""
-            android:textColor="@color/main_index_gary"
-            android:textSize="14sp" />
-
-    </LinearLayout>
-
-    <include layout="@layout/line_lay" />
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="67dp"
-        android:gravity="center_vertical"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="@color/order_bg"
-            android:orientation="vertical">
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:text="待付金额："
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/payway_sumPrice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:textColor="@color/orange_goods_price"
-                     />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:text="订单总额："
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/payWay_totalPrice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:textColor="@color/orange_goods_price"
-                     />
-
-            </LinearLayout>
-        </LinearLayout>
-
-        <ImageView
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/break_line" />
+            android:orientation="vertical"
+            android:scrollbars="none">
 
-    </LinearLayout>
 
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:layout_marginTop="10dp"
-        android:orientation="vertical">
-
-        <include layout="@layout/line_lay" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="@color/invite_bg"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
+            <ImageView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="16dp"
-                android:text="支付方式"
-                 />
-        </LinearLayout>
+                android:layout_marginTop="10dp"
+                android:background="@drawable/line_chang" />
 
-        <include layout="@layout/line_lay" />
-    </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="39dp"
-            android:orientation="horizontal">
-
-            <RelativeLayout
-                android:id="@+id/payWay_pay_total_rel"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="34dp"
+                android:background="#fff1e5"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/payWay_pay_total_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:text="全额支付"
-                    android:textColor="@color/orange"
-                     />
-
-            </RelativeLayout>
-
-            <TextView
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="8dp"
-                android:background="@color/gray" />
-
-            <RelativeLayout
-                android:id="@+id/payWay_pay_times_rel"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
+                    android:layout_marginLeft="16dp"
+                    android:text="订单号："
+                    android:textSize="18sp" />
 
                 <TextView
-                    android:id="@+id/payWay_pay_times_text"
+                    android:id="@+id/payWay_order_id"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:text="分次支付"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:textSize="18sp" />
+
+
+                <TextView
+                    android:id="@+id/payWay_order_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="16dp"
+                    android:text=""
                     android:textColor="@color/main_index_gary"
-                     />
-            </RelativeLayout>
+                    android:textSize="14sp" />
 
-        </LinearLayout>
+            </LinearLayout>
 
-        <include layout="@layout/line_lay"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="3px"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/payWay_pay_total_bar"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@color/orange"
-
-                />
-
-            <TextView
-                android:id="@+id/payWay_pay_times_bar"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@color/orange"
-                android:visibility="invisible" />
-
-        </LinearLayout>
-
-        <RelativeLayout
-            android:id="@+id/payWay_pay_total_view"
-            android:layout_width="match_parent"
-            android:layout_height="47dp"
-            android:visibility="visible">
-
-            <TextView
-                android:id="@+id/payWay_pay_total_price"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text=""
-                android:textColor="@color/orange_goods_price"
-                android:textSize="18dp" />
-
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/payWay_pay_times_view"
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:visibility="gone">
+            <include layout="@layout/line_lay" />
 
 
             <LinearLayout
-                android:id="@+id/payWay_discount_Lin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="12sp"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:orientation="horizontal">
+                android:layout_width="match_parent"
+                android:layout_height="67dp"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:background="@color/order_bg"
+                    android:orientation="vertical">
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="16dp"
+                            android:text="待付金额："
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/payway_sumPrice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:textColor="@color/orange_goods_price" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="16dp"
+                            android:text="订单总额："
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/payWay_totalPrice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:textColor="@color/orange_goods_price" />
+
+                    </LinearLayout>
+                </LinearLayout>
 
                 <ImageView
-                    android:id="@+id/payWay_discount_jian"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginRight="16dp"
-                    android:background="@drawable/selector_jian"
-                    android:scaleType="centerCrop" />
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/break_line" />
 
-                <EditText
-                    android:id="@+id/payWay_discount_price"
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
+
+                <include layout="@layout/line_lay" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:background="@color/invite_bg"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="16dp"
+                        android:text="支付方式" />
+                </LinearLayout>
+
+                <include layout="@layout/line_lay" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="39dp"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:id="@+id/payWay_pay_total_rel"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:id="@+id/payWay_pay_total_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:text="全额支付"
+                            android:textColor="@color/orange" />
+
+                    </RelativeLayout>
+
+                    <TextView
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@color/gray" />
+
+                    <RelativeLayout
+                        android:id="@+id/payWay_pay_times_rel"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:id="@+id/payWay_pay_times_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:text="分次支付"
+                            android:textColor="@color/main_index_gary" />
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="3px"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/payWay_pay_total_bar"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@color/orange"
+
+                        />
+
+                    <TextView
+                        android:id="@+id/payWay_pay_times_bar"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@color/orange"
+                        android:visibility="invisible" />
+
+                </LinearLayout>
+
+
+                <include layout="@layout/line_lay" />
+
+
+
+                <RelativeLayout
+                    android:id="@+id/payWay_pay_total_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="47dp"
+                    android:visibility="visible">
+
+                    <TextView
+                        android:id="@+id/payWay_pay_total_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:text=""
+                        android:textColor="@color/orange_goods_price"
+                        android:textSize="18dp" />
+
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/payWay_pay_times_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:visibility="gone">
+
+
+                    <LinearLayout
+                        android:id="@+id/payWay_discount_Lin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="12sp"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/payWay_discount_jian"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginRight="16dp"
+                            android:background="@drawable/selector_jian_pay_way"
+                            android:scaleType="centerCrop" />
+
+                        <EditText
+                            android:id="@+id/payWay_discount_price"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@null"
+                            android:inputType="numberDecimal"
+                            android:maxLength="12"
+                            android:minWidth="30dp"
+                            android:text=""
+                            android:textColor="@color/orange_goods_price"
+                            android:textSize="18sp" />
+
+                        <ImageView
+                            android:id="@+id/payWay_discount_jia"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="16dp"
+                            android:background="@drawable/selector_jia_pay_way"
+                            android:scaleType="centerCrop" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/payWay_discount_Lin"
+                        android:layout_marginTop="12dp"
+                        android:gravity="center">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="+-"
+                            android:textColor="@color/orange"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="可调节金额，幅度"
+                            android:textSize="9sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="500"
+                            android:textColor="@color/orange"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="元，最低调至"
+                            android:textSize="9sp" />
+
+                        <TextView
+                            android:id="@+id/describe_min_pay_price"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="3000"
+                            android:textColor="@color/orange"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="元，不足按实际金额支付"
+                            android:textSize="9sp" />
+
+                    </LinearLayout>
+
+
+                </RelativeLayout>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:orientation="vertical">
+
+                <include layout="@layout/line_lay" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:background="@color/invite_bg"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="16dp"
+                        android:text="付款方式" />
+                </LinearLayout>
+
+                <include layout="@layout/line_lay" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/alipay_ll"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:background="@color/white"
+                android:gravity="center_vertical">
+
+
+                <LinearLayout
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:layout_marginLeft="16dp"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/alipay_icon" />
+
+                </LinearLayout>
+
+
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=""
-                    android:inputType="numberDecimal"
-                    android:background="@null"
-                    android:maxLength="12"
-                    android:minWidth="30dp"
-                    android:textColor="@color/orange_goods_price"
+                    android:layout_marginLeft="16dp"
+                    android:layout_weight="1"
+                    android:text="支付宝支付"
                     android:textSize="18sp" />
 
                 <ImageView
-                    android:id="@+id/payWay_discount_jia"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="16dp"
-                    android:background="@drawable/selector_jia"
-                    android:scaleType="centerCrop" />
-
+                    android:id="@+id/alipay_img"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_marginRight="26dp"
+                    android:background="@drawable/circle_gray"
+                    android:scaleType="centerCrop"
+                    android:visibility="visible" />
             </LinearLayout>
+
+            <include layout="@layout/line_lay" />
 
             <LinearLayout
+                android:id="@+id/bank_ll"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/payWay_discount_Lin"
-                android:layout_marginTop="12dp"
-                android:gravity="center">
+                android:layout_height="44dp"
+                android:background="@color/white"
+                android:gravity="center_vertical">
+
+
+                <LinearLayout
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:layout_marginLeft="16dp"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/unipay_icon" />
+
+                </LinearLayout>
+
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="+-"
-                    android:textColor="@color/orange"
-                    android:textSize="12sp" />
+                    android:layout_marginLeft="16dp"
+                    android:layout_weight="1"
+                    android:text="银联支付"
+                    android:textSize="18sp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="可调节金额，幅度"
-                    android:textSize="9sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="500"
-                    android:textColor="@color/orange"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="元，最低调至"
-                    android:textSize="9sp" />
-
-                <TextView
-                    android:id="@+id/describe_min_pay_price"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="3000"
-                    android:textColor="@color/orange"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="元，不足按实际金额支付"
-                    android:textSize="9sp" />
-
+                <ImageView
+                    android:id="@+id/bank_img"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_marginRight="26dp"
+                    android:background="@drawable/circle_gray"
+                    android:scaleType="centerCrop"
+                    android:visibility="visible" />
             </LinearLayout>
 
 
-        </RelativeLayout>
-    </LinearLayout>
+            <LinearLayout
+                android:id="@+id/pos_ll"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:background="@color/white"
+                android:gravity="center_vertical"
+                android:visibility="gone">
 
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:layout_marginLeft="16dp"
+                    android:gravity="center">
 
-        <include layout="@layout/line_lay" />
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="16dp"
+                        android:background="@drawable/mpos_logo" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="@color/invite_bg"
-            android:orientation="horizontal">
+                </LinearLayout>
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_weight="1"
+                    android:text="EPOS刷卡"
+                    android:textSize="18sp" />
+
+                <ImageView
+                    android:id="@+id/pos_img"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_marginRight="26dp"
+                    android:background="@drawable/circle_gray"
+                    android:scaleType="centerCrop"
+                    android:visibility="visible" />
+            </LinearLayout>
+
+            <include layout="@layout/line_lay" />
+
+            <LinearLayout
+                android:id="@+id/bank_dianhui_ll"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:background="@color/white"
+                android:gravity="center_vertical"
+                android:visibility="visible">
+
+
+                <LinearLayout
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:layout_marginLeft="16dp"
+                    android:gravity="center">
+
+                    <ImageView
+
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:background="@drawable/offline_payment" />
+
+                </LinearLayout>
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_weight="1"
+                    android:text="线下支付"
+                    android:textSize="18sp" />
+
+                <ImageView
+                    android:id="@+id/dianhui_img"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_marginRight="26dp"
+                    android:background="@drawable/circle_gray"
+                    android:scaleType="centerCrop"
+                    android:visibility="visible" />
+            </LinearLayout>
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="16dp"
-                android:text="付款方式"
-                 />
-        </LinearLayout>
+                android:id="@+id/separatrix_line"
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/gray" />
 
-        <include layout="@layout/line_lay" />
-    </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="38dp" />
 
+            <TextView
+                android:id="@+id/pay_sure_tv"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_margin="16dp"
+                android:background="@drawable/login_roate_orange"
+                android:gravity="center"
+                android:text="去支付"
+                android:textColor="@color/white" />
 
-    <LinearLayout
-        android:id="@+id/alipay_ll"
-        android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:background="@color/white"
-        android:gravity="center_vertical">
-
-
-        <LinearLayout
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:layout_marginLeft="16dp"
-            android:gravity="center">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/alipay_icon" />
 
         </LinearLayout>
 
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_weight="1"
-            android:text="支付宝支付"
-            android:textColor="@color/black"
-            android:textSize="18sp" />
-
-        <ImageView
-            android:id="@+id/alipay_img"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:layout_marginRight="26dp"
-            android:background="@drawable/circle_gray"
-            android:scaleType="centerCrop"
-            android:visibility="visible" />
-    </LinearLayout>
-
-    <include layout="@layout/line_lay" />
-
-    <LinearLayout
-        android:id="@+id/bank_ll"
-        android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:background="@color/white"
-        android:gravity="center_vertical">
+    </ScrollView>
 
 
-        <LinearLayout
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:layout_marginLeft="16dp"
-            android:gravity="center">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/unipay_icon" />
-
-        </LinearLayout>
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_weight="1"
-            android:text="银联支付"
-            android:textColor="@color/black"
-            android:textSize="18sp" />
-
-        <ImageView
-            android:id="@+id/bank_img"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:layout_marginRight="26dp"
-            android:background="@drawable/circle_gray"
-            android:scaleType="centerCrop"
-            android:visibility="visible" />
-    </LinearLayout>
-
-    <include layout="@layout/line_lay" />
-
-    <LinearLayout
-        android:id="@+id/bank_dianhui_ll"
-        android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:background="@color/white"
-        android:gravity="center_vertical"
-        android:visibility="gone">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:background="@drawable/bank" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
-        <ImageView
-            android:id="@+id/dianhui_img"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:layout_marginRight="26dp"
-            android:background="@drawable/circle_gray"
-            android:scaleType="centerCrop"
-            android:visibility="visible" />
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:id="@+id/pos_ll"
-        android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:background="@color/white"
-        android:gravity="center_vertical"
-        android:visibility="gone">
-
-        <ImageView
-
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:background="@drawable/pos" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
-        <ImageView
-            android:id="@+id/pos_img"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:layout_marginRight="26dp"
-            android:background="@drawable/circle_gray"
-            android:scaleType="centerCrop"
-            android:visibility="visible" />
-    </LinearLayout>
-
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-
-    <TextView
-        android:id="@+id/pay_sure_tv"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_margin="16dp"
-        android:background="@drawable/login_roate_orange"
-        android:gravity="center"
-        android:text="去支付"
-        android:textColor="@color/white" />
 </LinearLayout>

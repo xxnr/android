@@ -71,7 +71,7 @@
         android:layout_marginRight="15dp"
         android:gravity="center_vertical"
         android:text="确认"
-        android:textColor="@color/title_text_color"
+        android:textColor="@color/textview_selector_text1"
         android:textSize="18sp"
         android:visibility="gone" />
 

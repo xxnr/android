@@ -1,5 +1,6 @@
 package com.ksfc.newfarmer.activitys;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,8 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
+import com.ksfc.newfarmer.adapter.CommonAdapter;
+import com.ksfc.newfarmer.adapter.CommonViewHolder;
 import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.Request;
@@ -22,7 +25,6 @@ import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.UnSwipeListView;
 import com.ksfc.newfarmer.widget.WidgetUtil;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -57,7 +59,7 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
             params.put("inviteeId", consumer.userId);
             params.put("page", page);
             params.put("max", 20);
-            if (isLogin()){
+            if (isLogin()) {
                 params.put("userId", Store.User.queryMe().userid);
             }
             execApi(ApiType.GET_INVITEE_ORDERS, params);
@@ -107,22 +109,18 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
                         consumer_count.setText(datas.total);
                     }
                     List<ConsumerOrderResult.Rows> rows = datas.rows;
-                    if (rows != null) {
-                        if (rows.size() > 0) {
-                            if (page == 1) {
-                                if (adapter == null) {
-                                    adapter = new OrderAdapter(rows);
-                                    WidgetUtil.setListViewHeightBasedOnChildren(listView);
-                                    listView.setAdapter(adapter);
-                                } else {
-                                    adapter.clear();
-                                    adapter.addAll(rows);
-                                }
+                    if (rows != null && !rows.isEmpty()) {
+                        if (page == 1) {
+                            if (adapter == null) {
+                                adapter = new OrderAdapter(this,rows);
+                                WidgetUtil.setListViewHeightBasedOnChildren(listView);
+                                listView.setAdapter(adapter);
                             } else {
+                                adapter.clear();
                                 adapter.addAll(rows);
                             }
                         } else {
-                            showToast("没有更多订单");
+                            adapter.addAll(rows);
                         }
                     } else {
                         showToast("没有更多订单");
@@ -133,6 +131,104 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
 
         }
 
+    }
+
+    //外层的适配器
+    class OrderAdapter extends CommonAdapter<ConsumerOrderResult.Rows> {
+
+
+        public OrderAdapter(Context context, List<ConsumerOrderResult.Rows> data) {
+            super(context, data, R.layout.consumer_order_item);
+        }
+
+        @Override
+        public void convert(CommonViewHolder holder, ConsumerOrderResult.Rows rows) {
+            if (rows != null) {
+                //设置文本
+                if (StringUtil.checkStr(rows.totalPrice)) {
+                    holder.setText(R.id.consumer_item_orderPrice, "¥" + rows.totalPrice);
+                }
+                String state = "";
+                switch (rows.typeValue) {
+                    case 0:
+                        state = "交易关闭";
+                        break;
+                    case 1:
+                        state = "待付款";
+                        break;
+                    case 2:
+                        state = "待发货";
+                        break;
+                    case 3:
+                        state = "已发货";
+                        break;
+                    default:
+                        state = "未知状态";
+                }
+                holder.setText(R.id.consumer_item_payType, state);
+
+                if (StringUtil.checkStr(rows.dateCreated)) {
+                    holder.setText(R.id.consumer_item_orderTime, "下单时间：" + DateFormatUtils.convertTime(rows.dateCreated));
+                }
+
+
+                UnSwipeListView listView = (UnSwipeListView) holder.getView(R.id.consumer_item_listView);
+                if (rows.SKUs != null && !rows.SKUs.isEmpty()) {
+                    SkusAdapter carAdapter = new SkusAdapter(ConsumerOrderActivity.this,rows.SKUs);
+                    listView.setAdapter(carAdapter);
+                    WidgetUtil.setListViewHeightBasedOnChildren(listView);
+                } else {
+                    if (rows.products != null && !rows.products.isEmpty()) {
+                        ProductsAdapter carAdapter = new ProductsAdapter(ConsumerOrderActivity.this,rows.products);
+                        listView.setAdapter(carAdapter);
+                        WidgetUtil.setListViewHeightBasedOnChildren(listView);
+                    } else {
+                        listView.setAdapter(null);
+                    }
+                }
+
+            }
+        }
+    }
+
+    //内层的商品列表，已订单区分(兼容老的商品)
+    class ProductsAdapter extends CommonAdapter<ConsumerOrderResult.Product>{
+
+        public ProductsAdapter(Context context, List<ConsumerOrderResult.Product> data) {
+            super(context, data, R.layout.consumer_order_item_tem);
+        }
+
+        @Override
+        public void convert(CommonViewHolder holder, ConsumerOrderResult.Product product) {
+            if (product!=null){
+                //设置文本
+                if (StringUtil.checkStr(product.name)) {
+                    holder.setText(R.id.product_name,product.name);
+                }
+                holder.setText(R.id.product_count, "X " +product.count);
+            }
+
+        }
+    }
+
+    //内层的商品列表，已订单区分(兼容老的商品)
+    class SkusAdapter extends CommonAdapter<ConsumerOrderResult.SKUS>{
+
+        public SkusAdapter(Context context, List<ConsumerOrderResult.SKUS> data) {
+            super(context, data, R.layout.consumer_order_item_tem);
+        }
+
+        @Override
+        public void convert(CommonViewHolder holder, ConsumerOrderResult.SKUS skus) {
+            if (skus!=null){
+                //设置文本
+                if (StringUtil.checkStr(skus.productName)) {
+                    holder.setText(R.id.product_name,skus.productName);
+                }
+                holder.setText(R.id.product_count, "X " +skus.count);
+            }
+
+        }
     }
 
     //上拉 下拉刷新
@@ -150,204 +246,5 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
         getData();
     }
 
-    //外层的适配器
-    class OrderAdapter extends BaseAdapter {
-
-        private List<ConsumerOrderResult.Rows> list;
-
-        public OrderAdapter(List<ConsumerOrderResult.Rows> list) {
-            this.list = list;
-        }
-
-        @Override
-        public int getCount() {
-            return list.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return list.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        public void clear() {
-            list.clear();
-            notifyDataSetChanged();
-        }
-
-        public void addAll(Collection<? extends ConsumerOrderResult.Rows> collection) {
-            list.addAll(collection);
-            notifyDataSetChanged();
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                convertView = getLayoutInflater().inflate(R.layout.consumer_order_item, null);
-                convertView.setTag(new ViewHolder(convertView));
-            }
-            ViewHolder holder = (ViewHolder) convertView.getTag();
-            if (StringUtil.checkStr(list.get(position).totalPrice)) {
-                holder.orderPrice.setText("¥" + list.get(position).totalPrice);
-            }
-            String state = "";
-            switch (list.get(position).typeValue) {
-                case 0:
-                    state = "交易关闭";
-                    break;
-                case 1:
-                    state = "待付款";
-                    break;
-                case 2:
-                    state = "待发货";
-                    break;
-                case 3:
-                    state = "已发货";
-                    break;
-                default:
-                    state = "未知状态";
-            }
-            holder.orderType.setText(state);
-
-            if (StringUtil.checkStr(list.get(position).dateCreated)) {
-                holder.orderTime.setText("下单时间：" + DateFormatUtils.convertTime(list.get(position).dateCreated));
-            }
-
-
-            if (list.get(position).SKUs != null && !list.get(position).SKUs.isEmpty()) {
-                SkusAdapter carAdapter = new SkusAdapter(list.get(position).SKUs);
-                holder.listView.setAdapter(carAdapter);
-                WidgetUtil.setListViewHeightBasedOnChildren(holder.listView);
-            } else {
-                if (list.get(position).products != null) {
-                    if (list.get(position).products.size() > 0) {
-                        ProductsAdapter carAdapter = new ProductsAdapter(list.get(position).products);
-                        holder.listView.setAdapter(carAdapter);
-                        WidgetUtil.setListViewHeightBasedOnChildren(holder.listView);
-                    } else {
-                        holder.listView.setAdapter(null);
-                    }
-                }
-            }
-
-
-            return convertView;
-        }
-
-        class ViewHolder {
-            private TextView orderTime, orderType, orderPrice;
-            private UnSwipeListView listView;
-
-            public ViewHolder(View convertView) {
-                orderTime = (TextView) convertView.findViewById(R.id.consumer_item_orderTime);
-                orderType = (TextView) convertView.findViewById(R.id.consumer_item_payType);
-                orderPrice = (TextView) convertView.findViewById(R.id.consumer_item_orderPrice);
-                listView = (UnSwipeListView) convertView.findViewById(R.id.consumer_item_listView);
-            }
-        }
-    }
-
-    //内层的商品列表，已订单区分
-    class ProductsAdapter extends BaseAdapter {
-        private List<ConsumerOrderResult.Product> list;
-
-        public ProductsAdapter(List<ConsumerOrderResult.Product> products) {
-            this.list = products;
-        }
-
-        @Override
-        public int getCount() {
-            return list.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return list.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                convertView = getLayoutInflater().inflate(R.layout.consumer_order_item_tem, null);
-                convertView.setTag(new ViewHolder(convertView));
-            }
-            ViewHolder holder = (ViewHolder) convertView.getTag();
-            if (list.get(position) != null) {
-                if (StringUtil.checkStr(list.get(position).name)) {
-                    holder.productName.setText(list.get(position).name);
-                }
-                holder.productCount.setText("X " + list.get(position).count);
-            }
-            return convertView;
-        }
-
-        class ViewHolder {
-            private TextView productName, productCount;
-
-            public ViewHolder(View convertView) {
-                productName = (TextView) convertView.findViewById(R.id.product_name);
-                productCount = (TextView) convertView.findViewById(R.id.product_count);
-            }
-        }
-    }
-
-
-    //内层的商品列表，已订单区分
-    class SkusAdapter extends BaseAdapter {
-        private List<ConsumerOrderResult.SKUS> list;
-
-        public SkusAdapter(List<ConsumerOrderResult.SKUS> list) {
-            this.list = list;
-        }
-
-        @Override
-        public int getCount() {
-            return list.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return list.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                convertView = getLayoutInflater().inflate(R.layout.consumer_order_item_tem, null);
-                convertView.setTag(new ViewHolder(convertView));
-            }
-            ViewHolder holder = (ViewHolder) convertView.getTag();
-            if (list.get(position) != null) {
-                if (StringUtil.checkStr(list.get(position).productName)) {
-                    holder.productName.setText(list.get(position).productName);
-                }
-                holder.productCount.setText("X " + list.get(position).count);
-            }
-            return convertView;
-        }
-
-        class ViewHolder {
-            private TextView productName, productCount;
-
-            public ViewHolder(View convertView) {
-                productName = (TextView) convertView.findViewById(R.id.product_name);
-                productCount = (TextView) convertView.findViewById(R.id.product_count);
-            }
-        }
-    }
 
 }

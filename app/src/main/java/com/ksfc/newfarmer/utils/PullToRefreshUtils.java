@@ -42,4 +42,5 @@ public class PullToRefreshUtils {
             }
         }, 12 * 1000);
     }
+
 }

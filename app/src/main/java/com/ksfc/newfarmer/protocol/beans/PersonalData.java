@@ -26,6 +26,8 @@ public class PersonalData extends ResponseResult implements Serializable {
         public String userType;
         public boolean isVerified;
         public boolean isXXNRAgent; //是否是新农经纪人
+        public boolean isRSC;//是否认证为县级经销商
+        public boolean RSCInfoVerifing; //是否正在认证县级经销商
         public String pointLaterTrade;
         public String name;
         public boolean sex;

@@ -70,21 +70,5 @@ public class SplashActivity extends Activity {
 
     }
 
-    /**
-     * 返回当前程序版本名
-     */
-    public static int getAppVersionName(Context context) {
-        int versioncode = 0;
-        try {
-            // ---get the package info---
-            PackageManager pm = context.getPackageManager();
-            PackageInfo pi = pm.getPackageInfo(context.getPackageName(), 0);
-            versioncode = pi.versionCode;
-
-        } catch (Exception e) {
-            Log.e("VersionInfo", "Exception", e);
-        }
-        return versioncode;
-    }
 
 }

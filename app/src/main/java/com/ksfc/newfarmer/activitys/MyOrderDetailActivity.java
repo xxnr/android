@@ -1,31 +1,49 @@
 package com.ksfc.newfarmer.activitys;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.google.gson.Gson;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
+import com.ksfc.newfarmer.adapter.CommonAdapter;
+import com.ksfc.newfarmer.adapter.CommonViewHolder;
 import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
+import com.ksfc.newfarmer.protocol.beans.LoginResult;
 import com.ksfc.newfarmer.protocol.beans.MyOrderDetailResult;
+import com.ksfc.newfarmer.utils.PopWindowUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.RecyclerImageView;
 import com.ksfc.newfarmer.widget.UnSwipeListView;
 import com.ksfc.newfarmer.widget.WidgetUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -38,9 +56,24 @@ public class MyOrderDetailActivity extends BaseActivity {
     private ListView order_shangpin_list;
     private RelativeLayout go_to_pay_rel;
     private String orderId; //订单号
-    private int payType = 1;//支付类型
     private int order_type = 1; //订单类型
     private UnSwipeListView pay_info_listView;//支付信息列表
+    private TextView RSC_state_name;
+    private TextView RSC_state_address;
+    private TextView RSC_state_phone;
+    private ImageView delivery_icon;
+    private TextView delivery_text;
+    private Button go_to_pay;
+    private Button change_pay_type;
+
+    private Map<String, Boolean> checkedMap = new HashMap<>();//用于存放popWindow中选中的确认收货商品
+    private PopupWindow popupWindow;
+    private TextView pop_sure;
+    private ListView pop_listView;
+    private RelativeLayout pop_bg;
+    private LinearLayout state_address_ll;
+    private LinearLayout address_shouhuo_ll;
+    private TextView RSC_state_person_info;
 
 
     @Override
@@ -54,22 +87,59 @@ public class MyOrderDetailActivity extends BaseActivity {
         if (!StringUtil.empty(getIntent().getStringExtra("orderId"))) {
             orderId = getIntent().getStringExtra("orderId");
         }
+
+
         if (TextUtils.isEmpty(orderId)) {
             return;
         }
         setTitle("订单详情");
         initView();
         requestData(orderId);
+
+        final boolean callByMyOrderListActivity = getIntent().getBooleanExtra("callByMyOrderListActivity", false);
+        setLeftClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (!callByMyOrderListActivity) {
+                    Intent intent = new Intent(MyOrderDetailActivity.this,
+                            MyOrderListActivity.class);
+                    intent.putExtra("orderSelect", 0);
+                    intent.putExtra("callByDetailActivity", true);
+                    startActivity(intent);
+                }
+                finish();
+            }
+        });
+
     }
 
     private void initView() {
         go_to_pay_rel = (RelativeLayout) findViewById(R.id.go_to_pay_rel);
+        go_to_pay = (Button) findViewById(R.id.go_to_pay);
+        change_pay_type = (Button) findViewById(R.id.change_pay_type);
+        pop_bg = (RelativeLayout) findViewById(R.id.pop_bg);
+
         //头部信息 订单号： 交易状态 送货人 地址
         View head_layout = LayoutInflater.from(MyOrderDetailActivity.this).inflate(R.layout.my_orderdetail_head_layout, null);
         name_phone_tv = (TextView) head_layout.findViewById(R.id.order_detail_name_tv);
         order_detail_address_tv = (TextView) head_layout.findViewById(R.id.order_detail_address_tv);
         order_tv = (TextView) head_layout.findViewById(R.id.my_order_detail_id);
         pay_state_tv = (TextView) head_layout.findViewById(R.id.pay_state);
+
+        state_address_ll = (LinearLayout) head_layout.findViewById(R.id.select_state_address_ll); //网点自提
+        address_shouhuo_ll = (LinearLayout) head_layout.findViewById(R.id.address_shouhuo_ll); //配送到户
+        state_address_ll.setVisibility(View.GONE);
+        address_shouhuo_ll.setVisibility(View.GONE);
+
+        RSC_state_name = (TextView) head_layout.findViewById(R.id.select_state_name);
+        RSC_state_address = (TextView) head_layout.findViewById(R.id.select_state_address);
+        RSC_state_phone = (TextView) head_layout.findViewById(R.id.select_state_phone);
+
+        RSC_state_person_info = (TextView) head_layout.findViewById(R.id.select_state_person_info);
+
+        delivery_icon = (ImageView) head_layout.findViewById(R.id.delivery_icon);
+        delivery_text = (TextView) head_layout.findViewById(R.id.delivery_text);
 
         pay_info_listView = (UnSwipeListView) head_layout.findViewById(R.id.pay_info_listView);
         //尾部信息 去付款
@@ -85,7 +155,7 @@ public class MyOrderDetailActivity extends BaseActivity {
     private void requestData(String orderId) {
         showProgressDialog();
         RequestParams params = new RequestParams();
-        if (isLogin()){
+        if (isLogin()) {
             params.put("userId", Store.User.queryMe().userid);
         }
         params.put("orderId", orderId);
@@ -95,12 +165,44 @@ public class MyOrderDetailActivity extends BaseActivity {
 
     @Override
     public void OnViewClick(View v) {
-        if (v.getId() == R.id.go_to_pay) {
-            Intent intent = new Intent(MyOrderDetailActivity.this,
-                    PaywayActivity.class);
-            intent.putExtra("orderId", orderId);
-            intent.putExtra("payType", payType);
-            startActivity(intent);
+        switch (v.getId()) {
+
+            case R.id.pop_close:
+                if (null != popupWindow && popupWindow.isShowing()) {
+                    popupWindow.dismiss();
+                }
+                break;
+            //确认收货
+            case R.id.save:
+                if (checkedMap != null && !checkedMap.isEmpty()) {
+                    List<String> list = new ArrayList<>();
+                    for (String key : checkedMap.keySet()) {
+                        if (checkedMap.get(key)) {
+                            list.add(key);
+                        }
+                    }
+
+                    if (StringUtil.checkStr(orderId)) {
+                        showProgressDialog();
+                        RequestParams params = new RequestParams();
+                        Map<String, Object> map = new HashMap<>();
+                        map.put("SKURefs", list);
+                        map.put("orderId", orderId);
+                        LoginResult.UserInfo userInfo = Store.User.queryMe();
+                        if (userInfo != null) {
+                            map.put("token", userInfo.token);
+                        }
+                        Gson gson = new Gson();
+                        String toJson = gson.toJson(map);
+                        params.put("JSON", toJson);
+                        execApi(ApiType.SURE_GET_GOODS.setMethod(ApiType.RequestMethod.POSTJSON), params);
+                    }
+                }
+                if (null != popupWindow && popupWindow.isShowing()) {
+                    popupWindow.dismiss();
+                }
+                break;
+
         }
     }
 
@@ -112,34 +214,180 @@ public class MyOrderDetailActivity extends BaseActivity {
             if (data.getStatus().equals("1000")) {
                 MyOrderDetailResult.Datas datas = data.datas;
                 if (datas != null && datas.rows != null) {
-                    MyOrderDetailResult.Rows rows = datas.rows;
-                    //联系人 及电话
-                    name_phone_tv.setText(rows.recipientName + " " + rows.recipientPhone);
-                    //联系人地址
-                    order_detail_address_tv.setText(rows.address);
+                    //配送方式
+                    if (datas.rows.deliveryType != null) {
+
+                        if (datas.rows.deliveryType.type == 1) {  //网点自提
+                            delivery_icon.setVisibility(View.VISIBLE);
+                            delivery_icon.setBackgroundResource(R.drawable.home_delivery_icon);
+                        } else {
+                            delivery_icon.setVisibility(View.VISIBLE);//其他的暂用 送货到家图标
+                            delivery_icon.setBackgroundResource(R.drawable.state_delivery_icon);
+                        }
+                        if (StringUtil.checkStr(datas.rows.deliveryType.value)) {
+                            delivery_text.setVisibility(View.VISIBLE);
+                            delivery_text.setText(datas.rows.deliveryType.value);
+                        }
+
+
+                        //收货地址网点等信息
+
+                        if (datas.rows.deliveryType.type == 1) { //展示网点信息
+                            state_address_ll.setVisibility(View.VISIBLE);
+                            //设置RSCInfo
+                            if (datas.rows.RSCInfo != null) {
+                                if (StringUtil.checkStr(datas.rows.RSCInfo.companyName)) {
+                                    RSC_state_name.setText(datas.rows.RSCInfo.companyName);
+                                }
+
+                                if (StringUtil.checkStr(datas.rows.RSCInfo.RSCAddress)) {
+                                    RSC_state_address.setText(datas.rows.RSCInfo.RSCAddress);
+                                }
+
+                                if (StringUtil.checkStr(datas.rows.RSCInfo.RSCPhone)) {
+                                    RSC_state_phone.setText(datas.rows.RSCInfo.RSCPhone);
+                                }
+                            }
+                            RSC_state_person_info.setText(datas.rows.recipientName + " " + datas.rows.recipientPhone);
+
+                        } else {   //暂时送货到家地址信息
+                            address_shouhuo_ll.setVisibility(View.VISIBLE);
+                            //联系人 及电话
+                            name_phone_tv.setText(datas.rows.recipientName + " " + datas.rows.recipientPhone);
+                            //联系人地址
+                            order_detail_address_tv.setText(datas.rows.address);
+                        }
+                    }
+
+                    final MyOrderDetailResult.Rows rows = datas.rows;
                     //订单号
                     order_tv.setText("订单号：" + rows.id);
-                    //支付类型
-                    payType = rows.payType;
                     //合计 与 去支付
                     if (rows.order != null) {
                         total_price_tv.setText("¥" + rows.order.totalPrice);
                         if (rows.order.orderStatus != null) {
-                            pay_state_tv.setText(rows.order.orderStatus.value);
-                            order_type = rows.order.orderStatus.type;
-                            if (rows.order.orderStatus.type == 1 || rows.order.orderStatus.type == 2) {
-                                //可支付
-                                go_to_pay_rel.setVisibility(View.VISIBLE);
-                                setViewClick(R.id.go_to_pay);
-                            } else {
-                                //不支付
-                                go_to_pay_rel.setVisibility(View.GONE);
+                            //订单状态
+                            if (StringUtil.checkStr(rows.order.orderStatus.value)) {
+                                pay_state_tv.setText(rows.order.orderStatus.value);
+                            }
+                            //不支付
+                            go_to_pay_rel.setVisibility(View.GONE);
+                            change_pay_type.setVisibility(View.GONE);
+
+                            switch (rows.order.orderStatus.type) {
+                                //如果是待付款1的订单或者是部分付款的2的订单，点击可以去支付
+                                case 1:
+                                case 2:
+                                    go_to_pay_rel.setVisibility(View.VISIBLE);
+                                    go_to_pay.setText("去付款");
+                                    go_to_pay.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+
+                                            if (StringUtil.checkStr(orderId)) {
+                                                Intent intent = new Intent(MyOrderDetailActivity.this,
+                                                        PaywayActivity.class);
+                                                intent.putExtra("orderId", orderId);
+                                                intent.putExtra("payType", rows.payType);
+                                                startActivity(intent);
+                                            }
+                                        }
+                                    });
+                                    break;
+                                //如果是付款待审核的订单，点击可以去更改支付方式 查看付款信息
+                                case 7:
+                                    go_to_pay_rel.setVisibility(View.VISIBLE);
+                                    change_pay_type.setVisibility(View.VISIBLE);
+                                    go_to_pay.setText("查看付款信息");
+                                    go_to_pay.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            Intent intent = new Intent(MyOrderDetailActivity.this,
+                                                    OfflinePayActivity.class);
+                                            intent.putExtra("orderId", orderId);
+                                            if (rows.payment != null) {
+                                                intent.putExtra("payPrice", rows.payment.price);
+                                            }
+                                            startActivity(intent);
+                                        }
+                                    });
+                                    //更改支付方式
+                                    change_pay_type.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            if (StringUtil.checkStr(orderId)) {
+                                                Intent intent = new Intent(MyOrderDetailActivity.this,
+                                                        PaywayActivity.class);
+                                                intent.putExtra("orderId", orderId);
+                                                intent.putExtra("payType", rows.payType);
+                                                startActivity(intent);
+                                            }
+                                        }
+                                    });
+                                    break;
+                                //如果是配送中的订单，用户可以确认收货
+                                case 4:
+                                    boolean isSure = false;
+
+                                    final List<MyOrderDetailResult.Rows.SKUS> skusList = new ArrayList<>();
+                                    List<MyOrderDetailResult.Rows.SKUS> skUsList1 = rows.SKUList;
+                                    if (skUsList1 != null) {
+                                        for (int i = 0; i < skUsList1.size(); i++) {
+                                            MyOrderDetailResult.Rows.SKUS skus = skUsList1.get(i);
+                                            if (skus != null && skus.deliverStatus.equals("2")) {
+                                                skusList.add(skus);
+                                                isSure = true;
+                                            }
+                                        }
+                                    }
+
+                                    if (isSure) {
+                                        go_to_pay_rel.setVisibility(View.VISIBLE);
+                                        go_to_pay.setText("确认收货");
+                                        go_to_pay.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                showPopUp(v, skusList);
+                                            }
+                                        });
+                                    }
+
+                                    break;
+                                //如果是待自提的订单，且有带自提的商品   用户可以去自提
+                                case 5:
+                                    boolean flag = false;
+                                    if (rows.SKUList != null) {
+                                        for (int i = 0; i < rows.SKUList.size(); i++) {
+                                            MyOrderDetailResult.Rows.SKUS skus = rows.SKUList.get(i);
+                                            if (skus != null && skus.deliverStatus.equals("4")) {
+                                                flag = true;
+                                            }
+                                        }
+                                    }
+                                    if (flag) {
+                                        go_to_pay_rel.setVisibility(View.VISIBLE);
+                                        go_to_pay.setText("去自提");
+                                        go_to_pay.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                Intent intent = new Intent(MyOrderDetailActivity.this,
+                                                        PickUpStateActivity.class);
+                                                intent.putExtra("orderId", orderId);
+                                                startActivity(intent);
+                                            }
+                                        });
+                                    }
+                                    break;
+                                default:
+                                    break;
                             }
                         }
                     }
+
+
                     //支付信息列表
                     if (rows.subOrders != null && !rows.subOrders.isEmpty()) {
-                        PayInfoAdapter payInfoAdapter = new PayInfoAdapter(rows.subOrders);
+                        PayInfoAdapter payInfoAdapter = new PayInfoAdapter(this, rows.subOrders);
                         pay_info_listView.setAdapter(payInfoAdapter);
                     }
 
@@ -153,126 +401,122 @@ public class MyOrderDetailActivity extends BaseActivity {
                     }
                 }
             }
+        } else if (req.getApi() == ApiType.SURE_GET_GOODS) {
+            if (req.getData().getStatus().equals("1000")) {
+                showCustomToast("收货成功", R.drawable.toast_success_icon);
+                requestData(orderId);
+            }
+
+
         }
     }
 
     //支付信息列表
 
-    public class PayInfoAdapter extends BaseAdapter {
-        private List<MyOrderDetailResult.Rows.SubOrders> subOrders;
+    public class PayInfoAdapter extends CommonAdapter<MyOrderDetailResult.Rows.SubOrders> {
+        private List<MyOrderDetailResult.Rows.SubOrders> data;
 
-        public PayInfoAdapter(List<MyOrderDetailResult.Rows.SubOrders> subOrders) {
-            this.subOrders = subOrders;
+        public PayInfoAdapter(Context context, List<MyOrderDetailResult.Rows.SubOrders> data) {
+            super(context, data, R.layout.item_payinfo_orderdetail);
+            this.data = data;
         }
 
         @Override
-        public int getCount() {
-            return subOrders.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return subOrders.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                convertView = LayoutInflater.from(MyOrderDetailActivity.this).inflate(R.layout.item_payinfo_orderdetail, parent, false);
-                convertView.setTag(new ViewHolder(convertView));
-            }
-            ViewHolder holder = (ViewHolder) convertView.getTag();
-            final MyOrderDetailResult.Rows.SubOrders subOrder = subOrders.get(position);
+        public void convert(CommonViewHolder holder, final MyOrderDetailResult.Rows.SubOrders subOrder) {
             if (subOrder != null) {
+
                 //支付阶段
+                TextView item_payInfo_step = ((TextView) holder.getView(R.id.item_payInfo_step));
                 if (subOrder.type.equals("deposit")) {
-                    holder.item_payInfo_step.setText("阶段一：订金");
+                    item_payInfo_step.setText("阶段一：订金");
                 } else if (subOrder.type.equals("balance")) {
-                    holder.item_payInfo_step.setText("阶段二：尾款");
+                    item_payInfo_step.setText("阶段二：尾款");
                 } else if (subOrder.type.equals("full")) {
-                    holder.item_payInfo_step.setText("订单总额");
+                    item_payInfo_step.setText("订单总额");
                 }
+
+
                 //支付状态
+                TextView item_payInfo_type = (TextView) holder.getView(R.id.item_payInfo_type);
                 if (order_type != 0) { //如果交易状态 是已关闭 下方设置已关闭
                     if (subOrder.type.equals("balance")) {//阶段二的子订单
                         try {
-                            if (subOrders.get(position - 1).payStatus.equals("2")) {//如果阶段一的子订单 已付款
+                            if (data.get(holder.getPosition() - 1).payStatus.equals("2")) {//如果阶段一的子订单 已付款
 
                                 if (subOrder.payStatus.equals("1")) {
-                                    holder.item_payInfo_type.setTextColor(getResources().getColor(R.color.orange));
-                                    holder.item_payInfo_type.setText("待付款");
+                                    item_payInfo_type.setTextColor(getResources().getColor(R.color.orange));
+                                    item_payInfo_type.setText("待付款");
                                 } else if (subOrder.payStatus.equals("2")) {
-                                    holder.item_payInfo_type.setTextColor(getResources().getColor(R.color.black_goods_titile));
-                                    holder.item_payInfo_type.setText("已付款");
+                                    item_payInfo_type.setTextColor(getResources().getColor(R.color.black_goods_titile));
+                                    item_payInfo_type.setText("已付款");
                                 } else if (subOrder.payStatus.equals("3")) {
-                                    holder.item_payInfo_type.setTextColor(getResources().getColor(R.color.orange));
-                                    holder.item_payInfo_type.setText("部分付款");
+                                    item_payInfo_type.setTextColor(getResources().getColor(R.color.orange));
+                                    item_payInfo_type.setText("部分付款");
                                 }
 
                             } else {
-                                holder.item_payInfo_type.setTextColor(getResources().getColor(R.color.black_goods_titile));
-                                holder.item_payInfo_type.setText("未开始");
+                                item_payInfo_type.setTextColor(getResources().getColor(R.color.black_goods_titile));
+                                item_payInfo_type.setText("未开始");
                             }
                         } catch (Exception e) {//如果下标越界 就 设置 默认设置
 
                             if (subOrder.payStatus.equals("1")) {
-                                holder.item_payInfo_type.setTextColor(getResources().getColor(R.color.orange));
-                                holder.item_payInfo_type.setText("待付款");
+                                item_payInfo_type.setTextColor(getResources().getColor(R.color.orange));
+                                item_payInfo_type.setText("待付款");
                             } else if (subOrder.payStatus.equals("2")) {
-                                holder.item_payInfo_type.setTextColor(getResources().getColor(R.color.black_goods_titile));
-                                holder.item_payInfo_type.setText("已付款");
+                                item_payInfo_type.setTextColor(getResources().getColor(R.color.black_goods_titile));
+                                item_payInfo_type.setText("已付款");
                             } else if (subOrder.payStatus.equals("3")) {
-                                holder.item_payInfo_type.setTextColor(getResources().getColor(R.color.orange));
-                                holder.item_payInfo_type.setText("部分付款");
+                                item_payInfo_type.setTextColor(getResources().getColor(R.color.orange));
+                                item_payInfo_type.setText("部分付款");
                             }
                         }
 
-
                     } else {
                         if (subOrder.payStatus.equals("1")) {
-                            holder.item_payInfo_type.setTextColor(getResources().getColor(R.color.orange));
-                            holder.item_payInfo_type.setText("待付款");
+                            item_payInfo_type.setTextColor(getResources().getColor(R.color.orange));
+                            item_payInfo_type.setText("待付款");
                         } else if (subOrder.payStatus.equals("2")) {
-                            holder.item_payInfo_type.setTextColor(getResources().getColor(R.color.black_goods_titile));
-                            holder.item_payInfo_type.setText("已付款");
+                            item_payInfo_type.setTextColor(getResources().getColor(R.color.black_goods_titile));
+                            item_payInfo_type.setText("已付款");
                         } else if (subOrder.payStatus.equals("3")) {
-                            holder.item_payInfo_type.setTextColor(getResources().getColor(R.color.orange));
-                            holder.item_payInfo_type.setText("部分付款");
+                            item_payInfo_type.setTextColor(getResources().getColor(R.color.orange));
+                            item_payInfo_type.setText("部分付款");
                         }
                     }
 
-
                 } else {
-                    holder.item_payInfo_type.setTextColor(getResources().getColor(R.color.black_goods_titile));
-                    holder.item_payInfo_type.setText("已关闭");
+                    item_payInfo_type.setTextColor(getResources().getColor(R.color.black_goods_titile));
+                    item_payInfo_type.setText("已关闭");
                 }
 
                 //应支付金额
-                holder.to_pay_price.setText("¥" + subOrder.price);
+                holder.setText(R.id.to_pay_price, "¥" + subOrder.price);
                 //已支付金额
-                holder.order_yet_price.setText("¥" + subOrder.paidPrice);
+                holder.setText(R.id.order_yet_price, "¥" + subOrder.paidPrice);
                 //支付类型
                 if (StringUtil.checkStr(subOrder.payType)) {
-
                     if (subOrder.payType.equals("1")) {
-                        holder.order_pay_type_ll.setVisibility(View.VISIBLE);
-                        holder.order_pay_type.setText("支付宝支付");
+                        holder.getView(R.id.order_pay_type_ll).setVisibility(View.VISIBLE);
+                        holder.setText(R.id.order_pay_type, "支付宝支付");
                     } else if (subOrder.payType.equals("2")) {
-                        holder.order_pay_type_ll.setVisibility(View.VISIBLE);
-                        holder.order_pay_type.setText("银联支付");
+                        holder.getView(R.id.order_pay_type_ll).setVisibility(View.VISIBLE);
+                        holder.setText(R.id.order_pay_type, "银联支付");
+                    } else if (subOrder.payType.equals("3")) {
+                        holder.getView(R.id.order_pay_type_ll).setVisibility(View.VISIBLE);
+                        holder.setText(R.id.order_pay_type, "现金");
+                    } else if (subOrder.payType.equals("4")) {
+                        holder.getView(R.id.order_pay_type_ll).setVisibility(View.VISIBLE);
+                        holder.setText(R.id.order_pay_type, "线下POS机");
                     }
                 } else {
-                    holder.order_pay_type_ll.setVisibility(View.GONE);
+                    holder.getView(R.id.order_pay_type_ll).setVisibility(View.GONE);
                 }
                 //查看详情
+                TextView to_get_pay_detail = (TextView) holder.getView(R.id.to_get_pay_detail);
                 if (subOrder.payments != null && !subOrder.payments.isEmpty()) {
-                    holder.to_get_pay_detail.setVisibility(View.VISIBLE);
-                    holder.to_get_pay_detail.setOnClickListener(new View.OnClickListener() {
+                    to_get_pay_detail.setVisibility(View.VISIBLE);
+                    to_get_pay_detail.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             Intent intent = new Intent(MyOrderDetailActivity.this, CheckPayDetailActivity.class);
@@ -282,41 +526,14 @@ public class MyOrderDetailActivity extends BaseActivity {
                         }
                     });
                 } else {
-                    holder.to_get_pay_detail.setVisibility(View.GONE);
+                    to_get_pay_detail.setVisibility(View.GONE);
                 }
-
-
             }
-
-            return convertView;
         }
-
-        class ViewHolder {
-            private TextView item_payInfo_step,//支付阶段
-                    item_payInfo_type,//支付状态
-                    to_pay_price,//应支付金额
-                    order_yet_price,//已支付金额
-                    order_pay_type,//支付类型
-                    to_get_pay_detail;//查看详情
-            private LinearLayout order_pay_type_ll;//支付类型所在的布局
-
-            ViewHolder(View convertView) {
-                order_pay_type_ll = (LinearLayout) convertView.findViewById(R.id.order_pay_type_ll);
-                item_payInfo_step = (TextView) convertView.findViewById(R.id.item_payInfo_step);
-                item_payInfo_type = (TextView) convertView.findViewById(R.id.item_payInfo_type);
-                to_pay_price = (TextView) convertView.findViewById(R.id.to_pay_price);
-                order_yet_price = (TextView) convertView.findViewById(R.id.order_yet_price);
-                order_pay_type = (TextView) convertView.findViewById(R.id.order_pay_type);
-                to_get_pay_detail = (TextView) convertView.findViewById(R.id.to_get_pay_detail);
-            }
-
-        }
-
-
     }
 
 
-    //商品列表
+    //商品列表(方法特殊 暂时继承BaseAdapter)
     public class CarAdapter extends BaseAdapter {
 
         private List<MyOrderDetailResult.OrderGood> goodsList;
@@ -365,7 +582,7 @@ public class MyOrderDetailActivity extends BaseActivity {
             private RecyclerImageView ordering_item_img;
             private TextView ordering_now_pri, ordering_item_name, goods_car_deposit,
                     goods_car_weikuan, ordering_item_geshu, ordering_item_attr, ordering_item_orderType;
-            private ListView additions_listView;
+            private UnSwipeListView additions_listView;
 
 
             public ViewHolder(View convertView) {
@@ -386,7 +603,7 @@ public class MyOrderDetailActivity extends BaseActivity {
                         .findViewById(R.id.goods_car_item_bar_deposit);
                 goods_car_weikuan = (TextView) convertView//汽车尾款
                         .findViewById(R.id.goods_car_item_bar_weikuan);
-                additions_listView = (ListView) convertView//附加选项
+                additions_listView = (UnSwipeListView) convertView//附加选项
                         .findViewById(R.id.additions_listView);
             }
         }
@@ -419,16 +636,17 @@ public class MyOrderDetailActivity extends BaseActivity {
                 if (StringUtil.checkStr(SKUsList.get(position).deliverStatus)) {
                     holder.ordering_item_orderType.setVisibility(View.VISIBLE);
                     if (SKUsList.get(position).deliverStatus.equals("1")) {
-                        if (order_type == 0) {
-                            holder.ordering_item_orderType.setTextColor(getResources().getColor(R.color.black_goods_titile));
-                            holder.ordering_item_orderType.setText("待发货");
-                        } else {
-                            holder.ordering_item_orderType.setTextColor(getResources().getColor(R.color.orange));
-                            holder.ordering_item_orderType.setText("待发货");
-                        }
+                        holder.ordering_item_orderType.setTextColor(getResources().getColor(R.color.orange));
+                        holder.ordering_item_orderType.setText("未发货");
                     } else if (SKUsList.get(position).deliverStatus.equals("2")) {
-                        holder.ordering_item_orderType.setTextColor(getResources().getColor(R.color.black_goods_titile));
-                        holder.ordering_item_orderType.setText("已发货");
+                        holder.ordering_item_orderType.setTextColor(getResources().getColor(R.color.orange));
+                        holder.ordering_item_orderType.setText("配送中");
+                    } else if (SKUsList.get(position).deliverStatus.equals("4")) {
+                        holder.ordering_item_orderType.setTextColor(getResources().getColor(R.color.orange));
+                        holder.ordering_item_orderType.setText("已到服务站");
+                    } else if (SKUsList.get(position).deliverStatus.equals("5")) {
+                        holder.ordering_item_orderType.setTextColor(getResources().getColor(R.color.orange));
+                        holder.ordering_item_orderType.setText("已收货");
                     }
                 }
                 //附加选项的总价
@@ -469,16 +687,15 @@ public class MyOrderDetailActivity extends BaseActivity {
                                     .append(SKUsList.get(position).attributes.get(k).value + ";");
                         }
                     }
-                    String car_attr = stringBuilder.toString().substring(0, stringBuilder.toString().length() - 1);
+                    String car_attr = stringBuilder.substring(0, stringBuilder.length() - 1);
                     if (StringUtil.checkStr(car_attr)) {
-                        holder.ordering_item_attr.setEms(10);
                         holder.ordering_item_attr.setText(car_attr);
                     }
                 }
                 //附加选项
                 if (SKUsList.get(position).additions != null && !SKUsList.get(position).additions.isEmpty()) {
                     holder.additions_listView.setVisibility(View.VISIBLE);
-                    AdditionsAdapter adapter = new AdditionsAdapter(SKUsList.get(position).additions);
+                    AdditionsAdapter adapter = new AdditionsAdapter(MyOrderDetailActivity.this, SKUsList.get(position).additions);
                     holder.additions_listView.setAdapter(adapter);
                     WidgetUtil.setListViewHeightBasedOnChildren(holder.additions_listView);
                 } else {
@@ -503,16 +720,17 @@ public class MyOrderDetailActivity extends BaseActivity {
                 if (StringUtil.checkStr(goodsList.get(position).deliverStatus)) {
                     holder.ordering_item_orderType.setVisibility(View.VISIBLE);
                     if (goodsList.get(position).deliverStatus.equals("1")) {
-                        if (order_type == 0) {
-                            holder.ordering_item_orderType.setTextColor(getResources().getColor(R.color.black_goods_titile));
-                            holder.ordering_item_orderType.setText("待发货");
-                        } else {
-                            holder.ordering_item_orderType.setTextColor(getResources().getColor(R.color.orange));
-                            holder.ordering_item_orderType.setText("待发货");
-                        }
+                        holder.ordering_item_orderType.setTextColor(getResources().getColor(R.color.orange));
+                        holder.ordering_item_orderType.setText("未发货");
                     } else if (goodsList.get(position).deliverStatus.equals("2")) {
-                        holder.ordering_item_orderType.setTextColor(getResources().getColor(R.color.black_goods_titile));
-                        holder.ordering_item_orderType.setText("已发货");
+                        holder.ordering_item_orderType.setTextColor(getResources().getColor(R.color.orange));
+                        holder.ordering_item_orderType.setText("配送中");
+                    } else if (goodsList.get(position).deliverStatus.equals("4")) {
+                        holder.ordering_item_orderType.setTextColor(getResources().getColor(R.color.orange));
+                        holder.ordering_item_orderType.setText("已到服务站");
+                    } else if (goodsList.get(position).deliverStatus.equals("5")) {
+                        holder.ordering_item_orderType.setTextColor(getResources().getColor(R.color.orange));
+                        holder.ordering_item_orderType.setText("已收货");
                     }
                 }
 
@@ -542,48 +760,21 @@ public class MyOrderDetailActivity extends BaseActivity {
         }
     }
 
-    class AdditionsAdapter extends BaseAdapter {
-        private List<MyOrderDetailResult.Rows.SKUS.Additions> list;
 
-        public AdditionsAdapter(List<MyOrderDetailResult.Rows.SKUS.Additions> list) {
-            this.list = list;
+    class AdditionsAdapter extends CommonAdapter<MyOrderDetailResult.Rows.SKUS.Additions> {
+
+
+        public AdditionsAdapter(Context context, List<MyOrderDetailResult.Rows.SKUS.Additions> data) {
+            super(context, data, R.layout.item_for_additions_layout);
         }
 
         @Override
-        public int getCount() {
-            return list.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return list.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                convertView = LayoutInflater.from(MyOrderDetailActivity.this).inflate(R.layout.item_for_additions_layout, null);
-                convertView.setTag(new ViewHolder(convertView));
-            }
-            ViewHolder holder = (ViewHolder) convertView.getTag();
-            if (StringUtil.checkStr(list.get(position).name)) {
-                holder.item_additions_name.setText(list.get(position).name);
-                holder.item_additions_price.setText("¥" + StringUtil.toTwoString(list.get(position).price + ""));
-            }
-            return convertView;
-        }
-
-        class ViewHolder {
-            private TextView item_additions_name, item_additions_price;
-
-            ViewHolder(View convertView) {
-                this.item_additions_name = ((TextView) convertView.findViewById(R.id.item_additions_name));
-                this.item_additions_price = ((TextView) convertView.findViewById(R.id.item_additions_price));
+        public void convert(CommonViewHolder holder, MyOrderDetailResult.Rows.SKUS.Additions additions) {
+            if (additions != null) {
+                if (StringUtil.checkStr(additions.name)) {
+                    holder.setText(R.id.item_additions_name, additions.name);
+                    holder.setText(R.id.item_additions_price, "¥" + StringUtil.toTwoString(additions.price + ""));
+                }
             }
 
         }
@@ -594,4 +785,181 @@ public class MyOrderDetailActivity extends BaseActivity {
         super.onResume();
         requestData(orderId);
     }
+
+
+    /**
+     * 创建PopupWindow
+     */
+    private void initPopuptWindow() {
+        // TODO Auto-generated method stub
+        // 获取自定义布局文件activity_popupwindow_left.xml的视图
+        @SuppressLint("InflateParams") View popupWindow_view = getLayoutInflater().inflate(
+                R.layout.pop_layout_sureorder_dialog, null, false);
+
+        // 创建PopupWindow实例,200,LayoutParams.MATCH_PARENT分别是宽度和高度
+        popupWindow = new PopupWindow(popupWindow_view,
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+        popupWindow.setAnimationStyle(R.style.popWindow_anim_style);
+        popupWindow.setFocusable(true);
+        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                PopWindowUtils.setBackgroundBlack(pop_bg, 1);
+            }
+        });
+
+        //初始化组件
+
+        ImageView pop_close = (ImageView) popupWindow_view.findViewById(R.id.pop_close);
+        pop_close.setOnClickListener(this);
+        pop_sure = (TextView) popupWindow_view.findViewById(R.id.save);
+        pop_sure.setOnClickListener(this);
+        pop_sure.setEnabled(false);
+        pop_listView = (ListView) popupWindow_view.findViewById(R.id.pop_listView);
+
+
+    }
+
+    //显示popWindow
+    private void showPopUp(View parent, List<MyOrderDetailResult.Rows.SKUS> skusList) {
+        if (null != popupWindow) {
+            popupWindow.dismiss();
+        } else {
+            initPopuptWindow();
+        }
+
+        //初始化数据
+        PopSkusAdapter popSkusAdapter = new PopSkusAdapter(MyOrderDetailActivity.this, skusList);
+        pop_listView.setAdapter(popSkusAdapter);
+
+        //设置背景及展示
+        PopWindowUtils.setBackgroundBlack(pop_bg, 0);
+        popupWindow.showAtLocation(parent, Gravity.BOTTOM, 0, 0);
+    }
+
+
+    class PopSkusAdapter extends CommonAdapter<MyOrderDetailResult.Rows.SKUS> {
+        private List<MyOrderDetailResult.Rows.SKUS> list;
+
+
+        public PopSkusAdapter(Context context, List<MyOrderDetailResult.Rows.SKUS> data) {
+            super(context, data, R.layout.item_pop_sureorder_layout);
+            this.list = data;
+        }
+
+        @Override
+        public void convert(CommonViewHolder holder, final MyOrderDetailResult.Rows.SKUS skus) {
+
+            if (skus != null) {
+
+                //商品个数
+                holder.setText(R.id.sku_count, "X " + skus.count + "");
+                //商品名
+                if (StringUtil.checkStr(skus.productName)) {
+                    holder.setText(R.id.sku_name, skus.productName);
+                } else {
+                    holder.setText(R.id.sku_name, "");
+                }
+                //Sku属性
+                StringBuilder stringBuilder = new StringBuilder();
+                if (skus.attributes != null && !skus.attributes.isEmpty()) {
+                    for (int k = 0; k < skus.attributes.size(); k++) {
+                        if (StringUtil.checkStr(skus.attributes.get(k).name)
+                                && StringUtil.checkStr(skus.attributes.get(k).value)) {
+                            stringBuilder.append(skus.attributes.get(k).name + ":")
+                                    .append(skus.attributes.get(k).value + ";");
+                        }
+                    }
+                    String car_attr = stringBuilder.substring(0, stringBuilder.length() - 1);
+                    if (StringUtil.checkStr(car_attr)) {
+                        holder.setText(R.id.sku_attr, car_attr);
+                    } else {
+                        holder.setText(R.id.sku_attr, "");
+                    }
+                } else {
+                    holder.setText(R.id.sku_attr, "");
+                }
+
+                //附加选项
+                TextView sku_addiction = (TextView) holder.getView(R.id.sku_addiction);
+
+                StringBuilder stringAdditions = new StringBuilder();
+                if (skus.additions != null && !skus.additions.isEmpty()) {
+                    stringAdditions.append("附加项目:");
+                    for (int k = 0; k < skus.additions.size(); k++) {
+                        if (StringUtil.checkStr(skus.additions.get(k).name)) {
+                            stringAdditions.append(skus.additions.get(k).name + ";");
+                        }
+                    }
+                    String car_additions = stringAdditions.substring(0, stringAdditions.length() - 1);
+                    if (StringUtil.checkStr(car_additions)) {
+                        sku_addiction.setVisibility(View.VISIBLE);
+                        sku_addiction.setText(car_additions);
+                    } else {
+                        sku_addiction.setText("");
+                    }
+                } else {
+                    sku_addiction.setVisibility(View.GONE);
+                }
+
+                //CheckBox
+                final CheckBox checkBox = (CheckBox) holder.getView(R.id.btn_surr_order_item);
+
+                holder.getConvertView().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        if (checkBox.isChecked()) {
+                            checkedMap.put(skus.ref,
+                                    false);
+                        } else {
+                            checkedMap.put(skus.ref,
+                                    true);
+                        }
+                        //刷新适配器中的选中状态
+                        notifyDataSetChanged();
+                        //刷新确定按钮的选中数量
+                        int count = setCheckedGoodsCount(list);
+                        if (count != 0) {
+                            pop_sure.setText("确定(" + count + ")");
+                            pop_sure.setEnabled(true);
+                        } else {
+                            pop_sure.setText("确定");
+                            pop_sure.setEnabled(false);
+                        }
+                    }
+                });
+                Boolean res = checkedMap.get(skus.ref);
+                if (res != null && res) {
+                    checkBox.setChecked(true);
+                } else {
+                    checkBox.setChecked(false);
+                }
+
+
+            }
+
+        }
+    }
+
+    //确定选中按钮的数量
+    public int setCheckedGoodsCount(List<MyOrderDetailResult.Rows.SKUS> list) {
+        int count = 0;
+        List<String> refList = new ArrayList<>();
+        for (String key : checkedMap.keySet()) {
+            if (checkedMap.get(key)) {
+                refList.add(key);
+            }
+        }
+        for (MyOrderDetailResult.Rows.SKUS skus : list) {
+
+            if (refList.contains(skus.ref)) {
+                count += skus.count;
+            }
+
+        }
+        return count;
+    }
+
 }

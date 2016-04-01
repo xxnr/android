@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="1dp"
             android:layout_marginRight="3dp"
-            android:text="5"
+            android:text=""
             android:textColor="@color/green"
              />
 

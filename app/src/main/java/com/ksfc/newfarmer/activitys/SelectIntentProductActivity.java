@@ -1,5 +1,6 @@
 package com.ksfc.newfarmer.activitys;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,6 +13,8 @@ import android.widget.TextView;
 
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
+import com.ksfc.newfarmer.adapter.CommonAdapter;
+import com.ksfc.newfarmer.adapter.CommonViewHolder;
 import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.Request;
@@ -45,10 +48,11 @@ public class SelectIntentProductActivity extends BaseActivity {
         listView = ((ListView) findViewById(R.id.listView));
         showProgressDialog();
         RequestParams params = new RequestParams();
-        if (isLogin()){
+        if (isLogin()) {
+            params.put("userId", Store.User.queryMe().userid);
             execApi(ApiType.GET_PURPOSE_GOODS_LIST
                     .setMethod(ApiType.RequestMethod.GET)
-                    .setOpt("/api/v2.1/intentionProducts" + "?token=" + Store.User.queryMe().token), params);
+                    , params);
         }
         setViewClick(R.id.choice_compelet);
     }
@@ -71,16 +75,16 @@ public class SelectIntentProductActivity extends BaseActivity {
                             builder.append(entry.getKey()).append("；");
                         }
                     }
-                    if (StringUtil.checkStr(builder.toString())){
+                    if (StringUtil.checkStr(builder.toString())) {
                         substring = builder.toString().substring(0, builder.toString().length() - 1);
                     }
-                    if (StringUtil.checkStr(substring)&&!list.isEmpty()){
+                    if (StringUtil.checkStr(substring) && !list.isEmpty()) {
                         Intent intent = new Intent();
                         intent.putExtra("productIdList", (Serializable) list);
                         intent.putExtra("str", substring);
                         setResult(0x14, intent);
                         finish();
-                    }else {
+                    } else {
                         showToast("请至少选择一个意向商品");
                     }
                 }
@@ -97,7 +101,7 @@ public class SelectIntentProductActivity extends BaseActivity {
             IntentionProductsResult data = (IntentionProductsResult) req.getData();
             if (data.getStatus().equals("1000")) {
                 if (data.intentionProducts != null && !data.intentionProducts.isEmpty()) {
-                    adapter = new ProductAdapter(data.intentionProducts);
+                    adapter = new ProductAdapter(SelectIntentProductActivity.this,data.intentionProducts);
                     listView.setAdapter(adapter);
                 }
 
@@ -106,68 +110,41 @@ public class SelectIntentProductActivity extends BaseActivity {
         }
     }
 
-    class ProductAdapter extends BaseAdapter {
-        private List<IntentionProductsResult.IntentionProductsEntity> list;
+
+    class ProductAdapter extends CommonAdapter<IntentionProductsResult.IntentionProductsEntity> {
         private HashMap<String, Boolean> checkMap = new HashMap<>();
         private HashMap<String, Boolean> checkNameMap = new HashMap<>();
 
-        public ProductAdapter(List<IntentionProductsResult.IntentionProductsEntity> list) {
-            this.list = list;
-        }
-
-
-        @Override
-        public int getCount() {
-            return list.size();
+        public ProductAdapter(Context context, List<IntentionProductsResult.IntentionProductsEntity> data) {
+            super(context, data, R.layout.item_select_intent_layout);
         }
 
         @Override
-        public Object getItem(int position) {
-            return list.get(position);
-        }
+        public void convert(final CommonViewHolder holder, final IntentionProductsResult.IntentionProductsEntity intentionProductsEntity) {
+            if (intentionProductsEntity != null) {
 
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
+                holder.setText(R.id.item_select_intent_name, intentionProductsEntity.name);
+                final CheckBox checkBox = (CheckBox) holder.getView(R.id.item_select_intent_checkbox);
+                checkBox.setEnabled(false);
+                holder.getConvertView().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
 
-        @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                convertView = LayoutInflater.from(SelectIntentProductActivity.this).inflate(R.layout.item_select_intent_layout, null);
-                convertView.setTag(new ViewHolder(convertView));
-            }
-            final ViewHolder holder = (ViewHolder) convertView.getTag();
-            holder.product_name.setText(list.get(position).name);
-            holder.checkbox.setEnabled(false);
-            convertView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+                        if (!checkBox.isChecked()) {
+                            checkBox.setChecked(true);
+                            checkMap.put(intentionProductsEntity._id, true);
+                            checkNameMap.put(intentionProductsEntity.name, true);
+                        } else {
+                            checkBox.setChecked(false);
+                            checkMap.put(intentionProductsEntity._id, false);
+                            checkNameMap.put(intentionProductsEntity.name, false);
+                        }
 
-                    if (!holder.checkbox.isChecked()) {
-                        holder.checkbox.setChecked(true);
-                        checkMap.put(list.get(position)._id, true);
-                        checkNameMap.put(list.get(position).name, true);
-                    } else {
-                        holder.checkbox.setChecked(false);
-                        checkMap.put(list.get(position)._id, false);
-                        checkNameMap.put(list.get(position).name, false);
                     }
-
-                }
-            });
-            return convertView;
-        }
-
-        class ViewHolder {
-            private TextView product_name;
-            private CheckBox checkbox;
-
-            ViewHolder(View convertView) {
-                this.checkbox = (CheckBox) convertView.findViewById(R.id.item_select_intent_checkbox);
-                this.product_name = (TextView) convertView.findViewById(R.id.item_select_intent_name);
+                });
             }
-
         }
     }
+
+
 }

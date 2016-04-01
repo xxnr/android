@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-
+    <item android:state_enabled="false">
+        <shape>
+            <solid android:color="@color/deep1_gray" />
+            <corners
+                android:bottomLeftRadius="5dp"
+                android:bottomRightRadius="5dp"
+                android:topLeftRadius="5dp"
+                android:topRightRadius="5dp" />
+        </shape>
+    </item>
     <item android:state_pressed="true">
         <shape>
             <solid android:color="@color/deep_orange" />
@@ -12,7 +21,8 @@
                 android:topRightRadius="5dp" />
         </shape>
     </item>
-    <item>
+
+    <item android:state_pressed="false">
         <shape>
             <solid android:color="@color/orange" />
             <corners

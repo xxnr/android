@@ -6,6 +6,8 @@ import java.util.List;
 
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
+import com.ksfc.newfarmer.adapter.CommonAdapter;
+import com.ksfc.newfarmer.adapter.CommonViewHolder;
 import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.Request;
@@ -19,21 +21,18 @@ import com.ksfc.newfarmer.utils.ExpandViewTouch;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import net.yangentao.util.msg.MsgCenter;
 
@@ -44,7 +43,7 @@ public class AddressmanageActivity extends BaseActivity {
     private ListView address_list;
     HashMap<String, Integer> map = new HashMap<>();//创建一个map集合用于存放  是否是默认地址
     private final int reqestcode = 1;
-    private addressAdapter adapter;
+    private AddressAdapter adapter;
     private List<AddressList.Address> rows;
     private List<AddressList.Address> addList;
     private AddressList.Address selectedAddress;
@@ -72,44 +71,26 @@ public class AddressmanageActivity extends BaseActivity {
         address_list = (ListView) findViewById(R.id.address_list);
         none_address_rel = (RelativeLayout) findViewById(R.id.none_address_rel);
 
-        //设置返回监听的，回传数据
-        setLeftClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MsgCenter.fireNull("MSG.ADDR", selectedAddress);
-                finish();
-            }
-        });
         //添加数据
         setRightTextViewListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
                 bundle.putInt("addressCount", addressCount);
-                IntentUtil.startActivityForResult(AddressmanageActivity.this, ChoiceActivity.class,
+                IntentUtil.startActivityForResult(AddressmanageActivity.this, AddAddressActivity.class,
                         reqestcode, bundle);
             }
         });
     }
 
-    //设置返回监听的，回传数据
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-            MsgCenter.fireNull("MSG.ADDR", selectedAddress);
-            finish();
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
-    }
 
     //获得地址列表
     private void initData() {
-        addList.clear();
         getAddressList();
     }
 
     private void getAddressList() {
+        addList.clear();
         showProgressDialog();
         RequestParams params = new RequestParams();
         if (isLogin()) {
@@ -128,11 +109,9 @@ public class AddressmanageActivity extends BaseActivity {
     public void onResponsed(Request req) {
         disMissDialog();
         if (req.getApi() == ApiType.ADDRESS_LIST) {
-            if (req.getData().getStatus().equals("1000")){
+            if (req.getData().getStatus().equals("1000")) {
                 AddressList data = (AddressList) req.getData();
-                if (data == null) {
-                    return;
-                }
+
                 if (data.datas == null) {
                     return;
                 }
@@ -154,30 +133,25 @@ public class AddressmanageActivity extends BaseActivity {
                     showToast("请先新增地址");
                     addressCount = 0;
                 }
-                adapter = new addressAdapter();
+                adapter = new AddressAdapter(AddressmanageActivity.this,addList);
                 address_list.setAdapter(adapter);
             }
 
         } else if (req.getApi() == ApiType.DELETE_ADDRESS) {
-            ResponseResult data = (ResponseResult) req.getData();
-            if ("1000".equals(data.getStatus())) {
+            if ("1000".equals(req.getData().getStatus())) {
                 showToast("删除成功！");
-                addList.clear();
                 getAddressList();
                 adapter.notifyDataSetChanged();
 
             }
         } else if (req.getApi() == ApiType.UPDATE_ADDRESS) {
-            ResponseResult data = (ResponseResult) req.getData();
-            if ("1000".equals(data.getStatus())) {
+            if ("1000".equals(req.getData().getStatus())) {
                 showToast("更改默认地址成功");
-                addList.clear();
                 getAddressList();
                 adapter.notifyDataSetChanged();
             }
         } else if (req.getApi() == ApiType.SELECT_ADDRESS) {
-            ResponseResult data = (ResponseResult) req.getData();
-            if ("1000".equals(data.getStatus())) {
+            if ("1000".equals( req.getData().getStatus())) {
                 MsgCenter.fireNull("MSG.ADDRESS.CALL.BACK",
                         rows.get(map.get("pos")));
                 finish();
@@ -185,185 +159,147 @@ public class AddressmanageActivity extends BaseActivity {
         }
     }
 
-    public class addressAdapter extends BaseAdapter {
-        ViewHolder holder;
+    public class AddressAdapter extends CommonAdapter<AddressList.Address> {
 
-        @Override
-        public int getCount() {
 
-            if (addList == null)
-                return 0;
-
-            return addList.size();
+        public AddressAdapter(Context context, List<Address> data) {
+            super(context, data, R.layout.address_list_item);
         }
 
         @Override
-        public Object getItem(int position) {
-            return null;
-        }
+        public void convert(CommonViewHolder holder, final Address address) {
 
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(final int position, View convertView,
-                            ViewGroup parent) {
-
-
-            if (convertView == null) {
-                convertView = LayoutInflater.from(AddressmanageActivity.this)
-                        .inflate(R.layout.address_list_item, null);
-                holder = new ViewHolder();
-                holder.address_tv = (TextView) convertView
-                        .findViewById(R.id.address_tv);
-                holder.btn_check_item = (CheckBox) convertView.findViewById(R.id.btn_check_item);
+            if (address!=null){
+                //文本内容
+                holder.setText(R.id.address_tv, StringUtil.checkBufferStrWithSpace
+                        (address.areaName,
+                                address.cityName,
+                                address.countyName,
+                                address.townName,
+                                address.address));
+                holder.setText(R.id.address_name_tv,address.receiptPeople);
+                holder.setText(R.id.address_phone_tv,address.receiptPhone);
+                //初始化其他组件
+                CheckBox btn_check_item = (CheckBox) holder.getView(R.id.btn_check_item);
                 //设置控件点击区域扩大
-                ExpandViewTouch.expandViewTouchDelegate(holder.btn_check_item, 100, 100, 100, 100);
-                holder.edit_address_img = (Button) convertView
-                        .findViewById(R.id.edit_address_img);
-                holder.delete_address_img = (Button) convertView
-                        .findViewById(R.id.delete_address_img);
-                holder.address_name_tv = (TextView) convertView
-                        .findViewById(R.id.address_name_tv);
-                holder.address_phone_tv = (TextView) convertView
-                        .findViewById(R.id.address_phone_tv);
-                convertView.setTag(holder);
-            } else {
-                holder = (ViewHolder) convertView.getTag();
-            }
-            holder.address_tv.setText(StringUtil.checkBufferStrWithSpace
-                    (addList.get(position).areaName,
-                            addList.get(position).cityName,
-                            addList.get(position).countyName,
-                            addList.get(position).townName,
-                            addList.get(position).address));
-            holder.address_name_tv.setText(addList.get(position).receiptPeople);
-            holder.address_phone_tv.setText(addList.get(position).receiptPhone);
+                ExpandViewTouch.expandViewTouchDelegate(btn_check_item, 100, 100, 100, 100);
 
-            //编辑地址
-            holder.edit_address_img.setOnClickListener(new OnClickListener() {
+                //编辑地址
+                holder.getView(R.id.edit_address_img).setOnClickListener(new OnClickListener() {
 
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(AddressmanageActivity.this,
-                            UpdateAddressActivity.class);
-                    intent.putExtra("address", addList.get(position));
-                    startActivity(intent);
-                }
-            });
-            //删除地址
-            holder.delete_address_img.setOnClickListener(new OnClickListener() {
+                     @Override
+                     public void onClick(View v) {
+                         Intent intent = new Intent(AddressmanageActivity.this,
+                                 UpdateAddressActivity.class);
+                         intent.putExtra("address", address);
+                         startActivity(intent);
+                     }
+                 });
 
-                @Override
-                public void onClick(View v) {
-                    // app/buildUser/deleteAddress
-                    // id:主键
-                    // locationUserId:操作人ID
-                    // app/user/saveUserAddress
-                    // userId:用户ID,
-                    // addressId:地址唯一标识
+                //删除地址
+                holder.getView(R.id.delete_address_img).setOnClickListener(new OnClickListener() {
 
-                    CustomDialog.Builder builder = new CustomDialog.Builder(
-                            AddressmanageActivity.this);
-                    builder.setMessage("确认要删除该地址吗")
-                            .setPositiveButton("确定",
-                                    new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog,
-                                                            int which) {
-                                            if (addList.get(position).type.equals("1")) {
-                                                UserInfo queryMe = Store.User.queryMe();
-                                                if (queryMe != null) {
-                                                    queryMe.defaultAddress = "";
-                                                    Store.User.saveMe(queryMe);
-                                                    map.put("pos", -1);
-                                                    selectedAddress = null;
-                                                    MsgCenter.fireNull("MSG.ADDR", selectedAddress);
-                                                }
-                                            }
-                                            showProgressDialog();
-                                            RequestParams params = new RequestParams();
-                                            params.put("userId", addList.get(position).userId);
-                                            params.put("addressId", addList.get(position).addressId);
-                                            execApi(ApiType.DELETE_ADDRESS, params);
-                                            dialog.dismiss();
-                                        }
-                                    })
-                            .setNegativeButton("取消",
-                                    new DialogInterface.OnClickListener() {
+                   @Override
+                   public void onClick(View v) {
+                       // app/buildUser/deleteAddress
+                       // id:主键
+                       // locationUserId:操作人ID
+                       // app/user/saveUserAddress
+                       // userId:用户ID,
+                       // addressId:地址唯一标识
 
-                                        @Override
-                                        public void onClick(DialogInterface dialog,
-                                                            int which) {
+                       CustomDialog.Builder builder = new CustomDialog.Builder(
+                               AddressmanageActivity.this);
+                       builder.setMessage("确认要删除该地址吗")
+                               .setPositiveButton("确定",
+                                       new DialogInterface.OnClickListener() {
+                                           @Override
+                                           public void onClick(DialogInterface dialog,
+                                                               int which) {
+                                               if (address.type.equals("1")) {
+                                                   UserInfo queryMe = Store.User.queryMe();
+                                                   if (queryMe != null) {
+                                                       queryMe.defaultAddress = "";
+                                                       Store.User.saveMe(queryMe);
+                                                       map.put("pos", -1);
+                                                       selectedAddress = null;
+                                                       MsgCenter.fireNull("MSG.ADDR", selectedAddress);
+                                                   }
+                                               }
+                                               showProgressDialog();
+                                               RequestParams params = new RequestParams();
+                                               UserInfo queryMe = Store.User.queryMe();
+                                               if (queryMe != null) {
+                                                   params.put("userId", queryMe.userid);
+                                               }
+                                               params.put("addressId", address.addressId);
+                                               execApi(ApiType.DELETE_ADDRESS, params);
+                                               dialog.dismiss();
+                                           }
+                                       })
+                               .setNegativeButton("取消",
+                                       new DialogInterface.OnClickListener() {
 
-                                            dialog.dismiss();
+                                           @Override
+                                           public void onClick(DialogInterface dialog,
+                                                               int which) {
 
-                                        }
-                                    });
-                    builder.create().show();
-                }
-            });
-            if (map.get("pos") != null) {
-                if (position == map.get("pos")) {
-                    holder.btn_check_item.setChecked(true);
-                } else {
-                    holder.btn_check_item.setChecked(false);
-                }
-            }
+                                               dialog.dismiss();
 
-            holder.btn_check_item.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    showProgressDialog();
+                                           }
+                                       });
+                       builder.create().show();
+                   }
+               });
 
-                    Address address = addList.get(position);
 
-                    RequestParams params = new RequestParams();
-                    if (isLogin()) {
-                        params.put("userId", Store.User.queryMe().userid);
-                    }
-                    params.put("addressId", address.addressId);
-                    params.put("receiptPhone", address.receiptPhone);
-                    params.put("receiptPeople", address.receiptPeople);
-                    params.put("areaId", address.areaId);
-                    params.put("cityId", address.cityId);
-                    params.put("countyId", address.countyId);
-                    params.put("townId", address.townId);
-                    params.put("zipCode", address.zipCode);
-                    params.put("address", address.address);
-                    if (isChecked) {
-                        params.put("type", 1);
-                        UserInfo queryMe = Store.User.queryMe();
-                        if (queryMe != null) {
-                            queryMe.defaultAddress = StringUtil.checkBufferStr(address.areaName + address.cityName, address.countyName, address.townName, address.address);
-                            Store.User.saveMe(queryMe);
-                        }
+                if (map.get("pos") != null) {
+                    if (holder.getPosition() == map.get("pos")) {
+                        btn_check_item.setChecked(true);
                     } else {
-                        params.put("type", 2);
-                        UserInfo queryMe = Store.User.queryMe();
-                        if (queryMe != null) {
-                            queryMe.defaultAddress = "";
-                            Store.User.saveMe(queryMe);
-                        }
+                        btn_check_item.setChecked(false);
                     }
-                    execApi(ApiType.UPDATE_ADDRESS, params);
                 }
-            });
-            return convertView;
-        }
 
-        private class ViewHolder {
-            private TextView address_tv, address_name_tv, address_phone_tv;
-            private Button edit_address_img;
-            private Button delete_address_img;
-            private CheckBox btn_check_item;
-        }
+                btn_check_item.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        showProgressDialog();
+                        RequestParams params = new RequestParams();
+                        if (isLogin()) {
+                            params.put("userId", Store.User.queryMe().userid);
+                        }
+                        params.put("addressId", address.addressId);
+                        params.put("receiptPhone", address.receiptPhone);
+                        params.put("receiptPeople", address.receiptPeople);
+                        params.put("areaId", address.areaId);
+                        params.put("cityId", address.cityId);
+                        params.put("countyId", address.countyId);
+                        params.put("townId", address.townId);
+                        params.put("zipCode", address.zipCode);
+                        params.put("address", address.address);
+                        if (isChecked) {
+                            params.put("type", 1);
+                            UserInfo queryMe = Store.User.queryMe();
+                            if (queryMe != null) {
+                                queryMe.defaultAddress = StringUtil.checkBufferStr(address.areaName + address.cityName, address.countyName, address.townName, address.address);
+                                Store.User.saveMe(queryMe);
+                            }
+                        } else {
+                            params.put("type", 2);
+                            UserInfo queryMe = Store.User.queryMe();
+                            if (queryMe != null) {
+                                queryMe.defaultAddress = "";
+                                Store.User.saveMe(queryMe);
+                            }
+                        }
+                        execApi(ApiType.UPDATE_ADDRESS, params);
+                    }
+                });
+            }
 
+        }
     }
-
-
     @Override
     protected void onResume() {
         initData();

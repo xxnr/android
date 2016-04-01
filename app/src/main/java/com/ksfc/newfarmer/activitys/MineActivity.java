@@ -21,8 +21,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -35,6 +37,9 @@ public class MineActivity extends BaseActivity {
     private String nickname = "";
     private RelativeLayout titleView, titleview_login;
     private ImageView isVerified;
+    private String integral = ""; //用户的积分用于向，我的积分页传递
+    private LinearLayout my_order_open_ll;
+    private LinearLayout my_state_ll;
 
 
     @Override
@@ -96,6 +101,17 @@ public class MineActivity extends BaseActivity {
                     isVerified.setVisibility(View.GONE);
                 }
 
+                if (userInfo.isRSC) {
+
+                    my_order_open_ll.setVisibility(View.GONE);
+                    my_state_ll.setVisibility(View.VISIBLE);
+
+                }else {
+                    my_order_open_ll.setVisibility(View.VISIBLE);
+                    my_state_ll.setVisibility(View.GONE);
+                }
+
+
                 if (userInfo.userAddress != null) {
 
                     String province = "";
@@ -150,6 +166,11 @@ public class MineActivity extends BaseActivity {
         mine_type = (TextView) findViewById(R.id.mine_type);//用户类型
         isVerified = (ImageView) findViewById(R.id.mine_type_isVerified);//是否是认证用户
 
+        my_order_open_ll = (LinearLayout) findViewById(R.id.my_order_open_ll);
+        my_order_open_ll.setVisibility(View.GONE);
+        my_state_ll = (LinearLayout) findViewById(R.id.my_state_ll);
+
+        setViewClick(R.id.my_state_ll);
         setViewClick(R.id.my_order_ll);
         setViewClick(R.id.my_yaoqing_ll);
         setViewClick(R.id.my_jifen_ll);
@@ -222,12 +243,22 @@ public class MineActivity extends BaseActivity {
                     startActivity(intent);
                 }
                 break;
+            case R.id.my_state_ll:
+                if (!isLogin()) {
+                    DialogShow();
+                } else {
+                    Intent intent = new Intent(MineActivity.this,
+                            RSCOrderListActivity.class);
+                    startActivity(intent);
+                }
+                break;
+
             case R.id.my_order_ll:
                 if (!isLogin()) {
                     DialogShow();
                 } else {
                     Intent intent = new Intent(MineActivity.this,
-                            WaitingPayActivity.class);
+                            MyOrderListActivity.class);
                     intent.putExtra("orderSelect", 0);
                     startActivity(intent);
                 }
@@ -244,8 +275,10 @@ public class MineActivity extends BaseActivity {
                 if (!isLogin()) {
                     DialogShow();
                 } else {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("integral", integral);
                     IntentUtil.activityForward(MineActivity.this,
-                            MyIntegralActivity.class, null, false);
+                            MyIntegralActivity.class, bundle, false);
                 }
                 break;
 
@@ -295,7 +328,6 @@ public class MineActivity extends BaseActivity {
                             LoginActivity.class);
                     intent.putExtra("id", 4);
                     startActivity(intent);
-                    finish();
                 }
                 break;
             case R.id.mine_button2:
@@ -303,7 +335,7 @@ public class MineActivity extends BaseActivity {
                     DialogShow();
                 } else {
                     Intent intent = new Intent(MineActivity.this,
-                            WaitingPayActivity.class);
+                            MyOrderListActivity.class);
                     intent.putExtra("orderSelect", 1);
                     startActivity(intent);
                 }
@@ -313,7 +345,7 @@ public class MineActivity extends BaseActivity {
                     DialogShow();
                 } else {
                     Intent intent = new Intent(MineActivity.this,
-                            WaitingPayActivity.class);
+                            MyOrderListActivity.class);
                     intent.putExtra("orderSelect", 2);
                     startActivity(intent);
                 }
@@ -323,7 +355,7 @@ public class MineActivity extends BaseActivity {
                     DialogShow();
                 } else {
                     Intent intent = new Intent(MineActivity.this,
-                            WaitingPayActivity.class);
+                            MyOrderListActivity.class);
                     intent.putExtra("orderSelect", 3);
                     startActivity(intent);
                 }
@@ -333,7 +365,7 @@ public class MineActivity extends BaseActivity {
                     DialogShow();
                 } else {
                     Intent intent = new Intent(MineActivity.this,
-                            WaitingPayActivity.class);
+                            MyOrderListActivity.class);
                     intent.putExtra("orderSelect", 4);
                     startActivity(intent);
                 }
@@ -358,7 +390,6 @@ public class MineActivity extends BaseActivity {
                                 LoginActivity.class);
                         intent.putExtra("id", 4);
                         startActivity(intent);
-                        finish();
                         dialog.dismiss();
                     }
                 })
@@ -410,6 +441,15 @@ public class MineActivity extends BaseActivity {
                 isVerified.setVisibility(View.GONE);
             }
 
+            if (user.isRSC) {
+                my_order_open_ll.setVisibility(View.GONE);
+                my_state_ll.setVisibility(View.VISIBLE);
+            }else {
+                my_order_open_ll.setVisibility(View.VISIBLE);
+                my_state_ll.setVisibility(View.GONE);
+            }
+
+
             if (user.address != null) {
 
                 String province = "";
@@ -438,6 +478,9 @@ public class MineActivity extends BaseActivity {
                 }
             } else {
                 userAaddress_mine.setText("所在地区：还没填写呦~");
+            }
+            if (StringUtil.checkStr(user.pointLaterTrade)) {
+                integral = user.pointLaterTrade;
             }
             saveMe(user);
         }
@@ -487,6 +530,8 @@ public class MineActivity extends BaseActivity {
             me.userType = user.userType;
             me.userTypeInName = user.userTypeInName;
             me.isXXNRAgent = user.isXXNRAgent;
+            me.isRSC = user.isRSC;
+            me.RSCInfoVerifing = user.RSCInfoVerifing;
             Store.User.saveMe(me);
         }
 
@@ -503,5 +548,13 @@ public class MineActivity extends BaseActivity {
             titleview_login.setVisibility(View.VISIBLE);
             titleView.setVisibility(View.GONE);
         }
+        LoginResult.UserInfo me = Store.User.queryMe();
+        if (me!=null){
+            if (me.isRSC) {
+                my_order_open_ll.setVisibility(View.GONE);
+                my_state_ll.setVisibility(View.VISIBLE);
+            }
+        }
+
     }
 }

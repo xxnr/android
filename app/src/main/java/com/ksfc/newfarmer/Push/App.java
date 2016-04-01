@@ -16,14 +16,4 @@ public class App {
 		return app;
 	}
 
-	private static String imei;
-
-	public static String imei() {
-		if (imei == null) {
-			TelephonyManager tm = (TelephonyManager) app
-					.getSystemService(Context.TELEPHONY_SERVICE);
-			imei = tm.getDeviceId();
-		}
-		return imei;
-	}
 }

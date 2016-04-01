@@ -54,7 +54,7 @@ public class OrderSuccessActivity extends BaseActivity {
     public void OnViewClick(View v) {
         switch (v.getId()) {
             case R.id.contact_tv:
-                Intent intent = new Intent(OrderSuccessActivity.this, WaitingPayActivity.class);
+                Intent intent = new Intent(OrderSuccessActivity.this, MyOrderListActivity.class);
                 startActivity(intent);
                 quit();
                 break;

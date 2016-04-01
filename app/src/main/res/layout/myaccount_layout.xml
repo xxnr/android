@@ -8,528 +8,548 @@
 
     <include layout="@layout/title_lay" />
 
-    <TextView
+    <ScrollView
+        android:scrollbars="none"
         android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:background="@color/default_act_bg" />
-
-    <include layout="@layout/line_lay" />
-
-    <RelativeLayout
-        android:background="@drawable/list_bg_selector"
-        android:id="@+id/header_image_ll"
-        android:layout_width="match_parent"
-        android:layout_height="49dp">
+        android:layout_height="match_parent">
 
         <LinearLayout
-            android:layout_width="49dp"
-            android:layout_height="49dp"
-            android:layout_alignParentLeft="true"
-            android:gravity="center">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/mine_account_head" />
-
-        </LinearLayout>
-
-
-        <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="50dp"
-            android:text="我的头像"
-             />
+            android:orientation="vertical">
 
-
-        <com.ksfc.newfarmer.widget.HeadImageView
-            android:id="@+id/myself_userImg"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="5dp"
-            android:layout_toLeftOf="@+id/header_image_ll_qianjin"
-            android:background="@drawable/mine_account_head_default_head"
-            android:scaleType="fitXY" />
-
-
-        <ImageView
-            android:id="@+id/header_image_ll_qianjin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="16dp"
-            android:background="@drawable/common_icon_qianjin" />
-
-    </RelativeLayout>
-
-    <include layout="@layout/line_lay" />
-
-
-    <RelativeLayout
-        android:background="@drawable/list_bg_selector"
-        android:id="@+id/set_name_ll"
-        android:layout_width="match_parent"
-        android:layout_height="49dp">
-
-        <LinearLayout
-            android:layout_width="49dp"
-            android:layout_height="49dp"
-            android:layout_alignParentLeft="true"
-            android:gravity="center">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/mine_account_head_nickname" />
-
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="50dp"
-            android:text="我的昵称"
-             />
-
-
-        <TextView
-            android:id="@+id/nickName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="5dp"
-            android:layout_toLeftOf="@+id/nickName_ll_qianjin"
-            android:text=""
-            android:textColor="@color/main_index_gary"
-             />
-
-
-        <ImageView
-            android:id="@+id/nickName_ll_qianjin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="16dp"
-            android:background="@drawable/common_icon_qianjin" />
-
-    </RelativeLayout>
-
-    <include layout="@layout/line_lay" />
-
-    <RelativeLayout
-        android:background="@drawable/list_bg_selector"
-        android:id="@+id/choose_address_ll"
-        android:layout_width="match_parent"
-        android:layout_height="49dp">
-
-        <LinearLayout
-            android:layout_width="49dp"
-            android:layout_height="49dp"
-            android:layout_alignParentLeft="true"
-            android:gravity="center">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/mine_account_address" />
-
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="50dp"
-            android:text="地址管理"
-             />
-
-
-        <RelativeLayout
-            android:layout_width="100dp"
-            android:layout_height="match_parent"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="5dp"
-            android:layout_toLeftOf="@+id/address_ll_qianjin">
 
             <TextView
-                android:id="@+id/address_songhuo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:maxLength="16"
-                android:maxLines="2"
-                android:textColor="@color/main_index_gary"
-                 />
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:background="@color/default_act_bg" />
 
-        </RelativeLayout>
+            <include layout="@layout/line_lay" />
 
+            <RelativeLayout
+                android:id="@+id/header_image_ll"
+                android:layout_width="match_parent"
+                android:layout_height="49dp"
+                android:background="@drawable/list_bg_selector">
 
-        <ImageView
-            android:id="@+id/address_ll_qianjin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="16dp"
-            android:background="@drawable/common_icon_qianjin" />
+                <LinearLayout
+                    android:layout_width="49dp"
+                    android:layout_height="49dp"
+                    android:layout_alignParentLeft="true"
+                    android:gravity="center">
 
-    </RelativeLayout>
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/mine_account_head" />
 
-    <include layout="@layout/line_lay" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:background="@color/default_act_bg" />
-
-    <include layout="@layout/line_lay" />
+                </LinearLayout>
 
 
-    <RelativeLayout
-        android:background="@drawable/list_bg_selector"
-        android:id="@+id/choose_name_ll"
-        android:layout_width="match_parent"
-        android:layout_height="49dp">
-
-        <LinearLayout
-            android:layout_width="49dp"
-            android:layout_height="49dp"
-            android:layout_alignParentLeft="true"
-            android:gravity="center">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/name_icon" />
-
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="50dp"
-            android:text="姓名"
-             />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="50dp"
+                    android:text="我的头像" />
 
 
-        <RelativeLayout
-            android:layout_width="100dp"
-            android:layout_height="match_parent"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="5dp"
-            android:layout_toLeftOf="@+id/name_ll_qianjin">
+                <com.ksfc.newfarmer.widget.HeadImageView
+                    android:id="@+id/myself_userImg"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="5dp"
+                    android:layout_toLeftOf="@+id/header_image_ll_qianjin"
+                    android:background="@drawable/mine_account_head_default_head"
+                    android:scaleType="fitXY" />
+
+
+                <ImageView
+                    android:id="@+id/header_image_ll_qianjin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16dp"
+                    android:background="@drawable/common_icon_qianjin" />
+
+            </RelativeLayout>
+
+            <include layout="@layout/line_lay" />
+
+
+            <RelativeLayout
+                android:id="@+id/set_name_ll"
+                android:layout_width="match_parent"
+                android:layout_height="49dp"
+                android:background="@drawable/list_bg_selector">
+
+                <LinearLayout
+                    android:layout_width="49dp"
+                    android:layout_height="49dp"
+                    android:layout_alignParentLeft="true"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/mine_account_head_nickname" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="50dp"
+                    android:text="我的昵称" />
+
+
+                <TextView
+                    android:id="@+id/nickName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="5dp"
+                    android:layout_toLeftOf="@+id/nickName_ll_qianjin"
+                    android:text=""
+                    android:textColor="@color/main_index_gary" />
+
+
+                <ImageView
+                    android:id="@+id/nickName_ll_qianjin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16dp"
+                    android:background="@drawable/common_icon_qianjin" />
+
+            </RelativeLayout>
+
+            <include layout="@layout/line_lay" />
+
 
             <TextView
-                android:id="@+id/name_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:maxLength="16"
-                android:maxLines="1"
-                android:text=""
-                android:textColor="@color/main_index_gary"
-                 />
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:background="@color/default_act_bg" />
 
-        </RelativeLayout>
+            <include layout="@layout/line_lay" />
 
 
-        <ImageView
-            android:id="@+id/name_ll_qianjin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="16dp"
-            android:background="@drawable/common_icon_qianjin" />
+            <RelativeLayout
+                android:id="@+id/choose_name_ll"
+                android:layout_width="match_parent"
+                android:layout_height="49dp"
+                android:background="@drawable/list_bg_selector">
 
-    </RelativeLayout>
+                <LinearLayout
+                    android:layout_width="49dp"
+                    android:layout_height="49dp"
+                    android:layout_alignParentLeft="true"
+                    android:gravity="center">
 
-    <include layout="@layout/line_lay" />
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/name_icon" />
 
-    <RelativeLayout
-        android:background="@drawable/list_bg_selector"
-        android:id="@+id/choose_sex_ll"
-        android:layout_width="match_parent"
-        android:layout_height="49dp">
+                </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="49dp"
-            android:layout_height="49dp"
-            android:layout_alignParentLeft="true"
-            android:gravity="center">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/sex_icon" />
-
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="50dp"
-            android:text="性别"
-             />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="50dp"
+                    android:text="姓名" />
 
 
-        <RelativeLayout
-            android:layout_width="100dp"
-            android:layout_height="match_parent"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="5dp"
-            android:layout_toLeftOf="@+id/sex_ll_qianjin">
+                <RelativeLayout
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="5dp"
+                    android:layout_toLeftOf="@+id/name_ll_qianjin">
+
+                    <TextView
+                        android:id="@+id/name_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:maxLength="16"
+                        android:maxLines="1"
+                        android:text=""
+                        android:textColor="@color/main_index_gary" />
+
+                </RelativeLayout>
+
+
+                <ImageView
+                    android:id="@+id/name_ll_qianjin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16dp"
+                    android:background="@drawable/common_icon_qianjin" />
+
+            </RelativeLayout>
+
+            <include layout="@layout/line_lay" />
+
+            <RelativeLayout
+                android:id="@+id/choose_sex_ll"
+                android:layout_width="match_parent"
+                android:layout_height="49dp"
+                android:background="@drawable/list_bg_selector">
+
+                <LinearLayout
+                    android:layout_width="49dp"
+                    android:layout_height="49dp"
+                    android:layout_alignParentLeft="true"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/sex_icon" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="50dp"
+                    android:text="性别" />
+
+
+                <RelativeLayout
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="5dp"
+                    android:layout_toLeftOf="@+id/sex_ll_qianjin">
+
+                    <TextView
+                        android:id="@+id/sex_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:maxLength="16"
+                        android:maxLines="1"
+                        android:text=""
+                        android:textColor="@color/main_index_gary" />
+
+                </RelativeLayout>
+
+
+                <ImageView
+                    android:id="@+id/sex_ll_qianjin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16dp"
+                    android:background="@drawable/common_icon_qianjin" />
+
+            </RelativeLayout>
+
+            <include layout="@layout/line_lay" />
+
+            <RelativeLayout
+                android:id="@+id/choose_home_address_ll"
+                android:layout_width="match_parent"
+                android:layout_height="49dp"
+                android:background="@drawable/list_bg_selector">
+
+                <LinearLayout
+                    android:layout_width="49dp"
+                    android:layout_height="49dp"
+                    android:layout_alignParentLeft="true"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/address_home_icon" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="50dp"
+                    android:text="所在地区" />
+
+
+                <RelativeLayout
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="5dp"
+                    android:layout_toLeftOf="@+id/home_address_ll_qianjin">
+
+                    <TextView
+                        android:id="@+id/home_address_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:maxLength="16"
+                        android:maxLines="2"
+                        android:textColor="@color/main_index_gary" />
+
+                </RelativeLayout>
+
+
+                <ImageView
+                    android:id="@+id/home_address_ll_qianjin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16dp"
+                    android:background="@drawable/common_icon_qianjin" />
+
+            </RelativeLayout>
+
+            <include layout="@layout/line_lay" />
+
+            <RelativeLayout
+                android:id="@+id/choose_type_ll"
+                android:layout_width="match_parent"
+                android:layout_height="49dp"
+                android:background="@drawable/list_bg_selector">
+
+                <LinearLayout
+                    android:layout_width="49dp"
+                    android:layout_height="49dp"
+                    android:layout_alignParentLeft="true"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/vip_icon" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="50dp"
+                    android:text="类型" />
+
+
+                <RelativeLayout
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="5dp"
+                    android:layout_toLeftOf="@+id/type_ll_qianjin">
+
+                    <TextView
+                        android:id="@+id/type_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:maxLength="16"
+                        android:maxLines="2"
+                        android:textColor="@color/main_index_gary" />
+
+                </RelativeLayout>
+
+
+                <ImageView
+                    android:id="@+id/type_ll_qianjin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16dp"
+                    android:background="@drawable/common_icon_qianjin" />
+
+            </RelativeLayout>
+
+            <include layout="@layout/line_lay" />
+
+            <RelativeLayout
+                android:id="@+id/choose_type_Certified_ll"
+                android:layout_width="match_parent"
+                android:layout_height="49dp"
+                android:background="@drawable/list_bg_selector">
+
+
+                <TextView
+                    android:id="@+id/choose_type_Certified_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/choose_type_Certified_qianjin"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="5dp"
+                    android:singleLine="true"
+                    android:text="想成为新新农人的县级网点？去申请认证吧"
+                    android:textColor="@color/green"
+                    android:textSize="14sp" />
+
+
+                <ImageView
+                    android:id="@+id/choose_type_Certified_qianjin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16dp"
+                    android:background="@drawable/common_icon_qianjin" />
+
+            </RelativeLayout>
+
+            <include layout="@layout/line_lay" />
+
 
             <TextView
-                android:id="@+id/sex_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:maxLength="16"
-                android:maxLines="1"
-                android:text=""
-                android:textColor="@color/main_index_gary"
-                 />
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:background="@color/default_act_bg" />
 
-        </RelativeLayout>
+            <include layout="@layout/line_lay" />
 
-
-        <ImageView
-            android:id="@+id/sex_ll_qianjin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="16dp"
-            android:background="@drawable/common_icon_qianjin" />
-
-    </RelativeLayout>
-
-    <include layout="@layout/line_lay" />
-
-    <RelativeLayout
-        android:background="@drawable/list_bg_selector"
-        android:id="@+id/choose_home_address_ll"
-        android:layout_width="match_parent"
-        android:layout_height="49dp">
-
-        <LinearLayout
-            android:layout_width="49dp"
-            android:layout_height="49dp"
-            android:layout_alignParentLeft="true"
-            android:gravity="center">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/address_home_icon" />
-
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="50dp"
-            android:text="所在地区"
-             />
+            <RelativeLayout
+                android:id="@+id/chane_pass_ll"
+                android:layout_width="match_parent"
+                android:layout_height="49dp"
+                android:background="@drawable/list_bg_selector">
 
 
-        <RelativeLayout
-            android:layout_width="100dp"
-            android:layout_height="match_parent"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="5dp"
-            android:layout_toLeftOf="@+id/home_address_ll_qianjin">
+                <LinearLayout
+                    android:layout_width="49dp"
+                    android:layout_height="49dp"
+                    android:layout_alignParentLeft="true"
+                    android:gravity="center">
 
-            <TextView
-                android:id="@+id/home_address_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:maxLength="16"
-                android:maxLines="2"
-                android:textColor="@color/main_index_gary"
-                 />
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/mine_account_head_password" />
 
-        </RelativeLayout>
+                </LinearLayout>
 
 
-        <ImageView
-            android:id="@+id/home_address_ll_qianjin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="16dp"
-            android:background="@drawable/common_icon_qianjin" />
-
-    </RelativeLayout>
-
-    <include layout="@layout/line_lay" />
-
-    <RelativeLayout
-        android:background="@drawable/list_bg_selector"
-        android:id="@+id/choose_type_ll"
-        android:layout_width="match_parent"
-        android:layout_height="49dp">
-
-        <LinearLayout
-            android:layout_width="49dp"
-            android:layout_height="49dp"
-            android:layout_alignParentLeft="true"
-            android:gravity="center">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/vip_icon" />
-
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="50dp"
-            android:text="类型"
-             />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="50dp"
+                    android:text="修改密码" />
 
 
-        <RelativeLayout
-            android:layout_width="100dp"
-            android:layout_height="match_parent"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="5dp"
-            android:layout_toLeftOf="@+id/type_ll_qianjin">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="5dp"
+                    android:layout_toLeftOf="@+id/password_ll_qianjin"
+                    android:maxLength="16"
+                    android:maxLines="2"
+                    android:text="修改"
+                    android:textColor="@color/main_index_gary" />
+
+
+                <ImageView
+                    android:id="@+id/password_ll_qianjin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16dp"
+                    android:background="@drawable/common_icon_qianjin" />
+
+            </RelativeLayout>
+
+
+            <include layout="@layout/line_lay" />
+
+            <RelativeLayout
+                android:id="@+id/choose_address_ll"
+                android:layout_width="match_parent"
+                android:layout_height="49dp"
+                android:background="@drawable/list_bg_selector">
+
+                <LinearLayout
+                    android:layout_width="49dp"
+                    android:layout_height="49dp"
+                    android:layout_alignParentLeft="true"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/mine_account_address" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="50dp"
+                    android:text="地址管理" />
+
+
+                <ImageView
+                    android:id="@+id/address_ll_qianjin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16dp"
+                    android:background="@drawable/common_icon_qianjin" />
+
+            </RelativeLayout>
+
+            <include layout="@layout/line_lay" />
 
             <TextView
-                android:layout_alignParentRight="true"
-                android:id="@+id/type_tv"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+
+            <TextView
+                android:id="@+id/save_userInfo"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:maxLength="16"
-                android:maxLines="2"
-                android:textColor="@color/main_index_gary"
-                 />
-
-        </RelativeLayout>
-
-
-        <ImageView
-            android:id="@+id/type_ll_qianjin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="16dp"
-            android:background="@drawable/common_icon_qianjin" />
-
-    </RelativeLayout>
-
-    <include layout="@layout/line_lay" />
-
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:background="@color/default_act_bg" />
-
-    <include layout="@layout/line_lay" />
-
-    <RelativeLayout
-        android:background="@drawable/list_bg_selector"
-        android:id="@+id/chane_pass_ll"
-        android:layout_width="match_parent"
-        android:layout_height="49dp">
-
-
-        <LinearLayout
-            android:layout_width="49dp"
-            android:layout_height="49dp"
-            android:layout_alignParentLeft="true"
-            android:gravity="center">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/mine_account_head_password" />
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:background="@drawable/login_roate"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="退出登录"
+                android:textColor="@color/white" />
 
         </LinearLayout>
 
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="50dp"
-            android:text="修改密码"
-             />
+    </ScrollView>
 
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="5dp"
-            android:layout_toLeftOf="@+id/password_ll_qianjin"
-            android:maxLength="16"
-            android:maxLines="2"
-            android:text="修改"
-            android:textColor="@color/main_index_gary"
-             />
 
-
-        <ImageView
-            android:id="@+id/password_ll_qianjin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="16dp"
-            android:background="@drawable/common_icon_qianjin" />
-
-    </RelativeLayout>
-
-
-    <include layout="@layout/line_lay" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-
-
-    <TextView
-        android:id="@+id/save_userInfo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:background="@drawable/login_roate"
-        android:gravity="center"
-        android:padding="10dp"
-        android:text="退出登录"
-        android:textColor="@color/white" />
 
 </LinearLayout>

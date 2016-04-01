@@ -252,6 +252,7 @@ public class SelectAddressActivity extends BaseActivity implements AdapterView.O
         finish();
     }
 
+    //构造特殊 继承BaseAdapter
 
     class AddressAdapter extends BaseAdapter {
         private List<? extends Object> list;

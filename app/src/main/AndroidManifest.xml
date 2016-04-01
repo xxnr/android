@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:uses-permissionandroid="http://schemas.android.com/tools"
     package="com.ksfc.newfarmer"
-    android:versionCode="12"
-    android:versionName="2.2.2">
+    android:versionCode="13"
+    android:versionName="2.2.3">
     <!-- app本身及友盟需要的权限 -->
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
@@ -65,6 +64,7 @@
         <!-- 主界面 -->
         <activity
             android:name=".MainActivity"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustPan" />
         <!-- 首界面 -->
         <activity android:name=".activitys.HomepageActivity" />
@@ -82,7 +82,7 @@
             android:theme="@style/Theme.Transparent" />
         <!-- 商品详情 -->
         <activity
-            android:name=".activitys.ShangpinDetailActivity"
+            android:name=".activitys.GoodsDetailActivity"
             android:windowSoftInputMode="adjustResize" />
         <!-- 商品详情的大图 -->
         <activity
@@ -103,9 +103,13 @@
         <!-- 选择收货地址 -->
         <activity android:name=".activitys.ChooseAddressActivity" />
         <!-- 登录 -->
-        <activity android:name=".activitys.LoginActivity" />
+        <activity
+            android:name=".activitys.LoginActivity"
+            android:launchMode="singleTask" />
         <!-- 注册 -->
-        <activity android:name=".activitys.RegisterActivity" />
+        <activity
+            android:name=".activitys.RegisterActivity"
+            android:launchMode="singleTask" />
         <!-- 找回密码 -->
         <activity android:name=".activitys.RetrievePasswordActivity" />
         <!-- 支付方式 -->
@@ -117,17 +121,13 @@
         <!-- 系统设置 -->
         <activity android:name=".activitys.SettingActivity" />
         <!-- 待付款 -->
-        <activity
-            android:name=".activitys.WaitingPayActivity"
-            android:launchMode="singleTask" />
+        <activity android:name=".activitys.MyOrderListActivity" />
         <!-- 订单信息 -->
-        <activity android:name=".activitys.OrderDetailActivity" />
+        <activity android:name=".activitys.AddOrderActivity" />
         <!-- 修改密码 -->
         <activity android:name=".activitys.ChangePasswordActivity" />
-        <!-- 轮播 -->
-        <activity android:name=".activitys.LunboActivity" />
         <!-- 新增地址 -->
-        <activity android:name=".activitys.ChoiceActivity" />
+        <activity android:name=".activitys.AddAddressActivity" />
         <!-- 购物车 -->
         <activity android:name=".activitys.ShoppingCartActivity" />
         <!-- 省份-->
@@ -138,7 +138,7 @@
         <!-- 文章详情 -->
         <activity android:name=".activitys.ArticleActivity" />
         <!-- 商品类目页 -->
-        <activity android:name=".activitys.ShangpinListActivity" />
+        <activity android:name=".activitys.GoodsListActivity" />
         <!-- 完善用户信息页 -->
         <activity android:name=".activitys.ImprovePersonActivity" />
         <!-- 修改所在地区 -->
@@ -161,7 +161,29 @@
         <activity android:name=".activitys.SelectIntentProductActivity" />
         <!-- 客户详情 -->
         <activity android:name=".activitys.PotentialCustomerDetailActivity" />
+        <!-- 申请县级网店认证 -->
+        <activity android:name=".activitys.CertifiedRSCActivity" />
+        <!-- 选择自提网点 -->
+        <activity android:name=".activitys.SelectDeliveriesStateActivity" />
+        <!-- 选择自提收货人 -->
+        <activity
+            android:name=".activitys.SelectDeliveriesPersonActivity"
+            android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
+        <!-- 全名付Epos -->
+        <activity android:name=".activitys.EposActivity" />
+        <!-- 线下支付 -->
+        <activity android:name=".activitys.OfflinePayActivity" />
 
+        <!-- 网点自提 -->
+        <activity android:name=".activitys.PickUpStateActivity" />
+        <!-- 服务站订单 -->
+        <activity android:name=".activitys.RSCOrderListActivity" />
+        <!-- 服务站订单详情 -->
+        <activity
+            android:name=".activitys.RscOrderDetailActivity"
+            android:launchMode="singleTask" />
+        <!-- 服务站订单搜索 -->
+        <activity android:name=".activitys.RscSearchOrderActivity" />
         <!-- 新农邀请 -->
         <activity
             android:name=".activitys.NewFramerInvite"
@@ -175,11 +197,6 @@
             android:screenOrientation="behind" />
 
         <!-- 银联 -->
-
-
-        <uses-library
-            android:name="org.simalliance.openmobileapi"
-            android:required="false" />
 
         <activity
             android:name="com.unionpay.uppay.PayActivity"
@@ -197,7 +214,7 @@
 
 
         <!-- umeng appkey   android:value="564d588ce0f55a25e9003ec7"
-        android:value="YOUR_APPKEY"
+        android:value=""
         -->
         <meta-data
             android:name="UMENG_APPKEY"

@@ -33,7 +33,7 @@ import android.widget.TextView;
 import net.yangentao.util.msg.MsgCenter;
 
 /**
- * 项目名称：QianXihe518 类名称：ChoiceActivity 类描述： 创建人：王蕾 创建时间：2015-5-26 上午11:19:21
+ * 项目名称：QianXihe518 类名称：AddAddressActivity 类描述： 创建人：王蕾 创建时间：2015-5-26 上午11:19:21
  * 修改备注：
  */
 public class UpdateAddressActivity extends BaseActivity {
@@ -109,28 +109,32 @@ public class UpdateAddressActivity extends BaseActivity {
     public void setData() {
 
         AddressList.Address address = ((AddressList.Address) getIntent().getSerializableExtra("address"));
-        shouhuo_name.setText(address.receiptPeople);
-        shouhuo_tel.setText(address.receiptPhone);
-        choice_city_text.setText(address.areaName + address.cityName + address.countyName);
-        choice_town_text.setText(address.townName);
-        zipCode_text.setText(address.zipCode);
-        room_edit.setText(address.address);
+        if (address!=null){
+            shouhuo_name.setText(address.receiptPeople);
+            shouhuo_tel.setText(address.receiptPhone);
+            choice_city_text.setText(address.areaName + address.cityName + address.countyName);
+            choice_town_text.setText(address.townName);
+            zipCode_text.setText(address.zipCode);
+            room_edit.setText(address.address);
 
-        if (address.type.equals("1")) {
-            default_address.setChecked(true);
-        } else {
-            default_address.setChecked(false);
+            if (address.type.equals("1")) {
+                default_address.setChecked(true);
+            } else {
+                default_address.setChecked(false);
+            }
+
+            city = address.areaName + address.cityName + address.countyName;//省市县区
+            room = address.address;
+
+            cityareaid = address.areaId;
+            queueid = address.cityId;
+            buildid = address.countyId;
+            townid = address.townId;
+            addressId = address.addressId;
+            type = address.type;
+
         }
 
-        city = address.areaName + address.cityName + address.countyName;//省市县区
-        room = address.address;
-
-        cityareaid = address.areaId;
-        queueid = address.cityId;
-        buildid = address.countyId;
-        townid = address.townId;
-        addressId = address.addressId;
-        type = address.type;
 
     }
 

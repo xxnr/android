@@ -5,16 +5,17 @@ package com.ksfc.newfarmer.activitys;
 
 
 import com.ksfc.newfarmer.BaseActivity;
+import com.ksfc.newfarmer.MainActivity;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.ApiType.RequestMethod;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
-import com.ksfc.newfarmer.protocol.beans.GetCodeResult;
 import com.ksfc.newfarmer.protocol.beans.LoginResult;
 import com.ksfc.newfarmer.protocol.beans.PublicKeyResult;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.RSAUtil;
+import com.ksfc.newfarmer.widget.ClearEditText;
 
 import android.content.Intent;
 import android.graphics.Paint;
@@ -31,9 +32,9 @@ import android.widget.Toast;
  * 修改备注：
  */
 public class RegisterActivity extends BaseActivity {
-    private EditText backedit1, backyanzhengma, backnewpassword, confimPasword;
-    private TextView backgetVerificationCode,
-            register_layoutxieyi;
+    private ClearEditText backedit1, backnewpassword, confimPasword;
+    private EditText backyanzhengma;
+    private TextView backgetVerificationCode, register_layoutxieyi;
     private String mobile;
     private String phoneNumber, password, smsCode;
     private CheckBox checkBox;
@@ -47,23 +48,35 @@ public class RegisterActivity extends BaseActivity {
 
     @Override
     public void OnActCreate(Bundle savedInstanceState) {
+
+        setTitle("注册");
+
         backgetVerificationCode = (TextView) findViewById(R.id.backgetVerificationCode);
         register_layoutxieyi = (TextView) findViewById(R.id.register_layoutxieyi);
-        backedit1 = (EditText) findViewById(R.id.backedit1);
+        backedit1 = (ClearEditText) findViewById(R.id.backedit1);
         backyanzhengma = (EditText) findViewById(R.id.backyanzhengma);
-        backnewpassword = (EditText) findViewById(R.id.backnewpassword);
-        confimPasword = (EditText) findViewById(R.id.confimPasword);
+        backnewpassword = (ClearEditText) findViewById(R.id.backnewpassword);
+        confimPasword = (ClearEditText) findViewById(R.id.confimPasword);
         checkBox = (CheckBox) findViewById(R.id.check_box);
         setViewClick(R.id.backgetVerificationCode);
         setViewClick(R.id.backdengLubutton);
-        setTitle("注册");
-        register_layoutxieyi.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
         setViewClick(R.id.register_layoutxieyi);
         setViewClick(R.id.reg_dengLubutton);
+        register_layoutxieyi.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
+
+        setLeftClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                intent.putExtra("id", 4);
+                startActivity(intent);
+                finish();
+            }
+        });
+
     }
 
-    private String uid;
-    private String pwd;
 
     @Override
     public void OnViewClick(View v) {
@@ -97,8 +110,6 @@ public class RegisterActivity extends BaseActivity {
                     showToast("密码长度不能大于20位");
                     return;
                 }
-                uid = backedit1.getText().toString();
-                pwd = backnewpassword.getText().toString();
                 // app/user/register
                 // account:登录账号
                 // password:登录密码
@@ -113,10 +124,8 @@ public class RegisterActivity extends BaseActivity {
             case R.id.register_layoutxieyi:
                 startActivity(AgreeMentActivity.class);
                 break;
-
             case R.id.reg_dengLubutton:
-                startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-                finish();
+                startActivity(LoginActivity.class);
                 break;
 
             default:
@@ -147,13 +156,9 @@ public class RegisterActivity extends BaseActivity {
     private void sendSMS() {
         showProgressDialog("正在获取验证码");
         RequestParams params = new RequestParams();
-        // params.put("tel", mobile);
-        // params.put("bizcode", "register");
-        // execApi(ApiType.SEND_SMS.setMethod(RequestMethod.GET), params);
-
-        execApi(ApiType.SEND_SMS.setMethod(RequestMethod.GET).setOpt(
-                        "/api/v2.0/sms" + "?tel=" + mobile + "&bizcode=register"),
-                params);
+        params.put("tel", mobile);
+        params.put("bizcode", "register");
+        execApi(ApiType.SEND_SMS.setMethod(RequestMethod.GET), params);
     }
 
     /* 定义一个倒计时的内部类 */
@@ -176,12 +181,9 @@ public class RegisterActivity extends BaseActivity {
         }
     }
 
-    private boolean isOk;
-    private int i;
 
     @Override
     public void onResponsed(Request req) {
-        i = 0;
         disMissDialog();
         if (req.getApi() == ApiType.GET_PUBLIC_KEY) {
             PublicKeyResult res = (PublicKeyResult) req.getData();
@@ -200,8 +202,7 @@ public class RegisterActivity extends BaseActivity {
                 e.printStackTrace();
             }
         } else if (req.getApi() == ApiType.SEND_SMS) {
-            GetCodeResult res = (GetCodeResult) req.getData();
-            if ("1000".equals(res.getStatus())) {
+            if ("1000".equals(req.getData().getStatus())) {
                 showToast("成功获取短信，请注意查收");
                 MyCount mc = new MyCount(60000, 1000);
                 mc.start();
@@ -209,43 +210,13 @@ public class RegisterActivity extends BaseActivity {
         } else if (req.getApi() == ApiType.REGISTER) {
             LoginResult res = (LoginResult) req.getData();
             if ("1000".equals(res.getStatus())) {
-                // 保存
-                // 本地登录成功
-                // HXLogin.getInstance().login(RegisterActivity.this, uid, pwd);
-                //
-                // TimerTask task = new TimerTask(){
-                // @Override
-                // public void run() {
-                // isOk = DemoHXSDKHelper.getInstance().isLogined();
-                // i++;
-                // }
-                //
-                // };
-                // Timer timer = new Timer();
-                // timer.schedule(task, 0, 1000);
-                //
-                // while(true){
-                // if(isOk){
-                // IntentUtil.activityForward(this, MainActivity.class, null,
-                // true);
-                // finish();
-                // showToast("注册成功");
-                // break;
-                // }
-                // if(i >= 10){
-                // disMissDialog();
-                // showToast("网络超时");
-                // break;
-                // }
-                // }
                 showToast("注册成功");
-                Bundle bundle =new Bundle();
-                bundle.putBoolean("from_reg",true);
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("from_reg", true);
                 bundle.putString("reg_phone", phoneNumber);
                 IntentUtil.activityForward(this, LoginActivity.class, bundle,
                         true);
                 finish();
-
             } else {
                 showToast(res.getMessage());
             }
