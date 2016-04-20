@@ -98,8 +98,8 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="14dp"
+                    android:layout_height="18dp"
                     android:layout_marginLeft="16dp"
                     android:background="@drawable/address_location" />
 
@@ -151,8 +151,8 @@
             android:layout_weight="1">
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="14dp"
+                android:layout_height="18dp"
                 android:layout_centerVertical="true"
                 android:layout_toLeftOf="@+id/add_address"
                 android:background="@drawable/address_location" />
@@ -205,8 +205,8 @@
             android:paddingTop="10dp">
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="14dp"
+                android:layout_height="18dp"
                 android:layout_marginLeft="16dp"
                 android:background="@drawable/address_location" />
 

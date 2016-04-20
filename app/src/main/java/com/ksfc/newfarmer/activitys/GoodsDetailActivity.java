@@ -12,7 +12,6 @@ import com.custom.vg.list.CustomAdapter;
 import com.custom.vg.list.CustomListView;
 import com.google.gson.Gson;
 import com.ksfc.newfarmer.BaseActivity;
-import com.ksfc.newfarmer.MainActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.RndApplication;
@@ -26,6 +25,7 @@ import com.ksfc.newfarmer.protocol.beans.GetGoodsDetail;
 import com.ksfc.newfarmer.protocol.beans.RemainGoodsAttr;
 import com.ksfc.newfarmer.utils.ExpandViewTouch;
 import com.ksfc.newfarmer.utils.RndLog;
+import com.ksfc.newfarmer.utils.ScreenUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.utils.PopWindowUtils;
 import com.ksfc.newfarmer.utils.Utils;
@@ -37,7 +37,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -51,14 +50,12 @@ import android.text.Selection;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -130,7 +127,7 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
 
         viewPager = (VerticalViewPager) findViewById(R.id.viewPager_vertical);
         //预售时显示
-        shangpin_detail_bottom=(LinearLayout)findViewById(R.id.shangpin_detail_bottom);
+        shangpin_detail_bottom = (LinearLayout) findViewById(R.id.shangpin_detail_bottom);
         jinqingqidai_bar = ((TextView) findViewById(R.id.jingqingqidai_bar));
         shangpin_detail_bottom_bar = ((LinearLayout) findViewById(R.id.shangpin_detail_bottom_bar));
         //popWindow弹出的时候用于遮挡背景
@@ -257,10 +254,52 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
                 break;
             case R.id.pop_sure:
                 //触发一次点击事件
-                if (pop_action) {
-                    pop_add_to_shopcart.performClick();
-                } else {
-                    pop_buy_now.performClick();
+                if (pop_action) { //加入购物车
+                    if (!TextUtils.isEmpty(pop_discount_geshu.getText().toString().trim())) {
+                        fenshu = Integer
+                                .valueOf(pop_discount_geshu.getText().toString().trim());
+                    } else {
+                        showToast("请输入正确的商品数量");
+                        return;
+                    }
+                    toast_flag = true;
+                    addToCar();
+                } else { //立即购买
+                    if (!TextUtils.isEmpty(pop_discount_geshu.getText().toString().trim())) {
+                        fenshu = Integer
+                                .valueOf(pop_discount_geshu.getText().toString().trim());
+                    } else {
+                        showToast("请输入正确的商品数量");
+                        return;
+                    }
+                    if (isLogin()) {
+                        toast_flag = false;//是否显示toast
+                        addToCar();
+
+                    } else {
+                        CustomDialog.Builder builder = new CustomDialog.Builder(
+                                GoodsDetailActivity.this);
+                        builder.setMessage("您还没有登录,是否登录？")
+                                .setPositiveButton("是", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Intent intent = new Intent(GoodsDetailActivity.this,
+                                                LoginActivity.class);
+                                        intent.putExtra("id", 0);
+                                        startActivity(intent);
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .setNegativeButton("否", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                        CustomDialog dialog = builder.create();
+                        dialog.setCanceledOnTouchOutside(false);
+                        dialog.show();
+                    }
                 }
                 break;
             case R.id.pop_close:
@@ -281,6 +320,7 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
         // 获取自定义布局文件activity_popupWindow.xml的视图
         View popupWindow_view = getLayoutInflater().inflate(
                 R.layout.pop_layout_goods_detail, null, false);
+        ScreenUtil.setHeight(this,popupWindow_view.findViewById(R.id.pop_layout),480);
         //初始化popWindow中的组件
         ImageView pop_close = (ImageView) popupWindow_view.findViewById(R.id.pop_close);
 
@@ -450,7 +490,6 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
             RndLog.v(TAG, "adapter_null");
         }
     }
-
 
 
     /**
@@ -639,7 +678,7 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
                 }
             }
             if (StringUtil.checkStr(value)) {
-                Map<String, String> map = new HashMap<String, String>();
+                Map<String, String> map = new HashMap<>();
                 map.put("name", name);
                 map.put("value", value);
                 list.add(map);
@@ -672,6 +711,8 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
         } else {
             initPopuptWindow();
         }
+        pop_add_to_shopcart.setOnClickListener(this);
+        pop_buy_now.setOnClickListener(this);
 
         popupWindow.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
         //如果从点击购物车 或者立即购买进入popWindow pop_flag_为true ,否则false;
@@ -781,7 +822,7 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
                 Map<String, String> shopping = dao.getShopping(SKUId);
                 if (shopping.isEmpty()) {
                     // 新插入
-                    Map<String, String> map = new HashMap<String, String>();
+                    Map<String, String> map = new HashMap<>();
                     map.put("pid", detail.id);
                     map.put("title", detail.name);
                     map.put("imageurl", detail.imgUrl);
@@ -1105,7 +1146,7 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
                     for (Map.Entry<String, Boolean> entry : adapters.get(i).states.entrySet()) {
                         if (entry.getValue()) {
                             if (!entry.getKey().equals("")) {
-                                stringBuilder.append("\"" + entry.getKey() + "\"");
+                                stringBuilder.append("\"").append(entry.getKey()).append("\"");
                             }
                         }
                     }
@@ -1204,11 +1245,9 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
                 Selection.setSelection(eText, eText.length());
             }
 
-            if (pop_discount_geshu!=null){
+            if (pop_discount_geshu != null) {
                 pop_discount_geshu.clearFocus();
             }
         }
     }
-
-
 }

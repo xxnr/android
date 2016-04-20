@@ -5,7 +5,7 @@ import java.util.Stack;
 import android.app.Activity;
 
 public class ScreenManager {
-	private static Stack<Activity> stack = new Stack<Activity>();// Activity栈
+	private static Stack<Activity> stack = new Stack<>();// Activity栈
 
 	public static void popAll() {
 		while (!stack.isEmpty()) {
@@ -28,7 +28,7 @@ public class ScreenManager {
 	}
 
 	public static void popClass(Class<? extends Activity> cls) {
-		Stack<Activity> newStack = new Stack<Activity>();
+		Stack<Activity> newStack = new Stack<>();
 		for (Activity a : stack) {
 			if (a.getClass().equals(cls)) {
 				if (!a.isFinishing()) {
@@ -53,7 +53,7 @@ public class ScreenManager {
 	}
 
 	public static void retain(Class<? extends Activity> cls) {
-		Stack<Activity> newStack = new Stack<Activity>();
+		Stack<Activity> newStack = new Stack<>();
 		for (Activity a : stack) {
 			if (a.getClass().equals(cls)) {
 				newStack.push(a);

@@ -11,45 +11,63 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white">
+        android:background="@color/white"
+        android:padding="16dp">
 
         <TextView
             android:id="@+id/consumer_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="16dp"
             android:text="姓名："
-            android:textSize="14dp" />
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/consumer_phone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/consumer_name"
-            android:layout_marginBottom="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="10dp"
             android:text="手机号："
-            android:textSize="14dp" />
+            android:textSize="14sp" />
+
+        <ImageView
+            android:id="@+id/consumer_phone_icon"
+            android:layout_width="12dp"
+            android:layout_height="15dp"
+            android:layout_alignBottom="@id/consumer_phone"
+            android:layout_marginBottom="2dp"
+            android:layout_marginLeft="9dp"
+            android:layout_toRightOf="@+id/consumer_phone"
+            android:src="@drawable/phone_call" />
+
+
+        <TextView
+            android:id="@+id/consumer_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/consumer_phone"
+            android:layout_marginTop="10dp"
+            android:text="所在地区："
+            android:textSize="14sp" />
 
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
             android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
             android:layout_toLeftOf="@+id/consumer_count"
             android:text="订单数："
-            android:textSize="14dp" />
+            android:textSize="14sp" />
 
 
         <TextView
+
             android:id="@+id/consumer_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="16dp"
             android:background="@drawable/circle_orange_bg"
             android:gravity="center"
             android:text=""
@@ -60,19 +78,17 @@
     <include layout="@layout/line_lay" />
 
 
-    <com.handmark.pulltorefresh.library.PullToRefreshListView
-        xmlns:ptr="http://schemas.android.com/apk/res-auto"
+    <com.handmark.pulltorefresh.library.PullToRefreshListView xmlns:ptr="http://schemas.android.com/apk/res-auto"
         android:id="@+id/consumer_listView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="none"
         android:divider="@color/default_act_bg"
         android:dividerHeight="10dp"
+        android:scrollbars="none"
         ptr:ptrAnimationStyle="rotate"
         ptr:ptrDrawable="@drawable/loader"
         ptr:ptrHeaderBackground="@color/re_flash"
         ptr:ptrListViewExtrasEnabled="false"
-        ptr:ptrScrollingWhileRefreshingEnabled="true"
-        />
+        ptr:ptrScrollingWhileRefreshingEnabled="true" />
 
 </LinearLayout>

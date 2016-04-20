@@ -197,7 +197,7 @@ public final class ServerInterface {
      * @return
      */
     private String buildDebugUrl(ApiType api, RequestParams params) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append(api.getOpt());
         sb.append("?");
         Set<String> keySet = params.keySet();

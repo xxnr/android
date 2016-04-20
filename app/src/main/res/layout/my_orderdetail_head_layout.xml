@@ -9,51 +9,76 @@
     <LinearLayout
         android:id="@+id/contact_ll"
         android:layout_width="match_parent"
-        android:layout_height="88dp"
+        android:layout_height="84dp"
         android:background="@color/default_act_bg"
         android:orientation="vertical"
         android:paddingBottom="10dp"
         android:paddingTop="10dp">
 
-        <include layout="@layout/line_lay" />
-
-        <LinearLayout
+        <RelativeLayout
+            android:id="@+id/to_order_state_rel"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="@color/white"
-            android:gravity="bottom">
+            android:layout_height="match_parent"
+            >
 
-            <TextView
-                android:id="@+id/my_order_detail_id"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <include layout="@layout/line_lay" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:background="@color/white"
+                    android:gravity="bottom">
+
+                    <TextView
+                        android:id="@+id/my_order_detail_id"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:text="订单号：" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:background="@color/white"
+                    android:gravity="top">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:text="订单状态：" />
+
+                    <TextView
+                        android:id="@+id/pay_state"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textColor="@color/orange" />
+
+
+                </LinearLayout>
+
+                <include layout="@layout/line_lay" />
+
+            </LinearLayout>
+
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="12dp"
-                android:text="订单号：" />
-        </LinearLayout>
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="16dp"
+                android:background="@drawable/common_icon_qianjin" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="@color/white"
-            android:gravity="top">
+        </RelativeLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="12dp"
-                android:text="订单状态：" />
 
-            <TextView
-                android:id="@+id/pay_state"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:textColor="@color/orange" />
-        </LinearLayout>
-
-        <include layout="@layout/line_lay" />
     </LinearLayout>
 
     <include layout="@layout/line_lay" />
@@ -76,8 +101,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="5dp"
-            android:visibility="gone"
-            android:background="@drawable/home_delivery_icon" />
+            android:background="@drawable/home_delivery_icon"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/delivery_text"
@@ -85,9 +110,9 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="16dp"
             android:text="网点自提"
-            android:visibility="gone"
             android:textColor="@color/main_index_gary"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:visibility="gone" />
 
 
     </LinearLayout>
@@ -128,8 +153,8 @@
                 android:gravity="center_vertical">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="14dp"
+                    android:layout_height="18dp"
                     android:layout_marginLeft="16dp"
                     android:background="@drawable/address_location" />
 
@@ -177,8 +202,8 @@
             android:paddingTop="10dp">
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="14dp"
+                android:layout_height="18dp"
                 android:layout_marginLeft="16dp"
                 android:background="@drawable/address_location" />
 

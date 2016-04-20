@@ -32,6 +32,10 @@ public class PotentialCustomerDetailResult extends ResponseResult {
         public UserEntity user;
         public String name;
         public String phone;
+        public String remarks;
+        public String namePinyin;
+        public String nameInitial;
+        public int nameInitialType;
         public boolean isRegistered;
         /**
          * province : {"shortname":"H","uppername":"河南","name":"河南","id":"58054e5ba551445","tid":"410000"}

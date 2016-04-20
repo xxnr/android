@@ -44,7 +44,7 @@
                 android:gravity="center"
                 android:text="微信好友"
                 android:textColor="@color/main_index_gary"
-                android:textSize="12dp" />
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/wechat_circle"
@@ -57,7 +57,7 @@
                 android:gravity="center"
                 android:text="微信朋友圈"
                 android:textColor="@color/main_index_gary"
-                android:textSize="12dp" />
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/qq_share"
@@ -70,7 +70,7 @@
                 android:gravity="center"
                 android:text="QQ"
                 android:textColor="@color/main_index_gary"
-                android:textSize="12dp" />
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/qq_zone_share"
@@ -83,7 +83,7 @@
                 android:gravity="center"
                 android:text="QQ空间"
                 android:textColor="@color/main_index_gary"
-                android:textSize="12dp" />
+                android:textSize="12sp" />
 
         </LinearLayout>
 

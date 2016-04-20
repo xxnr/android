@@ -5,39 +5,28 @@ package com.ksfc.newfarmer.activitys;
 
 
 import com.ksfc.newfarmer.BaseActivity;
-import com.ksfc.newfarmer.MainActivity;
 import com.ksfc.newfarmer.MsgID;
-import com.ksfc.newfarmer.Push.UmengPush;
+import com.ksfc.newfarmer.utils.thrid.UmengPush;
 import com.ksfc.newfarmer.R;
-import com.ksfc.newfarmer.RndApplication;
 import com.ksfc.newfarmer.db.Store;
-import com.ksfc.newfarmer.db.dao.ShoppingDao;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
-import com.ksfc.newfarmer.protocol.ResponseResult;
 import com.ksfc.newfarmer.protocol.beans.LoginResult;
 import com.ksfc.newfarmer.protocol.beans.PublicKeyResult;
 import com.ksfc.newfarmer.utils.RSAUtil;
-import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.SPUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
-import com.ksfc.newfarmer.utils.Utils;
 import com.ksfc.newfarmer.widget.ClearEditText;
-import com.umeng.message.PushAgent;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.EditText;
-import android.widget.TextView;
 
 import net.yangentao.util.PreferenceUtil;
-import net.yangentao.util.Util;
 import net.yangentao.util.app.App;
 import net.yangentao.util.msg.MsgCenter;
 
@@ -87,8 +76,7 @@ public class LoginActivity extends BaseActivity {
             login_layoutpassword.requestFocus();
         } else {
             //获取上次保存再本地的手机号
-            PreferenceUtil pu = new PreferenceUtil();
-            pu.init(this, "config");
+            PreferenceUtil pu = new PreferenceUtil(this, "config");
             String lastPhoneNumber = pu.getString("lastPhoneNumber", "");
             if (StringUtil.checkStr(lastPhoneNumber)) {
                 login_layout_phone.setText(lastPhoneNumber);
@@ -201,12 +189,11 @@ public class LoginActivity extends BaseActivity {
                         login.datas.cartId);
                 showToast("登录成功");
                 //保存到本地此用户的上次登陆的手机号
-                PreferenceUtil pu = new PreferenceUtil();
-                pu.init(this, "config");
+                PreferenceUtil pu = new PreferenceUtil(this, "config");
                 pu.putString("lastPhoneNumber", login.datas.phone);
 
                 // 发广播 让首页列表再次刷新
-                MsgCenter.fireNull(MsgID.ISLOGIN, "islogin");
+                MsgCenter.fireNull(MsgID.ISLOGIN);
 
                 //注册推送alias
                 UmengPush.addAlias(this, login.datas.userid);

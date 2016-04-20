@@ -8,12 +8,10 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -46,6 +44,8 @@ import com.ksfc.newfarmer.widget.RecyclerImageView;
 import com.ksfc.newfarmer.widget.UnSwipeGridView;
 import com.ksfc.newfarmer.widget.UnSwipeListView;
 import com.squareup.picasso.Picasso;
+
+import net.yangentao.util.msg.MsgCenter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -444,17 +444,19 @@ public class RscOrderDetailActivity extends BaseActivity implements KeyboardList
             if (req.getData().getStatus().equals("1000")) {
                 showCustomToast("审核成功", R.drawable.toast_success_icon);
                 requestData(orderId);
+                MsgCenter.fireNull(MsgID.Rsc_order_Change,"CONFIRM");
             }
         } else if (req.getApi() == ApiType.RSC_ORDER_DELIVERING) {
             if (req.getData().getStatus().equals("1000")) {
                 showCustomToast("发货成功", R.drawable.toast_success_icon);
                 requestData(orderId);
+                MsgCenter.fireNull(MsgID.Rsc_order_Change, "DELIVERING");
             }
         } else if (ApiType.RSC_ORDER_SELF_DELIVERY == req.getApi()) {
             if (req.getData().getStatus().equals("1000")) {
                 showCustomToast("自提成功", R.drawable.toast_success_icon);
                 requestData(orderId);
-
+                MsgCenter.fireNull(MsgID.Rsc_order_Change, "SELF_DELIVERY");
                 if (null != popupWindowSelfDelivery && popupWindowSelfDelivery.isShowing()) {
                     popupWindowSelfDelivery.dismiss();
                 }
@@ -485,12 +487,16 @@ public class RscOrderDetailActivity extends BaseActivity implements KeyboardList
 
                 //支付阶段
                 TextView item_payInfo_step = ((TextView) holder.getView(R.id.item_payInfo_step));
-                if (subOrder.type.equals("deposit")) {
-                    item_payInfo_step.setText("阶段一：订金");
-                } else if (subOrder.type.equals("balance")) {
-                    item_payInfo_step.setText("阶段二：尾款");
-                } else if (subOrder.type.equals("full")) {
-                    item_payInfo_step.setText("订单总额");
+                switch (subOrder.type) {
+                    case "deposit":
+                        item_payInfo_step.setText("阶段一：订金");
+                        break;
+                    case "balance":
+                        item_payInfo_step.setText("阶段二：尾款");
+                        break;
+                    case "full":
+                        item_payInfo_step.setText("订单总额");
+                        break;
                 }
 
 
@@ -501,15 +507,19 @@ public class RscOrderDetailActivity extends BaseActivity implements KeyboardList
                         try {
                             if (data.get(holder.getPosition() - 1).payStatus.equals("2")) {//如果阶段一的子订单 已付款
 
-                                if (subOrder.payStatus.equals("1")) {
-                                    item_payInfo_type.setTextColor(getResources().getColor(R.color.orange));
-                                    item_payInfo_type.setText("待付款");
-                                } else if (subOrder.payStatus.equals("2")) {
-                                    item_payInfo_type.setTextColor(getResources().getColor(R.color.black_goods_titile));
-                                    item_payInfo_type.setText("已付款");
-                                } else if (subOrder.payStatus.equals("3")) {
-                                    item_payInfo_type.setTextColor(getResources().getColor(R.color.orange));
-                                    item_payInfo_type.setText("部分付款");
+                                switch (subOrder.payStatus) {
+                                    case "1":
+                                        item_payInfo_type.setTextColor(getResources().getColor(R.color.orange));
+                                        item_payInfo_type.setText("待付款");
+                                        break;
+                                    case "2":
+                                        item_payInfo_type.setTextColor(getResources().getColor(R.color.black_goods_titile));
+                                        item_payInfo_type.setText("已付款");
+                                        break;
+                                    case "3":
+                                        item_payInfo_type.setTextColor(getResources().getColor(R.color.orange));
+                                        item_payInfo_type.setText("部分付款");
+                                        break;
                                 }
 
                             } else {
@@ -518,28 +528,36 @@ public class RscOrderDetailActivity extends BaseActivity implements KeyboardList
                             }
                         } catch (Exception e) {//如果下标越界 就 设置 默认设置
 
-                            if (subOrder.payStatus.equals("1")) {
-                                item_payInfo_type.setTextColor(getResources().getColor(R.color.orange));
-                                item_payInfo_type.setText("待付款");
-                            } else if (subOrder.payStatus.equals("2")) {
-                                item_payInfo_type.setTextColor(getResources().getColor(R.color.black_goods_titile));
-                                item_payInfo_type.setText("已付款");
-                            } else if (subOrder.payStatus.equals("3")) {
-                                item_payInfo_type.setTextColor(getResources().getColor(R.color.orange));
-                                item_payInfo_type.setText("部分付款");
+                            switch (subOrder.payStatus) {
+                                case "1":
+                                    item_payInfo_type.setTextColor(getResources().getColor(R.color.orange));
+                                    item_payInfo_type.setText("待付款");
+                                    break;
+                                case "2":
+                                    item_payInfo_type.setTextColor(getResources().getColor(R.color.black_goods_titile));
+                                    item_payInfo_type.setText("已付款");
+                                    break;
+                                case "3":
+                                    item_payInfo_type.setTextColor(getResources().getColor(R.color.orange));
+                                    item_payInfo_type.setText("部分付款");
+                                    break;
                             }
                         }
 
                     } else {
-                        if (subOrder.payStatus.equals("1")) {
-                            item_payInfo_type.setTextColor(getResources().getColor(R.color.orange));
-                            item_payInfo_type.setText("待付款");
-                        } else if (subOrder.payStatus.equals("2")) {
-                            item_payInfo_type.setTextColor(getResources().getColor(R.color.black_goods_titile));
-                            item_payInfo_type.setText("已付款");
-                        } else if (subOrder.payStatus.equals("3")) {
-                            item_payInfo_type.setTextColor(getResources().getColor(R.color.orange));
-                            item_payInfo_type.setText("部分付款");
+                        switch (subOrder.payStatus) {
+                            case "1":
+                                item_payInfo_type.setTextColor(getResources().getColor(R.color.orange));
+                                item_payInfo_type.setText("待付款");
+                                break;
+                            case "2":
+                                item_payInfo_type.setTextColor(getResources().getColor(R.color.black_goods_titile));
+                                item_payInfo_type.setText("已付款");
+                                break;
+                            case "3":
+                                item_payInfo_type.setTextColor(getResources().getColor(R.color.orange));
+                                item_payInfo_type.setText("部分付款");
+                                break;
                         }
                     }
 
@@ -598,8 +616,7 @@ public class RscOrderDetailActivity extends BaseActivity implements KeyboardList
                     for (int k = 0; k < skUsEntity.attributes.size(); k++) {
                         if (StringUtil.checkStr(skUsEntity.attributes.get(k).name)
                                 && StringUtil.checkStr(skUsEntity.attributes.get(k).value)) {
-                            stringSku.append(skUsEntity.attributes.get(k).name + ":")
-                                    .append(skUsEntity.attributes.get(k).value + ";");
+                            stringSku.append(skUsEntity.attributes.get(k).name).append(":").append(skUsEntity.attributes.get(k).value).append(";");
                         }
                     }
                     String car_attr = stringSku.substring(0, stringSku.length() - 1);
@@ -617,7 +634,7 @@ public class RscOrderDetailActivity extends BaseActivity implements KeyboardList
                     stringAdditions.append("附加项目:");
                     for (int k = 0; k < skUsEntity.additions.size(); k++) {
                         if (StringUtil.checkStr(skUsEntity.additions.get(k).name)) {
-                            stringAdditions.append(skUsEntity.additions.get(k).name + ";");
+                            stringAdditions.append(skUsEntity.additions.get(k).name).append(";");
                         }
                     }
                     String car_additions = stringAdditions.substring(0, stringAdditions.length() - 1);
@@ -743,8 +760,7 @@ public class RscOrderDetailActivity extends BaseActivity implements KeyboardList
                     for (int k = 0; k < skus.attributes.size(); k++) {
                         if (StringUtil.checkStr(skus.attributes.get(k).name)
                                 && StringUtil.checkStr(skus.attributes.get(k).value)) {
-                            stringBuilder.append(skus.attributes.get(k).name + ":")
-                                    .append(skus.attributes.get(k).value + ";");
+                            stringBuilder.append(skus.attributes.get(k).name).append(":").append(skus.attributes.get(k).value).append(";");
                         }
                     }
                     String car_attr = stringBuilder.substring(0, stringBuilder.length() - 1);
@@ -765,7 +781,7 @@ public class RscOrderDetailActivity extends BaseActivity implements KeyboardList
                     stringAdditions.append("附加项目:");
                     for (int k = 0; k < skus.additions.size(); k++) {
                         if (StringUtil.checkStr(skus.additions.get(k).name)) {
-                            stringAdditions.append(skus.additions.get(k).name + ";");
+                            stringAdditions.append(skus.additions.get(k).name).append(";");
                         }
                     }
                     String car_additions = stringAdditions.substring(0, stringAdditions.length() - 1);
@@ -1054,8 +1070,7 @@ public class RscOrderDetailActivity extends BaseActivity implements KeyboardList
                     for (int k = 0; k < skus.attributes.size(); k++) {
                         if (StringUtil.checkStr(skus.attributes.get(k).name)
                                 && StringUtil.checkStr(skus.attributes.get(k).value)) {
-                            stringBuilder.append(skus.attributes.get(k).name + ":")
-                                    .append(skus.attributes.get(k).value + ";");
+                            stringBuilder.append(skus.attributes.get(k).name).append(":").append(skus.attributes.get(k).value).append(";");
                         }
                     }
                     String car_attr = stringBuilder.substring(0, stringBuilder.length() - 1);
@@ -1076,7 +1091,7 @@ public class RscOrderDetailActivity extends BaseActivity implements KeyboardList
                     stringAdditions.append("附加项目:");
                     for (int k = 0; k < skus.additions.size(); k++) {
                         if (StringUtil.checkStr(skus.additions.get(k).name)) {
-                            stringAdditions.append(skus.additions.get(k).name + ";");
+                            stringAdditions.append(skus.additions.get(k).name).append(";");
                         }
                     }
                     String car_additions = stringAdditions.substring(0, stringAdditions.length() - 1);

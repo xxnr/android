@@ -86,14 +86,12 @@ public class HeadImageView extends ImageView {
 			// 画外圆
 			drawCircleBorder(canvas, radius + mBorderThickness
 					+ mBorderThickness / 2, mBorderOutsideColor);
-		} else if (mBorderInsideColor != defaultColor
-				&& mBorderOutsideColor == defaultColor) {// 定义画一个边框
+		} else if (mBorderInsideColor != defaultColor) {// 定义画一个边框
 			radius = (defaultWidth < defaultHeight ? defaultWidth
 					: defaultHeight) / 2 - mBorderThickness;
 			drawCircleBorder(canvas, radius + mBorderThickness / 2,
 					mBorderInsideColor);
-		} else if (mBorderInsideColor == defaultColor
-				&& mBorderOutsideColor != defaultColor) {// 定义画一个边框
+		} else if (mBorderOutsideColor != defaultColor) {// 定义画一个边框
 			radius = (defaultWidth < defaultHeight ? defaultWidth
 					: defaultHeight) / 2 - mBorderThickness;
 			drawCircleBorder(canvas, radius + mBorderThickness / 2,

@@ -1,7 +1,6 @@
 package com.ksfc.newfarmer.activitys;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,15 +11,12 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -677,7 +673,7 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
 
     //popWindow中的品牌
     class BrandsAdapter extends CommonAdapter<BrandsResult.BrandsEntity> {
-        private HashMap<String, Boolean> states = new HashMap<String, Boolean>();
+        private HashMap<String, Boolean> states = new HashMap<>();
 
         public BrandsAdapter(Context context, List<BrandsResult.BrandsEntity> data) {
             super(context, data, R.layout.item_popwindow_gv);

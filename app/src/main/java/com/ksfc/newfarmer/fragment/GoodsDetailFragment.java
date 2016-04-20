@@ -24,10 +24,13 @@ import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.activitys.BigImageActivity;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.beans.GetGoodsDetail;
+import com.ksfc.newfarmer.utils.ScreenUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.CirclePageIndicator;
 import com.ksfc.newfarmer.widget.VerticalScrollView;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
+import net.yangentao.util.app.App;
 
 import java.util.List;
 
@@ -53,7 +56,7 @@ public class GoodsDetailFragment extends BaseFragment implements ViewPager.OnPag
         int position = bundle.getInt("position", 0);//当前Viewpager的index
         int count = bundle.getInt("count", 1);//Viewpager的item 用于控制是否需要监听滑到底部
         if (position == 0) {
-            View view = LayoutInflater.from(getActivity()).inflate(R.layout.goods_detail_top_layout, null);
+            View view = LayoutInflater.from(App.getApp().getApplicationContext()).inflate(R.layout.goods_detail_top_layout, null);
             if (count == 2) {//监听scrollView是否滑动到底部
                 scrollView = (VerticalScrollView) view.findViewById(R.id.scrollView_goods_detail);
                 scrollView.setOnScrollToBottomLintener(new VerticalScrollView.OnScrollToBottomListener() {
@@ -71,6 +74,10 @@ public class GoodsDetailFragment extends BaseFragment implements ViewPager.OnPag
                 });
             }
             ViewPager viewPager = (ViewPager) view.findViewById(R.id.goods_detail_top_viewpager);
+
+            View goods_detail_top_viewpager_rel = view.findViewById(R.id.goods_detail_top_viewpager_rel);
+            ScreenUtil.setHeight(App.getApp().getApplicationContext(),goods_detail_top_viewpager_rel,360);
+
             TextView good_xianjia = (TextView) view.findViewById(R.id.product_price);//xianjia:价格
             CirclePageIndicator indicator = (CirclePageIndicator) view.findViewById(R.id.circlePageIndicator);//Viewpager的指示器Indicator
             current_count = (TextView) view.findViewById(R.id.current_count);//当前Viewpager/item
@@ -199,7 +206,7 @@ public class GoodsDetailFragment extends BaseFragment implements ViewPager.OnPag
             guild_1.setOnClickListener(this);
             guild_2.setOnClickListener(this);
             guild_3.setOnClickListener(this);
-            guild_1.setTextColor(getActivity().getResources().getColor(R.color.green));
+            guild_1.setTextColor(App.getApp().getResources().getColor(R.color.green));
             bar_guild_1.setVisibility(View.VISIBLE);
             web.loadUrl(detail.app_body_url);
             return view;
@@ -219,25 +226,25 @@ public class GoodsDetailFragment extends BaseFragment implements ViewPager.OnPag
     public void OnViewClick(View v) {
         switch (v.getId()) {
             case R.id.tv_guid1:
-                guild_1.setTextColor(getActivity().getResources().getColor(R.color.green));
-                guild_2.setTextColor(getActivity().getResources().getColor(R.color.main_index_gary));
-                guild_3.setTextColor(getActivity().getResources().getColor(R.color.main_index_gary));
+                guild_1.setTextColor(App.getApp().getResources().getColor(R.color.green));
+                guild_2.setTextColor(App.getApp().getResources().getColor(R.color.main_index_gary));
+                guild_3.setTextColor(App.getApp().getResources().getColor(R.color.main_index_gary));
                 initBar();
                 bar_guild_1.setVisibility(View.VISIBLE);
                 web.loadUrl(detail.app_body_url);
                 break;
             case R.id.tv_guid2:
-                guild_1.setTextColor(getActivity().getResources().getColor(R.color.main_index_gary));
-                guild_2.setTextColor(getActivity().getResources().getColor(R.color.green));
-                guild_3.setTextColor(getActivity().getResources().getColor(R.color.main_index_gary));
+                guild_1.setTextColor(App.getApp().getResources().getColor(R.color.main_index_gary));
+                guild_2.setTextColor(App.getApp().getResources().getColor(R.color.green));
+                guild_3.setTextColor(App.getApp().getResources().getColor(R.color.main_index_gary));
                 initBar();
                 bar_guild_2.setVisibility(View.VISIBLE);
                 web.loadUrl(detail.app_standard_url);
                 break;
             case R.id.tv_guid3:
-                guild_1.setTextColor(getActivity().getResources().getColor(R.color.main_index_gary));
-                guild_2.setTextColor(getActivity().getResources().getColor(R.color.main_index_gary));
-                guild_3.setTextColor(getActivity().getResources().getColor(R.color.green));
+                guild_1.setTextColor(App.getApp().getResources().getColor(R.color.main_index_gary));
+                guild_2.setTextColor(App.getApp().getResources().getColor(R.color.main_index_gary));
+                guild_3.setTextColor(App.getApp().getResources().getColor(R.color.green));
                 initBar();
                 bar_guild_3.setVisibility(View.VISIBLE);
                 web.loadUrl(detail.app_support_url);

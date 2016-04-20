@@ -7,22 +7,20 @@
     <include layout="@layout/title_lay" />
 
 
-    <com.handmark.pulltorefresh.library.PullToRefreshListView xmlns:ptr="http://schemas.android.com/apk/res-auto"
+    <com.handmark.pulltorefresh.library.PullToRefreshExpandableListView xmlns:ptr="http://schemas.android.com/apk/res-auto"
         android:id="@+id/shopcart_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/topay_ll"
         android:layout_below="@+id/titleview"
         android:background="@color/default_act_bg"
-        android:divider="@null"
-        android:dividerHeight="10dp"
         android:scrollbars="none"
+        android:divider="@null"
         ptr:ptrAnimationStyle="rotate"
         ptr:ptrDrawable="@drawable/loader"
         ptr:ptrHeaderBackground="@color/re_flash"
-        ptr:ptrScrollingWhileRefreshingEnabled="true"
         ptr:ptrListViewExtrasEnabled="false"
-        />
+        ptr:ptrScrollingWhileRefreshingEnabled="true" />
 
 
     <RelativeLayout
@@ -45,22 +43,22 @@
         <TextView
             android:id="@+id/shop_text1"
             android:layout_width="wrap_content"
-            android:textColor="@color/main_index_gary"
             android:layout_height="wrap_content"
             android:layout_below="@id/myself_userImg_1"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="40dp"
-            android:text="您的购物车还是空空的哦" />
+            android:text="您的购物车还是空空的哦"
+            android:textColor="@color/main_index_gary" />
 
         <TextView
             android:id="@+id/shop_text2"
-            android:textColor="@color/main_index_gary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/shop_text1"
             android:layout_below="@id/shop_text1"
             android:layout_centerHorizontal="true"
-            android:text="赶快去挑选心仪的商品吧~" />
+            android:text="赶快去挑选心仪的商品吧~"
+            android:textColor="@color/main_index_gary" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -102,12 +100,12 @@
         android:orientation="vertical"
         android:visibility="gone">
 
-        <include layout="@layout/line_lay"/>
+        <include layout="@layout/line_lay" />
 
         <LinearLayout
-            android:baselineAligned="false"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:baselineAligned="false"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -130,8 +128,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="10dp"
-                    android:text="全选"
-                     />
+                    android:text="全选" />
 
                 <LinearLayout
                     android:id="@+id/goods_car_price_lin"

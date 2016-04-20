@@ -90,7 +90,7 @@ public class ShoppingDao extends BaseDao {
     }
 
     public synchronized Map<String, String> getShopping(String pid) {
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
         if (isDBOpen()) {
             String sql = "SELECT * FROM " + TABLE_NAME_SHOPPING + " WHERE "
                     + COLUMN_SKUId + " = ?";
@@ -145,7 +145,7 @@ public class ShoppingDao extends BaseDao {
     }
 
     public synchronized List<Map> getAllShoppings(String ptype) {
-        List<Map> list = new ArrayList<Map>();
+        List<Map> list = new ArrayList<>();
         if (isDBOpen()) {
             // String sql = "SELECT * FROM " + TABLE_NAME_SHOPPING + " WHERE "
             // + COLUMN_TYPE + " = ?";
@@ -181,7 +181,7 @@ public class ShoppingDao extends BaseDao {
                         .getColumnIndex(COLUMN_USESCORE));
                 String praises = cursor.getString(cursor
                         .getColumnIndex(COLUMN_PRAISES));
-                Map<String, String> map = new HashMap<String, String>();
+                Map<String, String> map = new HashMap<>();
                 map.put("pid", pid);
                 map.put("SKUId", SKUId);
                 map.put("additions", additions);

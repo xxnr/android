@@ -6,24 +6,25 @@
 
 
     <LinearLayout
-        android:layout_width="158dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/default_act_bg"
         android:orientation="vertical">
 
 
         <RelativeLayout
-            android:layout_width="158dp"
-            android:layout_height="158dp"
+            android:id="@+id/huafei_img_rel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/round_line_gary_write">
 
             <ImageView
                 android:id="@+id/huafei_img"
-                android:layout_width="157dp"
-                android:layout_height="157dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_centerInParent="true"
-                android:scaleType="centerInside"
+                android:scaleType="centerCrop"
                 android:src="@drawable/zhanweitu" />
 
         </RelativeLayout>

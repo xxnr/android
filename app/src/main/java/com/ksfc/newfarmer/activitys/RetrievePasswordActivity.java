@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -22,7 +21,6 @@ import com.ksfc.newfarmer.utils.RSAUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.ClearEditText;
 
-import net.yangentao.util.app.App;
 
 @TargetApi(Build.VERSION_CODES.GINGERBREAD)
 public class RetrievePasswordActivity extends BaseActivity {
@@ -113,12 +111,11 @@ public class RetrievePasswordActivity extends BaseActivity {
         } else if (req.getApi() == ApiType.FIND_PASSWORD) {
             if ("1000".equals(req.getData().getStatus())) {
                 // 找回密码成功后 就跳到MainActivity
-                showToast("修改密码成功");
+                showToast("找回密码成功");
                 IntentUtil.activityForward(RetrievePasswordActivity.this,
                         LoginActivity.class, null, true);
-                App.getApp().quit();
             } else {
-                showToast("修改密码失败");
+                showToast("找回密码失败");
             }
         } else if (req.getApi() == ApiType.SEND_SMS) {
             if ("1000".equals(req.getData().getStatus())) {

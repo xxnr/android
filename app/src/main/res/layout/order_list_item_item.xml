@@ -107,8 +107,8 @@
         android:id="@+id/additions_lin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
         android:gravity="center_vertical"
-        android:layout_marginLeft="12dp"
         android:visibility="gone">
 
 
@@ -116,10 +116,9 @@
             android:id="@+id/additions_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:maxLines="2"
-            android:layout_weight="1"
             android:layout_marginRight="10dp"
-            android:text=""
+            android:layout_weight="1"
+            android:maxLines="2"
             android:textColor="@color/main_index_gary"
             android:textSize="14sp" />
 
@@ -150,7 +149,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <TextView
             android:layout_width="match_parent"
@@ -212,4 +211,6 @@
                 android:textSize="14sp" />
         </RelativeLayout>
     </LinearLayout>
+
+    <include layout="@layout/line_lay" />
 </LinearLayout>

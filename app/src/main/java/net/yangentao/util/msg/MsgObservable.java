@@ -16,9 +16,9 @@ import net.yangentao.util.Util;
  * 
  */
 public class MsgObservable {
-	private MultiHashMap<String, MsgListener> listeners = new MultiHashMap<String, MsgListener>(
+	private MultiHashMap<String, MsgListener> listeners = new MultiHashMap<>(
 			12);
-	private ArrayList<MsgListener> globalListeners = new ArrayList<MsgListener>();
+	private ArrayList<MsgListener> globalListeners = new ArrayList<>();
 
 	/**
 	 * 如果没有指定消息ID, 则会添加一个全局的监听器, 能监听所有消息.
@@ -69,7 +69,7 @@ public class MsgObservable {
 	 *            自定义的参数
 	 */
 	public void fire(Object sender, String msg, Object... args) {
-		ArrayList<MsgListener> tofire = new ArrayList<MsgListener>(
+		ArrayList<MsgListener> tofire = new ArrayList<>(
 				globalListeners.size() + 8);
 		synchronized (this) {
 			tofire.addAll(globalListeners);

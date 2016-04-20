@@ -3,8 +3,6 @@ package com.ksfc.newfarmer.activitys;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -22,6 +20,7 @@ import com.ksfc.newfarmer.protocol.beans.InviteeResult;
 import com.ksfc.newfarmer.utils.DateFormatUtils;
 import com.ksfc.newfarmer.utils.PullToRefreshUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
+import com.ksfc.newfarmer.utils.Utils;
 import com.ksfc.newfarmer.widget.UnSwipeListView;
 import com.ksfc.newfarmer.widget.WidgetUtil;
 
@@ -34,10 +33,11 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
     private TextView name;
     private TextView phone;
     private PullToRefreshListView listView;
-    private InviteeResult.Invitee consumer;
+    private InviteeResult.InviteeEntity consumer;
     private int page = 1;
     private TextView consumer_count;
     private OrderAdapter adapter;
+    private TextView consumer_address;
 
     @Override
     public int getLayout() {
@@ -69,6 +69,8 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
     private void initView() {
         name = ((TextView) findViewById(R.id.consumer_name));
         phone = ((TextView) findViewById(R.id.consumer_phone));
+        consumer_address = (TextView) findViewById(R.id.consumer_address);//所在地区
+
         listView = ((PullToRefreshListView) findViewById(R.id.consumer_listView));
         listView.setMode(PullToRefreshBase.Mode.BOTH);
         listView.setOnRefreshListener(this);
@@ -76,7 +78,7 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
         PullToRefreshUtils.setFreshText(listView);
         consumer_count = (TextView) findViewById(R.id.consumer_count);
 
-        consumer = (InviteeResult.Invitee) getIntent().getSerializableExtra("consumer");
+        consumer = (InviteeResult.InviteeEntity) getIntent().getSerializableExtra("consumer");
         if (consumer != null) {
             if (!StringUtil.empty(consumer.name)) {
                 name.setText("姓名：" + consumer.name);
@@ -89,11 +91,23 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
             }
         }
 
+        setViewClick(R.id.consumer_phone);
+        setViewClick(R.id.consumer_phone_icon);
+
+
     }
 
     @Override
     public void OnViewClick(View v) {
+        switch (v.getId()) {
+            case R.id.consumer_phone:
+            case R.id.consumer_phone_icon:
+                if (consumer != null && StringUtil.checkStr(consumer.account)) {
+                    Utils.dial(this, consumer.account);
+                }
+                break;
 
+        }
     }
 
     @Override
@@ -108,11 +122,40 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
                     if (datas.total != null) {
                         consumer_count.setText(datas.total);
                     }
+                    if (datas.address != null) {
+
+                        String province = "";
+                        String city = "";
+                        String county = "";
+                        String town = "";
+                        if (datas.address.province != null) {
+                            province = datas.address.province.name;
+                        }
+                        if (datas.address.city != null) {
+                            city = datas.address.city.name;
+                        }
+                        if (datas.address.county != null) {
+                            county = datas.address.county.name;
+                        }
+                        if (datas.address.town != null) {
+                            town = datas.address.town.name;
+                        }
+
+                        String address = StringUtil.checkBufferStr
+                                (province, city, county, town);
+                        if (address.equals("")) {
+                            consumer_address.setText("所在地区：");
+                        } else {
+                            consumer_address.setText("所在地区：" + address);
+                        }
+
+                    }
+
                     List<ConsumerOrderResult.Rows> rows = datas.rows;
                     if (rows != null && !rows.isEmpty()) {
                         if (page == 1) {
                             if (adapter == null) {
-                                adapter = new OrderAdapter(this,rows);
+                                adapter = new OrderAdapter(this, rows);
                                 WidgetUtil.setListViewHeightBasedOnChildren(listView);
                                 listView.setAdapter(adapter);
                             } else {
@@ -123,7 +166,14 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
                             adapter.addAll(rows);
                         }
                     } else {
-                        showToast("没有更多订单");
+                        if (page == 1) {
+                            if (adapter != null) {
+                                adapter.clear();
+                            }
+                        } else {
+                            page--;
+                            showToast("没有更多订单");
+                        }
                     }
                 }
             }
@@ -174,12 +224,12 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
 
                 UnSwipeListView listView = (UnSwipeListView) holder.getView(R.id.consumer_item_listView);
                 if (rows.SKUs != null && !rows.SKUs.isEmpty()) {
-                    SkusAdapter carAdapter = new SkusAdapter(ConsumerOrderActivity.this,rows.SKUs);
+                    SkusAdapter carAdapter = new SkusAdapter(ConsumerOrderActivity.this, rows.SKUs);
                     listView.setAdapter(carAdapter);
                     WidgetUtil.setListViewHeightBasedOnChildren(listView);
                 } else {
                     if (rows.products != null && !rows.products.isEmpty()) {
-                        ProductsAdapter carAdapter = new ProductsAdapter(ConsumerOrderActivity.this,rows.products);
+                        ProductsAdapter carAdapter = new ProductsAdapter(ConsumerOrderActivity.this, rows.products);
                         listView.setAdapter(carAdapter);
                         WidgetUtil.setListViewHeightBasedOnChildren(listView);
                     } else {
@@ -192,7 +242,7 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
     }
 
     //内层的商品列表，已订单区分(兼容老的商品)
-    class ProductsAdapter extends CommonAdapter<ConsumerOrderResult.Product>{
+    class ProductsAdapter extends CommonAdapter<ConsumerOrderResult.Product> {
 
         public ProductsAdapter(Context context, List<ConsumerOrderResult.Product> data) {
             super(context, data, R.layout.consumer_order_item_tem);
@@ -200,19 +250,19 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
 
         @Override
         public void convert(CommonViewHolder holder, ConsumerOrderResult.Product product) {
-            if (product!=null){
+            if (product != null) {
                 //设置文本
                 if (StringUtil.checkStr(product.name)) {
-                    holder.setText(R.id.product_name,product.name);
+                    holder.setText(R.id.product_name, product.name);
                 }
-                holder.setText(R.id.product_count, "X " +product.count);
+                holder.setText(R.id.product_count, "X " + product.count);
             }
 
         }
     }
 
     //内层的商品列表，已订单区分(兼容老的商品)
-    class SkusAdapter extends CommonAdapter<ConsumerOrderResult.SKUS>{
+    class SkusAdapter extends CommonAdapter<ConsumerOrderResult.SKUS> {
 
         public SkusAdapter(Context context, List<ConsumerOrderResult.SKUS> data) {
             super(context, data, R.layout.consumer_order_item_tem);
@@ -220,12 +270,12 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
 
         @Override
         public void convert(CommonViewHolder holder, ConsumerOrderResult.SKUS skus) {
-            if (skus!=null){
+            if (skus != null) {
                 //设置文本
                 if (StringUtil.checkStr(skus.productName)) {
-                    holder.setText(R.id.product_name,skus.productName);
+                    holder.setText(R.id.product_name, skus.productName);
                 }
-                holder.setText(R.id.product_count, "X " +skus.count);
+                holder.setText(R.id.product_count, "X " + skus.count);
             }
 
         }

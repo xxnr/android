@@ -11,11 +11,7 @@ import net.yangentao.util.PreferenceUtil;
  * 
  */
 public class Persist {
-	private static PreferenceUtil p = new PreferenceUtil();
-
-	static {
-		p.init(App.getApp(), "persist.global.preference");
-	}
+	private static PreferenceUtil p = new PreferenceUtil(App.getApp(), "persist.global.preference");
 
 	public static void putString(String key, String value) {
 		p.putString(key, value);

@@ -2,15 +2,17 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/invite_bg"
-    android:orientation="vertical" >
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:paddingBottom="22dp">
+
 
     <ImageView
         android:id="@+id/item_invite_list_head_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="20dp"
         android:src="@drawable/head_invite" />
 
     <LinearLayout
@@ -18,16 +20,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/item_invite_list_head_image"
-        android:gravity="center"
         android:layout_marginTop="15dp"
-        android:layout_marginBottom="15dp"
-        android:orientation="horizontal" >
+        android:gravity="center"
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="已邀请 "
-
             android:textColor="@color/main_index_gary" />
 
         <TextView
@@ -37,14 +37,12 @@
             android:layout_marginLeft="1dp"
             android:layout_marginRight="3dp"
             android:text=""
-            android:textColor="@color/green"
-             />
+            android:textColor="@color/green" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="位好友"
-
             android:textColor="@color/main_index_gary" />
     </LinearLayout>
 

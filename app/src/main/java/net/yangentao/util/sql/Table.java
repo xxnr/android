@@ -52,7 +52,7 @@ public class Table extends StrPutGet {
 		}
 		String sql = sb.toString();
 		Cursor c = db.query(sql, args);
-		List<String> result = new ArrayList<String>(c.getCount() + 1);
+		List<String> result = new ArrayList<>(c.getCount() + 1);
 		while (c.moveToNext()) {
 			result.add(c.getString(0));
 		}
@@ -120,8 +120,7 @@ public class Table extends StrPutGet {
 		Cursor c = db.queryTable(TABLE, "key=?", key);
 		try {
 			if (c.moveToFirst()) {
-				String s = c.getString(c.getColumnIndex("value"));
-				return s;
+				return c.getString(c.getColumnIndex("value"));
 			}
 		} finally {
 			c.close();
@@ -157,7 +156,7 @@ public class Table extends StrPutGet {
 		}
 		String sql = sb.toString();
 		Cursor c = db.query(sql, args);
-		List<RowItem> result = new ArrayList<RowItem>(c.getCount() + 1);
+		List<RowItem> result = new ArrayList<>(c.getCount() + 1);
 		while (c.moveToNext()) {
 			result.add(new RowItem(c.getString(0), c.getString(1)));
 		}
@@ -170,7 +169,7 @@ public class Table extends StrPutGet {
 		sb.append("select key, value from ", TABLE);
 		String sql = sb.toString();
 		Cursor c = db.query(sql);
-		List<RowItem> result = new ArrayList<RowItem>(c.getCount() + 1);
+		List<RowItem> result = new ArrayList<>(c.getCount() + 1);
 		while (c.moveToNext()) {
 			result.add(new RowItem(c.getString(0), c.getString(1)));
 		}

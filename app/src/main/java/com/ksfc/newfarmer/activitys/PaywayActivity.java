@@ -44,7 +44,6 @@ import android.os.Message;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -128,7 +127,7 @@ public class PaywayActivity extends BaseActivity implements Runnable {
 
     @Override
     public void OnActCreate(Bundle savedInstanceState) {
-        App.getApp().exit();
+        App.getApp().partQuit();
         RndApplication.tempDestroyActivityList.add(PaywayActivity.this);
         setTitle("支付方式");
         initView();
@@ -189,7 +188,7 @@ public class PaywayActivity extends BaseActivity implements Runnable {
         setViewClick(R.id.payWay_pay_total_rel);
         setViewClick(R.id.payWay_pay_times_rel);
         setViewClick(R.id.bank_dianhui_ll);
-//        setViewClick(R.id.pos_ll);
+        setViewClick(R.id.pos_ll);
 
         pay_sure_tv.setEnabled(false);
         initCircle();
@@ -210,6 +209,11 @@ public class PaywayActivity extends BaseActivity implements Runnable {
                 // 银行电汇
                 offline_img.setBackgroundResource(R.drawable.circle_orange);
                 tag = 3;
+                break;
+            case 5:
+                // Epos支付
+                pos_img.setBackgroundResource(R.drawable.circle_orange);
+                tag = 4;
                 break;
             default:
                 // 默认选中支付宝支付
@@ -280,7 +284,7 @@ public class PaywayActivity extends BaseActivity implements Runnable {
                                     if (StringUtil.checkStr(s.toString())) {
                                         double price;
                                         try {
-                                            price=Double.parseDouble(s.toString());
+                                            price = Double.parseDouble(s.toString());
                                             if (price > duePrice) {
                                                 payWay_times_price_et.setText(StringUtil.toTwoString(duePrice + ""));
                                             } else if (price == 0) {
@@ -354,11 +358,11 @@ public class PaywayActivity extends BaseActivity implements Runnable {
                 offline_img.setBackgroundResource(R.drawable.circle_orange);
                 tag = 3;
                 break;
-//            case R.id.pos_ll://POS机
-//                initCircle();
-//                pos_img.setBackgroundResource(R.drawable.circle_orange);
-//                tag = 4;
-//                break;
+            case R.id.pos_ll://POS机
+                initCircle();
+                pos_img.setBackgroundResource(R.drawable.circle_orange);
+                tag = 4;
+                break;
             case R.id.pay_sure_tv:
                 //当分次付款时，执行
                 if (payWay_pay_times_view.getVisibility() == View.VISIBLE) {
@@ -380,6 +384,15 @@ public class PaywayActivity extends BaseActivity implements Runnable {
                     } else if (tag == 2) {
                         showProgressDialog();
                         new Thread(this).start();
+                    } else if (tag == 4) {//Epos支付
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("orderInfo", datas);
+                        if (StringUtil.checkStr(payWay_times_price_et.getText().toString().trim())) {
+                            bundle.putString("payPrice", payWay_times_price_et.getText().toString().trim());
+                        }
+                        IntentUtil.activityForward(this, EposActivity.class, bundle, false);
+
+
                     } else {
                         disMissDialog();
                         showToast("请选择支付方式");
@@ -402,9 +415,6 @@ public class PaywayActivity extends BaseActivity implements Runnable {
                         showProgressDialog();
                         new Thread(this).start();
                     } else if (tag == 3) {
-
-
-                        Log.d("PaywayActivity", "线下支付");
                         //线下支付
                         showProgressDialog();
                         RequestParams params = new RequestParams();
@@ -421,11 +431,19 @@ public class PaywayActivity extends BaseActivity implements Runnable {
                         }
                         execApi(ApiType.OFFLINE_PAY.setMethod(ApiType.RequestMethod.GET), params);
 
+                    } else if (tag == 4) {//Epos支付
+
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("orderInfo", datas);
+                        bundle.putString("payPrice", datas.rows.payment.price);
+                        IntentUtil.activityForward(this, EposActivity.class, bundle, false);
+
                     } else {
                         disMissDialog();
                         showToast("请选择支付方式");
                     }
                 }
+                MsgCenter.fireNull(MsgID.order_Change, "payType_change");
                 break;
             default:
                 break;
@@ -502,12 +520,16 @@ public class PaywayActivity extends BaseActivity implements Runnable {
                         //订单状态
                         if (StringUtil.checkStr(datas.rows.paySubOrderType)) {
 
-                            if (datas.rows.paySubOrderType.equals("deposit")) {
-                                payWay_order_type_tv.setText("阶段一：订金");
-                            } else if (datas.rows.paySubOrderType.equals("balance")) {
-                                payWay_order_type_tv.setText("阶段二：尾款");
-                            } else if (datas.rows.paySubOrderType.equals("full")) {
-                                payWay_order_type_tv.setText("订单总额");
+                            switch (datas.rows.paySubOrderType) {
+                                case "deposit":
+                                    payWay_order_type_tv.setText("阶段一：订金");
+                                    break;
+                                case "balance":
+                                    payWay_order_type_tv.setText("阶段二：尾款");
+                                    break;
+                                case "full":
+                                    payWay_order_type_tv.setText("订单总额");
+                                    break;
                             }
                         }
 
@@ -548,11 +570,14 @@ public class PaywayActivity extends BaseActivity implements Runnable {
                     bundle.putString("orderId", orderId);
                     if (datas.rows != null && datas.rows.payment != null) {
                         bundle.putString("payPrice", datas.rows.payment.price);
+                        if (datas.rows.RSCInfo != null) {
+                            bundle.putString("companyName", datas.rows.RSCInfo.companyName);
+                            bundle.putString("RSCPhone", datas.rows.RSCInfo.RSCPhone);
+                            bundle.putString("RSCAddress", datas.rows.RSCInfo.RSCAddress);
+                        }
                     }
+                    IntentUtil.activityForward(this, OfflinePayActivity.class, bundle, false);
                 }
-                //通知 订单列表刷新
-                MsgCenter.fireNull(MsgID.Pay_success, "price");
-                IntentUtil.activityForward(this, OfflinePayActivity.class, bundle, false);
             }
         }
     }

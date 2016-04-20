@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class LocalData {
 
-	private static Map<String, Object> map = new ConcurrentHashMap<String, Object>(
+	private static Map<String, Object> map = new ConcurrentHashMap<>(
 			8);//
 
 	/**

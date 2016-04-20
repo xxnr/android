@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.ksfc.newfarmer.protocol.ResponseResult;
 
-public class MyOrderDetailResult extends ResponseResult implements Serializable{
+public class MyOrderDetailResult extends ResponseResult implements Serializable {
 
     public Datas datas;
 
@@ -63,8 +63,9 @@ public class MyOrderDetailResult extends ResponseResult implements Serializable{
             public String deposit;   // 定金（没有定金时为0）
             public String dateCreated;  // 下单时间
             public String datePaid;  // 支付完成时间
-            public String dateDelivered;  // 发货时间
+            public String dateDelivered;  // 全部发货时间
             public String dateCompleted;  // 完成时间
+            public String datePendingDeliver;//待收货时间
             public OrderStatus orderStatus;
 
 

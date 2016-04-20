@@ -8,64 +8,126 @@
         android:id="@+id/my_inviter_fragment_lin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/invite_bg"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="30dp"
             android:src="@drawable/head_invite" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="15dp"
-            android:layout_marginTop="15dp"
-            android:text="我的代表"
-            android:textColor="@color/main_index_gary" />
-
-        <include layout="@layout/line_lay" />
-
-        <RelativeLayout
-            android:id="@+id/my_inviter_fragment_rel"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="49dp"
-            android:background="@color/white">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:gravity="center"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/my_inviter_nickname"
                 android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="16dp"
-                android:background="@drawable/gethaoyouweishezhinicheng"
-                android:gravity="center"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:singleLine="true"
-                android:text="该好友未填姓名"
-                android:textColor="@color/main_index_gary" />
-
-            <TextView
-                android:id="@+id/my_inviter_phone"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="16dp"
+                android:singleLine="true"
                 android:text=""
-                android:textColor="@color/green" />
-        </RelativeLayout>
+                android:textColor="@color/main_index_gary"
+                android:textSize="20sp" />
 
-        <include layout="@layout/line_lay" />
+            <ImageView
+                android:visibility="visible"
+                android:id="@+id/my_inviter_sex"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/boy_icon" />
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="35dp"
+            android:orientation="vertical">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/my_inviter_userType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="用户类型："
+                    android:textColor="@color/main_index_gary" />
+
+
+                <ImageView
+                    android:id="@+id/my_inviter_userType_icon"
+                    android:layout_width="11dp"
+                    android:layout_height="19dp"
+                    android:layout_marginLeft="9dp"
+                    android:src="@drawable/vip_icon"
+                    android:visibility="gone" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/my_inviter_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="所在地区："
+                    android:textColor="@color/main_index_gary" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/my_inviter_phone_ll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/my_inviter_phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="电话号码："
+                    android:textColor="@color/main_index_gary" />
+
+                <ImageView
+                    android:id="@+id/my_inviter_phone_icon"
+                    android:layout_width="12dp"
+                    android:layout_height="15dp"
+                    android:layout_marginLeft="9dp"
+                    android:src="@drawable/phone_call" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
     </LinearLayout>
 
     <LinearLayout
+        android:layout_alignBottom="@+id/center_line"
         android:id="@+id/my_inviter_fragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -76,28 +138,29 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="108dp"
             android:src="@drawable/head_invite" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="35dp"
+            android:layout_marginTop="45dp"
             android:focusable="true"
             android:focusableInTouchMode="true"
-            android:layout_marginTop="45dp"
             android:gravity="center_vertical"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
             android:orientation="horizontal">
 
             <EditText
                 android:id="@+id/my_inviter_fragment_edittext"
-                android:layout_width="230dp"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="34dp"
-                android:layout_marginLeft="16dp"
                 android:background="@drawable/round_line_gary_radius"
                 android:gravity="center"
                 android:hint="请输入代表人手机号添加"
                 android:inputType="number"
-                android:maxLength="20"
+                android:maxLength="11"
                 android:textColor="@color/main_index_gary"
                 android:textColorHint="@color/b0_gray" />
 
@@ -126,5 +189,11 @@
 
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/center_line"
+        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </RelativeLayout>

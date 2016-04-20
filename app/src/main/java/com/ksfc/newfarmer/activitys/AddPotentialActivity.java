@@ -65,6 +65,7 @@ public class AddPotentialActivity extends BaseActivity {
     private String queueid2;
     private String buildid2;
     private String townid2;
+    private EditText add_potential_remark;
 
 
     @Override
@@ -90,6 +91,7 @@ public class AddPotentialActivity extends BaseActivity {
         choice_city_text = (TextView) findViewById(R.id.choice_city_text);
         choice_town_text = (TextView) findViewById(R.id.choice_town_text);
         intent_product_text = (TextView) findViewById(R.id.choice_type_text); //意向商品
+        add_potential_remark = (EditText) findViewById(R.id.add_potential_remark);//备注
 
         boy_box = (CheckBox) findViewById(R.id.btn_check_item_item);
         girl_box = (CheckBox) findViewById(R.id.btn_check_item_item1);
@@ -122,6 +124,7 @@ public class AddPotentialActivity extends BaseActivity {
                         showToast("请输入正确的手机号");
                     } else {
                         phone_error_ll.setVisibility(View.GONE);
+                        dividing_line.setVisibility(View.GONE);
                     }
                 }
 
@@ -270,7 +273,10 @@ public class AddPotentialActivity extends BaseActivity {
         if (girl_box.isChecked()) {
             map1.put("sex", 1);
         }
-
+        String trim = add_potential_remark.getText().toString().trim();
+        if (StringUtil.checkStr(trim)) {
+            map1.put("remarks", trim);
+        }
         map1.put("buyIntentions", productIdList);
         if (isLogin()) {
             map1.put("token", Store.User.queryMe().token);

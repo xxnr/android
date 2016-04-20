@@ -2,11 +2,8 @@ package com.ksfc.newfarmer.activitys;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -44,23 +41,31 @@ public class CheckPayDetailActivity extends BaseActivity {
         }
         if (subOrder != null) {
             //支付阶段
-            if (subOrder.type.equals("deposit")) {
-                orderStep_tv.setText("阶段一：订金");
-            } else if (subOrder.type.equals("balance")) {
-                orderStep_tv.setText("阶段二：尾款");
-            } else if (subOrder.type.equals("full")) {
-                orderStep_tv.setText("订单总额");
+            switch (subOrder.type) {
+                case "deposit":
+                    orderStep_tv.setText("阶段一：订金");
+                    break;
+                case "balance":
+                    orderStep_tv.setText("阶段二：尾款");
+                    break;
+                case "full":
+                    orderStep_tv.setText("订单总额");
+                    break;
             }
             //支付状态
-            if (subOrder.payStatus.equals("1")) {
-                orderState_tv.setTextColor(getResources().getColor(R.color.orange));
-                orderState_tv.setText("待付款");
-            } else if (subOrder.payStatus.equals("2")) {
-                orderState_tv.setTextColor(getResources().getColor(R.color.black_goods_titile));
-                orderState_tv.setText("已付款");
-            } else if (subOrder.payStatus.equals("3")) {
-                orderState_tv.setTextColor(getResources().getColor(R.color.orange));
-                orderState_tv.setText("部分付款");
+            switch (subOrder.payStatus) {
+                case "1":
+                    orderState_tv.setTextColor(getResources().getColor(R.color.orange));
+                    orderState_tv.setText("待付款");
+                    break;
+                case "2":
+                    orderState_tv.setTextColor(getResources().getColor(R.color.black_goods_titile));
+                    orderState_tv.setText("已付款");
+                    break;
+                case "3":
+                    orderState_tv.setTextColor(getResources().getColor(R.color.orange));
+                    orderState_tv.setText("部分付款");
+                    break;
             }
             //应支付金额
             to_pay_price_tv.setText("¥" + subOrder.price);
@@ -113,6 +118,8 @@ public class CheckPayDetailActivity extends BaseActivity {
                     holder.setText(R.id.order_pay_type, "现金");
                 } else if (payments.payType == 4) {
                     holder.setText(R.id.order_pay_type, "线下POS机");
+                } else if (payments.payType == 5) {
+                    holder.setText(R.id.order_pay_type, "EPOS支付");
                 }
                 //支付金额
                 if (StringUtil.checkStr(payments.price)) {

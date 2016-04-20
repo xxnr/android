@@ -196,9 +196,7 @@ public class SPUtils {
 					sApplyMethod.invoke(editor);
 					return;
 				}
-			} catch (IllegalArgumentException e) {
-			} catch (IllegalAccessException e) {
-			} catch (InvocationTargetException e) {
+			} catch (IllegalArgumentException | InvocationTargetException | IllegalAccessException e) {
 			}
 			editor.commit();
 		}

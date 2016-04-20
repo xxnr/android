@@ -33,7 +33,6 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                android:columnWidth="90dp"
                 android:gravity="center"
                 android:horizontalSpacing="12dp"
                 android:listSelector="@null"
@@ -45,7 +44,7 @@
             <RelativeLayout
                 android:id="@+id/car_bar_layout"
                 android:layout_width="match_parent"
-                android:layout_height="35dp"
+                android:layout_height="50dp"
                 android:visibility="gone">
 
                 <TextView
@@ -85,12 +84,12 @@
             </RelativeLayout>
 
             <com.ksfc.newfarmer.widget.UnSwipeGridView
+                android:layout_marginBottom="10dp"
                 android:id="@+id/qiche_gv"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                android:columnWidth="90dp"
                 android:gravity="center"
                 android:horizontalSpacing="12dp"
                 android:listSelector="@null"

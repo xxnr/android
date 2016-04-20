@@ -5,6 +5,7 @@ import java.util.Set;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+
 /**
  *
  */
@@ -12,8 +13,8 @@ public class PreferenceUtil {
 
 	private SharedPreferences sp = null;
 
-	public void init(Context c, String name) {
-		sp = c.getSharedPreferences(name, 0);
+	public  PreferenceUtil(Context c, String name){
+		sp = c.getSharedPreferences(name, Context.MODE_PRIVATE);
 	}
 
 	public void clear() {

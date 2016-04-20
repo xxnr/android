@@ -299,7 +299,7 @@ public class SerialMap implements SortedMap<String, String> {
 	@NonNull
 	@Override
 	public Set<Entry<String, String>> entrySet() {
-		TreeSet<Entry<String, String>> s = new TreeSet<Entry<String, String>>();
+		TreeSet<Entry<String, String>> s = new TreeSet<>();
 		try {
 			JSONArray arr = dbHelper.queryTableMulti(tableName, null);
 			for (int i = 0; i < arr.length(); ++i) {
@@ -332,7 +332,7 @@ public class SerialMap implements SortedMap<String, String> {
 	@Override
 	public Collection<String> values() {
 		JSONArray jarr = dbHelper.queryTableMulti(tableName, null);
-		ArrayList<String> list = new ArrayList<String>(jarr.length());
+		ArrayList<String> list = new ArrayList<>(jarr.length());
 		try {
 			for (int i = 0; i < jarr.length(); ++i) {
 				JSONObject jo = jarr.getJSONObject(i);
@@ -347,7 +347,7 @@ public class SerialMap implements SortedMap<String, String> {
 	@Override
 	public Set<String> keySet() {
 		JSONArray jarr = dbHelper.queryTableMulti(tableName, null);
-		Set<String> s = new TreeSet<String>();
+		Set<String> s = new TreeSet<>();
 		try {
 			for (int i = 0; i < jarr.length(); ++i) {
 				JSONObject jo = jarr.getJSONObject(i);
@@ -360,7 +360,7 @@ public class SerialMap implements SortedMap<String, String> {
 	}
 
 	private SortedMap<String, String> toSortedMap(JSONArray arr) {
-		TreeMap<String, String> m = new TreeMap<String, String>();
+		TreeMap<String, String> m = new TreeMap<>();
 		try {
 			for (int i = 0; i < arr.length(); ++i) {
 				JSONObject jo = arr.getJSONObject(i);
@@ -397,7 +397,7 @@ public class SerialMap implements SortedMap<String, String> {
 	// extends
 
 	private ArrayList<Map.Entry<String, String>> toArrayList(JSONArray arr) {
-		ArrayList<Map.Entry<String, String>> m = new ArrayList<Map.Entry<String, String>>(
+		ArrayList<Map.Entry<String, String>> m = new ArrayList<>(
 				arr.length());
 		try {
 			for (int i = 0; i < arr.length(); ++i) {
@@ -477,7 +477,7 @@ public class SerialMap implements SortedMap<String, String> {
 		public List<String> values() {
 			JSONArray jarr = dbHelper.queryTableMulti(tableName,
 					"key>=? and key<?", beginKey, endKey);
-			ArrayList<String> list = new ArrayList<String>(jarr.length());
+			ArrayList<String> list = new ArrayList<>(jarr.length());
 			try {
 				for (int i = 0; i < jarr.length(); ++i) {
 					JSONObject jo = jarr.getJSONObject(i);

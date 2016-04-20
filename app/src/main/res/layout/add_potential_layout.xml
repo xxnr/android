@@ -23,21 +23,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
-                android:text="姓名"
-                 />
+                android:text="姓名" />
         </LinearLayout>
 
 
         <EditText
             android:id="@+id/name_tv"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:background="@null"
             android:ellipsize="end"
             android:hint="请填写客户的真实姓名"
             android:maxLength="12"
-            android:singleLine="true"
-             />
+            android:singleLine="true" />
     </LinearLayout>
 
     <include layout="@layout/line_lay" />
@@ -56,21 +54,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
-                android:text="手机号"
-                 />
+                android:text="手机号" />
         </LinearLayout>
 
         <EditText
             android:id="@+id/phone_tv"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:background="@null"
             android:ellipsize="end"
             android:hint="请填写客户的联系方式"
             android:inputType="number"
-            android:maxLength="20"
-            android:singleLine="true"
-             />
+            android:maxLength="11"
+            android:singleLine="true" />
     </LinearLayout>
 
     <include layout="@layout/line_lay" />
@@ -131,8 +127,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
-                android:text="性别"
-                 />
+                android:text="性别" />
         </LinearLayout>
 
         <CheckBox
@@ -197,8 +192,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
-                android:text="地区"
-                 />
+                android:text="地区" />
 
         </LinearLayout>
 
@@ -206,8 +200,7 @@
             android:id="@+id/choice_city_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="选择所在省市区县"
-             />
+            android:hint="选择所在省市区县" />
 
     </LinearLayout>
 
@@ -228,8 +221,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
-                android:text="街道"
-                 />
+                android:text="街道" />
         </LinearLayout>
 
 
@@ -237,8 +229,7 @@
             android:id="@+id/choice_town_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="选择所在街道或乡镇"
-             />
+            android:hint="选择所在街道或乡镇" />
 
     </LinearLayout>
 
@@ -260,8 +251,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
-                android:text="意向产品"
-                 />
+                android:text="意向产品" />
         </LinearLayout>
 
 
@@ -269,8 +259,45 @@
             android:id="@+id/choice_type_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="选择客户想买的商品"
-             />
+            android:hint="选择客户想买的商品" />
+
+
+    </LinearLayout>
+
+    <include layout="@layout/line_lay" />
+
+
+    <LinearLayout
+         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:minHeight="48dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="102dp"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:text="备注" />
+        </LinearLayout>
+
+
+        <EditText
+            android:id="@+id/add_potential_remark"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:layout_marginRight="16dp"
+            android:ellipsize="end"
+            android:hint="请填写备注信息（30字以内）"
+            android:imeOptions="actionDone"
+            android:inputType="textMultiLine"
+            android:maxLines="3"
+            android:maxLength="30" />
 
 
     </LinearLayout>

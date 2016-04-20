@@ -50,7 +50,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import net.yangentao.util.app.App;
 import net.yangentao.util.msg.MsgCenter;
 import net.yangentao.util.msg.MsgListener;
 
@@ -114,7 +113,6 @@ public class AddOrderActivity extends BaseActivity implements RadioGroup.OnCheck
 
     @Override
     public void OnActCreate(Bundle savedInstanceState) {
-        App.getApp().addActivity(this);
         RndApplication.tempDestroyActivityList.add(AddOrderActivity.this);
         data = new Data();
         data.category = new ArrayList<>();
@@ -162,12 +160,13 @@ public class AddOrderActivity extends BaseActivity implements RadioGroup.OnCheck
         MsgCenter.addListener(new MsgListener() {// 收货人信息
             @Override
             public void onMsg(Object sender, String msg, Object... args) {
+                initHeadView();
                 Address str = (Address) args[0];
                 if (str == null) {
                     order_detail_address_tv.setText("");
                     getAddress();
                 } else {
-                    initHeadView();
+
                     address_shouhuo_ll.setVisibility(View.VISIBLE);
                     String name = str.receiptPeople + "  " + str.receiptPhone;
                     selectedAddress = str;
@@ -242,11 +241,10 @@ public class AddOrderActivity extends BaseActivity implements RadioGroup.OnCheck
             case R.id.ordering_go_bt:// 订单确认按钮
 
 
-
                 //自提
                 if (deliveries_button1.getVisibility() == View.VISIBLE && deliveries_button1.isChecked()) {
 
-                    if (none_state_address_ll.getVisibility()==View.VISIBLE){
+                    if (none_state_address_ll.getVisibility() == View.VISIBLE) {
                         showToast("您选择的商品不能在同一个网点自提，请返回购物车重新选择");
                         return;
                     }
@@ -393,9 +391,8 @@ public class AddOrderActivity extends BaseActivity implements RadioGroup.OnCheck
                 if (StringUtil.checkStr(category.title)) {
                     holder.setText(R.id.car_name, category.title);
                 }
-                getSmallPrice(holder.getPosition(), ((TextView) holder.getView(R.id.good_list_small_price)));
                 CarAdapter carAdapter = new CarAdapter(AddOrderActivity.this, category.goods);
-                UnSwipeListView car_list = (UnSwipeListView) holder.getView(R.id.car_list);
+                UnSwipeListView car_list = holder.getView(R.id.car_list);
                 car_list.setAdapter(carAdapter);
                 WidgetUtil.setListViewHeightBasedOnChildren(car_list);
 
@@ -442,9 +439,9 @@ public class AddOrderActivity extends BaseActivity implements RadioGroup.OnCheck
                     holder.setText(R.id.ordering_item_attr, goods.attr);
                 }
                 //是否显示阶段
-                TextView ordering_now_pri = (TextView) holder.getView(R.id.ordering_now_pri);
-                TextView goods_car_deposit = (TextView) holder.getView(R.id.goods_car_item_bar_deposit);
-                TextView goods_car_weikuan = (TextView) holder.getView(R.id.goods_car_item_bar_weikuan);
+                TextView ordering_now_pri = holder.getView(R.id.ordering_now_pri);
+                TextView goods_car_deposit = holder.getView(R.id.goods_car_item_bar_deposit);
+                TextView goods_car_weikuan = holder.getView(R.id.goods_car_item_bar_weikuan);
                 if (goods.dingjin == 0) {
                     ordering_now_pri.setTextColor(getResources().getColor(R.color.orange_goods_price));
                     holder.getView(R.id.goods_car_item_bar).setVisibility(View.GONE);
@@ -464,7 +461,7 @@ public class AddOrderActivity extends BaseActivity implements RadioGroup.OnCheck
                 ordering_now_pri.setText("¥" + StringUtil.toTwoString(goods.xianjia + ""));
 
                 //附加选项
-                UnSwipeListView additions_listView = (UnSwipeListView) holder.getView(R.id.additions_listView);
+                UnSwipeListView additions_listView =  holder.getView(R.id.additions_listView);
                 if (goods.additionsList != null && !goods.additionsList.isEmpty()) {
                     additions_listView.setVisibility(View.VISIBLE);
                     AdditionsAdapter adapter = new AdditionsAdapter(AddOrderActivity.this, goods.additionsList);
@@ -598,8 +595,7 @@ public class AddOrderActivity extends BaseActivity implements RadioGroup.OnCheck
                         for (int k = 0; k < rows.get(i).SKUList.get(j).attributes.size(); k++) {
                             if (StringUtil.checkStr(rows.get(i).SKUList.get(j).attributes.get(k).name)
                                     && StringUtil.checkStr(rows.get(i).SKUList.get(j).attributes.get(k).value)) {
-                                stringBuilder.append(rows.get(i).SKUList.get(j).attributes.get(k).name + ":")
-                                        .append(rows.get(i).SKUList.get(j).attributes.get(k).value + ";");
+                                stringBuilder.append(rows.get(i).SKUList.get(j).attributes.get(k).name).append(":").append(rows.get(i).SKUList.get(j).attributes.get(k).value).append(";");
                             }
                         }
                         goods.attr = stringBuilder.substring(0, stringBuilder.length() - 1);
@@ -688,21 +684,21 @@ public class AddOrderActivity extends BaseActivity implements RadioGroup.OnCheck
     /**
      * 获得小计总额
      */
-    private void getSmallPrice(int position, TextView smallPrice) {
-        float price = 0;
-        for (int j = 0; j < data.category.get(position).goods.size(); j++) {
-            Data.Goods good = data.category.get(position).goods.get(j);
-            // 判断是汽车还是化肥，如果是汽车dingjin应该是0
-            if (data.category.get(position).goods.get(j).dingjin != 0) {
-                price += good.num
-                        * good.dingjin;
-            } else {
-                price += good.num
-                        * good.xianjia;
-            }
-        }
-        smallPrice.setText("¥" + StringUtil.toTwoString(price + ""));
-    }
+//    private void getSmallPrice(int position, TextView smallPrice) {
+//        float price = 0;
+//        for (int j = 0; j < data.category.get(position).goods.size(); j++) {
+//            Data.Goods good = data.category.get(position).goods.get(j);
+//
+//            if (data.category.get(position).goods.get(j).dingjin != 0) {
+//                price += good.num
+//                        * good.dingjin;
+//            } else {
+//                price += good.num
+//                        * good.xianjia;
+//            }
+//        }
+//        smallPrice.setText("¥" + StringUtil.toTwoString(price + ""));
+//    }
 
 
     /**
@@ -854,7 +850,7 @@ public class AddOrderActivity extends BaseActivity implements RadioGroup.OnCheck
             StringBuilder builder = new StringBuilder();
             if (productIds != null && productIds.size() > 0) {
                 for (int j = 0; j < productIds.size(); j++) {
-                    String _id = (String) productIds.get(j);
+                    String _id = productIds.get(j);
                     if (StringUtil.checkStr(_id)) {
                         builder.append(_id).append(",");
                     }

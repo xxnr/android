@@ -8,9 +8,8 @@ import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
 import com.ksfc.newfarmer.protocol.ResponseResult;
 import com.ksfc.newfarmer.protocol.beans.LoginResult;
+import com.ksfc.newfarmer.protocol.beans.MyInviterResult;
 import com.ksfc.newfarmer.protocol.beans.NominatedInviterResult;
-import com.ksfc.newfarmer.protocol.beans.PersonalData;
-import com.ksfc.newfarmer.protocol.beans.PersonalData.Data;
 import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.utils.Utils;
@@ -23,60 +22,78 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import net.yangentao.util.app.App;
 
 
 public class MyInviter extends BaseFragment {
 
     private EditText edit;//输入代表人的手机号
-    private Button addInvite;//添加代表
     private String phoneNumber;//手机号
-    private LinearLayout centerLin;//没有代表的布局
-    private LinearLayout headLin;//有代表的布局
-    private String nickname;//昵称
+    private LinearLayout noneInviterView;//没有代表的布局
+    private LinearLayout inviterView;//有代表的布局
     private String phoneNum;//手机号
     private TextView nickname_tv;
     private TextView phoneNum_tv;
-    private String userId;
-    private Data user;
     private String user_phone;
+    private ImageView my_inviter_sex;
+    private TextView my_inviter_userType;
+    private ImageView my_inviter_userType_icon;
+    private TextView my_inviter_address;
 
     @Override
     public View InItView() {
         View view = inflater.inflate(R.layout.fragment_my_inviter, null);
         //未设置新农代表的View
-        centerLin = (LinearLayout) view.findViewById(R.id.my_inviter_fragment);
+        noneInviterView = (LinearLayout) view.findViewById(R.id.my_inviter_fragment);
         edit = (EditText) view.findViewById(R.id.my_inviter_fragment_edittext);
-        addInvite = (Button) view.findViewById(R.id.add_inviter);
+        Button addInvite = (Button) view.findViewById(R.id.add_inviter);
         addInvite.setOnClickListener(this);
+        noneInviterView.setVisibility(View.GONE);
 
         //设置完成新农代表的View
-        headLin = (LinearLayout) view
+        inviterView = (LinearLayout) view
                 .findViewById(R.id.my_inviter_fragment_lin);
         nickname_tv = (TextView) view.findViewById(R.id.my_inviter_nickname);
         phoneNum_tv = (TextView) view.findViewById(R.id.my_inviter_phone);
 
-        headLin.setVisibility(View.GONE);
+        LinearLayout my_inviter_phone_ll = (LinearLayout) view.findViewById(R.id.my_inviter_phone_ll);
+        my_inviter_phone_ll.setOnClickListener(this);
 
+        my_inviter_sex = (ImageView) view.findViewById(R.id.my_inviter_sex);
 
+        my_inviter_userType = (TextView) view.findViewById(R.id.my_inviter_userType);
+        my_inviter_userType_icon = (ImageView) view.findViewById(R.id.my_inviter_userType_icon);
+        my_inviter_address = (TextView) view.findViewById(R.id.my_inviter_address);
+
+        inviterView.setVisibility(View.GONE);
+        LoginResult.UserInfo userInfo = Store.User.queryMe();
+        if (userInfo != null) {
+            user_phone = userInfo.phone;
+        }
+
+        //请求我的新农代表
+        showProgressDialog();
+        getMyinviter();
+        return view;
+    }
+
+    //请求我的新农代表
+    public void getMyinviter() {
         RequestParams params = new RequestParams();
         LoginResult.UserInfo userInfo = Store.User.queryMe();
         if (userInfo != null) {
-            userId = userInfo.userid;
+            String userId = userInfo.userid;
             params.put("userId", userId);
         }
-
-
-        params.put("flags", "address");
-        execApi(ApiType.PERSONAL_CENTER, params);
-        showProgressDialog();
-        return view;
+        execApi(ApiType.GET_MY_INVITER.setMethod(ApiType.RequestMethod.GET), params);
     }
 
 
@@ -92,7 +109,7 @@ public class MyInviter extends BaseFragment {
                 }
 
                 if (!Utils.isMobileNum(phoneNumber)) {
-                    showToast("您输入 的手机号码格式不正确");
+                    showToast("您输入的手机号码格式不正确");
                     return;
                 }
 
@@ -104,6 +121,13 @@ public class MyInviter extends BaseFragment {
                 RequestParams params = new RequestParams();
                 params.put("account", phoneNumber);
                 execApi(ApiType.FIND_USER, params);
+                break;
+            case R.id.my_inviter_phone_ll:
+
+                if (StringUtil.checkStr(phoneNum)) {
+                    Utils.dial(getActivity(), phoneNum);
+                }
+
                 break;
         }
     }
@@ -118,47 +142,88 @@ public class MyInviter extends BaseFragment {
             if (req.getData().getStatus().equals("1000")) {
                 showToast("绑定成功");
                 //绑定成功后 获取一次个人信息用于展示
-                centerLin.setVisibility(View.GONE);
-                RequestParams params = new RequestParams();
-                LoginResult.UserInfo userInfo = Store.User.queryMe();
-                if (userInfo != null) {
-                    userId = userInfo.userid;
-                    params.put("userId", userId);
-                }
-                execApi(ApiType.PERSONAL_CENTER, params);
+                noneInviterView.setVisibility(View.GONE);
+                //请求我的新农代表
+                getMyinviter();
             }
-        } else if (req.getApi() == ApiType.PERSONAL_CENTER) {
-            PersonalData data = (PersonalData) req.getData();
-            user = data.datas;
-            phoneNum = user.inviter;
-            nickname = user.inviterName;
-            user_phone = user.phone;
+        } else if (req.getApi() == ApiType.GET_MY_INVITER) {
+            if (req.getData().getStatus().equals("1000")) {
 
-            if (TextUtils.isEmpty(phoneNum)) {
-                headLin.setVisibility(View.GONE);
-                centerLin.setVisibility(View.VISIBLE);
+                MyInviterResult data = (MyInviterResult) req.getData();
+                if (data.datas != null) {
+                    phoneNum = data.datas.inviterPhone;
+                    String nickname = data.datas.inviterName;
+                    if (StringUtil.checkStr(phoneNum)) {
+                        inviterView.setVisibility(View.VISIBLE);
+                        noneInviterView.setVisibility(View.GONE);
+                        //名字和号码
+                        if (!TextUtils.isEmpty(nickname)) {//如果有昵称 设置一些属性
+                            nickname_tv.setText(nickname);
+                        }
+                        phoneNum_tv.setText("电话号码：" + phoneNum);
+                        //用户类型
+                        my_inviter_userType.setText("用户类型：" + data.datas.inviterUserTypeInName);
+                        if (data.datas.inviterIsVerified){
+                            my_inviter_userType_icon.setVisibility(View.VISIBLE);
+                        }else {
+                            my_inviter_userType_icon.setVisibility(View.GONE);
+                        }
 
-                //没有添加新农代表 获取推荐代表
-                if (Store.User.queryMe() != null) {
-                    if (centerLin != null && centerLin.getVisibility() == View.VISIBLE) {//当前用户未设置新农代表
-                        getRecommend();
+                        //性别
+                        if (data.datas.inviterSex) {
+                            my_inviter_sex.setImageResource(R.drawable.girl_icon);
+                        } else {
+                            my_inviter_sex.setImageResource(R.drawable.boy_icon);
+                        }
+                        //所在地区
+                        if (data.datas.inviterAddress != null) {
+
+                            String province = "";
+                            String city = "";
+                            String county = "";
+                            String town = "";
+                            if (data.datas.inviterAddress.province != null) {
+                                province = data.datas.inviterAddress.province.name;
+                            }
+                            if (data.datas.inviterAddress.city != null) {
+                                city = data.datas.inviterAddress.city.name;
+                            }
+                            if (data.datas.inviterAddress.county != null) {
+                                county = data.datas.inviterAddress.county.name;
+                            }
+                            if (data.datas.inviterAddress.town != null) {
+                                town = data.datas.inviterAddress.town.name;
+                            }
+
+                            String address = StringUtil.checkBufferStr
+                                    (province, city, county, town);
+                            if (address.equals("")) {
+                                my_inviter_address.setText("所在地区：");
+                            } else {
+                                my_inviter_address.setText("所在地区：" + address);
+                            }
+                        }
+
+                    } else {
+                        inviterView.setVisibility(View.GONE);
+                        noneInviterView.setVisibility(View.VISIBLE);
+                        //没有添加新农代表 获取推荐代表
+                        if (Store.User.queryMe() != null) {
+                            if (noneInviterView != null && noneInviterView.getVisibility() == View.VISIBLE) {//当前用户未设置新农代表
+                                getRecommend();
+                            }
+                        }
                     }
                 }
 
-            } else {
-                headLin.setVisibility(View.VISIBLE);
-                if (!TextUtils.isEmpty(nickname)) {//如果有昵称 设置一些属性
-                    nickname_tv.setText(nickname);
-                    nickname_tv.setTextColor(Color.WHITE);
-                    nickname_tv.setBackgroundResource(R.drawable.login_roateup);
-                }
-                phoneNum_tv.setText(phoneNum);
+
             }
+
         } else if (req.getApi() == ApiType.FIND_USER) {
             ResponseResult data = req.getData();
             if (data.getStatus().equals("1000")) {
                 CustomDialog.Builder builder = new CustomDialog.Builder(
-                        getActivity());
+                        App.getApp().getApplicationContext());
                 builder.setMessage("代表人添加后不可修改,确定设置该用户为您的代表吗?")
                         .setPositiveButton("确定",
                                 new DialogInterface.OnClickListener() {
@@ -211,7 +276,7 @@ public class MyInviter extends BaseFragment {
                     final NominatedInviterResult.Datas datas = result.nominated_inviter;
                     if (datas != null) {
                         if (StringUtil.checkStr(datas.phone) && StringUtil.checkStr(datas.name)) {
-                            CustomDialogForInviter.Builder builder = new CustomDialogForInviter.Builder(getActivity());  //先得到构造器
+                            CustomDialogForInviter.Builder builder = new CustomDialogForInviter.Builder(App.getApp().getApplicationContext());  //先得到构造器
                             builder.setTitle("是否要添加该用户为您的代表？"); //设置标题
                             builder.setMessage(datas.name); //设置内容
                             builder.setMessage2(datas.phone);

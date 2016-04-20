@@ -32,13 +32,7 @@ public class SimplePlayer {
 			player.setDataSource(path);
 			player.prepare();
 			player.start();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (IllegalArgumentException | IOException | IllegalStateException | SecurityException e) {
 			e.printStackTrace();
 		}
 	}

@@ -1,8 +1,9 @@
 package com.ksfc.newfarmer.utils;
 
+
+import net.yangentao.util.StrBuilder;
+
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -71,9 +72,23 @@ public class StringUtil {
 
     // 将float转换成浮点型保留两位小数的字符串
     public static String toTwoString(String str) {
-        Double v = Double.parseDouble(str);
-        DecimalFormat df = new DecimalFormat("0.00");
-        return String.valueOf(df.format(v));
+        try {
+            Double v = Double.parseDouble(str);
+            DecimalFormat df = new DecimalFormat("0.00");
+            return String.valueOf(df.format(v));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return str;
+    }
+
+
+    // 将元转换为分
+    public static String unitToCent(String unit) {
+
+
+        Double v = Double.parseDouble(unit);
+        return (String.valueOf((int)(v * 100)));
     }
 
     // 正则判断一个字符串是否全是数字
@@ -82,10 +97,7 @@ public class StringUtil {
             return false;
         Pattern pattern = Pattern.compile("[0-9]*");
         Matcher isNum = pattern.matcher(str);
-        if (!isNum.matches()) {
-            return false;
-        }
-        return true;
+        return isNum.matches();
     }
 
 
@@ -107,6 +119,26 @@ public class StringUtil {
         }
     }
 
+    /**
+     * 不足前面补位0
+     *
+     * @param str
+     * @param strLength
+     * @return
+     */
+    public static String addZeroForNum(String str, int strLength) {
+        int strLen = str.length();
+        if (strLen < strLength) {
+            while (strLen < strLength) {
+                StrBuilder sb = new StrBuilder();
+                sb.append("0").append(str);// 左补0
+                str = sb.toString();
+                strLen = str.length();
+            }
+        }
+        return str;
+    }
+
 
     /**
      * 验证字符串是否为空
@@ -117,7 +149,6 @@ public class StringUtil {
     public static boolean empty(String param) {
         return param == null || param.trim().length() < 1;
     }
-
 
 
 }

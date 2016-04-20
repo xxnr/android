@@ -1,133 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/default_act_bg"
-    android:orientation="vertical">
+    android:background="@color/default_act_bg">
 
-    <include layout="@layout/line_lay" />
+
+    <com.ksfc.newfarmer.widget.SlidingLinearLayout
+        android:id="@+id/slidingview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <ListView
+            android:id="@+id/potential_customer_listView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@color/gray"
+            android:dividerHeight="1px"
+            android:scrollbars="none" />
+
+    </com.ksfc.newfarmer.widget.SlidingLinearLayout>
+
+
+    <com.ksfc.newfarmer.widget.QuickAlphabeticBar
+        android:id="@+id/fast_scroller"
+        android:layout_width="24dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="0dip"
+        android:background="@null"
+        android:scaleType="centerInside" />
+
+
+    <TextView
+        android:id="@+id/fast_position"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center_horizontal|top"
+        android:layout_margin="34dp"
+        android:background="@drawable/circle_green_bg_transparent"
+        android:gravity="center"
+        android:padding="2dip"
+        android:textColor="@color/white"
+        android:textSize="32sp"
+        android:visibility="invisible" />
+
 
     <LinearLayout
+        android:layout_alignParentTop="true"
+        android:id="@+id/none_invitee_customer_ll"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:layout_marginTop="10dp"
+        android:layout_height="wrap_content"
         android:background="@color/white"
-        android:orientation="horizontal">
-
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="共登记"
-                    android:textColor="@color/main_index_gary"
-                     />
-
-                <TextView
-                    android:id="@+id/count_total"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0"
-                    android:textColor="@color/orange"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="名客户"
-                    android:textColor="@color/main_index_gary"
-                     />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="今日还可添加"
-                    android:textColor="@color/main_index_gary"
-                     />
-
-                <TextView
-                    android:id="@+id/count_left"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="15"
-                    android:textColor="@color/green"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="名客户"
-                    android:textColor="@color/main_index_gary"
-                     />
-
-            </LinearLayout>
-
-
-        </LinearLayout>
-
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <ImageView
-            android:id="@+id/add_potential_customer"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginRight="16dp"
-            android:background="@drawable/circle_orange_bg"
-            android:gravity="center"
-            android:scaleType="center"
-            android:src="@drawable/customer_jia"
-            android:textColor="@color/white" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="15dp"
+            android:src="@drawable/head_invite" />
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="#e8e8e8">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="16dp"
-            android:text="已登记客户"
-             />
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="15dp"
+            android:text="您没有邀请用户哦~"
+            android:textColor="@color/deep_gray"
+            />
+
+        <include layout="@layout/line_lay" />
 
     </LinearLayout>
 
 
-    <com.handmark.pulltorefresh.library.PullToRefreshListView
 
-        xmlns:ptr="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/potential_customer_listView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="@drawable/line_chang"
-        android:scrollbars="none"
-        ptr:ptrAnimationStyle="rotate"
-        ptr:ptrDrawable="@drawable/loader"
-        ptr:ptrHeaderBackground="@color/re_flash"
-        ptr:ptrListViewExtrasEnabled="false"
-        ptr:ptrScrollingWhileRefreshingEnabled="true" />
-
-</LinearLayout>
+</RelativeLayout>

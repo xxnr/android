@@ -238,7 +238,6 @@
                 <include layout="@layout/line_lay" />
 
 
-
                 <RelativeLayout
                     android:id="@+id/payWay_pay_total_view"
                     android:layout_width="match_parent"
@@ -409,7 +408,7 @@
 
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
                     android:layout_weight="1"
@@ -451,7 +450,7 @@
 
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
                     android:layout_weight="1"
@@ -468,6 +467,7 @@
                     android:visibility="visible" />
             </LinearLayout>
 
+            <include layout="@layout/line_lay" />
 
             <LinearLayout
                 android:id="@+id/pos_ll"
@@ -475,7 +475,7 @@
                 android:layout_height="44dp"
                 android:background="@color/white"
                 android:gravity="center_vertical"
-                android:visibility="gone">
+                android:visibility="visible">
 
 
                 <LinearLayout
@@ -493,7 +493,7 @@
 
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
                     android:layout_weight="1"
@@ -537,7 +537,7 @@
 
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
                     android:layout_weight="1"

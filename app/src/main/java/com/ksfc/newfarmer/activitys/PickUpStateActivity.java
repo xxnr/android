@@ -162,8 +162,7 @@ public class PickUpStateActivity extends BaseActivity {
                     for (int k = 0; k < skus.attributes.size(); k++) {
                         if (StringUtil.checkStr(skus.attributes.get(k).name)
                                 && StringUtil.checkStr(skus.attributes.get(k).value)) {
-                            stringBuilder.append(skus.attributes.get(k).name + ":")
-                                    .append(skus.attributes.get(k).value + ";");
+                            stringBuilder.append(skus.attributes.get(k).name).append(":").append(skus.attributes.get(k).value).append(";");
                         }
                     }
                     String car_attr = stringBuilder.substring(0, stringBuilder.length() - 1);
@@ -184,7 +183,7 @@ public class PickUpStateActivity extends BaseActivity {
                     stringAdditions.append("附加项目:");
                     for (int k = 0; k < skus.additions.size(); k++) {
                         if (StringUtil.checkStr(skus.additions.get(k).name)) {
-                            stringAdditions.append(skus.additions.get(k).name + ";");
+                            stringAdditions.append(skus.additions.get(k).name).append(";");
                         }
                     }
                     String car_additions = stringAdditions.substring(0, stringAdditions.length() - 1);

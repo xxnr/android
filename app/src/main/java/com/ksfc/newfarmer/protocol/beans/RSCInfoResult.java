@@ -1,9 +1,7 @@
 package com.ksfc.newfarmer.protocol.beans;
 
-import com.google.gson.Gson;
 import com.ksfc.newfarmer.protocol.ResponseResult;
 
-import java.util.List;
 
 /**
  * Created by HePeng on 2016/3/7.

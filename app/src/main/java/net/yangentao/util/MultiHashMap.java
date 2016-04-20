@@ -32,7 +32,7 @@ public class MultiHashMap<K, V> {
 	}
 
 	public MultiHashMap(int capacity) {
-		model = new HashMap<K, LinkedList<V>>(capacity < 8 ? 8 : capacity);
+		model = new HashMap<>(capacity < 8 ? 8 : capacity);
 	}
 
 	public void clear() {
@@ -83,7 +83,7 @@ public class MultiHashMap<K, V> {
 	public void put(K key, V value) {
 		LinkedList<V> ls = model.get(key);
 		if (null == ls) {
-			ls = new LinkedList<V>();
+			ls = new LinkedList<>();
 			model.put(key, ls);
 		}
 		if (!ls.contains(value)) {

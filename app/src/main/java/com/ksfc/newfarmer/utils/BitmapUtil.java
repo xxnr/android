@@ -9,6 +9,7 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLEncoder;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -88,6 +89,7 @@ public class BitmapUtil {
 	 */
 	private static int FREE_SD_SPACE_NEEDED_TO_CACHE = 1;
 	private static int MB = 1024 * 1024;
+	@SuppressLint("SdCardPath")
 	public final static String DIR = "/sdcard/hypers";
 
 	public static void saveBmpToSd(Bitmap bm, String url, int quantity) {
@@ -113,8 +115,6 @@ public class BitmapUtil {
 			outStream.flush();
 			outStream.close();
 
-		} catch (FileNotFoundException e) {
-
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -139,6 +139,7 @@ public class BitmapUtil {
 		try {
 			filename = url;
 		} catch (Exception err) {
+			err.printStackTrace();
 		}
 
 		LOCALURL = URLEncoder.encode(filename);

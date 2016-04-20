@@ -28,44 +28,8 @@
         android:id="@+id/car_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:divider="@drawable/line_chang"
-        android:dividerHeight="1px"
+        android:divider="@null"
         android:scrollbars="none" />
 
-    <include layout="@layout/line_lay" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:visibility="gone"
-        >
-
-        <TextView
-            android:id="@+id/good_list_num"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="12dp"
-            android:textSize="14sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/good_list_small_price"
-            android:text="价格合计："
-            />
-
-        <TextView
-            android:id="@+id/good_list_small_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="15dp"
-            android:textColor="@color/orange_goods_price"
-            android:textSize="14sp" />
-    </RelativeLayout>
 
 </LinearLayout>

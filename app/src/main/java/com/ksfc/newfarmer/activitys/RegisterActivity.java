@@ -5,7 +5,6 @@ package com.ksfc.newfarmer.activitys;
 
 
 import com.ksfc.newfarmer.BaseActivity;
-import com.ksfc.newfarmer.MainActivity;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.ApiType.RequestMethod;

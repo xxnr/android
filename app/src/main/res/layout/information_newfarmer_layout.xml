@@ -26,8 +26,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="综合"
-                android:textColor="@color/orange_goods_price"
-                 />
+                android:textColor="@color/orange_goods_price" />
         </RelativeLayout>
 
         <TextView
@@ -46,8 +45,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="价格"
-                 />
+                android:text="价格" />
 
             <ImageView
                 android:id="@+id/goods_jiage_rel_image"
@@ -76,8 +74,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="筛选"
-                 />
+                android:text="筛选" />
 
             <ImageView
                 android:id="@+id/goods_shaixuan_rel_image"
@@ -111,7 +108,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="72dp"
+                android:layout_marginTop="100dp"
                 android:background="@drawable/good_list_none" />
 
 
@@ -120,10 +117,10 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/good_list_none"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="33dp"
                 android:text="抱歉，没有找到合适的商品"
-                android:textColor="@color/deep_gray"
-                 />
+                android:textColor="@color/deep_gray" />
+
 
         </RelativeLayout>
 
@@ -152,7 +149,6 @@
             android:scaleType="centerCrop"
             android:src="@drawable/return_top"
             android:visibility="gone" />
-
 
 
     </RelativeLayout>

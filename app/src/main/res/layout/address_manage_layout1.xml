@@ -25,7 +25,7 @@
         android:id="@+id/none_address_rel"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible">
+        android:visibility="invisible">
 
         <ImageView
             android:id="@+id/none_address_image"
@@ -42,7 +42,6 @@
             android:layout_width="wrap_content"
             android:text="您还没有收货地址哦，添加一个吧~"
             android:textColor="@color/deep_gray"
-
             android:layout_height="wrap_content" />
 
 

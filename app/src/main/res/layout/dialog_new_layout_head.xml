@@ -70,7 +70,7 @@
                 android:id="@+id/btn_cancel"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:background="@drawable/list_bg_selector"
+                android:background="@drawable/dialog_btn_bg_selector"
                 android:gravity="center"
                 android:textColor="@color/black"
                  />

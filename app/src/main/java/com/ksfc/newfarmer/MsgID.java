@@ -20,6 +20,9 @@ public interface MsgID {
     String MSG_ADD_ADDRESS = "MSG_ADD_ADDRESS";//用户的收货地址更新
     String MSG_Change_ADDRESS = "MSG.ADDRESS.CALL.BACK";//用户的收货地址更改
     String add_potential_success = "add_potential_success";//添加潜在客户成功
+    String change_potential_success = "change_potential_success";//更新了潜在客户成功
     String MyaccountActivityFinish = "MyaccountActivityFinish";//修改密码后通知“我的”页面关闭
     String Pay_success = "Pay_success";//支付成功通知各个页面
+    String Rsc_order_Change = "Rsc_order_Change";//RSC订单在详情改变时列表页刷新
+    String order_Change = "order_Change";//用户订单在详情改变时列表页刷新
 }

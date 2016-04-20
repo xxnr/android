@@ -6,7 +6,7 @@ package com.ksfc.newfarmer.fragment;
 import java.util.HashMap;
 
 import com.ksfc.newfarmer.BaseActivity;
-import com.ksfc.newfarmer.Push.UmengPush;
+import com.ksfc.newfarmer.utils.thrid.UmengPush;
 import com.ksfc.newfarmer.activitys.LoginActivity;
 import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.protocol.ApiType;
@@ -28,7 +28,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager.BadTokenException;
-import android.widget.Toast;
 
 import net.yangentao.util.app.App;
 
@@ -42,7 +41,7 @@ public abstract class BaseFragment extends Fragment implements
     public LayoutInflater inflater;
     private Dialog progressDialog;
     private HashMap<ApiType, Boolean> isReturnData = new HashMap<>();//是否请求超时（返回数据）
-    public HashMap<ApiType, RequestParams> execApis = new HashMap<ApiType, RequestParams>();
+    public HashMap<ApiType, RequestParams> execApis = new HashMap<>();
     private CustomToast customToast;
 
     @Override
@@ -87,14 +86,14 @@ public abstract class BaseFragment extends Fragment implements
         LoginResult.UserInfo userInfo = Store.User.queryMe();
         if (userInfo != null) {
             //解除推送alias
-            UmengPush.removeAlias(getActivity(), userInfo.userid);
+            UmengPush.removeAlias(App.getApp(), userInfo.userid);
         }
         Store.User.removeMe();
 
-        Intent intent = new Intent(getActivity().getApplicationContext(), LoginActivity.class);
+        Intent intent = new Intent(App.getApp(), LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("isTokenError", true);
-        getActivity().getApplicationContext().startActivity(intent);
+        App.getApp().startActivity(intent);
     }
 
     @Override
@@ -175,7 +174,7 @@ public abstract class BaseFragment extends Fragment implements
         if (customToast != null) {
             customToast.cancel();
         }
-        CustomToast.Builder builder = new CustomToast.Builder(getActivity());
+        CustomToast.Builder builder = new CustomToast.Builder(App.getApp().getApplicationContext());
         customToast = builder.setMessage(msg).setMessageImage(imgRes).create();
         customToast.show();
 
@@ -209,19 +208,25 @@ public abstract class BaseFragment extends Fragment implements
         //加入请求队列
         isReturnData.put(api, false);
         try {
-            //设置刷新的文字
+            //设置超时对话框关闭
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if (progressDialog != null && progressDialog.isShowing()) {
-                        progressDialog.dismiss();
+
+                    try {
+                        if (progressDialog != null && progressDialog.isShowing()) {
+                            progressDialog.dismiss();
+                        }
+                    } catch (IllegalArgumentException e) {
+                        e.printStackTrace();
                     }
                     //更改标记不返回数据
                     isReturnData.put(api, true);
                 }
+
             }, 20 * 1000);
 
-        } catch (BadTokenException exception) {
+        } catch (Exception exception) {
             exception.printStackTrace();
         }
     }

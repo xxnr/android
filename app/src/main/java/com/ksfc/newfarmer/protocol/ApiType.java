@@ -14,6 +14,7 @@ import com.ksfc.newfarmer.protocol.beans.ClassIDResult;
 import com.ksfc.newfarmer.protocol.beans.CommentResult;
 import com.ksfc.newfarmer.protocol.beans.ConsigneeResult;
 import com.ksfc.newfarmer.protocol.beans.ConsumerOrderResult;
+import com.ksfc.newfarmer.protocol.beans.CustomerIsLatestResult;
 import com.ksfc.newfarmer.protocol.beans.DeliveriesResult;
 import com.ksfc.newfarmer.protocol.beans.DeliveryCodeResult;
 import com.ksfc.newfarmer.protocol.beans.EvaluateList;
@@ -29,6 +30,7 @@ import com.ksfc.newfarmer.protocol.beans.IsPotentialCustomerResult;
 import com.ksfc.newfarmer.protocol.beans.JifenData;
 import com.ksfc.newfarmer.protocol.beans.LoginResult;
 import com.ksfc.newfarmer.protocol.beans.MinPayPriceResult;
+import com.ksfc.newfarmer.protocol.beans.MyInviterResult;
 import com.ksfc.newfarmer.protocol.beans.MyOrderDetailResult;
 import com.ksfc.newfarmer.protocol.beans.NominatedInviterResult;
 import com.ksfc.newfarmer.protocol.beans.OfflinePayWayResult;
@@ -330,10 +332,6 @@ public enum ApiType {
      */
     ADD_POTENTIAL_CUSTOMER("/api/v2.1/potentialCustomer/add", ResponseResult.class),
     /**
-     * 用户报备 获取潜在用户列表
-     */
-    GET_POTENTIAL_CUSTOMER_LIST("/api/v2.1/potentialCustomer/query", PotentialListResult.class),
-    /**
      * 用户报备 获取潜在客户详情
      */
     GET_POTENTIAL_CUSTOMER_DETAIL("/api/v2.1/potentialCustomer/get", PotentialCustomerDetailResult.class),
@@ -341,6 +339,11 @@ public enum ApiType {
      * 用户相关 获取推荐的新农代表:
      */
     GET_RECOMMEND_INVITER("/api/v2.1/user/getNominatedInviter", NominatedInviterResult.class),
+
+    /**
+     * 用户相关 我的客户:
+     */
+    GET_MY_INVITER("/api/v2.0/user/getInviter", MyInviterResult.class),
     /**
      * 订单相关 获取最小支付金额:
      */
@@ -401,6 +404,11 @@ public enum ApiType {
     OFFLINE_PAY("/offlinepay", ResponseResult.class),
 
     /**
+     * 订单相关 Epos支付:
+     */
+    EPOS_PAY("/EPOSpay", ResponseResult.class),
+
+    /**
      * 订单相关 线下支付方式:
      */
     GET_OFFLINE_PAY_WAY("/api/v2.2/getOfflinePayType", OfflinePayWayResult.class),
@@ -438,9 +446,26 @@ public enum ApiType {
      */
     RSC_ORDER_SELF_DELIVERY("/api/v2.2/RSC/order/selfDelivery", ResponseResult.class),
 
+    /**
+     * 用户报备: 列表是否需要更新今天剩余报备人数
+     */
+    GET_POTENTIAL_CUSTOMER_ISLATEST("/api/v2.1/potentialCustomer/isLatest", CustomerIsLatestResult.class),
+
+    /**
+     * 用户报备：按姓名pinyin排序获取全部报备用户列表
+     */
+    GET_POTENTIAL_CUSTOMER_LIST_NEW("/api/v2.1/potentialCustomer/queryAllOrderbyName", PotentialListResult.class),
+
+
+    /**
+     * 用户相关：获取新农代表的客户列表，按拼音字母排序:
+     */
+    GET_INVITEE_ORDER_BY_NAME("/api/v2.0/user/getInviteeOrderbyName", InviteeResult.class),
+
+
     TEST("", ResponseResult.class);
-             private static String server_url = "http://api.xinxinnongren.com";
-//    private static String server_url = "http://101.200.194.203";
+    //                     private static String server_url = "http://api.xinxinnongren.com";
+    private static String server_url = "http://101.200.194.203";
 //    private static String server_url = "http://192.168.1.15";
 
 

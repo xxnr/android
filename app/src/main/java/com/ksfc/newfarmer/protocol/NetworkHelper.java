@@ -1,6 +1,5 @@
 package com.ksfc.newfarmer.protocol;
 
-import android.util.Log;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,7 +14,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -51,6 +49,7 @@ import org.apache.http.protocol.HTTP;
 
 
 import com.ksfc.newfarmer.utils.RndLog;
+import com.ksfc.newfarmer.utils.StringUtil;
 
 /**
  * 连接网络的帮助类
@@ -113,7 +112,7 @@ public class NetworkHelper {
         ArrayList<NameValuePair> nvps = null;
 
         if (urlParams != null && !urlParams.isEmpty()) {
-            nvps = new ArrayList<NameValuePair>();
+            nvps = new ArrayList<>();
             for (String key : urlParams.keySet()) {
                 String value = urlParams.get(key);
                 RndLog.d(TAG, "performPost. parameter[" + key + "=" + value
@@ -197,10 +196,13 @@ public class NetworkHelper {
         if (urlParams != null && !urlParams.isEmpty()) {
             String value = urlParams.get("JSON");
             RndLog.d(TAG, "postBody. parameter[" + value + "]");
-            StringEntity entity = new StringEntity(value, "UTF-8");
-            entity.setContentEncoding("UTF-8");
-            entity.setContentType("application/json");
-            post.setEntity(entity);
+            //如果value 为空 new StringEntity的时候会报错
+            if (StringUtil.checkStr(value)) {
+                StringEntity entity = new StringEntity(value, "UTF-8");
+                entity.setContentEncoding("UTF-8");
+                entity.setContentType("application/json");
+                post.setEntity(entity);
+            }
         }
         return execute(client, post);
     }

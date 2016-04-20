@@ -23,8 +23,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
-                android:text="姓名"
-                 />
+                android:text="姓名" />
         </LinearLayout>
 
 
@@ -32,17 +31,19 @@
             android:id="@+id/name_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginRight="16dp"
             android:background="@null"
             android:ellipsize="end"
-            android:singleLine="true"
-             />
+            android:singleLine="true" />
     </LinearLayout>
 
     <include layout="@layout/line_lay" />
 
     <LinearLayout
+        android:id="@+id/phone_lin"
         android:layout_width="match_parent"
         android:layout_height="48dp"
+        android:background="@drawable/list_bg_selector"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -54,22 +55,32 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
-                android:text="手机号"
-                 />
+                android:text="手机号" />
         </LinearLayout>
 
         <TextView
             android:id="@+id/phone_tv"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@null"
             android:ellipsize="end"
             android:singleLine="true"
-             />
+            android:text="" />
+
+
+        <ImageView
+            android:id="@+id/phone_tv_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="9dp"
+            android:layout_marginRight="16dp"
+            android:src="@drawable/phone_call"
+            android:visibility="gone" />
+
+
     </LinearLayout>
 
     <include layout="@layout/line_lay" />
-
 
 
     <LinearLayout
@@ -83,11 +94,11 @@
             android:layout_height="wrap_content">
 
             <TextView
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
-                android:text="性别"
-                 />
+                android:text="性别" />
         </LinearLayout>
 
 
@@ -114,11 +125,11 @@
             android:layout_height="wrap_content">
 
             <TextView
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
-                android:text="地区"
-                 />
+                android:text="地区" />
 
         </LinearLayout>
 
@@ -126,7 +137,7 @@
             android:id="@+id/choice_city_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-             />
+            android:layout_marginRight="16dp" />
 
     </LinearLayout>
 
@@ -146,16 +157,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
-                android:text="街道"
-                 />
+                android:text="街道" />
         </LinearLayout>
 
 
         <TextView
             android:id="@+id/choice_town_text"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-             />
+            android:layout_marginRight="16dp" />
 
     </LinearLayout>
 
@@ -176,20 +187,51 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
-                android:text="意向产品"
-                 />
+                android:text="意向产品" />
         </LinearLayout>
 
 
         <TextView
             android:id="@+id/choice_type_text"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-             />
+            android:layout_marginRight="16dp" />
 
 
     </LinearLayout>
 
     <include layout="@layout/line_lay" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:minHeight="48dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="102dp"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:text="备注" />
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/choice_remark_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="16dp" />
+
+
+    </LinearLayout>
+
+    <include layout="@layout/line_lay" />
+
 
 </LinearLayout>

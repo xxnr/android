@@ -170,20 +170,30 @@ public final class DateUtil {
 	 */
 	public static int getDaysOfMonth(String year, String month) {
 		int days = 0;
-		if (month.equals("1") || month.equals("3") || month.equals("5")
-				|| month.equals("7") || month.equals("8") || month.equals("10")
-				|| month.equals("12")) {
-			days = 31;
-		} else if (month.equals("4") || month.equals("6") || month.equals("9")
-				|| month.equals("11")) {
-			days = 30;
-		} else {
-			if ((Integer.parseInt(year) % 4 == 0 && Integer.parseInt(year) % 100 != 0)
-					|| Integer.parseInt(year) % 400 == 0) {
-				days = 29;
-			} else {
-				days = 28;
-			}
+		switch (month) {
+			case "1":
+			case "3":
+			case "5":
+			case "7":
+			case "8":
+			case "10":
+			case "12":
+				days = 31;
+				break;
+			case "4":
+			case "6":
+			case "9":
+			case "11":
+				days = 30;
+				break;
+			default:
+				if ((Integer.parseInt(year) % 4 == 0 && Integer.parseInt(year) % 100 != 0)
+						|| Integer.parseInt(year) % 400 == 0) {
+					days = 29;
+				} else {
+					days = 28;
+				}
+				break;
 		}
 
 		return days;
@@ -397,7 +407,7 @@ public final class DateUtil {
 	 * @return
 	 */
 	public static boolean isDate(String date) {
-		StringBuffer reg = new StringBuffer(
+		StringBuilder reg = new StringBuilder(
 				"^((\\d{2}(([02468][048])|([13579][26]))-?((((0?");
 		reg.append("[13578])|(1[02]))-?((0?[1-9])|([1-2][0-9])|(3[01])))");
 		reg.append("|(((0?[469])|(11))-?((0?[1-9])|([1-2][0-9])|(30)))|");
@@ -543,10 +553,7 @@ public final class DateUtil {
 			return "";
 		if (datestr.length() < 10)
 			return "";
-		StringBuffer buf = new StringBuffer();
-		buf.append(datestr.substring(0, 4)).append(datestr.substring(5, 7))
-				.append(datestr.substring(8, 10));
-		return buf.toString();
+		return datestr.substring(0, 4) + datestr.substring(5, 7) + datestr.substring(8, 10);
 	}
 
 	/**

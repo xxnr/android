@@ -1,25 +1,55 @@
 package com.ksfc.newfarmer.protocol.beans;
 
+import com.ksfc.newfarmer.protocol.ResponseResult;
+import com.lidroid.xutils.db.annotation.Column;
+import com.lidroid.xutils.db.annotation.Id;
+import com.lidroid.xutils.db.annotation.Table;
+
 import java.io.Serializable;
 import java.util.List;
 
-import com.ksfc.newfarmer.protocol.ResponseResult;
-
 @SuppressWarnings("serial")
-public class InviteeResult extends ResponseResult {
+public class InviteeResult extends ResponseResult implements Serializable {
 
-    public List<Invitee> invitee;
 
-    // account:邀请人的手机号
-    // nickname：邀请人的昵称
-    // name: 邀请人名字
-    public static class Invitee implements Serializable {
-        public String account;
-        public String nickname;
-        public String name;
-        public int newOrdersNumber;
-        public String photo;
+    /**
+     * invitee : [{"userId":"7d1853749c","account":"18732199883","name":"As ","dateinvited":"2016-04-07T05:14:50.853Z","sex":true,"newOrdersNumber":0,"namePinyin":"as ","nameInitial":"A"}]
+     * total : 1
+     */
+
+    public int total;
+    /**
+     * userId : 7d1853749c
+     * account : 18732199883
+     * name : As
+     * dateinvited : 2016-04-07T05:14:50.853Z
+     * sex : true
+     * newOrdersNumber : 0
+     * namePinyin : as
+     * nameInitial : A
+     */
+
+    public List<InviteeEntity> invitee;
+
+    @Table(name = "InviteeEntity")
+    public static class InviteeEntity implements Serializable {
+        @Id
         public String userId;
+        @Column(column = "account")
+        public String account;
+        @Column(column = "name")
+        public String name;
+        @Column(column = "dateinvited")
+        public String dateinvited;
+        @Column(column = "sex")
+        public boolean sex;
+        @Column(column = "newOrdersNumber")
+        public int newOrdersNumber;
+        @Column(column = "namePinyin")
+        public String namePinyin;
+        @Column(column = "nameInitial")
+        public String nameInitial;
+
 
     }
 }

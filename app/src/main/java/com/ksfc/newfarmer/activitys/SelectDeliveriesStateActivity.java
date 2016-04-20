@@ -14,7 +14,6 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.Toast;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -277,11 +276,12 @@ public class SelectDeliveriesStateActivity extends BaseActivity implements PullT
                         for (RSCStateInfoResult.RSCsEntity key : data.RSCs) {
                             if (key != null) {
                                 if (checkedStateMap.containsKey(key._id) && checkedStateMap.get(key._id)) {
-                                    is_clear=false;
+                                    is_clear = false;
                                 }
                             }
                         }
-                        if (is_clear){
+                        if (is_clear) {
+                            save_userInfo.setEnabled(false);
                             checkedStateMap.clear();
                         }
 
@@ -294,6 +294,9 @@ public class SelectDeliveriesStateActivity extends BaseActivity implements PullT
                     }
                 } else {
                     if (page == 1) {
+                        if (deliveryAdapter!=null){
+                            deliveryAdapter.clear();
+                        }
                         showToast("该地区没有网点");
                     } else {
                         showToast("没有更多网点");
@@ -425,6 +428,11 @@ public class SelectDeliveriesStateActivity extends BaseActivity implements PullT
                         //执行api请求网点
                         page = 1;
                         showProgressDialog();
+                        //选省 重置市县
+                        cityId = null;
+                        countyId = null;
+                        state_county_text.setText("全部地区");
+                        state_city_text.setText("全部地区");
                         getStateList(provinceId, cityId, countyId);
                         if (popupWindow != null && popupWindow.isShowing()) {
                             popupWindow.dismiss();
@@ -482,6 +490,9 @@ public class SelectDeliveriesStateActivity extends BaseActivity implements PullT
                         //执行api请求网点
                         page = 1;
                         showProgressDialog();
+                        //选市重置县
+                        countyId = null;
+                        state_county_text.setText("全部地区");
                         getStateList(provinceId, cityId, countyId);
                         if (popupWindow != null && popupWindow.isShowing()) {
                             popupWindow.dismiss();

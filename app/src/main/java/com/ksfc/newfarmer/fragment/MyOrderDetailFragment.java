@@ -39,14 +39,15 @@ import com.ksfc.newfarmer.protocol.RequestParams;
 import com.ksfc.newfarmer.protocol.beans.LoginResult;
 import com.ksfc.newfarmer.protocol.beans.WaitingPay;
 import com.ksfc.newfarmer.utils.ExpandViewTouch;
+import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.PullToRefreshUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.RecyclerImageView;
-import com.ksfc.newfarmer.widget.UnSwipeListView;
 import com.ksfc.newfarmer.widget.WidgetUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.picasso.Picasso;
 
+import net.yangentao.util.app.App;
 import net.yangentao.util.msg.MsgCenter;
 import net.yangentao.util.msg.MsgListener;
 
@@ -86,6 +87,7 @@ public class MyOrderDetailFragment extends BaseFragment implements PullToRefresh
         PullToRefreshUtils.setFreshText(waitingpay_lv);
         //无订单下的状态
         null_layout = ((RelativeLayout) view.findViewById(R.id.null_shop_cart_layout));
+        null_layout.setVisibility(View.GONE);
         view.findViewById(R.id.my_login_sure).setOnClickListener(this);
         view.findViewById(R.id.my_login_cancel).setOnClickListener(this);
 
@@ -95,7 +97,7 @@ public class MyOrderDetailFragment extends BaseFragment implements PullToRefresh
         if (TYPE == 0) {
             showProgressDialog();
         }
-        //订单状态改变时刷新
+        //订单支付成功时刷新
         MsgCenter.addListener(new MsgListener() {
             @Override
             public void onMsg(Object sender, String msg, Object... args) {
@@ -104,17 +106,27 @@ public class MyOrderDetailFragment extends BaseFragment implements PullToRefresh
             }
         }, MsgID.Pay_success);
 
+
+        //订单状态改变时刷新
+        MsgCenter.addListener(new MsgListener() {
+            @Override
+            public void onMsg(Object sender, String msg, Object... args) {
+                page = 1;
+                getData(page);
+            }
+        }, MsgID.order_Change);
+
         //滑动时刷新
         MsgCenter.addListener(new MsgListener() {
             @Override
             public void onMsg(Object sender, String msg, Object... args) {
                 try {
-                    if (((Integer) args[0])==TYPE){
+                    if (((Integer) args[0]) == TYPE) {
                         showProgressDialog();
                         page = 1;
                         getData(page);
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -311,7 +323,6 @@ public class MyOrderDetailFragment extends BaseFragment implements PullToRefresh
                 holder.order_id_tv.setText("订单号：" + order.orderId);
             }
 
-
             if (order.order != null) {
 
                 //发货方式
@@ -360,11 +371,14 @@ public class MyOrderDetailFragment extends BaseFragment implements PullToRefresh
                             holder.go_to_pay.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    Intent intent = new Intent(getActivity(),
-                                            OfflinePayActivity.class);
-                                    intent.putExtra("orderId", order.orderId);
-                                    intent.putExtra("payPrice", order.duePrice);
-                                    startActivity(intent);
+                                    Bundle bundle = new Bundle();
+                                    if ( order.RSCInfo!= null) {
+                                        bundle.putString("companyName", order.RSCInfo.companyName);
+                                        bundle.putString("RSCPhone", order.RSCInfo.RSCPhone);
+                                        bundle.putString("RSCAddress", order.RSCInfo.RSCAddress);
+                                    }
+                                    bundle.putString("orderId", order.orderId);
+                                    IntentUtil.activityForward(getActivity(), OfflinePayActivity.class, bundle, false);
                                 }
                             });
                             //更改支付方式
@@ -451,24 +465,160 @@ public class MyOrderDetailFragment extends BaseFragment implements PullToRefresh
                     holder.price_tv.setText("¥" + StringUtil.toTwoString(order.order.totalPrice));
                 }
             }
-            //子商品列表
-            if (order.SKUs != null && !order.SKUs.isEmpty()) {
-                ProductAdapter carAdapter = new ProductAdapter(order, order.SKUs);
-                holder.my_order_list.setAdapter(carAdapter);
-            } else {
-                ProductAdapter carAdapter = new ProductAdapter(order.products, order);
-                holder.my_order_list.setAdapter(carAdapter);
+
+            List<WaitingPay.SKUS> SKUsList = order.SKUs;
+            List<WaitingPay.Product> goodsList = order.products;
+
+            if (holder.llCommerceContainer.getChildCount() > 0) {
+                holder.llCommerceContainer.removeAllViews();
             }
-//            设置ListView子listView的高度，避免只显示一个listView item 但是比较耗内存
-            WidgetUtil.setListViewHeightBasedOnChildren(holder.my_order_list);
+            if (SKUsList != null && !SKUsList.isEmpty()) {
+
+                for (int i = 0; i < SKUsList.size(); i++) {
+                    ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.order_list_item_item, null);
+
+                    ViewHolderChild viewHolderChild = new ViewHolderChild(rootView);
+                    //商品图片
+                    if (StringUtil.checkStr(SKUsList.get(i).thumbnail)) {
+                        Picasso.with(App.getApp().getApplicationContext())
+                                .load(MsgID.IP + SKUsList.get(i).thumbnail)
+                                .error(R.drawable.error)
+                                .placeholder(R.drawable.zhanweitu)
+                                .into(viewHolderChild.ordering_item_img);
+
+                    }
+                    //商品个数
+                    viewHolderChild.ordering_item_geshu.setText("X " + SKUsList.get(i).count + "");
+                    //商品名
+                    if (StringUtil.checkStr(SKUsList.get(i).productName)) {
+                        viewHolderChild.ordering_item_name.setText(SKUsList.get(i).productName);
+                    }
+
+                    //附加选项
+                    StringBuilder stringAdditions = new StringBuilder();
+                    float car_additions_price = 0;
+                    if (SKUsList.get(i).additions != null && !SKUsList.get(i).additions.isEmpty()) {
+                        viewHolderChild.additions_lin.setVisibility(View.VISIBLE);
+                        stringAdditions.append("附加项目:");
+                        for (int k = 0; k < SKUsList.get(i).additions.size(); k++) {
+                            if (StringUtil.checkStr(SKUsList.get(i).additions.get(k).name)) {
+                                stringAdditions.append(SKUsList.get(i).additions.get(k).name).append(";");
+                                car_additions_price += SKUsList.get(i).additions.get(k).price;
+                            }
+                        }
+                        String car_additions = stringAdditions.toString().substring(0, stringAdditions.toString().length() - 1);
+                        if (StringUtil.checkStr(car_additions)) {
+                            viewHolderChild.additions_text.setText(car_additions);
+                            viewHolderChild.additions_price.setText("¥" + StringUtil.toTwoString(car_additions_price + ""));
+                        }
+                    } else {
+                        viewHolderChild.additions_lin.setVisibility(View.GONE);
+                    }
+                    //商品 单价 阶段 订金 尾款
+                    viewHolderChild.ordering_now_pri.setTextColor(getResources().getColor(R.color.orange_goods_price));
+                    if (SKUsList.get(i).deposit == 0) {
+                        viewHolderChild.goods_car_bar.setVisibility(View.GONE);
+                    } else {
+                        viewHolderChild.goods_car_bar.setVisibility(View.VISIBLE);
+                        String deposit = StringUtil.toTwoString(SKUsList
+                                .get(i).deposit * SKUsList.get(i).count + "");
+                        if (StringUtil.checkStr(deposit)) {
+                            viewHolderChild.goods_car_deposit.setText("¥" + deposit);
+                        }
+                        String weiKuan = StringUtil.toTwoString((SKUsList.get(i).price + car_additions_price - SKUsList
+                                .get(i).deposit) * SKUsList.get(i).count + "");
+                        if (StringUtil.checkStr(weiKuan)) {
+                            viewHolderChild.goods_car_weikuan.setText("¥" + weiKuan);
+                        }
+                    }
+                    viewHolderChild.ordering_now_pri.setText("¥" + StringUtil.toTwoString(SKUsList
+                            .get(i).price + ""));
+
+                    //Sku属性
+                    StringBuilder stringSku = new StringBuilder();
+                    if (SKUsList.get(i).attributes != null && !SKUsList.get(i).attributes.isEmpty()) {
+                        for (int k = 0; k < SKUsList.get(i).attributes.size(); k++) {
+                            if (StringUtil.checkStr(SKUsList.get(i).attributes.get(k).name)
+                                    && StringUtil.checkStr(SKUsList.get(i).attributes.get(k).value)) {
+                                stringSku.append(SKUsList.get(i).attributes.get(k).name).append(":").append(SKUsList.get(i).attributes.get(k).value).append(";");
+                            }
+                        }
+                        String car_attr = stringSku.toString().substring(0, stringSku.toString().length() - 1);
+                        if (StringUtil.checkStr(car_attr)) {
+                            viewHolderChild.goods_car_attr.setText(car_attr);
+                        }
+                    }
+
+                    holder.llCommerceContainer.addView(rootView);
+
+                }
+                //老的订单
+            } else if (goodsList != null && !goodsList.isEmpty()) {
+
+                for (int i = 0; i < goodsList.size(); i++) {
+                    ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.order_list_item_item, null);
+                    ViewHolderChild viewHolderChild = new ViewHolderChild(rootView);
+                    //商品图片
+                    if (StringUtil.checkStr(goodsList.get(i).thumbnail)) {
+                        ImageLoader.getInstance().displayImage(
+                                MsgID.IP + goodsList.get(i).thumbnail, viewHolderChild.ordering_item_img);
+                    }
+                    //商品个数
+                    viewHolderChild.ordering_item_geshu.setText("X " + goodsList.get(i).count + "");
+                    //商品名
+                    if (StringUtil.checkStr(goodsList.get(i).name)) {
+                        viewHolderChild.ordering_item_name.setText(goodsList.get(i).name);
+                    }
+
+                    if (goodsList.get(i).deposit == 0) {
+                        viewHolderChild.ordering_now_pri.setTextColor(getResources().getColor(R.color.orange_goods_price));
+                        viewHolderChild.goods_car_bar.setVisibility(View.GONE);
+                    } else {
+                        viewHolderChild.ordering_now_pri.setTextColor(getResources().getColor(R.color.black_goods_titile));
+                        viewHolderChild.goods_car_bar.setVisibility(View.VISIBLE);
+                        String deposit = StringUtil.toTwoString(goodsList
+                                .get(i).deposit * goodsList.get(i).count + "");
+                        if (StringUtil.checkStr(deposit)) {
+                            viewHolderChild.goods_car_deposit.setText("¥" + deposit);
+                        }
+                        String weiKuan = StringUtil.toTwoString((goodsList.get(i).price - goodsList
+                                .get(i).deposit) * goodsList.get(i).count + "");
+                        if (StringUtil.checkStr(weiKuan)) {
+                            viewHolderChild.goods_car_weikuan.setText("¥" + weiKuan);
+                        }
+                    }
+                    String now_pri = StringUtil.toTwoString(goodsList
+                            .get(i).price + "");
+                    if (StringUtil.checkStr(now_pri)) {
+                        viewHolderChild.ordering_now_pri.setText("¥" + now_pri);
+                    }
+                    holder.llCommerceContainer.addView(rootView);
+                }
+            }
+            holder.llCommerceContainer.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    //点击商品跳转到订单详情界面
+                    Intent intent = new Intent(getActivity(),
+                            MyOrderDetailActivity.class);
+                    intent.putExtra("orderId",
+                            order.orderId);
+                    intent.putExtra("callByMyOrderListActivity",
+                            true);
+                    startActivity(intent);
+
+                }
+            });
+
             return convertView;
         }
 
         class ViewHolder {
             private TextView order_id_tv, pay_state_tv, price_tv, my_order_delivery_type;
             private Button go_to_pay, change_pay_type;
-            private UnSwipeListView my_order_list;
             private RelativeLayout go_to_pay_rel;
+            private LinearLayout llCommerceContainer;
 
             ViewHolder(View convertView) {
                 order_id_tv = (TextView) convertView.findViewById(R.id.my_order_id);
@@ -477,65 +627,21 @@ public class MyOrderDetailFragment extends BaseFragment implements PullToRefresh
                 my_order_delivery_type = (TextView) convertView.findViewById(R.id.my_order_delivery_type);
                 go_to_pay = (Button) convertView.findViewById(R.id.go_to_pay);
                 change_pay_type = (Button) convertView.findViewById(R.id.change_pay_type);
-                my_order_list = (UnSwipeListView) convertView.findViewById(R.id.my_order_list);
                 go_to_pay_rel = (RelativeLayout) convertView.findViewById(R.id.go_to_pay_rel);
                 ExpandViewTouch.expandViewTouchDelegate(go_to_pay, 50, 50, 50, 50);
+                llCommerceContainer = (LinearLayout) convertView.findViewById(R.id.my_order_llCommerceContainer);
             }
         }
 
-    }
 
-
-    //内层的商品列表，已订单区分
-    public class ProductAdapter extends BaseAdapter {
-        private List<WaitingPay.Product> goodsList;
-        private List<WaitingPay.SKUS> SKUsList;
-        private WaitingPay.Orders order;
-
-        public ProductAdapter(WaitingPay.Orders order, List<WaitingPay.SKUS> SKUsList) {
-            this.SKUsList = SKUsList;
-            this.order = order;
-        }
-
-        public ProductAdapter(List<WaitingPay.Product> goodsList, WaitingPay.Orders order) {
-            this.goodsList = goodsList;
-            this.order = order;
-        }
-
-
-        @Override
-        public int getCount() {
-            if (SKUsList != null && !SKUsList.isEmpty()) {
-                return SKUsList.size() > 0 ? SKUsList.size() : 0;
-            } else {
-                return goodsList.size() > 0 ? goodsList.size() : 0;
-            }
-        }
-
-        @Override
-        public Object getItem(int position) {
-            // TODO Auto-generated method stub
-            if (SKUsList != null && !SKUsList.isEmpty()) {
-                return SKUsList.size();
-            } else {
-                return goodsList.size();
-            }
-        }
-
-        @Override
-        public long getItemId(int position) {
-            // TODO Auto-generated method stub
-            return position;
-        }
-
-        class ViewHolder {
+        class ViewHolderChild {
             private LinearLayout goods_car_bar, additions_lin;
             private RecyclerImageView ordering_item_img;
             private TextView ordering_now_pri, ordering_item_name, goods_car_deposit,
                     goods_car_weikuan, ordering_item_geshu, goods_car_attr;
             private TextView additions_text, additions_price;
 
-            public ViewHolder(View convertView) {
+            public ViewHolderChild(View convertView) {
                 goods_car_bar = (LinearLayout) convertView.findViewById(R.id.goods_car_item_bar);
                 ordering_item_img = (RecyclerImageView) convertView//商品图
                         .findViewById(R.id.ordering_item_img);
@@ -560,150 +666,6 @@ public class MyOrderDetailFragment extends BaseFragment implements PullToRefresh
             }
         }
 
-        @Override
-        public View getView(final int position, View convertView,
-                            ViewGroup parent) {
-            if (convertView == null) {
-                convertView = inflater
-                        .inflate(R.layout.order_list_item_item, null);
-                convertView.setTag(new ViewHolder(convertView));
-            }
-            ViewHolder holder = (ViewHolder) convertView.getTag();
-
-            if (SKUsList != null && !SKUsList.isEmpty()) {//新订单
-                //商品图片
-                if (StringUtil.checkStr(SKUsList.get(position).thumbnail)) {
-                    Picasso.with(getActivity())
-                            .load(MsgID.IP + SKUsList.get(position).thumbnail)
-                            .error(R.drawable.error)
-                            .placeholder(R.drawable.zhanweitu)
-                            .into(holder.ordering_item_img);
-
-                }
-                //商品个数
-                holder.ordering_item_geshu.setText("X " + SKUsList.get(position).count + "");
-                //商品名
-                if (StringUtil.checkStr(SKUsList.get(position).productName)) {
-                    holder.ordering_item_name.setText(SKUsList.get(position).productName);
-                }
-
-                //附加选项
-                StringBuilder stringAdditions = new StringBuilder();
-                float car_additions_price = 0;
-                if (SKUsList.get(position).additions != null && !SKUsList.get(position).additions.isEmpty()) {
-                    holder.additions_lin.setVisibility(View.VISIBLE);
-                    stringAdditions.append("附加项目:");
-                    for (int k = 0; k < SKUsList.get(position).additions.size(); k++) {
-                        if (StringUtil.checkStr(SKUsList.get(position).additions.get(k).name)) {
-                            stringAdditions.append(SKUsList.get(position).additions.get(k).name + ";");
-                            car_additions_price += SKUsList.get(position).additions.get(k).price;
-                        }
-                    }
-                    String car_additions = stringAdditions.toString().substring(0, stringAdditions.toString().length() - 1);
-                    if (StringUtil.checkStr(car_additions)) {
-                        holder.additions_text.setText(car_additions);
-                        holder.additions_price.setText("¥" + StringUtil.toTwoString(car_additions_price + ""));
-                    }
-                } else {
-                    holder.additions_lin.setVisibility(View.GONE);
-                }
-                //商品 单价 阶段 订金 尾款
-                holder.ordering_now_pri.setTextColor(getResources().getColor(R.color.orange_goods_price));
-                if (SKUsList.get(position).deposit == 0) {
-                    holder.goods_car_bar.setVisibility(View.GONE);
-                } else {
-                    holder.goods_car_bar.setVisibility(View.VISIBLE);
-                    String deposit = StringUtil.toTwoString(SKUsList
-                            .get(position).deposit * SKUsList.get(position).count + "");
-                    if (StringUtil.checkStr(deposit)) {
-                        holder.goods_car_deposit.setText("¥" + deposit);
-                    }
-                    String weiKuan = StringUtil.toTwoString((SKUsList.get(position).price + car_additions_price - SKUsList
-                            .get(position).deposit) * SKUsList.get(position).count + "");
-                    if (StringUtil.checkStr(weiKuan)) {
-                        holder.goods_car_weikuan.setText("¥" + weiKuan);
-                    }
-                }
-                holder.ordering_now_pri.setText("¥" + StringUtil.toTwoString(SKUsList
-                        .get(position).price + ""));
-
-                //Sku属性
-                StringBuilder stringSku = new StringBuilder();
-                if (SKUsList.get(position).attributes != null && !SKUsList.get(position).attributes.isEmpty()) {
-                    for (int k = 0; k < SKUsList.get(position).attributes.size(); k++) {
-                        if (StringUtil.checkStr(SKUsList.get(position).attributes.get(k).name)
-                                && StringUtil.checkStr(SKUsList.get(position).attributes.get(k).value)) {
-                            stringSku.append(SKUsList.get(position).attributes.get(k).name + ":")
-                                    .append(SKUsList.get(position).attributes.get(k).value + ";");
-                        }
-                    }
-                    String car_attr = stringSku.toString().substring(0, stringSku.toString().length() - 1);
-                    if (StringUtil.checkStr(car_attr)) {
-                        holder.goods_car_attr.setText(car_attr);
-                    }
-                }
-
-
-            } else {  //兼容老订单
-                //商品图片
-                if (StringUtil.checkStr(goodsList.get(position).thumbnail)) {
-                    ImageLoader.getInstance().displayImage(
-                            MsgID.IP + goodsList.get(position).thumbnail, holder.ordering_item_img);
-                }
-                //商品个数
-                holder.ordering_item_geshu.setText("X " + goodsList.get(position).count + "");
-                //商品名
-                if (StringUtil.checkStr(goodsList.get(position).name)) {
-                    holder.ordering_item_name.setText(goodsList.get(position).name);
-                }
-
-                if (goodsList.get(position).deposit == 0) {
-                    holder.ordering_now_pri.setTextColor(getResources().getColor(R.color.orange_goods_price));
-                    holder.goods_car_bar.setVisibility(View.GONE);
-                } else {
-                    holder.ordering_now_pri.setTextColor(getResources().getColor(R.color.black_goods_titile));
-                    holder.goods_car_bar.setVisibility(View.VISIBLE);
-                    String deposit = StringUtil.toTwoString(goodsList
-                            .get(position).deposit * goodsList.get(position).count + "");
-                    if (StringUtil.checkStr(deposit)) {
-                        holder.goods_car_deposit.setText("¥" + deposit);
-                    }
-                    String weiKuan = StringUtil.toTwoString((goodsList.get(position).price - goodsList
-                            .get(position).deposit) * goodsList.get(position).count + "");
-                    if (StringUtil.checkStr(weiKuan)) {
-                        holder.goods_car_weikuan.setText("¥" + weiKuan);
-                    }
-                }
-
-                String now_pri = StringUtil.toTwoString(goodsList
-                        .get(position).price + "");
-                if (StringUtil.checkStr(now_pri)) {
-                    holder.ordering_now_pri.setText("¥" + now_pri);
-                }
-            }
-
-            //点击商品跳转到订单详情界面
-            convertView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(),
-                            MyOrderDetailActivity.class);
-                    intent.putExtra("orderId",
-                            order.orderId);
-                    intent.putExtra("callByMyOrderListActivity",
-                            true);
-                    startActivity(intent);
-                }
-            });
-            return convertView;
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-            page = 1;
-            getData(page);
     }
 
 
@@ -749,7 +711,6 @@ public class MyOrderDetailFragment extends BaseFragment implements PullToRefresh
         pop_sure.setOnClickListener(this);
 
         pop_listView = (ListView) popupWindow_view.findViewById(R.id.pop_listView);
-
 
     }
 
@@ -800,8 +761,7 @@ public class MyOrderDetailFragment extends BaseFragment implements PullToRefresh
                     for (int k = 0; k < skus.attributes.size(); k++) {
                         if (StringUtil.checkStr(skus.attributes.get(k).name)
                                 && StringUtil.checkStr(skus.attributes.get(k).value)) {
-                            stringBuilder.append(skus.attributes.get(k).name + ":")
-                                    .append(skus.attributes.get(k).value + ";");
+                            stringBuilder.append(skus.attributes.get(k).name).append(":").append(skus.attributes.get(k).value).append(";");
                         }
                     }
                     String car_attr = stringBuilder.substring(0, stringBuilder.length() - 1);
@@ -822,7 +782,7 @@ public class MyOrderDetailFragment extends BaseFragment implements PullToRefresh
                     stringAdditions.append("附加项目:");
                     for (int k = 0; k < skus.additions.size(); k++) {
                         if (StringUtil.checkStr(skus.additions.get(k).name)) {
-                            stringAdditions.append(skus.additions.get(k).name + ";");
+                            stringAdditions.append(skus.additions.get(k).name).append(";");
                         }
                     }
                     String car_additions = stringAdditions.substring(0, stringAdditions.length() - 1);

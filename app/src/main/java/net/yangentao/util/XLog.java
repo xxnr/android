@@ -184,7 +184,7 @@ public class XLog {
 		if (args.length == 0) {
 			msg = "";
 		} else {
-			StringBuffer sb = new StringBuffer(args.length * 8 + 8);
+			StringBuilder sb = new StringBuilder(args.length * 8 + 8);
 			boolean first = true;
 			for (Object obj : args) {
 				if (first) {

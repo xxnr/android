@@ -37,22 +37,21 @@
 
 
                 <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_marginTop="5dp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:id="@+id/ordering_item_name"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
                         android:layout_weight="1"
                         android:ellipsize="end"
-                        android:layout_marginRight="10dp"
                         android:maxLines="2"
                         android:text=""
                         android:textSize="14sp" />
-
 
 
                     <TextView
@@ -79,18 +78,18 @@
 
 
                 <LinearLayout
-                    android:layout_marginTop="7dp"
-                    android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="7dp"
+                    android:orientation="horizontal">
 
 
                     <TextView
                         android:id="@+id/ordering_item_attr"
                         android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_marginRight="16dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginRight="16dp"
+                        android:layout_weight="1"
                         android:textColor="@color/deep_gray"
                         android:textSize="14sp" />
 
@@ -99,9 +98,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="4dp"
+                        android:text=""
                         android:textColor="@color/main_index_gary"
                         android:textSize="16sp"
-                        android:text=""
                         android:visibility="gone" />
 
                 </LinearLayout>
@@ -112,8 +111,8 @@
         <LinearLayout
             android:id="@+id/ordering_item_additionsll"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:gravity="center_vertical">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
 
             <TextView
                 android:id="@+id/ordering_item_additions"
@@ -128,5 +127,7 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    <include layout="@layout/line_lay" />
 
 </LinearLayout>

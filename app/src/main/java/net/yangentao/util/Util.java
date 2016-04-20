@@ -200,7 +200,7 @@ public class Util {
 			'7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 
 	public static String bytes2HexString(byte[] data) {
-		StringBuffer sb = new StringBuffer(32);
+		StringBuilder sb = new StringBuilder(32);
 		for (byte b : data) {
 			char low = DIGITS[b & 0x0F];
 			char high = DIGITS[(b & 0xF0) >>> 4];

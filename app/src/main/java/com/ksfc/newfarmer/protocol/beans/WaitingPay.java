@@ -36,9 +36,18 @@ public class WaitingPay extends ResponseResult {
         public int payType; // 最后一次支付时的支付类型
         public String duePrice;// 待付金额,仅用于列表页展示，不用于付款
         public Order order;  //订单信息
+        public RSCInfoEntity RSCInfo;
         public List<Product> products;//商品列表
         public List<SKUS> SKUs;//Sku列表
         public List<SubOrders> subOrders;
+
+    }
+
+    public static class RSCInfoEntity implements Serializable {
+        public String RSC;
+        public String RSCAddress;
+        public String companyName;
+        public String RSCPhone;
 
     }
 

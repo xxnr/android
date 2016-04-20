@@ -73,7 +73,7 @@ public class MessageDao extends BaseDao {
 
 	/** 根据id读取单条数据 */
 	public synchronized Map<String, String> getMessage(String msgId) {
-		Map<String, String> data = new HashMap<String, String>();
+		Map<String, String> data = new HashMap<>();
 		if (isDBOpen()) {
 			String sql = "SELECT * FROM " + TABLE_NAME_MESSAGE + " WHERE "
 					+ COLUMN_ID + " = ?";
@@ -112,7 +112,7 @@ public class MessageDao extends BaseDao {
 
 	/** 读取所有数据 */
 	public synchronized List<Map> getAllMessages() {
-		List<Map> list = new ArrayList<Map>();
+		List<Map> list = new ArrayList<>();
 
 		if (isDBOpen()) {
 			String sql = "SELECT * FROM " + TABLE_NAME_MESSAGE + " ORDER BY "
@@ -134,7 +134,7 @@ public class MessageDao extends BaseDao {
 						.getColumnIndex(COLUMN_READSTATUS));
 				String delFlag = cursor.getString(cursor
 						.getColumnIndex(COLUMN_DELFLAG));
-				Map<String, String> data = new HashMap<String, String>();
+				Map<String, String> data = new HashMap<>();
 				data.put("id", id);
 				data.put("title", title);
 				data.put("sendId", sendId);

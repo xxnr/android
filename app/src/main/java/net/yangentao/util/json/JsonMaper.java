@@ -37,7 +37,7 @@ class JsonMaper {
 		}
 	}
 
-	private static Map<String, List<FieldInfo>> clsMap = new ConcurrentHashMap<String, List<FieldInfo>>();
+	private static Map<String, List<FieldInfo>> clsMap = new ConcurrentHashMap<>();
 
 	/**
 	 * List<Person> people = fromJsonArray(Person.class, jsonArray);
@@ -175,7 +175,7 @@ class JsonMaper {
 		List<FieldInfo> fieldList = clsMap.get(cls.getName());
 		if (fieldList == null) {
 			Field[] fields = cls.getFields();
-			fieldList = new ArrayList<FieldInfo>(fields.length);
+			fieldList = new ArrayList<>(fields.length);
 			for (Field field : fields) {
 				JsonColumn mf = field.getAnnotation(JsonColumn.class);
 				if (mf != null) {

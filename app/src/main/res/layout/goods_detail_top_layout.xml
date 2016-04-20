@@ -17,13 +17,14 @@
             android:orientation="vertical">
 
             <RelativeLayout
+                android:id="@+id/goods_detail_top_viewpager_rel"
                 android:layout_width="match_parent"
                 android:layout_height="360dp">
 
                 <android.support.v4.view.ViewPager
                     android:id="@+id/goods_detail_top_viewpager"
                     android:layout_width="match_parent"
-                    android:layout_height="360dp" />
+                    android:layout_height="match_parent" />
 
                 <TextView
                     android:id="@+id/current_count"
@@ -33,7 +34,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginBottom="10dp"
                     android:layout_marginRight="16dp"
-                    android:background="@drawable/circle_icon_green"
+                    android:background="@drawable/circle_green_bg"
                     android:gravity="center"
                     android:text=""
                     android:textColor="@color/white"

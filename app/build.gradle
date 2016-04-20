@@ -38,21 +38,9 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile files('libs/alipaysdk.jar')
-    compile files('libs/alipaysecsdk.jar')
-    compile files('libs/alipayutdid.jar')
-    compile files('libs/fastjson-1.1.43.android.jar')
-    compile files('libs/httpmime-4.1.1.jar')
-    compile files('libs/locSDK_4.2.jar')
-    compile files('libs/nineoldandroids-2.4.0.jar')
-    compile files('libs/picasso-2.4.0.jar')
-    compile files('libs/pinyin4j-2.5.0.jar')
-    compile files('libs/umeng-analytics-v5.2.4.jar')
-    compile files('libs/universal-image-loader-1.9.1-SNAPSHOT-with-sources.jar')
-    compile files('libs/UPPayAssistEx.jar')
-    compile files('libs/UPPayPluginExStd.jar')
-    compile files('libs/xUtils-2.6.14.jar')
+    //noinspection GradleDependency
     compile 'com.android.support:support-v4:22.2.0'
+    //noinspection GradleDependency
     compile 'com.android.support:design:22.2.0'
     compile project(':PhotoView')
     compile 'com.google.code.gson:gson:2.5'

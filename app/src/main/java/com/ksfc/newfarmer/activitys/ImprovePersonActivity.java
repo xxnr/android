@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.ksfc.newfarmer.BaseActivity;
-import com.ksfc.newfarmer.MainActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.db.Store;
@@ -26,17 +25,9 @@ import com.ksfc.newfarmer.protocol.beans.TownList;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.MaxLengthWatcher;
 import com.ksfc.newfarmer.utils.StringUtil;
-import com.lidroid.xutils.HttpUtils;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
 
 import net.yangentao.util.msg.MsgCenter;
 
-import org.apache.http.entity.StringEntity;
-
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -81,7 +72,7 @@ public class ImprovePersonActivity extends BaseActivity {
         setTitle("完善个人资料");
         me = Store.User.queryMe();
         intView();
-        if (me!=null){
+        if (me != null) {
             setData();
         }
 
@@ -295,7 +286,7 @@ public class ImprovePersonActivity extends BaseActivity {
 
         Map<String, Object> map1 = new HashMap();
         map1.put("address", map);
-        if (isLogin()){
+        if (isLogin()) {
             map1.put("token", Store.User.queryMe().token);
         }
         map1.put("userName", name.getText().toString().trim());
@@ -349,8 +340,8 @@ public class ImprovePersonActivity extends BaseActivity {
 
     private void upAddress(String value) {
         RequestParams params = new RequestParams();
-        params.put("JSON",value);
-        execApi(ApiType.SAVE_MYUSER.setMethod(ApiType.RequestMethod.POSTJSON),params);
+        params.put("JSON", value);
+        execApi(ApiType.SAVE_MYUSER.setMethod(ApiType.RequestMethod.POSTJSON), params);
     }
 
 }

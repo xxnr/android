@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="44dp"
+            android:layout_height="match_parent">
+
+
+            <TextView
+                android:id="@+id/order_state_top_divide"
+                android:layout_width="1dp"
+                android:layout_height="14dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:background="@color/gray" />
+
+            <ImageView
+                android:id="@+id/order_state_icon"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_below="@+id/order_state_top_divide"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/circle_green_bg"
+                android:scaleType="center"
+                android:src="@drawable/order_state_close" />
+
+            <TextView
+                android:id="@+id/order_state_bottom_divide"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentBottom="true"
+                android:layout_below="@+id/order_state_icon"
+                android:layout_centerHorizontal="true"
+                android:background="@color/gray" />
+
+
+        </RelativeLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="16dp"
+            android:orientation="vertical"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp">
+
+
+            <TextView
+                android:id="@+id/order_state_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="订单完成"
+                android:textColor="@color/green" />
+
+
+            <TextView
+                android:id="@+id/order_state_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="尊敬的客户，您的订单商品已完成收货，如有问 题可拨打客服电话联系我们"
+                android:textColor="@color/green"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/order_state_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="2015-12-23 15:12"
+                android:textColor="@color/green"
+                android:textSize="14sp" />
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/dividing_line"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="44dp"
+        android:background="@color/gray" />
+</LinearLayout>

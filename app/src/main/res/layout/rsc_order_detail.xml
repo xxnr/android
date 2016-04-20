@@ -14,8 +14,7 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/topay_ll"
         android:layout_below="@+id/titleview"
-        android:divider="@drawable/line_chang"
-        android:dividerHeight="1px"
+        android:divider="@null"
         android:scrollbars="none" />
 
     <LinearLayout

@@ -135,43 +135,51 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
-        <com.handmark.pulltorefresh.library.PullToRefreshListView xmlns:ptr="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/select_state_listView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@color/gray"
-            android:dividerHeight="1px"
-            android:scrollbars="none"
-            ptr:ptrAnimationStyle="rotate"
-            ptr:ptrDrawable="@drawable/loader"
-            ptr:ptrHeaderBackground="@color/re_flash"
-            ptr:ptrListViewExtrasEnabled="false"
-            ptr:ptrScrollingWhileRefreshingEnabled="true" />
-
-
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_gravity="bottom"
-            android:background="@color/white">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <TextView
+            <com.handmark.pulltorefresh.library.PullToRefreshListView xmlns:ptr="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/select_state_listView"
                 android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:layout_alignParentTop="true"
-                android:background="@color/gray" />
+                android:layout_height="match_parent"
+                android:divider="@color/gray"
+                android:dividerHeight="1px"
+                android:scrollbars="none"
+                android:layout_above="@+id/bottom_bar"
+                ptr:ptrAnimationStyle="rotate"
+                ptr:ptrDrawable="@drawable/loader"
+                ptr:ptrHeaderBackground="@color/re_flash"
+                ptr:ptrListViewExtrasEnabled="false"
+                ptr:ptrScrollingWhileRefreshingEnabled="true" />
 
-            <TextView
-                android:id="@+id/save_userInfo"
-                android:layout_width="81dp"
-                android:layout_height="25dp"
-                android:layout_centerInParent="true"
-                android:background="@drawable/login_roate_orange"
-                android:gravity="center"
-                android:text="确定"
-                android:textColor="@color/white" />
 
+            <RelativeLayout
+                android:id="@+id/bottom_bar"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/white">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentTop="true"
+                    android:background="@color/gray" />
+
+                <TextView
+                    android:id="@+id/save_userInfo"
+                    android:layout_width="90dp"
+                    android:layout_height="30dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/login_roate_orange"
+                    android:gravity="center"
+                    android:text="确定"
+                    android:textColor="@color/white" />
+
+
+            </RelativeLayout>
 
         </RelativeLayout>
 

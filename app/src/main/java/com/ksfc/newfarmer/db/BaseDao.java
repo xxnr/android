@@ -1,9 +1,10 @@
 package com.ksfc.newfarmer.db;
 
-import com.ksfc.newfarmer.RndApplication;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+
+import net.yangentao.util.app.App;
 
 /**
  * 
@@ -16,7 +17,7 @@ public abstract class BaseDao {
 	protected SQLiteDatabase database = null;
 	protected Context appContext;
 	/** 用户id */
-	protected static String uid = RndApplication.getInstance().getUid();
+	protected static String uid = App.getApp().getUid();
 	/** 执行数据库操作的返回值 */
 	protected long returnId = -1;
 

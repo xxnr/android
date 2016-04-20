@@ -7,17 +7,16 @@ import com.ksfc.newfarmer.RndApplication;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.utils.StringUtil;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import net.yangentao.util.app.App;
 import net.yangentao.util.msg.MsgCenter;
 
 public class OrderSuccessActivity extends BaseActivity {
     private String orderId;
-    private String price;
 
     @Override
     public int getLayout() {
@@ -26,11 +25,11 @@ public class OrderSuccessActivity extends BaseActivity {
 
     @Override
     public void OnActCreate(Bundle savedInstanceState) {
-        quit();
+        App.getApp().partQuit();
         RndApplication.tempDestroyActivityList.add(OrderSuccessActivity.this);
         setTitle("支付成功");
         orderId = (String) getIntent().getSerializableExtra("orderId");
-        price = (String) getIntent().getSerializableExtra("price");
+        String price = (String) getIntent().getSerializableExtra("price");
         TextView price_tv = (TextView) findViewById(R.id.pay_price);
         if (StringUtil.checkStr(price)) {
             price_tv.setText("支付金额：¥" + price + "元");
@@ -42,29 +41,20 @@ public class OrderSuccessActivity extends BaseActivity {
 
     }
 
-    public void quit() {
-        for (Activity activity : RndApplication.tempDestroyActivityList) {
-            if (null != activity) {
-                activity.finish();
-            }
-        }
-        RndApplication.tempDestroyActivityList.clear();
-    }
 
     @Override
     public void OnViewClick(View v) {
         switch (v.getId()) {
             case R.id.contact_tv:
-                Intent intent = new Intent(OrderSuccessActivity.this, MyOrderListActivity.class);
-                startActivity(intent);
-                quit();
+                startActivity(MyOrderListActivity.class);
+                App.getApp().partQuit();
                 break;
             case R.id.check_order_tv:
-                intent = new Intent(OrderSuccessActivity.this,
+                Intent intent = new Intent(OrderSuccessActivity.this,
                         MyOrderDetailActivity.class);
                 intent.putExtra("orderId", orderId);
                 startActivity(intent);
-                quit();
+                App.getApp().partQuit();
                 break;
 
             default:

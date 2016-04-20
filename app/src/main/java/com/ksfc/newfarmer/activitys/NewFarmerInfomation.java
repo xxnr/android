@@ -51,7 +51,6 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
         listView.setOnRefreshListener(this);
         listView.setOnScrollListener(this);
 
-
         //设置刷新的文字
         PullToRefreshUtils.setFreshText(listView);
         return_top = (ImageView) findViewById(R.id.return_top);
@@ -108,7 +107,7 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
         if (req.getApi() == ApiType.GET_INFORMATION) {
             if (req.getData().getStatus().equals("1000")) {
                 InformationResult data = (InformationResult) req.getData();
-                if (data.datas!= null
+                if (data.datas != null
                         && data.datas.items != null
                         && data.datas.items.size() > 0) {
                     List<ItemsEntity> list = data.datas.items;
@@ -120,9 +119,13 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
                     adapter.notifyDataSetChanged();
 
                 } else {
-                    showToast("没有更多资讯");
                     if (page != 1) {
+                        showToast("没有更多资讯");
                         page--;
+                    } else {
+                        if (adapter != null) {
+                            adapter.clear();
+                        }
                     }
                 }
             }

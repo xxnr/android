@@ -1,21 +1,17 @@
 package com.ksfc.newfarmer.utils;
 
-import android.content.Context;
 import android.os.Handler;
-import android.widget.Toast;
 
 import com.handmark.pulltorefresh.library.ILoadingLayout;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
-import net.yangentao.util.app.App;
 
 /**
  * Created by HePeng on 2015/12/18.
  */
 public class PullToRefreshUtils {
 
-    public static void setFreshText(PullToRefreshListView listView) {
+    public static void setFreshText(PullToRefreshBase listView) {
         //设置刷新的文字
         ILoadingLayout startLabels = listView
                 .getLoadingLayoutProxy(true, false);

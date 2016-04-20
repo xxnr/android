@@ -140,8 +140,8 @@
                 android:gravity="center_vertical">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="14dp"
+                    android:layout_height="18dp"
                     android:layout_marginLeft="16dp"
                     android:background="@drawable/address_location" />
 

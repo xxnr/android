@@ -18,7 +18,6 @@ import com.ksfc.newfarmer.protocol.beans.LoginResult;
 import com.ksfc.newfarmer.protocol.beans.RSCInfoResult;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.MaxLengthWatcher;
-import com.ksfc.newfarmer.utils.ShowHideUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.utils.Utils;
 
@@ -135,7 +134,6 @@ public class CertifiedRSCActivity extends BaseActivity {
             case R.id.choice_city_layout:
                 Bundle bundle1 = new Bundle();
                 bundle1.putInt("tag", 0);
-                bundle1.putBoolean("isUse_Id", true);
                 IntentUtil.startActivityForResult(this, SelectAddressActivity.class,
                         cityRequestCode, bundle1);
                 break;

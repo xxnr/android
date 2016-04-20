@@ -6,6 +6,8 @@ import com.ksfc.newfarmer.db.dao.ShoppingDao;
 
 import android.content.Context;
 
+import net.yangentao.util.app.App;
+
 /**
  * 
  * 项目名称：QianXihe 类名称：DBConstact 类描述： 此类用于保存创建数据库表语句 创建人：范东 创建时间：2015年6月16日
@@ -52,7 +54,7 @@ public class DBConstact {
 	// **************************以上为建表字符串******************************
 
 	private static String getUid() {
-		return RndApplication.getInstance().getUid();
+		return App.getApp().getUid();
 	}
 
 	/** 将要建立的数据表字符串加入到此数据中，方便被调用 */

@@ -15,6 +15,7 @@ import com.ksfc.newfarmer.fragment.RscOrderDetailFragment;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.PopWindowUtils;
+import com.ksfc.newfarmer.widget.UnSwipeViewPager;
 
 import net.yangentao.util.msg.MsgCenter;
 
@@ -24,7 +25,7 @@ import java.util.ArrayList;
  * Created by HePeng on 2016/3/23.
  */
 public class RSCOrderListActivity extends BaseActivity implements RscOrderDetailFragment.BgSwitch {
-    private ViewPager viewPager;
+    private UnSwipeViewPager viewPager;
     private FragmentManager fragmentManager;
     private TabLayout mTabLayout;
     private ArrayList<String> titleList = new ArrayList<>();
@@ -57,7 +58,8 @@ public class RSCOrderListActivity extends BaseActivity implements RscOrderDetail
     }
 
     private void initView() {
-        viewPager = (ViewPager) findViewById(R.id.waitingpay_ViewPager);
+        viewPager = (UnSwipeViewPager) findViewById(R.id.waitingpay_ViewPager);
+        viewPager.setScanScroll(false);
         mTabLayout = (TabLayout) findViewById(R.id.tabs);
         pop_bg = (RelativeLayout) findViewById(R.id.pop_bg);
         initTabs();

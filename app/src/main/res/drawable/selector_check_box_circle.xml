@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@drawable/circle_orange" android:state_checked="true"/>
-    <item android:drawable="@drawable/circle_gray" android:state_checked="false"/>
-    <item android:drawable="@drawable/circle_gray"/>
+    <item android:drawable="@drawable/circle_with_gary_stroke" android:state_checked="false"/>
+    <item android:drawable="@drawable/circle_with_gary_stroke"/>
 </selector>

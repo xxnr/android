@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/default_act_bg"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="49dp"
+            android:gravity="center_vertical">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_weight="1"
+                android:background="@drawable/round_edittext_gary"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="17dp"
+                    android:layout_height="17dp"
+                    android:layout_marginLeft="10dp"
+                    android:src="@drawable/search_icon_gary" />
+
+
+                <com.ksfc.newfarmer.widget.ClearEditText
+                    android:id="@+id/inviter_search_edit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@null"
+                    android:drawableRight="@drawable/delete_selector"
+                    android:hint="姓名/手机号"
+                    android:imeOptions="actionSearch"
+                    android:singleLine="true"
+                    android:textSize="14sp" />
+
+
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/inviter_search_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="16dp"
+                android:text="取消"
+                android:textColor="@color/green" />
+
+
+        </LinearLayout>
+
+        <include layout="@layout/line_lay" />
+
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <com.ksfc.newfarmer.widget.UnSwipeListView
+                    android:id="@+id/invitee_search_customer_listView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:divider="@color/gray"
+                    android:dividerHeight="1px"
+                    android:scrollbars="none"
+                    />
+
+                <LinearLayout
+                    android:id="@+id/invitee_search_customer_separatrix"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <include layout="@layout/line_lay"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="10dp" />
+
+                    <include layout="@layout/line_lay"/>
+
+                </LinearLayout>
+
+                <com.ksfc.newfarmer.widget.UnSwipeListView
+                    android:id="@+id/invitee_search_potential_listView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:divider="@color/gray"
+                    android:dividerHeight="1px"
+                    android:scrollbars="none" />
+
+
+            </LinearLayout>
+
+
+        </ScrollView>
+
+
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/null_customer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/null_customer_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/center_line"
+            android:layout_centerHorizontal="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/inviter_find_icon" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/null_customer_image"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:text="未查找到相关用户"
+            android:textColor="@color/deep_gray"
+            android:textSize="18sp" />
+
+
+        <TextView
+            android:id="@+id/center_line"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
+
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

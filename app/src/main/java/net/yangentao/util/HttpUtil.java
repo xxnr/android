@@ -187,7 +187,7 @@ public class HttpUtil {
 
 	public static String httpPostTextUtf8(String url, String argName,
 			String argValue) {
-		List<NameValuePair> args = new ArrayList<NameValuePair>();
+		List<NameValuePair> args = new ArrayList<>();
 		args.add(new BasicNameValuePair(argName, argValue));
 		return httpPostTextUtf8(url, args);
 	}

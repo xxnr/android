@@ -126,10 +126,10 @@ public class SwipeListView extends ListView {
 
 		if (Math.abs(dx) > 30 && Math.abs(dx) > 2 * Math.abs(dy)) {
 			mIsHorizontal = true;
-			System.out.println("mIsHorizontal---->" + mIsHorizontal);
+			System.out.println("mIsHorizontal---->" + true);
 		} else if (Math.abs(dy) > 30 && Math.abs(dy) > 2 * Math.abs(dx)) {
 			mIsHorizontal = false;
-			System.out.println("mIsHorizontal---->" + mIsHorizontal);
+			System.out.println("mIsHorizontal---->" + false);
 		} else {
 			canJudge = false;
 		}

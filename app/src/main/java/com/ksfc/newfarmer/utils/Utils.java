@@ -5,9 +5,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,20 +16,15 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
-import android.preference.PreferenceManager;
-import android.view.View;
+import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.TextView;
+
+import com.ksfc.newfarmer.widget.dialog.CustomDialog;
 
 public class Utils {
     private static long lastClickTime;
@@ -55,6 +50,7 @@ public class Utils {
                         "[Xx0-9])|([0-9]{2}[0|1][0-9][0-3][0-9][0-9]{3}))");
         Matcher m = p.matcher(IDCards);
         return m.matches();
+
 
     }
 
@@ -123,11 +119,13 @@ public class Utils {
     public static void addApk(final Context mContext, final String fileName) {
 
         if (copyApkFromAssets(mContext, fileName, Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + fileName)) {
-            AlertDialog.Builder m = new AlertDialog.Builder(mContext)
+            CustomDialog.Builder m = new CustomDialog.Builder(mContext)
                     .setMessage("使用ePos支付需要安装支付插件，是否继续？")
                     .setPositiveButton("继续", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+
                             Intent intent = new Intent(Intent.ACTION_VIEW);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             intent.setDataAndType(Uri.parse("file://" + Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + fileName),
@@ -140,11 +138,26 @@ public class Utils {
                             dialog.dismiss();
                         }
                     });
-            m.show();
+            m.create().show();
         } else {
-            RndLog.v("PkgInstalled", "not find pkg");
+            RndLog.v("PkgInstalled", "not found pkg");
         }
 
+    }
+
+    /**
+     * traversal bundle with string values.
+     *
+     * @param bundle
+     * @return
+     */
+    public static String printBundle(Bundle bundle) {
+        StringBuilder sb = new StringBuilder("");
+        Set<String> keys = bundle.keySet();
+        for (String key : keys) {
+            sb.append(key).append(":").append(bundle.get(key)).append(";\n");
+        }
+        return sb.toString();
     }
 
     /**
@@ -166,6 +179,55 @@ public class Utils {
             imm.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(),
                     InputMethodManager.HIDE_NOT_ALWAYS);
         }
+    }
+
+
+    // 将字母装换成数字
+
+    public static int getNum(String letter, List<String> list) {
+
+        for (int i = 0; i < list.size(); i++) {
+
+            if (list.get(i).equals(letter)) {
+
+                return i;
+            }
+        }
+        return 0;
+    }
+
+
+    public static void dial(final Activity activity, final String phoneNum) {
+
+        CustomDialog.Builder builder = new CustomDialog.Builder(
+                activity);
+        builder.setMessage(phoneNum)
+                .setPositiveButton("拨打",
+                        new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog,
+                                                int which) {
+                                Intent intent = new Intent();
+                                intent.setAction(Intent.ACTION_CALL);
+                                intent.setData(Uri.parse("tel:"
+                                        + phoneNum));
+                                dialog.dismiss();
+                                // 开启系统拨号器
+                                activity.startActivity(intent);
+                            }
+                        })
+                .setNegativeButton("取消",
+                        new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog,
+                                                int which) {
+                                dialog.dismiss();
+                            }
+                        });
+        builder.create().show();
+
     }
 
 

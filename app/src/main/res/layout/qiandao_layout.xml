@@ -15,7 +15,7 @@
 
         android:layout_marginTop="200dp"
         android:layout_height="30dp"
-        android:background="@drawable/qiandao_roate"
+        android:background="@drawable/qiandao_selector"
         android:layout_centerHorizontal="true" />
 
 

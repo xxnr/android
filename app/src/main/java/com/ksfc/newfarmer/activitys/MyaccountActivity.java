@@ -3,15 +3,12 @@ package com.ksfc.newfarmer.activitys;
 import java.io.File;
 
 import com.ksfc.newfarmer.BaseActivity;
-import com.ksfc.newfarmer.ChoicePicActivity;
-import com.ksfc.newfarmer.MainActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
-import com.ksfc.newfarmer.protocol.beans.AddressList;
 import com.ksfc.newfarmer.protocol.beans.CameraResult;
 import com.ksfc.newfarmer.protocol.beans.LoginResult.UserInfo;
 import com.ksfc.newfarmer.utils.ShowHideUtils;
@@ -130,7 +127,7 @@ public class MyaccountActivity extends BaseActivity {
         }, MsgID.MyaccountActivityFinish);
 
 
-
+        //用户类型改变
         MsgCenter.addListener(new MsgListener() {
             @Override
             public void onMsg(Object sender, String msg, Object... args) {
@@ -158,8 +155,6 @@ public class MyaccountActivity extends BaseActivity {
         }, MsgID.UPDATE_USER_TYPE);
 
 
-
-
         if (me == null) {
             return;
         }
@@ -183,16 +178,16 @@ public class MyaccountActivity extends BaseActivity {
         } else {
             type.setText("还没填写呦~");
         }
-
+        //设置一下申请认证的标志
         MsgCenter.fireNull(MsgID.UPDATE_USER_TYPE);
     }
 
     @Override
     public void OnViewClick(View v) {
 
-        if(!isLogin()){
+        if (!isLogin()) {
             IntentUtil.activityForward(MyaccountActivity.this,
-                    LoginActivity.class, null,true);
+                    LoginActivity.class, null, true);
         }
         switch (v.getId()) {
             case R.id.header_image_ll:
@@ -288,8 +283,7 @@ public class MyaccountActivity extends BaseActivity {
                                                             int which) {
                                             exitLogin();
                                             showToast("您已退出登录");
-                                            startActivity(new Intent(MyaccountActivity.this, MainActivity.class));
-                                            finish();
+                                            IntentUtil.activityForward(MyaccountActivity.this,MainActivity.class,null,true);
                                         }
                                     })
                             .setNegativeButton("取消",

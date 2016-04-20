@@ -48,12 +48,12 @@
                 android:text="消息通知"
                 android:textSize="18sp" />
 
-            <com.ksfc.newfarmer.widget.CustomCheckBox
+            <CheckBox
                 android:id="@+id/push_switch"
-                android:layout_width="50dp"
-                android:layout_height="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginRight="16dp"
-                android:background="@null"
+                android:background="@drawable/selector_checkbox_ios7"
                 android:button="@null" />
 
 

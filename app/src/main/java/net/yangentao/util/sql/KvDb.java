@@ -12,7 +12,7 @@ public class KvDb {
 	private static final String DEFAULT_TABLE = "default_table";
 
 	private InnerDB db;
-	private Map<String, Table> tableMap = new ConcurrentHashMap<String, Table>();
+	private Map<String, Table> tableMap = new ConcurrentHashMap<>();
 
 	public KvDb(Context c, String dbName) {
 		db = new InnerDB(c, dbName);

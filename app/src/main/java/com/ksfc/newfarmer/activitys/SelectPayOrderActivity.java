@@ -3,13 +3,8 @@ package com.ksfc.newfarmer.activitys;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
@@ -20,7 +15,6 @@ import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.beans.AddOrderResult;
 import com.ksfc.newfarmer.utils.StringUtil;
 
-import net.yangentao.util.app.App;
 
 import java.util.List;
 
@@ -38,7 +32,6 @@ public class SelectPayOrderActivity extends BaseActivity {
     @Override
     public void OnActCreate(Bundle savedInstanceState) {
 
-        App.getApp().addActivity(this);
         RndApplication.tempDestroyActivityList.add(SelectPayOrderActivity.this);
         setTitle("选择支付订单");
         Intent intent = getIntent();

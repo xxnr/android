@@ -66,9 +66,12 @@ public class SelectAddressActivity extends BaseActivity implements AdapterView.O
         title_ll = ((LinearLayout) findViewById(R.id.select_address_title_ll));
 
         Bundle bundle = getIntent().getExtras();
-        flag = bundle.getInt("tag");
-        queueId1 = bundle.getString("queueid");
-        buildId1 = bundle.getString("buildid");
+        if (bundle!=null){
+            flag = bundle.getInt("tag");
+            queueId1 = bundle.getString("queueid");
+            buildId1 = bundle.getString("buildid");
+        }
+
 
         if (flag == 1) {
             setTitle("选择乡镇地址");

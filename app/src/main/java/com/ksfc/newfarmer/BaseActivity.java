@@ -1,12 +1,9 @@
 package com.ksfc.newfarmer;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.ksfc.newfarmer.Push.UmengPush;
 import com.ksfc.newfarmer.activitys.LoginActivity;
 import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.protocol.ApiType;
@@ -15,6 +12,7 @@ import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
 import com.ksfc.newfarmer.protocol.beans.LoginResult.UserInfo;
 import com.ksfc.newfarmer.utils.StringUtil;
+import com.ksfc.newfarmer.utils.thrid.UmengPush;
 import com.ksfc.newfarmer.utils.Utils;
 import com.ksfc.newfarmer.widget.dialog.CustomProgressDialog;
 import com.ksfc.newfarmer.utils.RndLog;
@@ -24,26 +22,19 @@ import com.umeng.analytics.MobclickAgent;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-
 import net.yangentao.util.app.App;
-import net.yangentao.util.msg.MsgCenter;
-import net.yangentao.util.msg.MsgListener;
 
 public abstract class BaseActivity extends FragmentActivity implements
         OnClickListener, OnApiDataReceivedCallback {
@@ -81,6 +72,11 @@ public abstract class BaseActivity extends FragmentActivity implements
         }
         loadTitle();
         OnActCreate(savedInstanceState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
     }
 
     // -------------------------------------------------------------

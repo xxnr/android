@@ -101,7 +101,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="180dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/order_icon" />
+            android:src="@drawable/order_none_image" />
 
         <TextView
             android:id="@+id/shop_text1"

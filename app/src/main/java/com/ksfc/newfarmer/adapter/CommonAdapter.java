@@ -8,7 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import com.ksfc.newfarmer.Push.App;
+
+import net.yangentao.util.app.App;
 
 /**
  * @param <T>

@@ -10,6 +10,7 @@ import com.ksfc.newfarmer.protocol.RequestParams;
 import com.ksfc.newfarmer.protocol.beans.LoginResult;
 import com.ksfc.newfarmer.protocol.beans.PersonalData;
 import com.ksfc.newfarmer.protocol.beans.PersonalData.Data;
+import com.ksfc.newfarmer.utils.Utils;
 import com.ksfc.newfarmer.widget.dialog.CustomDialog;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.SPUtils;
@@ -19,9 +20,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -106,7 +105,7 @@ public class MineActivity extends BaseActivity {
                     my_order_open_ll.setVisibility(View.GONE);
                     my_state_ll.setVisibility(View.VISIBLE);
 
-                }else {
+                } else {
                     my_order_open_ll.setVisibility(View.VISIBLE);
                     my_state_ll.setVisibility(View.GONE);
                 }
@@ -165,7 +164,6 @@ public class MineActivity extends BaseActivity {
         nickName_mine = (TextView) findViewById(R.id.nickName_mine);//真实姓名
         mine_type = (TextView) findViewById(R.id.mine_type);//用户类型
         isVerified = (ImageView) findViewById(R.id.mine_type_isVerified);//是否是认证用户
-
         my_order_open_ll = (LinearLayout) findViewById(R.id.my_order_open_ll);
         my_order_open_ll.setVisibility(View.GONE);
         my_state_ll = (LinearLayout) findViewById(R.id.my_state_ll);
@@ -239,17 +237,14 @@ public class MineActivity extends BaseActivity {
                 if (!isLogin()) {
                     DialogShow();
                 } else {
-                    Intent intent = new Intent(this, MyaccountActivity.class);
-                    startActivity(intent);
+                    startActivity(MyaccountActivity.class);
                 }
                 break;
             case R.id.my_state_ll:
                 if (!isLogin()) {
                     DialogShow();
                 } else {
-                    Intent intent = new Intent(MineActivity.this,
-                            RSCOrderListActivity.class);
-                    startActivity(intent);
+                    startActivity( RSCOrderListActivity.class);
                 }
                 break;
 
@@ -267,8 +262,7 @@ public class MineActivity extends BaseActivity {
                 if (!isLogin()) {
                     DialogShow();
                 } else {
-                    Intent intent = new Intent(this, NewFramerInvite.class);
-                    startActivity(intent);
+                    startActivity(NewFramerInvite.class);
                 }
                 break;
             case R.id.my_jifen_ll:
@@ -283,44 +277,14 @@ public class MineActivity extends BaseActivity {
                 break;
 
             case R.id.my_kefudianhua:
-                CustomDialog.Builder builder = new CustomDialog.Builder(
-                        MineActivity.this);
-                builder.setMessage("400-056-0371")
-                        .setPositiveButton("拨打",
-                                new DialogInterface.OnClickListener() {
-
-                                    @Override
-                                    public void onClick(DialogInterface dialog,
-                                                        int which) {
-                                        Intent intent = new Intent();
-                                        intent.setAction(Intent.ACTION_CALL);
-                                        intent.setData(Uri.parse("tel:"
-                                                + "4000560371"));
-                                        dialog.dismiss();
-                                        // 开启系统拨号器
-                                        startActivity(intent);
-                                    }
-                                })
-                        .setNegativeButton("取消",
-                                new DialogInterface.OnClickListener() {
-
-                                    @Override
-                                    public void onClick(DialogInterface dialog,
-                                                        int which) {
-                                        dialog.dismiss();
-                                    }
-                                });
-                builder.create().show();
-
+                Utils.dial(this, "400-056-0371");
                 break;
             case R.id.my_set:
-                IntentUtil.activityForward(MineActivity.this,
-                        SettingActivity.class, null, false);
+                startActivity(SettingActivity.class);
                 break;
             case R.id.my_login_cancel:
                 if (!isLogin())
-                    IntentUtil.activityForward(MineActivity.this,
-                            RegisterActivity.class, null, false);
+                    startActivity(RegisterActivity.class);
                 break;
             case R.id.my_login_sure:
                 if (!isLogin()) {
@@ -444,7 +408,7 @@ public class MineActivity extends BaseActivity {
             if (user.isRSC) {
                 my_order_open_ll.setVisibility(View.GONE);
                 my_state_ll.setVisibility(View.VISIBLE);
-            }else {
+            } else {
                 my_order_open_ll.setVisibility(View.VISIBLE);
                 my_state_ll.setVisibility(View.GONE);
             }
@@ -549,10 +513,13 @@ public class MineActivity extends BaseActivity {
             titleView.setVisibility(View.GONE);
         }
         LoginResult.UserInfo me = Store.User.queryMe();
-        if (me!=null){
+        if (me != null) {
             if (me.isRSC) {
                 my_order_open_ll.setVisibility(View.GONE);
                 my_state_ll.setVisibility(View.VISIBLE);
+            } else {
+                my_order_open_ll.setVisibility(View.VISIBLE);
+                my_state_ll.setVisibility(View.GONE);
             }
         }
 

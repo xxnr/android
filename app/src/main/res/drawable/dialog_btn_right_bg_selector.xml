@@ -1,7 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:drawable="@drawable/dialog_bg_btn_right_unchecked" android:state_pressed="false"/>
-    <item android:drawable="@drawable/dialog_bg_btn_right_checked" android:state_pressed="true"/>
+    <item android:state_pressed="false">
+        <shape>
+            <solid android:color="@color/white" />
+            <corners android:bottomLeftRadius="0dp"
+                android:bottomRightRadius="5dp"
+                android:topLeftRadius="0dp"
+                android:topRightRadius="0dp"/>
+        </shape>
+    </item>
+
+    <item android:state_pressed="true">
+        <shape>
+            <solid android:color="@color/list_bg" />
+            <corners android:bottomLeftRadius="0dp"
+                android:bottomRightRadius="5dp"
+                android:topLeftRadius="0dp"
+                android:topRightRadius="0dp" />
+        </shape>
+    </item>
+
 
 </selector>

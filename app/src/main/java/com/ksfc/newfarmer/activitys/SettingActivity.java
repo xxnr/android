@@ -13,15 +13,12 @@ import com.ksfc.newfarmer.widget.dialog.CustomProgressDialogForCache;
 import com.ksfc.newfarmer.utils.DataCleanManager;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
-import com.ksfc.newfarmer.widget.CustomCheckBox;
-import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.PushAgent;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
-import com.umeng.socialize.media.UMEmoji;
 import com.umeng.socialize.media.UMImage;
 import com.umeng.update.UmengUpdateAgent;
 import com.umeng.update.UmengUpdateListener;
@@ -41,10 +38,13 @@ import android.os.Message;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import net.yangentao.util.app.App;
 
 /**
  * 项目名称：newFarmer 类名称：SettingActivity 类描述： 创建人：王蕾 创建时间：2015-5-29 下午2:28:31 修改备注：
@@ -52,7 +52,7 @@ import android.widget.TextView;
 public class SettingActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener {
 
     private TextView versionName;
-    private CustomCheckBox checkBox;
+    private CheckBox checkBox;
     private Dialog progressDialog;
     private boolean toastFlag = false;
 
@@ -120,7 +120,7 @@ public class SettingActivity extends BaseActivity implements CompoundButton.OnCh
         setViewClick(R.id.about_us);
         setViewClick(R.id.share_app_ll);
         //是否推送
-        checkBox = (CustomCheckBox) findViewById(R.id.push_switch);
+        checkBox = (CheckBox) findViewById(R.id.push_switch);
         PushAgent mPushAgent = PushAgent.getInstance(getApplicationContext());
         checkBox.setChecked(mPushAgent.isEnabled());
         checkBox.setOnCheckedChangeListener(this);
@@ -258,6 +258,8 @@ public class SettingActivity extends BaseActivity implements CompoundButton.OnCh
                                         dialog.dismiss();
                                         //清除缓存
                                         DataCleanManager.cleanInternalCache(getApplicationContext());
+                                        //清除当前用户的数据库 部分数据库
+                                        DataCleanManager.cleanDatabaseByName(getApplicationContext(), "customer" + App.getApp().getUid());
                                         //进度条
                                         progressDialog = CustomProgressDialogForCache.createLoadingDialog(SettingActivity.this, "正在清除缓存请稍后...");
                                         progressDialog.show();
@@ -318,13 +320,14 @@ public class SettingActivity extends BaseActivity implements CompoundButton.OnCh
         manager = this.getPackageManager();
         try {
             info = manager.getPackageInfo(this.getPackageName(), 0);
+            String versionName = info.versionName;
+            if (StringUtil.checkStr(versionName)) {
+                return versionName;
+            }
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        String versionName = info.versionName;
-        if (StringUtil.checkStr(versionName)) {
-            return versionName;
-        }
+
         return null;
     }
 

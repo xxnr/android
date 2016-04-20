@@ -1,42 +1,54 @@
 package com.ksfc.newfarmer.fragment;
 
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.activitys.ConsumerOrderActivity;
 import com.ksfc.newfarmer.adapter.CommonAdapter;
 import com.ksfc.newfarmer.adapter.CommonViewHolder;
 import com.ksfc.newfarmer.db.Store;
+import com.ksfc.newfarmer.db.XUtilsDb.XUtilsDbHelper;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
 import com.ksfc.newfarmer.protocol.beans.InviteeResult;
 import com.ksfc.newfarmer.protocol.beans.LoginResult;
-import com.ksfc.newfarmer.utils.PullToRefreshUtils;
+import com.ksfc.newfarmer.utils.ScreenUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
+import com.ksfc.newfarmer.utils.Utils;
+import com.ksfc.newfarmer.widget.QuickAlphabeticBar;
+import com.lidroid.xutils.DbUtils;
+import com.lidroid.xutils.db.sqlite.Selector;
+import com.lidroid.xutils.exception.DbException;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
-public class InviteFriendsList extends BaseFragment implements PullToRefreshBase.OnRefreshListener2 {
+import net.yangentao.util.app.App;
 
-    private LinearLayout none_layout;
-    private PullToRefreshListView listView;
-    private View head_view;
+
+/**
+ * 我的客户
+ */
+
+public class InviteFriendsList extends BaseFragment {
+
+
     private TextView count_tv;
+    private ListView listView;
+    private QuickAlphabeticBar alphabeticBar;
+    private TextView fast_position;
     private InviteAdapter adapter;
-    private int page = 1;
+    private LinearLayout none_invitee_customer_ll;
 
 
     @Override
@@ -47,18 +59,37 @@ public class InviteFriendsList extends BaseFragment implements PullToRefreshBase
     @Override
     public View InItView() {
         View view = inflater
-                .inflate(R.layout.fragment_invitefriends_list, null);
-        none_layout = (LinearLayout) view.findViewById(R.id.invitefriends_text);
-        listView = (PullToRefreshListView) view.findViewById(R.id.invitefriends);
-        listView.setOnRefreshListener(this);
-        listView.setMode(PullToRefreshBase.Mode.BOTH);
-        //设置刷新的文字
-        PullToRefreshUtils.setFreshText(listView);
-        head_view = LayoutInflater.from(getActivity()).inflate(
-                R.layout.item_invite_list_head, null);
-        count_tv = (TextView) head_view
-                .findViewById(R.id.item_invite_list_head_count);
-        showProgressDialog();
+                .inflate(R.layout.potential_customer_layout, null);
+        View headerLayout = inflater.inflate(R.layout.item_invite_list_head, null);
+
+        none_invitee_customer_ll = (LinearLayout) view.findViewById(R.id.none_invitee_customer_ll);
+
+        listView = (ListView) view.findViewById(R.id.potential_customer_listView);
+        alphabeticBar = (QuickAlphabeticBar) view.findViewById(R.id.fast_scroller);
+        fast_position = (TextView) view.findViewById(R.id.fast_position);
+        count_tv = (TextView) headerLayout.findViewById(R.id.item_invite_list_head_count);
+        listView.addHeaderView(headerLayout);
+
+        //从数据库中取数据
+        DbUtils dbUtils = XUtilsDbHelper.getInstance(App.getApp().getApplicationContext(), App.getApp().getUid());
+        try {
+            List<InviteeResult.InviteeEntity> inviteeEntityList = dbUtils.findAll(Selector.from(InviteeResult.InviteeEntity.class));
+            if (inviteeEntityList != null && !inviteeEntityList.isEmpty()) {
+                adapter = new InviteAdapter(getActivity(), inviteeEntityList);
+                listView.setAdapter(adapter);
+                initAlphabeticBar(inviteeEntityList);
+
+                none_invitee_customer_ll.setVisibility(View.GONE);
+
+                //好友数量
+                if (StringUtil.checkStr(inviteeEntityList.size() + "")) {
+                    count_tv.setText(inviteeEntityList.size() + "");
+                }
+            }
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+
         getData();
         return view;
     }
@@ -66,98 +97,126 @@ public class InviteFriendsList extends BaseFragment implements PullToRefreshBase
     public void getData() {
         RequestParams params = new RequestParams();
         LoginResult.UserInfo userInfo = Store.User.queryMe();
-        if (userInfo!=null){
+        if (userInfo != null) {
             String uid = userInfo.userid;
             params.put("userId", uid);
+            execApi(ApiType.GET_INVITEE_ORDER_BY_NAME.setMethod(ApiType.RequestMethod.GET), params);
         }
-        params.put("max", 20);
-        params.put("page", page);
-        execApi(ApiType.GET_INVITEE, params);
     }
 
     @Override
     public void onResponsed(Request req) {
-        disMissDialog();
-        listView.onRefreshComplete();
-        if (req.getApi() == ApiType.GET_INVITEE) {
-            InviteeResult data = (InviteeResult) req.getData();
-            if (data.getStatus().equals("1000")) {
-                none_layout.setVisibility(View.GONE);
-                if (listView.getRefreshableView().getHeaderViewsCount() == 0) {
-                    listView.getRefreshableView().addHeaderView(head_view);
+
+        if (req.getApi() == ApiType.GET_INVITEE_ORDER_BY_NAME) {
+
+            if (req.getData().getStatus().equals("1000")) {
+
+                InviteeResult data = (InviteeResult) req.getData();
+                //好友数量
+                if (StringUtil.checkStr(data.total + "")) {
+                    count_tv.setText(data.total + "");
                 }
-                if (data.invitee.size() > 0) {
-                    List<InviteeResult.Invitee> list = data.invitee;
-                    if (page == 1) {
-                        if (adapter == null) {
-                            adapter = new InviteAdapter(getActivity(),list);
-                            listView.setAdapter(adapter);
-                        } else {
-                            adapter.clear();
-                            adapter.addAll(list);
-                        }
+                if (data.invitee != null && !data.invitee.isEmpty()) {
+
+                    none_invitee_customer_ll.setVisibility(View.GONE);
+
+                    if (adapter != null) {
+                        adapter.clear();
+                        adapter.addAll(data.invitee);
                     } else {
-                        adapter.addAll(list);
+                        adapter = new InviteAdapter(getActivity(), data.invitee);
+                        listView.setAdapter(adapter);
                     }
-                    listView.setAdapter(adapter);
-                    count_tv.setText(data.invitee.size() + "");
+                    initAlphabeticBar(data.invitee);
+                    //删除并重新 存入数据库
+                    DbUtils dbUtils = XUtilsDbHelper.getInstance(App.getApp().getApplicationContext(), App.getApp().getUid());
+                    XUtilsDbHelper.deleteAll(dbUtils, InviteeResult.InviteeEntity.class);
+                    XUtilsDbHelper.saveOrUpdateAll(dbUtils, data.invitee);
 
                 } else {
-                    if (page > 1) {
-                        page--;
-                        if (adapter != null) {
-                            if (adapter.getCount() == 0) {
-                                none_layout.setVisibility(View.VISIBLE);
-                            }
-
-                        } else {
-                            none_layout.setVisibility(View.VISIBLE);
-
-                        }
-                        showToast("没有更多客户");
-                    } else {
-                        none_layout.setVisibility(View.VISIBLE);
-                    }
-
+                    none_invitee_customer_ll.setVisibility(View.VISIBLE);
                 }
+
             }
 
         }
+
+
     }
 
-    class InviteAdapter extends CommonAdapter<InviteeResult.Invitee>{
+    //初始化滚动条
+    public void initAlphabeticBar(List<InviteeResult.InviteeEntity> data) {
 
+        HashMap<String, Integer> alphaIndexer = new HashMap<>();
+        ArrayList<String> alphas = new ArrayList<>();
+        for (int i = 0; i < data.size(); i++) {
+            // 得到字母
+            if (!alphaIndexer.containsKey(data.get(i).nameInitial)) {
+                alphaIndexer.put(data.get(i).nameInitial, i);
+                alphas.add(data.get(i).nameInitial);
+            }
+        }
+        float mHeight = (ScreenUtil.getScreenHeight(App.getApp().getApplicationContext()) - (Utils.dip2px(App.getApp().getApplicationContext(), 125))) * (float) (alphaIndexer.size() / 27.00);
+        ViewGroup.LayoutParams layoutParams = alphabeticBar.getLayoutParams();
+        layoutParams.height = (int) mHeight;
+        alphabeticBar.setAlphaIndexer(alphaIndexer);
+        alphabeticBar.setFastScrollLetter(alphas);
+        alphabeticBar.setLayoutParams(layoutParams);
+        alphabeticBar.setHight(mHeight);
+        alphabeticBar.init(fast_position);
+        alphabeticBar.setListViewAndCustomerList(data, listView);
+        alphabeticBar.setVisibility(View.VISIBLE);
+    }
 
+    //适配器
+    class InviteAdapter extends CommonAdapter<InviteeResult.InviteeEntity> {
+        private List<InviteeResult.InviteeEntity> list;
 
-        public InviteAdapter(Context context, List<InviteeResult.Invitee> data) {
+        public InviteAdapter(Context context, List<InviteeResult.InviteeEntity> data) {
             super(context, data, R.layout.item_invite_list);
+            this.list = data;
         }
 
         @Override
-        public void convert(final CommonViewHolder holder, final InviteeResult.Invitee invitee) {
+        public void convert(final CommonViewHolder holder, final InviteeResult.InviteeEntity invitee) {
 
-            if (invitee!=null){
+            if (invitee != null) {
+                //分组 性别 姓名 是否更新订单 手机号
+                TextView alpha = (TextView) holder.getView(R.id.alpha);
+
+                // 当前字母
+                String currentStr = invitee.nameInitial;
+                // 前面的字母
+                String previewStr = (holder.getPosition() - 1) >= 0 ? list.get(holder.getPosition() - 1).nameInitial : " ";
+
+                if (!previewStr.equals(currentStr)) {
+                    alpha.setVisibility(View.VISIBLE);
+                    alpha.setText(currentStr);
+                } else {
+                    alpha.setVisibility(View.GONE);
+                }
+
+                ImageView sex_iv = (ImageView) holder.getView(R.id.item_invite_sex);
+                if (invitee.sex) {
+                    sex_iv.setBackgroundResource(R.drawable.girl_icon);
+                } else {
+                    sex_iv.setBackgroundResource(R.drawable.boy_icon);
+                }
+
                 TextView nickname_tv = (TextView) holder.getView(R.id.my_inviter_nickname);
                 if (!TextUtils.isEmpty(invitee.name)) {
                     nickname_tv.setText(invitee.name);
-                    nickname_tv.setTextColor(Color.WHITE);
-                    nickname_tv.setBackgroundResource(R.drawable.login_roateup);
                 } else {
-                    nickname_tv.setText("该好友未填姓名");
-                    nickname_tv.setTextColor(getResources().getColor(R.color.main_index_gary));
-                    nickname_tv.setBackgroundResource(R.drawable.gethaoyouweishezhinicheng);
+                    nickname_tv.setText("好友未填姓名");
+                }
+                final TextView dotView = (TextView) holder.getView(R.id.my_inviter_nickname_remind_dot);
+
+                if (invitee.newOrdersNumber > 0) {
+                    dotView.setVisibility(View.VISIBLE);
+                } else {
+                    dotView.setVisibility(View.INVISIBLE);
                 }
 
-                final TextView dotView = (TextView) holder.getView(R.id.my_inviter_nickname_remind_dot);
-                if (invitee.newOrdersNumber != 0) {
-                    if (invitee.newOrdersNumber > 0) {
-                        dotView.setVisibility(View.VISIBLE);
-                    } else {
-                        dotView.setVisibility(View.GONE);
-                    }
-                } else {
-                    dotView.setVisibility(View.GONE);
-                }
                 if (StringUtil.checkStr(invitee.account)) {
                     holder.setText(R.id.my_inviter_phone, invitee.account);
                 }
@@ -165,7 +224,7 @@ public class InviteFriendsList extends BaseFragment implements PullToRefreshBase
                 holder.getConvertView().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        dotView.setVisibility(View.GONE);
+                        dotView.setVisibility(View.INVISIBLE);
                         Intent intent = new Intent(getActivity(), ConsumerOrderActivity.class);
                         intent.putExtra("consumer", invitee);
                         startActivity(intent);
@@ -175,24 +234,6 @@ public class InviteFriendsList extends BaseFragment implements PullToRefreshBase
 
             }
         }
-    }
-
-
-
-
-    //加载更多
-    @Override
-    public void onPullDownToRefresh(PullToRefreshBase refreshView) {
-        PullToRefreshUtils.setFreshClose(refreshView);
-        page = 1;
-        getData();
-    }
-
-    @Override
-    public void onPullUpToRefresh(PullToRefreshBase refreshView) {
-        PullToRefreshUtils.setFreshClose(refreshView);
-        page++;
-        getData();
     }
 
 

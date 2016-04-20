@@ -8,12 +8,10 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -51,9 +49,11 @@ import com.ksfc.newfarmer.widget.ClearEditText;
 import com.ksfc.newfarmer.widget.KeyboardListenRelativeLayout;
 import com.ksfc.newfarmer.widget.RecyclerImageView;
 import com.ksfc.newfarmer.widget.UnSwipeGridView;
-import com.ksfc.newfarmer.widget.UnSwipeListView;
 import com.ksfc.newfarmer.widget.WidgetUtil;
 import com.squareup.picasso.Picasso;
+
+import net.yangentao.util.msg.MsgCenter;
+import net.yangentao.util.msg.MsgListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -110,8 +110,6 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
     private void initView() {
         rootView = (KeyboardListenRelativeLayout) findViewById(R.id.root_view);
         rootView.setOnKeyboardStateChangedListener(this);
-//        rootView.getViewTreeObserver().addOnGlobalLayoutListener(this);
-
         rsc_search_edit = (ClearEditText) findViewById(R.id.rsc_search_edit);
         rsc_search_text = (TextView) findViewById(R.id.rsc_search_text);
         rsc_search_text.setText("取消");
@@ -162,6 +160,15 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
 
         pop_bg = (RelativeLayout) findViewById(R.id.pop_bg);
 
+
+        //订单状态改变时刷新
+        MsgCenter.addListener(new MsgListener() {
+            @Override
+            public void onMsg(Object sender, String msg, Object... args) {
+                page = 1;
+                getData(page);
+            }
+        }, MsgID.Rsc_order_Change);
 
     }
 
@@ -302,13 +309,10 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
                     null_layout.setVisibility(View.GONE);
                     if (page == 1) {
                         if (adapter == null) {
-                            try {
-                                adapter = new OrderAdapter(this, orders);
-                                WidgetUtil.setListViewHeightBasedOnChildren(waitingpay_lv);
-                                waitingpay_lv.setAdapter(adapter);
-                            } catch (NullPointerException e) {
-                                //不知为何getActivity居然会空
-                            }
+                            adapter = new OrderAdapter(this, orders);
+                            WidgetUtil.setListViewHeightBasedOnChildren(waitingpay_lv);
+                            waitingpay_lv.setAdapter(adapter);
+
                         } else {
                             adapter.clear();
                             adapter.addAll(orders);
@@ -518,97 +522,99 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
                     holder.setText(R.id.my_order_pay_price, "¥" + StringUtil.toTwoString(ordersEntity.price + ""));
                 }
 
-                UnSwipeListView my_order_list = (UnSwipeListView) holder.getView(R.id.my_order_list);
-
-                //Sku列表
-                if (ordersEntity.SKUs != null && !ordersEntity.SKUs.isEmpty()) {
-                    ProductAdapter carAdapter = new ProductAdapter(RscSearchOrderActivity.this, ordersEntity.SKUs, ordersEntity.id);
-                    my_order_list.setAdapter(carAdapter);
-                    // 设置ListView子listView的高度，避免只显示一个listView item 但是比较耗内存
-                    WidgetUtil.setListViewHeightBasedOnChildren(my_order_list);
+                LinearLayout llCommerceContainer = (LinearLayout) holder.getView(R.id.my_order_llCommerceContainer);
+                if (llCommerceContainer.getChildCount() > 0) {
+                    llCommerceContainer.removeAllViews();
                 }
-            }
-        }
-    }
-    //内层的商品列表，已订单区分
+                List<RscOrderResult.OrdersEntity.SKUsEntity> SKUsList = ordersEntity.SKUs;
+                if (SKUsList != null && !SKUsList.isEmpty()) {
+                    for (int i = 0; i < SKUsList.size(); i++) {
+                        ViewGroup rootView = (ViewGroup) getLayoutInflater().inflate(R.layout.rsc_order_list_item_item, null);
+                        ViewHolderChild viewHolderChild = new ViewHolderChild(rootView);
+                        RscOrderResult.OrdersEntity.SKUsEntity skUsEntity = SKUsList.get(i);
+                        if (skUsEntity != null) {
+                            //商品图片
+                            if (StringUtil.checkStr(skUsEntity.thumbnail)) {
+                                Picasso.with(RscSearchOrderActivity.this)
+                                        .load(MsgID.IP + skUsEntity.thumbnail)
+                                        .error(R.drawable.error)
+                                        .placeholder(R.drawable.zhanweitu)
+                                        .into(viewHolderChild.ordering_item_img);
 
-    class ProductAdapter extends CommonAdapter<RscOrderResult.OrdersEntity.SKUsEntity> {
-        private String orderId;
-
-        public ProductAdapter(Context context, List<RscOrderResult.OrdersEntity.SKUsEntity> data, String orderId) {
-            super(context, data, R.layout.rsc_order_list_item_item);
-            this.orderId = orderId;
-
-        }
-
-        @Override
-        public void convert(CommonViewHolder holder, RscOrderResult.OrdersEntity.SKUsEntity skUsEntity) {
-
-            if (skUsEntity != null) {
-
-                //商品图片
-                if (StringUtil.checkStr(skUsEntity.thumbnail)) {
-                    Picasso.with(RscSearchOrderActivity.this)
-                            .load(MsgID.IP + skUsEntity.thumbnail)
-                            .error(R.drawable.error)
-                            .placeholder(R.drawable.zhanweitu)
-                            .into(((RecyclerImageView) holder.getView(R.id.ordering_item_img)));
-
-                }
-                //商品个数
-                holder.setText(R.id.ordering_item_geshu, "X " + skUsEntity.count + "");
-                //商品名
-                if (StringUtil.checkStr(skUsEntity.productName)) {
-                    holder.setText(R.id.ordering_item_name, skUsEntity.productName);
-                }
+                            }
+                            //商品个数
+                            viewHolderChild.ordering_item_geshu.setText("X " + skUsEntity.count);
+                            //商品名
+                            if (StringUtil.checkStr(skUsEntity.productName)) {
+                                viewHolderChild.ordering_item_name.setText(skUsEntity.productName);
+                            }
 
 
-                //Sku属性
-                StringBuilder stringSku = new StringBuilder();
-                if (skUsEntity.attributes != null && !skUsEntity.attributes.isEmpty()) {
-                    for (int k = 0; k < skUsEntity.attributes.size(); k++) {
-                        if (StringUtil.checkStr(skUsEntity.attributes.get(k).name)
-                                && StringUtil.checkStr(skUsEntity.attributes.get(k).value)) {
-                            stringSku.append(skUsEntity.attributes.get(k).name + ":")
-                                    .append(skUsEntity.attributes.get(k).value + ";");
+                            //Sku属性
+                            StringBuilder stringSku = new StringBuilder();
+                            if (skUsEntity.attributes != null && !skUsEntity.attributes.isEmpty()) {
+                                for (int k = 0; k < skUsEntity.attributes.size(); k++) {
+                                    if (StringUtil.checkStr(skUsEntity.attributes.get(k).name)
+                                            && StringUtil.checkStr(skUsEntity.attributes.get(k).value)) {
+                                        stringSku.append(skUsEntity.attributes.get(k).name).append(":").append(skUsEntity.attributes.get(k).value).append(";");
+                                    }
+                                }
+                                String car_attr = stringSku.substring(0, stringSku.length() - 1);
+                                if (StringUtil.checkStr(car_attr)) {
+                                    viewHolderChild.ordering_item_attr.setText(car_attr);
+                                }
+                            }
+
+                            //附加选项
+                            StringBuilder stringAdditions = new StringBuilder();
+                            if (skUsEntity.additions != null && !skUsEntity.additions.isEmpty()) {
+                                viewHolderChild.ordering_item_additionsll.setVisibility(View.VISIBLE);
+                                stringAdditions.append("附加项目:");
+                                for (int k = 0; k < skUsEntity.additions.size(); k++) {
+                                    if (StringUtil.checkStr(skUsEntity.additions.get(k).name)) {
+                                        stringAdditions.append(skUsEntity.additions.get(k).name).append(";");
+                                    }
+                                }
+                                String car_additions = stringAdditions.substring(0, stringAdditions.length() - 1);
+                                if (StringUtil.checkStr(car_additions)) {
+                                    viewHolderChild.ordering_item_additions.setText(car_additions);
+                                }
+                            } else {
+                                viewHolderChild.ordering_item_additionsll.setVisibility(View.GONE);
+                            }
                         }
-                    }
-                    String car_attr = stringSku.substring(0, stringSku.length() - 1);
-                    if (StringUtil.checkStr(car_attr)) {
-                        holder.setText(R.id.ordering_item_attr, car_attr);
+                        llCommerceContainer.addView(rootView);
                     }
                 }
-
-                //附加选项
-                LinearLayout ordering_item_additions_ll = (LinearLayout) holder.getView(R.id.ordering_item_additionsll);
-
-                StringBuilder stringAdditions = new StringBuilder();
-                if (skUsEntity.additions != null && !skUsEntity.additions.isEmpty()) {
-                    ordering_item_additions_ll.setVisibility(View.VISIBLE);
-                    stringAdditions.append("附加项目:");
-                    for (int k = 0; k < skUsEntity.additions.size(); k++) {
-                        if (StringUtil.checkStr(skUsEntity.additions.get(k).name)) {
-                            stringAdditions.append(skUsEntity.additions.get(k).name + ";");
-                        }
-                    }
-                    String car_additions = stringAdditions.substring(0, stringAdditions.length() - 1);
-                    if (StringUtil.checkStr(car_additions)) {
-                        holder.setText(R.id.ordering_item_additions, car_additions);
-                    }
-                } else {
-                    ordering_item_additions_ll.setVisibility(View.GONE);
-                }
-
-                holder.getConvertView().setOnClickListener(new View.OnClickListener() {
+                llCommerceContainer.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(RscSearchOrderActivity.this, RscOrderDetailActivity.class);
-                        intent.putExtra("orderId", orderId);
+                        intent.putExtra("orderId", ordersEntity.id);
                         startActivity(intent);
-
                     }
                 });
+            }
+        }
 
+
+        class ViewHolderChild {
+            public RecyclerImageView ordering_item_img;
+            public TextView ordering_item_name;
+            public TextView ordering_item_state;
+            public TextView ordering_item_geshu;
+            public TextView ordering_item_attr;
+            public TextView ordering_item_additions;
+            public LinearLayout ordering_item_additionsll;
+
+            public ViewHolderChild(View rootView) {
+                this.ordering_item_img = (RecyclerImageView) rootView.findViewById(R.id.ordering_item_img);
+                this.ordering_item_name = (TextView) rootView.findViewById(R.id.ordering_item_name);
+                this.ordering_item_state = (TextView) rootView.findViewById(R.id.ordering_item_state);
+                this.ordering_item_geshu = (TextView) rootView.findViewById(R.id.ordering_item_geshu);
+                this.ordering_item_attr = (TextView) rootView.findViewById(R.id.ordering_item_attr);
+                this.ordering_item_additions = (TextView) rootView.findViewById(R.id.ordering_item_additions);
+                this.ordering_item_additionsll = (LinearLayout) rootView.findViewById(R.id.ordering_item_additionsll);
             }
 
         }
@@ -701,8 +707,7 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
                     for (int k = 0; k < skus.attributes.size(); k++) {
                         if (StringUtil.checkStr(skus.attributes.get(k).name)
                                 && StringUtil.checkStr(skus.attributes.get(k).value)) {
-                            stringBuilder.append(skus.attributes.get(k).name + ":")
-                                    .append(skus.attributes.get(k).value + ";");
+                            stringBuilder.append(skus.attributes.get(k).name).append(":").append(skus.attributes.get(k).value).append(";");
                         }
                     }
                     String car_attr = stringBuilder.substring(0, stringBuilder.length() - 1);
@@ -723,7 +728,7 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
                     stringAdditions.append("附加项目:");
                     for (int k = 0; k < skus.additions.size(); k++) {
                         if (StringUtil.checkStr(skus.additions.get(k).name)) {
-                            stringAdditions.append(skus.additions.get(k).name + ";");
+                            stringAdditions.append(skus.additions.get(k).name).append(";");
                         }
                     }
                     String car_additions = stringAdditions.substring(0, stringAdditions.length() - 1);
@@ -994,8 +999,7 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
                     for (int k = 0; k < skus.attributes.size(); k++) {
                         if (StringUtil.checkStr(skus.attributes.get(k).name)
                                 && StringUtil.checkStr(skus.attributes.get(k).value)) {
-                            stringBuilder.append(skus.attributes.get(k).name + ":")
-                                    .append(skus.attributes.get(k).value + ";");
+                            stringBuilder.append(skus.attributes.get(k).name).append(":").append(skus.attributes.get(k).value).append(";");
                         }
                     }
                     String car_attr = stringBuilder.substring(0, stringBuilder.length() - 1);
@@ -1016,7 +1020,7 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
                     stringAdditions.append("附加项目:");
                     for (int k = 0; k < skus.additions.size(); k++) {
                         if (StringUtil.checkStr(skus.additions.get(k).name)) {
-                            stringAdditions.append(skus.additions.get(k).name + ";");
+                            stringAdditions.append(skus.additions.get(k).name).append(";");
                         }
                     }
                     String car_additions = stringAdditions.substring(0, stringAdditions.length() - 1);
@@ -1156,7 +1160,7 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
 
         if (state == KeyboardListenRelativeLayout.KEYBOARD_STATE_HIDE) {
 
-            if (self_delivery_code_et!=null){
+            if (self_delivery_code_et != null) {
                 self_delivery_code_et.clearFocus();
             }
         }

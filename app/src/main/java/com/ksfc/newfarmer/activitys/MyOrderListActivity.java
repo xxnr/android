@@ -6,20 +6,19 @@ package com.ksfc.newfarmer.activitys;
 import java.util.ArrayList;
 
 import com.ksfc.newfarmer.BaseActivity;
-import com.ksfc.newfarmer.MainActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.adapter.MyOrderListFragmentPagerAdapter;
 import com.ksfc.newfarmer.fragment.MyOrderDetailFragment;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.utils.PopWindowUtils;
+import com.ksfc.newfarmer.widget.UnSwipeViewPager;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -30,7 +29,7 @@ import net.yangentao.util.msg.MsgCenter;
  * 修改备注：
  */
 public class MyOrderListActivity extends BaseActivity implements MyOrderDetailFragment.BgSwitch {
-    private ViewPager viewPager;
+    private UnSwipeViewPager viewPager;
     private FragmentManager fragmentManager;
     private TabLayout mTabLayout;
     private ArrayList<String> titleList = new ArrayList<>();
@@ -65,7 +64,8 @@ public class MyOrderListActivity extends BaseActivity implements MyOrderDetailFr
     }
 
     private void initView() {
-        viewPager = (ViewPager) findViewById(R.id.waitingpay_ViewPager);
+        viewPager = (UnSwipeViewPager) findViewById(R.id.waitingpay_ViewPager);
+        viewPager.setScanScroll(false);
         mTabLayout = (TabLayout) findViewById(R.id.tabs);
         pop_bg = (RelativeLayout) findViewById(R.id.pop_bg);
         initTabs();

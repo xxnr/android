@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -28,7 +27,6 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
-import com.ksfc.newfarmer.activitys.GoodsListActivity;
 import com.ksfc.newfarmer.activitys.RSCOrderListActivity;
 import com.ksfc.newfarmer.activitys.RscOrderDetailActivity;
 import com.ksfc.newfarmer.adapter.CommonAdapter;
@@ -42,16 +40,13 @@ import com.ksfc.newfarmer.protocol.beans.OfflinePayWayResult;
 import com.ksfc.newfarmer.protocol.beans.RscOrderDetailResult;
 import com.ksfc.newfarmer.protocol.beans.RscOrderResult;
 import com.ksfc.newfarmer.utils.DateFormatUtils;
-import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.PullToRefreshUtils;
 import com.ksfc.newfarmer.utils.ShowHideUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.KeyboardListenRelativeLayout;
 import com.ksfc.newfarmer.widget.RecyclerImageView;
 import com.ksfc.newfarmer.widget.UnSwipeGridView;
-import com.ksfc.newfarmer.widget.UnSwipeListView;
 import com.ksfc.newfarmer.widget.WidgetUtil;
-import com.ksfc.newfarmer.widget.dialog.CustomToast;
 import com.squareup.picasso.Picasso;
 
 import net.yangentao.util.msg.MsgCenter;
@@ -131,6 +126,15 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
 
             }
         }, MsgID.rsc_swipe_reFlash);
+
+        //订单状态改变时刷新
+        MsgCenter.addListener(new MsgListener() {
+            @Override
+            public void onMsg(Object sender, String msg, Object... args) {
+                page = 1;
+                getData(page);
+            }
+        }, MsgID.Rsc_order_Change);
 
         getData(page);
         getPayWay();
@@ -290,6 +294,7 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
                         RequestParams params = new RequestParams();
                         Map<String, Object> map = new HashMap<>();
                         map.put("SKURefs", list);
+                        Log.d("RscOrderDetailFragment", "list:" + list);
                         map.put("orderId", deliveringOrderId);
                         LoginResult.UserInfo userInfo = Store.User.queryMe();
                         if (userInfo != null) {
@@ -367,7 +372,6 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
         public void convert(CommonViewHolder holder, final RscOrderResult.OrdersEntity ordersEntity) {
             if (ordersEntity != null) {
                 //时间和姓名
-
                 //格式化时间
                 String time = DateFormatUtils.convertTime(ordersEntity.dateCreated);
                 StringBuilder builder = new StringBuilder();
@@ -488,97 +492,99 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
                     holder.setText(R.id.my_order_pay_price, "¥" + StringUtil.toTwoString(ordersEntity.price + ""));
                 }
 
-                UnSwipeListView my_order_list = (UnSwipeListView) holder.getView(R.id.my_order_list);
-
-                //Sku列表
-                if (ordersEntity.SKUs != null && !ordersEntity.SKUs.isEmpty()) {
-                    ProductAdapter carAdapter = new ProductAdapter(getActivity(), ordersEntity.SKUs, ordersEntity.id);
-                    my_order_list.setAdapter(carAdapter);
-                    // 设置ListView子listView的高度，避免只显示一个listView item 但是比较耗内存
-                    WidgetUtil.setListViewHeightBasedOnChildren(my_order_list);
+                LinearLayout llCommerceContainer = (LinearLayout) holder.getView(R.id.my_order_llCommerceContainer);
+                if (llCommerceContainer.getChildCount() > 0) {
+                    llCommerceContainer.removeAllViews();
                 }
-            }
-        }
-    }
-    //内层的商品列表，已订单区分
+                List<RscOrderResult.OrdersEntity.SKUsEntity> SKUsList = ordersEntity.SKUs;
+                if (SKUsList != null && !SKUsList.isEmpty()) {
+                    for (int i = 0; i < SKUsList.size(); i++) {
+                        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.rsc_order_list_item_item, null);
+                        ViewHolderChild viewHolderChild = new ViewHolderChild(rootView);
+                        RscOrderResult.OrdersEntity.SKUsEntity skUsEntity = SKUsList.get(i);
+                        if (skUsEntity != null) {
+                            //商品图片
+                            if (StringUtil.checkStr(skUsEntity.thumbnail)) {
+                                Picasso.with(getActivity())
+                                        .load(MsgID.IP + skUsEntity.thumbnail)
+                                        .error(R.drawable.error)
+                                        .placeholder(R.drawable.zhanweitu)
+                                        .into(viewHolderChild.ordering_item_img);
 
-    class ProductAdapter extends CommonAdapter<RscOrderResult.OrdersEntity.SKUsEntity> {
-        private String orderId;
-
-        public ProductAdapter(Context context, List<RscOrderResult.OrdersEntity.SKUsEntity> data, String orderId) {
-            super(context, data, R.layout.rsc_order_list_item_item);
-            this.orderId = orderId;
-
-        }
-
-        @Override
-        public void convert(CommonViewHolder holder, RscOrderResult.OrdersEntity.SKUsEntity skUsEntity) {
-
-            if (skUsEntity != null) {
-
-                //商品图片
-                if (StringUtil.checkStr(skUsEntity.thumbnail)) {
-                    Picasso.with(getActivity())
-                            .load(MsgID.IP + skUsEntity.thumbnail)
-                            .error(R.drawable.error)
-                            .placeholder(R.drawable.zhanweitu)
-                            .into(((RecyclerImageView) holder.getView(R.id.ordering_item_img)));
-
-                }
-                //商品个数
-                holder.setText(R.id.ordering_item_geshu, "X " + skUsEntity.count + "");
-                //商品名
-                if (StringUtil.checkStr(skUsEntity.productName)) {
-                    holder.setText(R.id.ordering_item_name, skUsEntity.productName);
-                }
+                            }
+                            //商品个数
+                            viewHolderChild.ordering_item_geshu.setText("X " + skUsEntity.count);
+                            //商品名
+                            if (StringUtil.checkStr(skUsEntity.productName)) {
+                                viewHolderChild.ordering_item_name.setText(skUsEntity.productName);
+                            }
 
 
-                //Sku属性
-                StringBuilder stringSku = new StringBuilder();
-                if (skUsEntity.attributes != null && !skUsEntity.attributes.isEmpty()) {
-                    for (int k = 0; k < skUsEntity.attributes.size(); k++) {
-                        if (StringUtil.checkStr(skUsEntity.attributes.get(k).name)
-                                && StringUtil.checkStr(skUsEntity.attributes.get(k).value)) {
-                            stringSku.append(skUsEntity.attributes.get(k).name + ":")
-                                    .append(skUsEntity.attributes.get(k).value + ";");
+                            //Sku属性
+                            StringBuilder stringSku = new StringBuilder();
+                            if (skUsEntity.attributes != null && !skUsEntity.attributes.isEmpty()) {
+                                for (int k = 0; k < skUsEntity.attributes.size(); k++) {
+                                    if (StringUtil.checkStr(skUsEntity.attributes.get(k).name)
+                                            && StringUtil.checkStr(skUsEntity.attributes.get(k).value)) {
+                                        stringSku.append(skUsEntity.attributes.get(k).name).append(":").append(skUsEntity.attributes.get(k).value).append(";");
+                                    }
+                                }
+                                String car_attr = stringSku.substring(0, stringSku.length() - 1);
+                                if (StringUtil.checkStr(car_attr)) {
+                                    viewHolderChild.ordering_item_attr.setText(car_attr);
+                                }
+                            }
+
+                            //附加选项
+                            StringBuilder stringAdditions = new StringBuilder();
+                            if (skUsEntity.additions != null && !skUsEntity.additions.isEmpty()) {
+                                viewHolderChild.ordering_item_additionsll.setVisibility(View.VISIBLE);
+                                stringAdditions.append("附加项目:");
+                                for (int k = 0; k < skUsEntity.additions.size(); k++) {
+                                    if (StringUtil.checkStr(skUsEntity.additions.get(k).name)) {
+                                        stringAdditions.append(skUsEntity.additions.get(k).name).append(";");
+                                    }
+                                }
+                                String car_additions = stringAdditions.substring(0, stringAdditions.length() - 1);
+                                if (StringUtil.checkStr(car_additions)) {
+                                    viewHolderChild.ordering_item_additions.setText(car_additions);
+                                }
+                            } else {
+                                viewHolderChild.ordering_item_additionsll.setVisibility(View.GONE);
+                            }
                         }
-                    }
-                    String car_attr = stringSku.substring(0, stringSku.length() - 1);
-                    if (StringUtil.checkStr(car_attr)) {
-                        holder.setText(R.id.ordering_item_attr, car_attr);
+                        llCommerceContainer.addView(rootView);
                     }
                 }
-
-                //附加选项
-                LinearLayout ordering_item_additions_ll = (LinearLayout) holder.getView(R.id.ordering_item_additionsll);
-
-                StringBuilder stringAdditions = new StringBuilder();
-                if (skUsEntity.additions != null && !skUsEntity.additions.isEmpty()) {
-                    ordering_item_additions_ll.setVisibility(View.VISIBLE);
-                    stringAdditions.append("附加项目:");
-                    for (int k = 0; k < skUsEntity.additions.size(); k++) {
-                        if (StringUtil.checkStr(skUsEntity.additions.get(k).name)) {
-                            stringAdditions.append(skUsEntity.additions.get(k).name + ";");
-                        }
-                    }
-                    String car_additions = stringAdditions.substring(0, stringAdditions.length() - 1);
-                    if (StringUtil.checkStr(car_additions)) {
-                        holder.setText(R.id.ordering_item_additions, car_additions);
-                    }
-                } else {
-                    ordering_item_additions_ll.setVisibility(View.GONE);
-                }
-
-                holder.getConvertView().setOnClickListener(new View.OnClickListener() {
+                llCommerceContainer.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(getActivity(), RscOrderDetailActivity.class);
-                        intent.putExtra("orderId", orderId);
-                        getActivity().startActivity(intent);
-
+                        intent.putExtra("orderId", ordersEntity.id);
+                        startActivity(intent);
                     }
                 });
+            }
+        }
 
+
+        class ViewHolderChild {
+            public RecyclerImageView ordering_item_img;
+            public TextView ordering_item_name;
+            public TextView ordering_item_state;
+            public TextView ordering_item_geshu;
+            public TextView ordering_item_attr;
+            public TextView ordering_item_additions;
+            public LinearLayout ordering_item_additionsll;
+
+            public ViewHolderChild(View rootView) {
+                this.ordering_item_img = (RecyclerImageView) rootView.findViewById(R.id.ordering_item_img);
+                this.ordering_item_name = (TextView) rootView.findViewById(R.id.ordering_item_name);
+                this.ordering_item_state = (TextView) rootView.findViewById(R.id.ordering_item_state);
+                this.ordering_item_geshu = (TextView) rootView.findViewById(R.id.ordering_item_geshu);
+                this.ordering_item_attr = (TextView) rootView.findViewById(R.id.ordering_item_attr);
+                this.ordering_item_additions = (TextView) rootView.findViewById(R.id.ordering_item_additions);
+                this.ordering_item_additionsll = (LinearLayout) rootView.findViewById(R.id.ordering_item_additionsll);
             }
 
         }
@@ -671,8 +677,7 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
                     for (int k = 0; k < skus.attributes.size(); k++) {
                         if (StringUtil.checkStr(skus.attributes.get(k).name)
                                 && StringUtil.checkStr(skus.attributes.get(k).value)) {
-                            stringBuilder.append(skus.attributes.get(k).name + ":")
-                                    .append(skus.attributes.get(k).value + ";");
+                            stringBuilder.append(skus.attributes.get(k).name).append(":").append(skus.attributes.get(k).value).append(";");
                         }
                     }
                     String car_attr = stringBuilder.substring(0, stringBuilder.length() - 1);
@@ -693,7 +698,7 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
                     stringAdditions.append("附加项目:");
                     for (int k = 0; k < skus.additions.size(); k++) {
                         if (StringUtil.checkStr(skus.additions.get(k).name)) {
-                            stringAdditions.append(skus.additions.get(k).name + ";");
+                            stringAdditions.append(skus.additions.get(k).name).append(";");
                         }
                     }
                     String car_additions = stringAdditions.substring(0, stringAdditions.length() - 1);
@@ -965,8 +970,7 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
                     for (int k = 0; k < skus.attributes.size(); k++) {
                         if (StringUtil.checkStr(skus.attributes.get(k).name)
                                 && StringUtil.checkStr(skus.attributes.get(k).value)) {
-                            stringBuilder.append(skus.attributes.get(k).name + ":")
-                                    .append(skus.attributes.get(k).value + ";");
+                            stringBuilder.append(skus.attributes.get(k).name).append(":").append(skus.attributes.get(k).value).append(";");
                         }
                     }
                     String car_attr = stringBuilder.substring(0, stringBuilder.length() - 1);
@@ -987,7 +991,7 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
                     stringAdditions.append("附加项目:");
                     for (int k = 0; k < skus.additions.size(); k++) {
                         if (StringUtil.checkStr(skus.additions.get(k).name)) {
-                            stringAdditions.append(skus.additions.get(k).name + ";");
+                            stringAdditions.append(skus.additions.get(k).name).append(";");
                         }
                     }
                     String car_additions = stringAdditions.substring(0, stringAdditions.length() - 1);
@@ -1039,13 +1043,6 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        page = 1;
-        getData(page);
-    }
 
     //确定选中按钮的数量
     public int setCheckedDeliveryGoodsCount(List<RscOrderResult.OrdersEntity.SKUsEntity> list) {

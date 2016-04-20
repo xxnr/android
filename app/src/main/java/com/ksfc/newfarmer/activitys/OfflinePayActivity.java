@@ -1,7 +1,6 @@
 package com.ksfc.newfarmer.activitys;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,6 +22,8 @@ import com.ksfc.newfarmer.protocol.beans.MyOrderDetailResult;
 import com.ksfc.newfarmer.protocol.beans.OfflinePayWayResult;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.UnSwipeListView;
+
+import net.yangentao.util.app.App;
 
 import java.util.List;
 
@@ -60,25 +61,43 @@ public class OfflinePayActivity extends BaseActivity {
                         MyOrderDetailActivity.class);
                 intent.putExtra("orderId", orderId);
                 startActivity(intent);
-                quit();
+                App.getApp().partQuit();
             }
         });
 
-        quit();
+        App.getApp().partQuit();
         RndApplication.tempDestroyActivityList.add(OfflinePayActivity.this);
 
         Bundle bundle = getIntent().getExtras();
         orderId = bundle.getString("orderId");
         String payPrice = bundle.getString("payPrice");
+        String companyName = bundle.getString("companyName");
+        String RSCPhone = bundle.getString("RSCPhone");
+        String RSCAddress = bundle.getString("RSCAddress");
+
 
         if (StringUtil.checkStr(payPrice)) {
             pay_price.setText("¥" + payPrice);
         } else {
             pay_price.setText("");
         }
+        //Rsc信息
+        if (StringUtil.checkStr(companyName)) {
+            RSC_companyName.setText(companyName);
+        }
+
+        if (StringUtil.checkStr(RSCPhone)) {
+            RSC_phone.setText(RSCPhone);
+
+        }
+
+        if (StringUtil.checkStr(RSCAddress)) {
+            RSC_Address.setText(RSCAddress);
+        }
+
 
         if (StringUtil.checkStr(orderId)) {
-            //获取订单详情
+            //获取详情
             getData();
         }
 
@@ -86,14 +105,6 @@ public class OfflinePayActivity extends BaseActivity {
 
     }
 
-    public void quit() {
-        for (Activity activity : RndApplication.tempDestroyActivityList) {
-            if (null != activity) {
-                activity.finish();
-            }
-        }
-        RndApplication.tempDestroyActivityList.clear();
-    }
 
     private void getPayWay() {
 
@@ -104,7 +115,6 @@ public class OfflinePayActivity extends BaseActivity {
     //获取订单详情
     private void getData() {
 
-        showProgressDialog();
         RequestParams params = new RequestParams();
         if (isLogin()) {
             params.put("userId", Store.User.queryMe().userid);

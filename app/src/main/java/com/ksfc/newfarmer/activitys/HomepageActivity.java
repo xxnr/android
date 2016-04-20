@@ -40,15 +40,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
 
 
 public class HomepageActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener {
@@ -66,6 +68,7 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
     private RelativeLayout car_bar_layout;
 
     private PullToRefreshScrollView scrollView;
+    private int itemWitch;
 
     @Override
     public int getLayout() {
@@ -155,7 +158,9 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
 
     private void initView() {
 
-        ll_banner_container= (LinearLayout) findViewById(R.id.ll_banner_container);
+        ll_banner_container = (LinearLayout) findViewById(R.id.ll_banner_container);
+        ScreenUtil.setHeight(this,ll_banner_container,175);
+
         go_huafei = (RelativeLayout) findViewById(R.id.huafei_zhuanchang);
         go_car = (RelativeLayout) findViewById(R.id.car_zhuanchang);
 
@@ -203,8 +208,15 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
         qiche_gv = (UnSwipeGridView) findViewById(R.id.qiche_gv);
         huafei_gv.setFocusable(false);
         qiche_gv.setFocusable(false);
-//        huafei_gv.setColumnWidth(Utils.dip2px(this, 158));
-//        qiche_gv.setColumnWidth(Utils.dip2px(this, 158));
+
+
+        WindowManager windowManager = getWindowManager();
+        Display display = windowManager.getDefaultDisplay();
+        int wh = display.getWidth();
+        itemWitch = (wh - (Utils.dip2px(this, 12 + 16 * 2))) / 2;
+
+        huafei_gv.setColumnWidth(Utils.dip2px(this, itemWitch));
+        qiche_gv.setColumnWidth(Utils.dip2px(this, itemWitch));
     }
 
     @Override
@@ -344,9 +356,27 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
         @Override
         public void convert(CommonViewHolder holder, final SingleGood singleGood) {
             if (singleGood != null) {
+
+                //商品图的外边
+                if (itemWitch != 0) {
+                    RelativeLayout relativeLayout = holder.getView(R.id.huafei_img_rel);
+                    ViewGroup.LayoutParams layoutParams = relativeLayout.getLayoutParams();
+                    layoutParams.height = itemWitch;
+                    layoutParams.width = itemWitch;
+                    relativeLayout.setLayoutParams(layoutParams);
+                }
+
                 //商品图
-                ImageLoader.getInstance().displayImage(MsgID.IP + singleGood.imgUrl,
-                        ((ImageView) holder.getView(R.id.huafei_img)));
+                ImageView imageView = (ImageView) holder.getView(R.id.huafei_img);
+                if (itemWitch > 4) {
+                    ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
+                    layoutParams.height = itemWitch - 4;
+                    layoutParams.width = itemWitch - 4;
+                    imageView.setLayoutParams(layoutParams);
+                    ImageLoader.getInstance().displayImage(MsgID.IP + singleGood.imgUrl, imageView);
+                }
+                ImageLoader.getInstance().displayImage(MsgID.IP + singleGood.imgUrl, imageView);
+
                 //商品名
                 if (StringUtil.checkStr(singleGood.goodsName)) {
                     holder.setText(R.id.huafei_name_tv, singleGood.goodsName);
@@ -392,9 +422,23 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
         @Override
         public void convert(CommonViewHolder holder, final SingleGood singleGood) {
             if (singleGood != null) {
+                //商品图的外边
+                if (itemWitch != 0) {
+                    RelativeLayout relativeLayout = holder.getView(R.id.huafei_img_rel);
+                    ViewGroup.LayoutParams layoutParams = relativeLayout.getLayoutParams();
+                    layoutParams.height = itemWitch;
+                    layoutParams.width = itemWitch;
+                    relativeLayout.setLayoutParams(layoutParams);
+                }
+
                 //商品图
                 ImageView carImage = (ImageView) holder.getView(R.id.huafei_img);
-                carImage.setScaleType(ScaleType.CENTER_CROP);
+                if (itemWitch > 4) {
+                    ViewGroup.LayoutParams layoutParams = carImage.getLayoutParams();
+                    layoutParams.height = itemWitch - 4;
+                    layoutParams.width = itemWitch - 4;
+                    carImage.setLayoutParams(layoutParams);
+                }
                 ImageLoader.getInstance().displayImage(MsgID.IP + singleGood.imgUrl, carImage);
                 //商品名
                 if (StringUtil.checkStr(singleGood.goodsName)) {

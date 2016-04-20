@@ -3,13 +3,9 @@ package com.ksfc.newfarmer.activitys;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -93,7 +89,7 @@ public class SelectUserTypeActivity extends BaseActivity implements AdapterView.
                                 list_value.add((String) entry.getValue());
                                 list_key.add(entry.getKey());
                             }
-                            adapter = new AddressAdapter(SelectUserTypeActivity.this,list_value);
+                            adapter = new AddressAdapter(SelectUserTypeActivity.this, list_value);
                             listView.setAdapter(adapter);
                         }
                     }
@@ -111,12 +107,11 @@ public class SelectUserTypeActivity extends BaseActivity implements AdapterView.
         disMissDialog();
         if (ApiType.SAVE_MYUSER == req.getApi()) {
             LoginResult.UserInfo queryMe = Store.User.queryMe();
-            if (isLogin()){
+            if (queryMe != null) {
                 queryMe.userType = select;
                 Store.User.saveMe(queryMe);
             }
             showToast("保存成功");
-            MsgCenter.fireNull(MsgID.UPDATE_USER, "update");
             MsgCenter.fireNull(MsgID.UPDATE_USER_TYPE);
             finish();
         }
@@ -134,11 +129,11 @@ public class SelectUserTypeActivity extends BaseActivity implements AdapterView.
         if (flag) {
             showProgressDialog("正在保存中...");
             RequestParams params = new RequestParams();
-            if (isLogin()){
+            if (isLogin()) {
                 params.put("userId", Store.User.queryMe().userid);
             }
             params.put("type", list_key.get(position));
-            execApi(ApiType.SAVE_MYUSER, params);
+            execApi(ApiType.SAVE_MYUSER.setMethod(ApiType.RequestMethod.GET), params);
         } else {
             finish();
         }
@@ -146,8 +141,7 @@ public class SelectUserTypeActivity extends BaseActivity implements AdapterView.
     }
 
 
-    class AddressAdapter extends CommonAdapter<String>{
-
+    class AddressAdapter extends CommonAdapter<String> {
 
         public AddressAdapter(Context context, List<String> data) {
             super(context, data, R.layout.city);
@@ -155,15 +149,11 @@ public class SelectUserTypeActivity extends BaseActivity implements AdapterView.
 
         @Override
         public void convert(CommonViewHolder holder, String s) {
-            if (StringUtil.checkStr(s)){
-
-                holder.setText(R.id.cityTextView,s);
-
+            if (StringUtil.checkStr(s)) {
+                holder.setText(R.id.cityTextView, s);
             }
         }
     }
-
-
 
 
 }

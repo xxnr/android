@@ -5,8 +5,6 @@ import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.BaseAdapter;
-import android.widget.GridView;
 
 /**
  * 屏幕工具类--获取手机屏幕信息
@@ -76,6 +74,15 @@ public class ScreenUtil {
      */
     public static int getScreenViewRightHeight(View view) {
         return view.getRight();
+    }
+
+    /**
+     * 不同分辨率适配
+     */
+    public static void setHeight(Context context, View view, int dp) {
+        ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+        layoutParams.height = (int) (getScreenHeight(context)*(dp/640.00));
+        view.setLayoutParams(layoutParams);
     }
 
 

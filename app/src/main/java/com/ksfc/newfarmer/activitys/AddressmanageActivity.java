@@ -13,7 +13,6 @@ import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
-import com.ksfc.newfarmer.protocol.ResponseResult;
 import com.ksfc.newfarmer.protocol.beans.AddressList;
 import com.ksfc.newfarmer.protocol.beans.AddressList.Address;
 import com.ksfc.newfarmer.protocol.beans.LoginResult.UserInfo;
@@ -26,10 +25,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ListView;
@@ -181,7 +178,7 @@ public class AddressmanageActivity extends BaseActivity {
                 holder.setText(R.id.address_name_tv,address.receiptPeople);
                 holder.setText(R.id.address_phone_tv,address.receiptPhone);
                 //初始化其他组件
-                CheckBox btn_check_item = (CheckBox) holder.getView(R.id.btn_check_item);
+                CheckBox btn_check_item =  holder.getView(R.id.btn_check_item);
                 //设置控件点击区域扩大
                 ExpandViewTouch.expandViewTouchDelegate(btn_check_item, 100, 100, 100, 100);
 

@@ -141,7 +141,7 @@ public class CarouselDiagramViewPager extends ViewPager {
 	public void initDot(LinearLayout ll_dots) {
 		// 清除布局中所有视图对象
 		ll_dots.removeAllViews();
-		dotList = new ArrayList<View>();
+		dotList = new ArrayList<>();
 		// 将所有的点加入到布局文件对象中
 		for (int i = 0; i < carouselDiagramList.size(); i++) {
 			View view = new View(context);

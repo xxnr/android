@@ -28,7 +28,7 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/titleview"
         android:layout_centerInParent="true"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <ImageView
             android:id="@+id/myself_userImg_1"
@@ -56,6 +56,7 @@
             android:layout_below="@id/shop_text1"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="14dp"
+            android:textColor="@color/deep_gray"
             android:text="赶快去挑选心仪的商品吧~" />
 
         <LinearLayout

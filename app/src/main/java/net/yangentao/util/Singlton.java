@@ -33,7 +33,7 @@ public class Singlton {
 		public T createInstance();
 	}
 
-	private static Map<Object, Object> all = new ConcurrentHashMap<Object, Object>(
+	private static Map<Object, Object> all = new ConcurrentHashMap<>(
 			32);
 
 	/**

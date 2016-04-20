@@ -43,7 +43,13 @@
         android:dividerHeight="1px"
         android:scrollbars="none" />
 
-    <include layout="@layout/line_lay" />
+
+    <LinearLayout
+        android:id="@+id/my_order_llCommerceContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" />
+
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -85,20 +91,19 @@
         android:visibility="gone">
 
         <Button
-            android:visibility="gone"
             android:id="@+id/change_pay_type"
             android:layout_width="wrap_content"
             android:layout_height="25dp"
-            android:layout_toLeftOf="@+id/go_to_pay"
             android:layout_centerVertical="true"
             android:layout_marginRight="12dp"
+            android:layout_toLeftOf="@+id/go_to_pay"
             android:background="@drawable/selector_change_pay_type"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:text="修改支付方式"
             android:textColor="@color/white_orange_text_selector"
-            android:textSize="12sp" />
-
+            android:textSize="12sp"
+            android:visibility="gone" />
 
 
         <Button
@@ -114,8 +119,14 @@
             android:text=""
             android:textColor="@color/white"
             android:textSize="12sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignParentBottom="true"
+            android:background="@color/gray" />
+
     </RelativeLayout>
 
-    <include layout="@layout/line_lay" />
 
 </LinearLayout>

@@ -26,11 +26,8 @@ import com.ksfc.newfarmer.protocol.RequestParams;
 import com.ksfc.newfarmer.protocol.beans.ConsigneeResult;
 import com.ksfc.newfarmer.protocol.beans.LoginResult;
 import com.ksfc.newfarmer.utils.StringUtil;
-import com.ksfc.newfarmer.utils.Utils;
-import com.ksfc.newfarmer.widget.UnSwipeListView;
 
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -46,8 +43,10 @@ public class SelectDeliveriesPersonActivity extends BaseActivity {
 
     private final static int ResultPerson = 0x11;
     private TextView name_submit_tv;
-    private UnSwipeListView history_person_listView;
+    private ListView history_person_listView;
     private LinearLayout history_receive_person_ll;
+    private View headView1;
+    private View headView2;
 
     @Override
     public int getLayout() {
@@ -77,11 +76,32 @@ public class SelectDeliveriesPersonActivity extends BaseActivity {
 
     private void initView() {
 
-        name_submit_tv = (TextView) findViewById(R.id.name_submit_tv);
-        receipt_phone = (EditText) findViewById(R.id.shouhuo_tel);
-        receipt_name = (EditText) findViewById(R.id.shouhuo_name);
-        history_person_listView = (UnSwipeListView) findViewById(R.id.history_person_listView);
+        headView1 = getLayoutInflater().inflate(R.layout.select_deliveries_person_layout_head1, null);
+        headView2 = getLayoutInflater().inflate(R.layout.select_deliveries_person_layout_head2, null);
+
+        name_submit_tv = (TextView) headView1.findViewById(R.id.name_submit_tv);
+        receipt_phone = (EditText) headView1.findViewById(R.id.shouhuo_tel);
+        receipt_name = (EditText) headView1.findViewById(R.id.shouhuo_name);
         history_receive_person_ll = (LinearLayout) findViewById(R.id.history_receive_person_ll);
+        history_person_listView = (ListView) findViewById(R.id.history_person_listView);
+        history_person_listView.addHeaderView(headView1);
+        history_person_listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                    if (firstVisibleItem>=1){
+                        history_receive_person_ll.setVisibility(View.VISIBLE);
+                    }else {
+                        history_receive_person_ll.setVisibility(View.GONE);
+                    }
+            }
+        });
+
+
         name_submit_tv.setEnabled(false);
 
         receipt_name.addTextChangedListener(new TextWatcher() {
@@ -176,8 +196,10 @@ public class SelectDeliveriesPersonActivity extends BaseActivity {
                 List<ConsigneeResult.DatasEntity.RowsEntity> rows = data.datas.rows;
                 if (rows != null && !rows.isEmpty()) {
                     ConsigneesAdapter consigneesAdapter = new ConsigneesAdapter(this, rows);
+                    history_person_listView.addHeaderView(headView2);
                     history_person_listView.setAdapter(consigneesAdapter);
                 } else {
+                    history_person_listView.setAdapter(null);
                     //没有历史联系人时的默认设置
                     LoginResult.UserInfo userInfo = Store.User.queryMe();
                     if (userInfo != null) {
