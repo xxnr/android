@@ -56,7 +56,7 @@ public class GoodsDetailFragment extends BaseFragment implements ViewPager.OnPag
         int position = bundle.getInt("position", 0);//当前Viewpager的index
         int count = bundle.getInt("count", 1);//Viewpager的item 用于控制是否需要监听滑到底部
         if (position == 0) {
-            View view = LayoutInflater.from(App.getApp().getApplicationContext()).inflate(R.layout.goods_detail_top_layout, null);
+            View view = inflater.inflate(R.layout.goods_detail_top_layout, null);
             if (count == 2) {//监听scrollView是否滑动到底部
                 scrollView = (VerticalScrollView) view.findViewById(R.id.scrollView_goods_detail);
                 scrollView.setOnScrollToBottomLintener(new VerticalScrollView.OnScrollToBottomListener() {

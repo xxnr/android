@@ -48,7 +48,6 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:taskAffinity="com.chinaums.mposplugin"
         android:theme="@style/AppBaseTheme">
 
         <activity
@@ -227,15 +226,15 @@
             android:windowSoftInputMode="adjustResize" />
 
 
-        <!-- umeng appkey   android:value="564d588ce0f55a25e9003ec7"
-        android:value=""
+        <!-- umeng appkey   android:value=""
+        android:value="YOUR_APPKEY"
         -->
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="YOUR_APPKEY" />
+            android:value="564d588ce0f55a25e9003ec7" />
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="Wandoujia" />
+            android:value="${UMENG_CHANNEL_VALUE}" />
         <meta-data
             android:name="UMENG_MESSAGE_SECRET"
             android:value="03dd5a49bb79a65290b928d06d4a5cef" />

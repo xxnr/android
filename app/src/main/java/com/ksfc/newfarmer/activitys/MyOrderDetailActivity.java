@@ -207,10 +207,10 @@ public class MyOrderDetailActivity extends BaseActivity {
                 }
                 break;
             case R.id.to_order_state_rel:
-                if (datas!=null){
-                    Bundle bundle =new Bundle();
-                    bundle.putSerializable("order_state",datas);
-                    IntentUtil.activityForward(this,MyOrderStateDetail.class,bundle,false);
+                if (datas != null) {
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("order_state", datas);
+                    IntentUtil.activityForward(this, MyOrderStateDetail.class, bundle, false);
                 }
                 break;
 
@@ -224,7 +224,7 @@ public class MyOrderDetailActivity extends BaseActivity {
             MyOrderDetailResult data = (MyOrderDetailResult) req.getData();
             if (data.getStatus().equals("1000")) {
 
-              datas = data.datas;
+                datas = data.datas;
                 if (datas != null && datas.rows != null) {
                     //配送方式
                     if (datas.rows.deliveryType != null) {
@@ -548,6 +548,9 @@ public class MyOrderDetailActivity extends BaseActivity {
                         case "4":
                             holder.getView(R.id.order_pay_type_ll).setVisibility(View.VISIBLE);
                             holder.setText(R.id.order_pay_type, "线下POS机");
+                        case "5":
+                            holder.getView(R.id.order_pay_type_ll).setVisibility(View.VISIBLE);
+                            holder.setText(R.id.order_pay_type, "EPOS支付");
                             break;
                     }
                 } else {

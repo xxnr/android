@@ -124,14 +124,11 @@ public class LoginActivity extends BaseActivity {
         phoneNumber = login_layout_phone.getText().toString();
         phonePassword = login_layoutpassword.getText().toString();
         switch (v.getId()) {
-
             case R.id.login_layout_complete:
-
                 if (TextUtils.isEmpty(phoneNumber)) {
                     showToast("请输入您的手机号码");
                     return;
                 }
-
                 if (!isMobileNum(phoneNumber)) {
                     showToast("您输入的手机号码格式不正确");
                     return;

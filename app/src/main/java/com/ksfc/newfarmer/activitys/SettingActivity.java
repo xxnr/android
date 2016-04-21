@@ -5,7 +5,10 @@ package com.ksfc.newfarmer.activitys;
 
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
+import com.ksfc.newfarmer.db.XUtilsDb.XUtilsDbHelper;
 import com.ksfc.newfarmer.protocol.Request;
+import com.ksfc.newfarmer.protocol.beans.InviteeResult;
+import com.ksfc.newfarmer.protocol.beans.PotentialListResult;
 import com.ksfc.newfarmer.utils.PopWindowUtils;
 import com.ksfc.newfarmer.widget.dialog.CustomDialog;
 import com.ksfc.newfarmer.widget.dialog.CustomProgressDialog;
@@ -13,6 +16,8 @@ import com.ksfc.newfarmer.widget.dialog.CustomProgressDialogForCache;
 import com.ksfc.newfarmer.utils.DataCleanManager;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
+import com.lidroid.xutils.DbUtils;
+import com.lidroid.xutils.exception.DbException;
 import com.umeng.message.PushAgent;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.ShareAction;
@@ -258,8 +263,17 @@ public class SettingActivity extends BaseActivity implements CompoundButton.OnCh
                                         dialog.dismiss();
                                         //清除缓存
                                         DataCleanManager.cleanInternalCache(getApplicationContext());
+                                        DataCleanManager.cleanExternalCache(getApplicationContext());
                                         //清除当前用户的数据库 部分数据库
-                                        DataCleanManager.cleanDatabaseByName(getApplicationContext(), "customer" + App.getApp().getUid());
+                                        if (StringUtil.checkStr(App.getApp().getUid())) {
+                                            DbUtils dbUtils = XUtilsDbHelper.getInstance(SettingActivity.this, App.getApp().getUid());
+                                            try {
+                                                dbUtils.deleteAll(PotentialListResult.PotentialCustomersEntity.class);
+                                                dbUtils.deleteAll(InviteeResult.InviteeEntity.class);
+                                            } catch (DbException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
                                         //进度条
                                         progressDialog = CustomProgressDialogForCache.createLoadingDialog(SettingActivity.this, "正在清除缓存请稍后...");
                                         progressDialog.show();

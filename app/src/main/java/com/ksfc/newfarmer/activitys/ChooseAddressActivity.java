@@ -180,7 +180,7 @@ public class ChooseAddressActivity extends BaseActivity {
         @Override
         public void convert(CommonViewHolder holder, final AddressList.Address address) {
 
-            if (addlist != null) {
+            if (address != null) {
                 //文本内容
                 holder.setText(R.id.address_tv, StringUtil.checkBufferStrWithSpace
                         (address.areaName,
@@ -235,9 +235,9 @@ public class ChooseAddressActivity extends BaseActivity {
                                                     map.put("pos", -1);
                                                 }
 
-                                                if (address.addressId.equals(state.addressId)) {
+                                                if (state!=null&&address.addressId.equals(state.addressId)) {
                                                     state = null;
-                                                    MsgCenter.fireNull(MsgID.MSG_Change_ADDRESS, state);
+                                                    MsgCenter.fireNull(MsgID.MSG_Change_ADDRESS,state);
                                                 }
                                                 showProgressDialog();
                                                 RequestParams params = new RequestParams();

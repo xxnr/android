@@ -88,7 +88,7 @@ public class PotentialCustomer extends BaseFragment {
 
             //是否大于24小时 如果是就更新
             PreferenceUtil pu = new PreferenceUtil(App.getApp().getApplicationContext(), "config");
-            long last_up_date = pu.getLong("customer_up_date", 0l);
+            long last_up_date = pu.getLong("customer_up_date", 0L);
             long currentTimeMillis = System.currentTimeMillis();
             if ((currentTimeMillis - last_up_date) > (24 * 60 * 60 * 1000)) {
                 //24小时未请求户，请求一次全部

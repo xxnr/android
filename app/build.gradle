@@ -31,6 +31,42 @@ android {
         abortOnError false
     }
 
+    productFlavors {
+
+
+        wandoujia {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "wandoujia"]
+        }
+
+        huawei {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "Huawei"]
+        }
+
+        c360 {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "c360"]
+        }
+
+        mistore {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "MiStore"]
+        }
+
+
+        anzhi {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "anzhi"]
+        }
+
+        tencent {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "tencent"]
+        }
+
+        xxnr {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "xxnr"]
+        }
+
+
+
+    }
+
     useLibrary 'org.apache.http.legacy'
 }
 

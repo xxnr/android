@@ -12,7 +12,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -21,7 +20,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 
 import com.ksfc.newfarmer.widget.dialog.CustomDialog;
@@ -120,12 +118,11 @@ public class Utils {
 
         if (copyApkFromAssets(mContext, fileName, Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + fileName)) {
             CustomDialog.Builder m = new CustomDialog.Builder(mContext)
-                    .setMessage("使用ePos支付需要安装支付插件，是否继续？")
+                    .setMessage("请安装易POS支付插件进行支付,安装后请返回新新农人")
                     .setPositiveButton("继续", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
-
                             Intent intent = new Intent(Intent.ACTION_VIEW);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             intent.setDataAndType(Uri.parse("file://" + Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + fileName),

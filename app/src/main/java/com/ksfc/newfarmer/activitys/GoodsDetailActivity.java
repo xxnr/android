@@ -951,6 +951,7 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
                     market_price_ll = (LinearLayout) fragment.getView().findViewById(R.id.market_price_ll);//市场价 lin
                     market_price_tv = (TextView) fragment.getView().findViewById(R.id.market_price_tv);
                     product_attribute = (TextView) fragment.getView().findViewById(R.id.product_attribute);
+                    product_attribute.setTextColor(getResources().getColor(R.color.black_goods_titile));
                     //如果是下架的商品 不展示sku
                     if (view != null) {
                         if (detail.online) {

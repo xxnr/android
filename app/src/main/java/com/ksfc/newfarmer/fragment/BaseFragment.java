@@ -89,6 +89,7 @@ public abstract class BaseFragment extends Fragment implements
             UmengPush.removeAlias(App.getApp(), userInfo.userid);
         }
         Store.User.removeMe();
+        App.getApp().setUid("");
 
         Intent intent = new Intent(App.getApp(), LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

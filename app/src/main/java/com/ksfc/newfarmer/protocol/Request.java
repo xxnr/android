@@ -1,7 +1,6 @@
 package com.ksfc.newfarmer.protocol;
 
 import android.text.TextUtils;
-import android.widget.Toast;
 import net.yangentao.util.XLog;
 import net.yangentao.util.app.App;
 
@@ -72,8 +71,7 @@ public class Request {
 					|| errorMsg.equals("连接服务器失败")) {
 
 			} else {
-				Toast.makeText(App.getApp(), errorMsg, Toast.LENGTH_SHORT)
-						.show();
+				App.getApp().showToast(errorMsg);
 			}
 		}
 	}
@@ -93,7 +91,6 @@ public class Request {
 	/**
 	 * 设置请求参数
 	 * 
-	 * @param parms
 	 */
 	public void setParams(RequestParams params) {
 		this.params = params;
@@ -121,13 +118,13 @@ public class Request {
 	}
 
 	/**
-	 * 调用接口,扩充接口在{@link #ApiType}枚举中添加实例
+	 * 调用接口,扩充接口在{@link ApiType}枚举中添加实例
 	 * 
-	 * @param api
+	 *  api
 	 *            接口类型
-	 * @param params
+	 *  params
 	 *            请求参数
-	 * @param listener
+	 *  listener
 	 *            回调方法
 	 */
 	public void executeNetworkApi(final OnApiDataReceivedCallback Callback) {

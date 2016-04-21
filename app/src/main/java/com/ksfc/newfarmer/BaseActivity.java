@@ -34,11 +34,11 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import net.yangentao.util.app.App;
 
 public abstract class BaseActivity extends FragmentActivity implements
         OnClickListener, OnApiDataReceivedCallback {
-
 
     public String TAG = this.getClass().getSimpleName();
 
@@ -512,7 +512,9 @@ public abstract class BaseActivity extends FragmentActivity implements
         if (userInfo != null) {
             //解除推送alias
             UmengPush.removeAlias(this, userInfo.userid);
+            App.getApp().setUid("");
         }
+
         Store.User.removeMe();
         SPUtils.clear(getApplicationContext());
     }
