@@ -608,7 +608,11 @@ public class SelectDeliveriesStateActivity extends BaseActivity implements PullT
     private void getProvinceState() {
         showProgressDialog();
         Bundle bundle = getIntent().getExtras();
-        int flags = bundle.getInt("flags");
+        int flags = 0;
+        if (bundle!=null){
+            flags = bundle.getInt("flags");
+        }
+
         if (flags == 1) {
             String product_id = bundle.getString("product_id");
             RequestParams params = new RequestParams();
@@ -649,7 +653,10 @@ public class SelectDeliveriesStateActivity extends BaseActivity implements PullT
     private void getCityState(String provinceId) {
         showProgressDialog();
         Bundle bundle = getIntent().getExtras();
-        int flags = bundle.getInt("flags");
+        int flags = 0;
+        if (bundle!=null){
+            flags = bundle.getInt("flags");
+        }
         if (flags == 1) {
             String product_id = bundle.getString("product_id");
             RequestParams params = new RequestParams();
@@ -695,7 +702,10 @@ public class SelectDeliveriesStateActivity extends BaseActivity implements PullT
     private void getCountyState(String provinceId, String cityId) {
         showProgressDialog();
         Bundle bundle = getIntent().getExtras();
-        int flags = bundle.getInt("flags");
+        int flags = 0;
+        if (bundle!=null){
+            flags = bundle.getInt("flags");
+        }
         if (flags == 1) {
             RequestParams params = new RequestParams();
             String product_id = bundle.getString("product_id");
@@ -748,7 +758,11 @@ public class SelectDeliveriesStateActivity extends BaseActivity implements PullT
     //获取网点
     private void getStateList(String provinceId, String cityId, String countyId) {
         Bundle bundle = getIntent().getExtras();
-        int flags = bundle.getInt("flags");
+        int flags = 0;
+        if (bundle!=null){
+            flags = bundle.getInt("flags");
+        }
+
         if (flags == 1) {
             String product_id = bundle.getString("product_id");
             RequestParams params = new RequestParams();

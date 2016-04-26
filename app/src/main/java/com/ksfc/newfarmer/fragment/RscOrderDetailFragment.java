@@ -155,7 +155,7 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
                     if (page == 1) {
                         if (adapter == null) {
                             try {
-                                adapter = new OrderAdapter(getActivity(), orders);
+                                adapter = new OrderAdapter(activity, orders);
                                 WidgetUtil.setListViewHeightBasedOnChildren(waitingpay_lv);
                                 waitingpay_lv.setAdapter(adapter);
                             } catch (NullPointerException e) {
@@ -202,7 +202,7 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
                 //初始化数据
                 if (offlinePayType != null && !offlinePayType.isEmpty()) {
                     checkedMap.put("3", true);//默认选中现金
-                    PayWayAdapter popSkusAdapter = new PayWayAdapter(getActivity(), offlinePayType);
+                    PayWayAdapter popSkusAdapter = new PayWayAdapter(activity, offlinePayType);
                     pay_way_gridView.setAdapter(popSkusAdapter);
                 }
 
@@ -505,7 +505,7 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
                         if (skUsEntity != null) {
                             //商品图片
                             if (StringUtil.checkStr(skUsEntity.thumbnail)) {
-                                Picasso.with(getActivity())
+                                Picasso.with(activity)
                                         .load(MsgID.IP + skUsEntity.thumbnail)
                                         .error(R.drawable.error)
                                         .placeholder(R.drawable.zhanweitu)
@@ -559,7 +559,7 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
                 llCommerceContainer.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(getActivity(), RscOrderDetailActivity.class);
+                        Intent intent = new Intent(activity, RscOrderDetailActivity.class);
                         intent.putExtra("orderId", ordersEntity.id);
                         startActivity(intent);
                     }
@@ -610,7 +610,7 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
         popupWindowDelivery.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
-                showDialogBg(1, (RSCOrderListActivity) getActivity());
+                showDialogBg(1, (RSCOrderListActivity) activity);
                 checkedMap.clear();
             }
         });
@@ -640,12 +640,12 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
         pop_sureDelivery.setEnabled(false);
         pop_sureDelivery.setText("确定");
         //初始化数据
-        PopSkusDeliveryAdapter popSkusDeliveryAdapter = new PopSkusDeliveryAdapter(getActivity(), skusList);
+        PopSkusDeliveryAdapter popSkusDeliveryAdapter = new PopSkusDeliveryAdapter(activity, skusList);
         pop_listView.setAdapter(popSkusDeliveryAdapter);
 
 
         //设置背景及展示
-        showDialogBg(0, (RSCOrderListActivity) getActivity());
+        showDialogBg(0, (RSCOrderListActivity) activity);
         popupWindowDelivery.showAtLocation(parent, Gravity.BOTTOM, 0, 0);
     }
 
@@ -768,7 +768,7 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
         getRscOrderDetail(ordersEntity.id);
 
         //设置背景及展示
-        showDialogBg(0, (RSCOrderListActivity) getActivity());
+        showDialogBg(0, (RSCOrderListActivity) activity);
         popupWindow.showAtLocation(parent, Gravity.BOTTOM, 0, 0);
 
     }
@@ -792,7 +792,7 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
         popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
-                showDialogBg(1, (RSCOrderListActivity) getActivity());
+                showDialogBg(1, (RSCOrderListActivity) activity);
                 checkedMap.clear();
             }
         });
@@ -872,10 +872,10 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
         pop_self_delivery_listView.setVisibility(View.VISIBLE);
 
         //初始化数据
-        PopSkusSelfDeliveryAdapter popSkusSelfDeliveryAdapter = new PopSkusSelfDeliveryAdapter(getActivity(), skusList);
+        PopSkusSelfDeliveryAdapter popSkusSelfDeliveryAdapter = new PopSkusSelfDeliveryAdapter(activity, skusList);
         pop_self_delivery_listView.setAdapter(popSkusSelfDeliveryAdapter);
         //设置背景及展示
-        showDialogBg(0, (RSCOrderListActivity) getActivity());
+        showDialogBg(0, (RSCOrderListActivity) activity);
         popupWindowSelfDelivery.showAtLocation(parent, Gravity.BOTTOM, 0, 0);
     }
 
@@ -898,7 +898,7 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
         popupWindowSelfDelivery.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
-                showDialogBg(1, (RSCOrderListActivity) getActivity());
+                showDialogBg(1, (RSCOrderListActivity) activity);
                 checkedMap.clear();
                 self_delivery_tag = false;
             }

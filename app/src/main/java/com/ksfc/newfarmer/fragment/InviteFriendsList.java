@@ -71,11 +71,11 @@ public class InviteFriendsList extends BaseFragment {
         listView.addHeaderView(headerLayout);
 
         //从数据库中取数据
-        DbUtils dbUtils = XUtilsDbHelper.getInstance(App.getApp().getApplicationContext(), App.getApp().getUid());
+        DbUtils dbUtils = XUtilsDbHelper.getInstance(activity, App.getApp().getUid());
         try {
             List<InviteeResult.InviteeEntity> inviteeEntityList = dbUtils.findAll(Selector.from(InviteeResult.InviteeEntity.class));
             if (inviteeEntityList != null && !inviteeEntityList.isEmpty()) {
-                adapter = new InviteAdapter(getActivity(), inviteeEntityList);
+                adapter = new InviteAdapter(activity, inviteeEntityList);
                 listView.setAdapter(adapter);
                 initAlphabeticBar(inviteeEntityList);
 
@@ -124,12 +124,12 @@ public class InviteFriendsList extends BaseFragment {
                         adapter.clear();
                         adapter.addAll(data.invitee);
                     } else {
-                        adapter = new InviteAdapter(getActivity(), data.invitee);
+                        adapter = new InviteAdapter(activity, data.invitee);
                         listView.setAdapter(adapter);
                     }
                     initAlphabeticBar(data.invitee);
                     //删除并重新 存入数据库
-                    DbUtils dbUtils = XUtilsDbHelper.getInstance(App.getApp().getApplicationContext(), App.getApp().getUid());
+                    DbUtils dbUtils = XUtilsDbHelper.getInstance(activity, App.getApp().getUid());
                     XUtilsDbHelper.deleteAll(dbUtils, InviteeResult.InviteeEntity.class);
                     XUtilsDbHelper.saveOrUpdateAll(dbUtils, data.invitee);
 
@@ -156,7 +156,7 @@ public class InviteFriendsList extends BaseFragment {
                 alphas.add(data.get(i).nameInitial);
             }
         }
-        float mHeight = (ScreenUtil.getScreenHeight(App.getApp().getApplicationContext()) - (Utils.dip2px(App.getApp().getApplicationContext(), 125))) * (float) (alphaIndexer.size() / 27.00);
+        float mHeight = (ScreenUtil.getScreenHeight(activity) - (Utils.dip2px(activity, 125))) * (float) (alphaIndexer.size() / 27.00);
         ViewGroup.LayoutParams layoutParams = alphabeticBar.getLayoutParams();
         layoutParams.height = (int) mHeight;
         alphabeticBar.setAlphaIndexer(alphaIndexer);
@@ -225,7 +225,7 @@ public class InviteFriendsList extends BaseFragment {
                     @Override
                     public void onClick(View v) {
                         dotView.setVisibility(View.INVISIBLE);
-                        Intent intent = new Intent(getActivity(), ConsumerOrderActivity.class);
+                        Intent intent = new Intent(activity, ConsumerOrderActivity.class);
                         intent.putExtra("consumer", invitee);
                         startActivity(intent);
                     }

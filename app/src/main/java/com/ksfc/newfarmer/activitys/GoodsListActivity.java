@@ -44,6 +44,7 @@ import com.ksfc.newfarmer.protocol.beans.GetGoodsData.SingleGood;
 import com.ksfc.newfarmer.utils.ExpandViewTouch;
 import com.ksfc.newfarmer.utils.ImageLoaderUtils;
 import com.ksfc.newfarmer.utils.PullToRefreshUtils;
+import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.SPUtils;
 import com.ksfc.newfarmer.utils.ScreenUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
@@ -102,6 +103,14 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
     private int lastPrice = -1; //点击确定后保存上一次价格
     private boolean isReset = false;
     private List<String> commonAttr = new ArrayList<>();
+
+
+    private List<Map<String, Object>> oldAttributesList;//保存的属性
+    private String oldReservePrice;//保存的的价格
+    private StringBuilder oldBrand;//保存的品牌
+
+
+    private boolean oldFlag = false;//是否用上次的请求
 
 
     @Override
@@ -163,25 +172,52 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
     }
 
     private void getData() {
-        RequestParams params = new RequestParams();
-        Gson gson = new Gson();
-        Map<String, Object> map = new HashMap<>();
+        if (oldFlag) { //是否用上次的请求
+            RequestParams params = new RequestParams();
+            Gson gson = new Gson();
+            Map<String, Object> map = new HashMap<>();
+            map.put("page", page);
+            map.put("rowCount", "20");
+            map.put("classId", classId);
+            map.put("sort", sort);
+            map.put("reservePrice", oldReservePrice);
+            if (oldBrand != null) {
+                map.put("brand", oldBrand.toString());
+            }
+            if (oldAttributesList != null && !oldAttributesList.isEmpty()) {
+                map.put("attributes", oldAttributesList);
+            }
+            String json = gson.toJson(map);
+            params.put("JSON", json);
+            execApi(ApiType.GET_HUAFEI.setMethod(RequestMethod.POSTJSON), params);
 
-        map.put("page", page);
-        map.put("rowCount", "20");
-        map.put("classId", classId);
-        map.put("sort", sort);
-        map.put("reservePrice", reservePrice);
-        if (brand != null) {
-            map.put("brand", brand.toString());
+        } else {
+
+            RequestParams params = new RequestParams();
+            Gson gson = new Gson();
+            Map<String, Object> map = new HashMap<>();
+
+            map.put("page", page);
+            map.put("rowCount", "20");
+            map.put("classId", classId);
+            map.put("sort", sort);
+            map.put("reservePrice", reservePrice);
+            if (brand != null) {
+                map.put("brand", brand.toString());
+            }
+            if (attributesList != null && !attributesList.isEmpty()) {
+                map.put("attributes", attributesList);
+            }
+            oldReservePrice = reservePrice;
+            oldAttributesList = attributesList;
+            oldBrand = brand;
+            String json = gson.toJson(map);
+            params.put("JSON", json);
+            execApi(ApiType.GET_HUAFEI.setMethod(RequestMethod.POSTJSON), params);
+
         }
 
-        if (attributesList != null && !attributesList.isEmpty()) {
-            map.put("attributes", attributesList);
-        }
 
-        params.put("JSON", gson.toJson(map));
-        execApi(ApiType.GET_HUAFEI.setMethod(RequestMethod.POSTJSON), params);
     }
 
 
@@ -248,10 +284,13 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
                 getData();
                 break;
             case R.id.goods_shaixuan_rel:
+
                 if (popupWindow != null && popupWindow.isShowing()) {
                     popupWindow.dismiss();
                 } else {
+                    levelAttr.clear();
                     isReset = false;
+                    reset();
                     getPopupWindow();
                     getBrandsList();
                     popupWindow.showAsDropDown(goods_bar_separatrix);
@@ -309,6 +348,7 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
 
                     @Override
                     public void onClick(View v) {
+                        oldFlag = false;
                         nycList.clear();
                         page = 1;
                         getShuaixuan_value();
@@ -323,7 +363,9 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
                 .setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        oldFlag = true;
                         isReset = true;
+                        levelAttr.clear();
                         reset();
                     }
                 });
@@ -432,7 +474,6 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
                         listString.add(entry1.getKey());
                     }
                 }
-
                 if (!listString.isEmpty()) {
                     //保存上一次的数据以便于筛选
                     lastAttr.addAll(listString);
@@ -464,7 +505,7 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
                 entry.getValue().notifyDataSetChanged();
             }
         }
-        levelAttr.clear();
+//        levelAttr.clear();
         if (adapter_price != null) {
             adapter_price.states.clear();
             adapter_price.notifyDataSetChanged();
@@ -482,7 +523,6 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
     }
 
     //获取公共属性的title  如车型级别 品类
-
     private void getCommonAttr() {
         com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
         HttpUtils http = new HttpUtils();
@@ -579,6 +619,7 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
 
             adapter_price = new PriceAdapter(this, prices);
             price_gv.setAdapter(adapter_price);
+
             //初始化 保存的价格
             adapter_price.states.put(lastPrice + "", true);
             adapter_price.notifyDataSetChanged();
@@ -642,11 +683,21 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
                         if (lastAttr.contains(entry1.getKey())) {
                             if (!isReset) {
                                 entry1.setValue(true);
+                                if (commonAttr.contains(entry.getKey())) {
+                                    levelAttr.add(entry1.getKey());
+                                }
+                            } else {
+                                if (levelAttr.contains(entry1.getKey())) {
+                                    entry1.setValue(true);
+                                    RndLog.d("GoodsListActivity", levelAttr.toString());
+                                }
                             }
                         }
                         //共有属性
                         if (levelAttr.contains(entry1.getKey())) {
-                            entry1.setValue(true);
+                            if (isReset) {
+                                entry1.setValue(true);
+                            }
                         }
                     }
                     entry.getValue().notifyDataSetChanged();
@@ -692,6 +743,7 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
                         .setOnClickListener(new View.OnClickListener() {
 
                             public void onClick(View v) {
+                                oldFlag = true;
                                 isReset = true;
                                 states.put(brandsEntity._id, brands_name_tv.isChecked());
                                 getAttrsData();
@@ -732,11 +784,13 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
                 Attr_name_tv.setText(s);
                 Attr_name_tv.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
+                        oldFlag = true;
                         states.put(s,
                                 Attr_name_tv.isChecked());
                         if (commonAttr.contains(tag)) {
                             if (Attr_name_tv.isChecked()) {
                                 levelAttr.add(s);
+
                             } else {
                                 levelAttr.remove(s);
                             }
@@ -774,7 +828,7 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
                 price_tv.setOnClickListener(new View.OnClickListener() {
 
                     public void onClick(View v) {
-
+                        oldFlag = true;
                         // 重置，确保最多只有一项被选中
                         for (String key : states.keySet()) {
                             states.put(key, false);

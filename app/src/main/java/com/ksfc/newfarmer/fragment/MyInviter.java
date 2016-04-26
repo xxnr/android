@@ -48,6 +48,7 @@ public class MyInviter extends BaseFragment {
     private ImageView my_inviter_userType_icon;
     private TextView my_inviter_address;
 
+
     @Override
     public View InItView() {
         View view = inflater.inflate(R.layout.fragment_my_inviter, null);
@@ -125,7 +126,7 @@ public class MyInviter extends BaseFragment {
             case R.id.my_inviter_phone_ll:
 
                 if (StringUtil.checkStr(phoneNum)) {
-                    Utils.dial(getActivity(), phoneNum);
+                    Utils.dial(activity, phoneNum);
                 }
 
                 break;
@@ -223,7 +224,7 @@ public class MyInviter extends BaseFragment {
             ResponseResult data = req.getData();
             if (data.getStatus().equals("1000")) {
                 CustomDialog.Builder builder = new CustomDialog.Builder(
-                        App.getApp().getApplicationContext());
+                        activity);
                 builder.setMessage("代表人添加后不可修改,确定设置该用户为您的代表吗?")
                         .setPositiveButton("确定",
                                 new DialogInterface.OnClickListener() {
@@ -276,7 +277,7 @@ public class MyInviter extends BaseFragment {
                     final NominatedInviterResult.Datas datas = result.nominated_inviter;
                     if (datas != null) {
                         if (StringUtil.checkStr(datas.phone) && StringUtil.checkStr(datas.name)) {
-                            CustomDialogForInviter.Builder builder = new CustomDialogForInviter.Builder(App.getApp().getApplicationContext());  //先得到构造器
+                            CustomDialogForInviter.Builder builder = new CustomDialogForInviter.Builder(activity);  //先得到构造器
                             builder.setTitle("是否要添加该用户为您的代表？"); //设置标题
                             builder.setMessage(datas.name); //设置内容
                             builder.setMessage2(datas.phone);

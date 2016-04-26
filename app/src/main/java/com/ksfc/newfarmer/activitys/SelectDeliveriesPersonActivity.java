@@ -58,8 +58,10 @@ public class SelectDeliveriesPersonActivity extends BaseActivity {
         setTitle("选择收货人");
         initView();
         Bundle bundle = getIntent().getExtras();
-        consigneeName = bundle.getString("consigneeName");
-        consigneePhone = bundle.getString("consigneePhone");
+        if (bundle!=null){
+            consigneeName = bundle.getString("consigneeName");
+            consigneePhone = bundle.getString("consigneePhone");
+        }
         showProgressDialog();
         getData();
 

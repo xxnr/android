@@ -57,7 +57,9 @@ public class SelectUserTypeActivity extends BaseActivity implements AdapterView.
         setTitle("选择用户类型");
         listView = ((ListView) findViewById(R.id.select_address_list));
         listView.setOnItemClickListener(this);
-        flag = getIntent().getExtras().getBoolean("flag");
+        if (getIntent().getExtras()!=null){
+            flag = getIntent().getExtras().getBoolean("flag");
+        }
         showProgressDialog();
         getData();
     }

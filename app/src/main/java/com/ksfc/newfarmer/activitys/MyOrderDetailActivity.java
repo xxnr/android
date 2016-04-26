@@ -548,6 +548,7 @@ public class MyOrderDetailActivity extends BaseActivity {
                         case "4":
                             holder.getView(R.id.order_pay_type_ll).setVisibility(View.VISIBLE);
                             holder.setText(R.id.order_pay_type, "线下POS机");
+                            break;
                         case "5":
                             holder.getView(R.id.order_pay_type_ll).setVisibility(View.VISIBLE);
                             holder.setText(R.id.order_pay_type, "EPOS支付");

@@ -68,7 +68,7 @@ public class PotentialCustomer extends BaseFragment {
         add_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), AddPotentialActivity.class);
+                Intent intent = new Intent(activity, AddPotentialActivity.class);
                 startActivity(intent);
             }
         });
@@ -87,7 +87,7 @@ public class PotentialCustomer extends BaseFragment {
             getIsLatest(count);
 
             //是否大于24小时 如果是就更新
-            PreferenceUtil pu = new PreferenceUtil(App.getApp().getApplicationContext(), "config");
+            PreferenceUtil pu = new PreferenceUtil(activity, "config");
             long last_up_date = pu.getLong("customer_up_date", 0L);
             long currentTimeMillis = System.currentTimeMillis();
             if ((currentTimeMillis - last_up_date) > (24 * 60 * 60 * 1000)) {
@@ -130,13 +130,13 @@ public class PotentialCustomer extends BaseFragment {
     //从数据库中适配
     private void getOfflineList() {
         //从数据库中适配
-        DbUtils dbUtils = XUtilsDbHelper.getInstance(App.getApp().getApplicationContext(), App.getApp().getUid());
+        DbUtils dbUtils = XUtilsDbHelper.getInstance(activity, App.getApp().getUid());
         try {
             List<PotentialListResult.PotentialCustomersEntity> potentialCustomersEntities =
                     dbUtils.findAll(Selector.from(PotentialListResult.PotentialCustomersEntity.class).orderBy("nameInitialType , namePinyin"));
             if (potentialCustomersEntities != null && !potentialCustomersEntities.isEmpty()) {
                 count = potentialCustomersEntities.size();
-                adapter = new PotentialCustomerAdapter(App.getApp().getApplicationContext(), potentialCustomersEntities);
+                adapter = new PotentialCustomerAdapter(activity, potentialCustomersEntities);
                 listView.setAdapter(adapter);
                 initAlphabeticBar(potentialCustomersEntities);
             }
@@ -180,17 +180,17 @@ public class PotentialCustomer extends BaseFragment {
                         adapter.clear();
                         adapter.addAll(potentialCustomersEntities);
                     } else {
-                        adapter = new PotentialCustomerAdapter(getActivity(), potentialCustomersEntities);
+                        adapter = new PotentialCustomerAdapter(activity, potentialCustomersEntities);
                         listView.setAdapter(adapter);
                     }
                     initAlphabeticBar(potentialCustomersEntities);
                     //删除并重新 存入数据库
-                    DbUtils dbUtils = XUtilsDbHelper.getInstance(App.getApp().getApplicationContext(), App.getApp().getUid());
+                    DbUtils dbUtils = XUtilsDbHelper.getInstance(activity, App.getApp().getUid());
                     XUtilsDbHelper.deleteAll(dbUtils, PotentialListResult.PotentialCustomersEntity.class);
                     XUtilsDbHelper.saveOrUpdateAll(dbUtils, potentialCustomersEntities);
 
                     //记下更新时间
-                    PreferenceUtil pu = new PreferenceUtil(App.getApp().getApplicationContext(), "config");
+                    PreferenceUtil pu = new PreferenceUtil(activity, "config");
                     pu.putLong("customer_up_date", System.currentTimeMillis());
 
                 }
@@ -216,7 +216,7 @@ public class PotentialCustomer extends BaseFragment {
                 alphas.add(data.get(i).nameInitial);
             }
         }
-        float mHeight = (ScreenUtil.getScreenHeight(App.getApp().getApplicationContext()) - (Utils.dip2px(App.getApp().getApplicationContext(), 125))) * (float) (alphaIndexer.size() / 27.00);
+        float mHeight = (ScreenUtil.getScreenHeight(activity) - (Utils.dip2px(activity, 125))) * (float) (alphaIndexer.size() / 27.00);
         ViewGroup.LayoutParams layoutParams = alphabeticBar.getLayoutParams();
         layoutParams.height = (int) mHeight;
         alphabeticBar.setAlphaIndexer(alphaIndexer);
@@ -280,7 +280,7 @@ public class PotentialCustomer extends BaseFragment {
                 holder.getConvertView().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(getActivity(), CustomerDetailActivity.class);
+                        Intent intent = new Intent(activity, CustomerDetailActivity.class);
                         if (StringUtil.checkStr(potentialCustomers._id)) {
                             intent.putExtra("_id", potentialCustomers._id);
                             startActivity(intent);

@@ -69,35 +69,36 @@ public class OfflinePayActivity extends BaseActivity {
         RndApplication.tempDestroyActivityList.add(OfflinePayActivity.this);
 
         Bundle bundle = getIntent().getExtras();
-        orderId = bundle.getString("orderId");
-        String payPrice = bundle.getString("payPrice");
-        String companyName = bundle.getString("companyName");
-        String RSCPhone = bundle.getString("RSCPhone");
-        String RSCAddress = bundle.getString("RSCAddress");
+        if (bundle!=null){
 
+            orderId = bundle.getString("orderId");
+            String payPrice = bundle.getString("payPrice");
+            String companyName = bundle.getString("companyName");
+            String RSCPhone = bundle.getString("RSCPhone");
+            String RSCAddress = bundle.getString("RSCAddress");
 
-        if (StringUtil.checkStr(payPrice)) {
-            pay_price.setText("¥" + payPrice);
-        } else {
-            pay_price.setText("");
+            if (StringUtil.checkStr(payPrice)) {
+                pay_price.setText("¥" + payPrice);
+            } else {
+                pay_price.setText("");
+            }
+            if (StringUtil.checkStr(companyName)) {
+                //Rsc信息
+                state_info_ll.setVisibility(View.VISIBLE);
+                RSC_companyName.setText(companyName);
+            }
+            if (StringUtil.checkStr(RSCPhone)) {
+                RSC_phone.setText(RSCPhone);
+
+            }
+            if (StringUtil.checkStr(RSCAddress)) {
+                RSC_Address.setText(RSCAddress);
+            }
         }
-        //Rsc信息
-        if (StringUtil.checkStr(companyName)) {
-            RSC_companyName.setText(companyName);
-        }
-
-        if (StringUtil.checkStr(RSCPhone)) {
-            RSC_phone.setText(RSCPhone);
-
-        }
-
-        if (StringUtil.checkStr(RSCAddress)) {
-            RSC_Address.setText(RSCAddress);
-        }
-
 
         if (StringUtil.checkStr(orderId)) {
             //获取详情
+            showProgressDialog();
             getData();
         }
 

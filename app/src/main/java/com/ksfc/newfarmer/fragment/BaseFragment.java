@@ -86,15 +86,15 @@ public abstract class BaseFragment extends Fragment implements
         LoginResult.UserInfo userInfo = Store.User.queryMe();
         if (userInfo != null) {
             //解除推送alias
-            UmengPush.removeAlias(App.getApp(), userInfo.userid);
+            UmengPush.removeAlias(activity, userInfo.userid);
         }
         Store.User.removeMe();
         App.getApp().setUid("");
 
-        Intent intent = new Intent(App.getApp(), LoginActivity.class);
+        Intent intent = new Intent(activity, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("isTokenError", true);
-        App.getApp().startActivity(intent);
+        activity.startActivity(intent);
     }
 
     @Override
@@ -110,7 +110,11 @@ public abstract class BaseFragment extends Fragment implements
                 } else {
                     if (!(req.getApi() == ApiType.SURE_GET_GOODS
                     )) {
-                        req.showErrorMsg();
+                        if (req.getApi() == ApiType.RSC_ORDER_SELF_DELIVERY && req.getData().getStatus().equals("1429")) {
+                            App.getApp().showToast("您输入错误次数较多，请1分钟后再操作");
+                        } else {
+                            req.showErrorMsg();
+                        }
                     }
                 }
             }
@@ -139,7 +143,11 @@ public abstract class BaseFragment extends Fragment implements
 
     public void showProgressDialog(String msg) {
         if (progressDialog != null && progressDialog.isShowing()) {
-            progressDialog.dismiss();
+            try {
+                progressDialog.dismiss();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
             progressDialog = null;
         }
         progressDialog = CustomProgressDialog
@@ -175,7 +183,7 @@ public abstract class BaseFragment extends Fragment implements
         if (customToast != null) {
             customToast.cancel();
         }
-        CustomToast.Builder builder = new CustomToast.Builder(App.getApp().getApplicationContext());
+        CustomToast.Builder builder = new CustomToast.Builder(activity);
         customToast = builder.setMessage(msg).setMessageImage(imgRes).create();
         customToast.show();
 

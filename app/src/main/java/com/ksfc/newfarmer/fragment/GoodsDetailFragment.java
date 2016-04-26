@@ -76,7 +76,7 @@ public class GoodsDetailFragment extends BaseFragment implements ViewPager.OnPag
             ViewPager viewPager = (ViewPager) view.findViewById(R.id.goods_detail_top_viewpager);
 
             View goods_detail_top_viewpager_rel = view.findViewById(R.id.goods_detail_top_viewpager_rel);
-            ScreenUtil.setHeight(App.getApp().getApplicationContext(),goods_detail_top_viewpager_rel,360);
+            ScreenUtil.setHeight(activity,goods_detail_top_viewpager_rel,360);
 
             TextView good_xianjia = (TextView) view.findViewById(R.id.product_price);//xianjia:价格
             CirclePageIndicator indicator = (CirclePageIndicator) view.findViewById(R.id.circlePageIndicator);//Viewpager的指示器Indicator
@@ -206,7 +206,7 @@ public class GoodsDetailFragment extends BaseFragment implements ViewPager.OnPag
             guild_1.setOnClickListener(this);
             guild_2.setOnClickListener(this);
             guild_3.setOnClickListener(this);
-            guild_1.setTextColor(App.getApp().getResources().getColor(R.color.green));
+            guild_1.setTextColor(activity.getResources().getColor(R.color.green));
             bar_guild_1.setVisibility(View.VISIBLE);
             web.loadUrl(detail.app_body_url);
             return view;
@@ -226,25 +226,25 @@ public class GoodsDetailFragment extends BaseFragment implements ViewPager.OnPag
     public void OnViewClick(View v) {
         switch (v.getId()) {
             case R.id.tv_guid1:
-                guild_1.setTextColor(App.getApp().getResources().getColor(R.color.green));
-                guild_2.setTextColor(App.getApp().getResources().getColor(R.color.main_index_gary));
-                guild_3.setTextColor(App.getApp().getResources().getColor(R.color.main_index_gary));
+                guild_1.setTextColor(activity.getResources().getColor(R.color.green));
+                guild_2.setTextColor(activity.getResources().getColor(R.color.main_index_gary));
+                guild_3.setTextColor(activity.getResources().getColor(R.color.main_index_gary));
                 initBar();
                 bar_guild_1.setVisibility(View.VISIBLE);
                 web.loadUrl(detail.app_body_url);
                 break;
             case R.id.tv_guid2:
-                guild_1.setTextColor(App.getApp().getResources().getColor(R.color.main_index_gary));
-                guild_2.setTextColor(App.getApp().getResources().getColor(R.color.green));
-                guild_3.setTextColor(App.getApp().getResources().getColor(R.color.main_index_gary));
+                guild_1.setTextColor(activity.getResources().getColor(R.color.main_index_gary));
+                guild_2.setTextColor(activity.getResources().getColor(R.color.green));
+                guild_3.setTextColor(activity.getResources().getColor(R.color.main_index_gary));
                 initBar();
                 bar_guild_2.setVisibility(View.VISIBLE);
                 web.loadUrl(detail.app_standard_url);
                 break;
             case R.id.tv_guid3:
-                guild_1.setTextColor(App.getApp().getResources().getColor(R.color.main_index_gary));
-                guild_2.setTextColor(App.getApp().getResources().getColor(R.color.main_index_gary));
-                guild_3.setTextColor(App.getApp().getResources().getColor(R.color.green));
+                guild_1.setTextColor(activity.getResources().getColor(R.color.main_index_gary));
+                guild_2.setTextColor(activity.getResources().getColor(R.color.main_index_gary));
+                guild_3.setTextColor(activity.getResources().getColor(R.color.green));
                 initBar();
                 bar_guild_3.setVisibility(View.VISIBLE);
                 web.loadUrl(detail.app_support_url);
@@ -310,10 +310,10 @@ public class GoodsDetailFragment extends BaseFragment implements ViewPager.OnPag
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), BigImageActivity.class);
+                    Intent intent = new Intent(activity, BigImageActivity.class);
                     intent.putExtra("detail", detail);
                     intent.putExtra("position", position);
-                    getActivity().startActivity(intent);
+                    activity.startActivity(intent);
                 }
             });
             return view;
