@@ -38,8 +38,11 @@ public class SelectPayOrderActivity extends BaseActivity {
         List<AddOrderResult.Orders> ordersList = (List<AddOrderResult.Orders>) intent.getSerializableExtra("orderInfo");
 
         listView = ((ListView) findViewById(R.id.select_pay_order));
-        OrderAdapter adapter = new OrderAdapter(SelectPayOrderActivity.this,ordersList);
-        listView.setAdapter(adapter);
+        if (ordersList!=null&&!ordersList.isEmpty()){
+            OrderAdapter adapter = new OrderAdapter(SelectPayOrderActivity.this,ordersList);
+            listView.setAdapter(adapter);
+        }
+
     }
 
     @Override

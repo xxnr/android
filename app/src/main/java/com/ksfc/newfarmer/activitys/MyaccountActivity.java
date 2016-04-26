@@ -139,7 +139,7 @@ public class MyaccountActivity extends BaseActivity {
                     ShowHideUtils.showFadeOut(choose_type_Certified_ll);
                     choose_type_Certified_ll.setVisibility(View.VISIBLE);
                     if (me.RSCInfoVerifing) {
-                        choose_type_Certified_tv.setText("资料审核中，请耐心稍后");
+                        choose_type_Certified_tv.setText("资料正在审核，请耐心等候");
                     } else {
                         if (me.isRSC) {
                             choose_type_Certified_tv.setText("查看认证信息");

@@ -1,6 +1,8 @@
 package com.ksfc.newfarmer;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -59,25 +61,34 @@ public abstract class BaseActivity extends FragmentActivity implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //防止fragment中找不到getActivity Null空指针
-        if (savedInstanceState != null) {
-            String FRAGMENTS_TAG = "android:support:fragments";
-            savedInstanceState.remove(FRAGMENTS_TAG);
+        try {
+            setFullScreen(false);
+            if (savedInstanceState != null) {
+                String FRAGMENTS_TAG = "android:support:fragments";
+                savedInstanceState.remove(FRAGMENTS_TAG);
+            }
+            RndApplication.unDestroyActivityList.add(this);
+            // 屏幕竖屏
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            if (getLayout() != 0) {
+                setContentView(getLayout());
+            }
+            loadTitle();
+            OnActCreate(savedInstanceState);
+        }catch (Exception e){
+            RndApplication.unDestroyActivityList.add(this);
+            // 屏幕竖屏
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            if (getLayout() != 0) {
+                setContentView(getLayout());
+            }
+            loadTitle();
+            OnActCreate(savedInstanceState);
         }
-        setFullScreen(false);
-        RndApplication.unDestroyActivityList.add(this);
-        // 屏幕竖屏
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        if (getLayout() != 0) {
-            setContentView(getLayout());
-        }
-        loadTitle();
-        OnActCreate(savedInstanceState);
+
+
     }
 
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-    }
 
     // -------------------------------------------------------------
     // 重写方法区
@@ -183,18 +194,26 @@ public abstract class BaseActivity extends FragmentActivity implements
                 } else {
                     disMissDialog();
                     //这些Api不返回前台用户error msg
+
                     if (!(req.getApi() == ApiType.GET_MIN_PAY_PRICE
                             || req.getApi() == ApiType.SAVE_CONSIGNEE_INFO
                             || req.getApi() == ApiType.SURE_GET_GOODS
                     )) {
-                        req.showErrorMsg();
+                        if (req.getApi() == ApiType.RSC_ORDER_SELF_DELIVERY && req.getData().getStatus().equals("1429")) {
+                            App.getApp().showToast("您输入错误次数较多，请1分钟后再操作");
+                        } else {
+                            req.showErrorMsg();
+                        }
                     }
+
+
                 }
             }
         } else {
             //请求时间过长提示
             if (!getClass().getName().equals(
-                    "com.ksfc.newfarmer.activitys.HomepageActivity")) {
+                    "com.ksfc.newfarmer.activitys.HomepageActivity")&&!getClass().getName().equals(
+                    "com.ksfc.newfarmer.activitys.GoodsListActivity")) {
                 App.getApp().showToast("您的网络不太顺畅，重试或检查下网络吧~");
             }
             onResponsedError(req);
@@ -405,15 +424,22 @@ public abstract class BaseActivity extends FragmentActivity implements
 
     public void showProgressDialog(String msg) {
         if (progressDialog != null && progressDialog.isShowing()) {
-            progressDialog.dismiss();
-            progressDialog = null;
+            try {
+                progressDialog.dismiss();
+                progressDialog = null;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
         }
         progressDialog = CustomProgressDialog.createLoadingDialog(this, msg, Color.parseColor("#000000"));
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setCancelable(true);
-        progressDialog.show();
-
+        try {
+            progressDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**

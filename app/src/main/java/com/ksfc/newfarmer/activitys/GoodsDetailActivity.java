@@ -320,7 +320,7 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
         // 获取自定义布局文件activity_popupWindow.xml的视图
         View popupWindow_view = getLayoutInflater().inflate(
                 R.layout.pop_layout_goods_detail, null, false);
-        ScreenUtil.setHeight(this,popupWindow_view.findViewById(R.id.pop_layout),480);
+        ScreenUtil.setHeight(this, popupWindow_view.findViewById(R.id.pop_layout), 480);
         //初始化popWindow中的组件
         ImageView pop_close = (ImageView) popupWindow_view.findViewById(R.id.pop_close);
 
@@ -1239,16 +1239,17 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
     public void onKeyboardStateChanged(int state) {
 
         if (state == KeyboardListenRelativeLayout.KEYBOARD_STATE_HIDE) {
-            String num = pop_discount_geshu.getText().toString().trim();
-            if (num.equals("") || num.equals("000") || num.equals("00") || num.equals("0")) {
-                pop_discount_geshu.setText("1");
-                Editable eText = pop_discount_geshu.getText();
-                Selection.setSelection(eText, eText.length());
-            }
 
             if (pop_discount_geshu != null) {
+                String num = pop_discount_geshu.getText().toString().trim();
+                if (num.equals("") || num.equals("000") || num.equals("00") || num.equals("0")) {
+                    pop_discount_geshu.setText("1");
+                    Editable eText = pop_discount_geshu.getText();
+                    Selection.setSelection(eText, eText.length());
+                }
                 pop_discount_geshu.clearFocus();
             }
+
         }
     }
 }

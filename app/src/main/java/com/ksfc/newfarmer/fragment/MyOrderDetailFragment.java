@@ -207,13 +207,13 @@ public class MyOrderDetailFragment extends BaseFragment implements PullToRefresh
     public void OnViewClick(View v) {
         switch (v.getId()) {
             case R.id.my_login_sure:
-                Intent intent = new Intent(getActivity(),
+                Intent intent = new Intent(activity,
                         GoodsListActivity.class);
                 intent.putExtra("goods", "huafei");
                 startActivity(intent);
                 break;
             case R.id.my_login_cancel:
-                Intent intent1 = new Intent(getActivity(),
+                Intent intent1 = new Intent(activity,
                         GoodsListActivity.class);
                 intent1.putExtra("goods", "qiche");
                 startActivity(intent1);
@@ -354,7 +354,7 @@ public class MyOrderDetailFragment extends BaseFragment implements PullToRefresh
                                 public void onClick(View v) {
 
                                     if (StringUtil.checkStr(order.orderId)) {
-                                        Intent intent = new Intent(getActivity(),
+                                        Intent intent = new Intent(activity,
                                                 PaywayActivity.class);
                                         intent.putExtra("orderId", order.orderId);
                                         intent.putExtra("payType", order.payType);
@@ -378,7 +378,7 @@ public class MyOrderDetailFragment extends BaseFragment implements PullToRefresh
                                         bundle.putString("RSCAddress", order.RSCInfo.RSCAddress);
                                     }
                                     bundle.putString("orderId", order.orderId);
-                                    IntentUtil.activityForward(getActivity(), OfflinePayActivity.class, bundle, false);
+                                    IntentUtil.activityForward(activity, OfflinePayActivity.class, bundle, false);
                                 }
                             });
                             //更改支付方式
@@ -386,7 +386,7 @@ public class MyOrderDetailFragment extends BaseFragment implements PullToRefresh
                                 @Override
                                 public void onClick(View v) {
                                     if (StringUtil.checkStr(order.orderId)) {
-                                        Intent intent = new Intent(getActivity(),
+                                        Intent intent = new Intent(activity,
                                                 PaywayActivity.class);
                                         intent.putExtra("orderId", order.orderId);
                                         intent.putExtra("payType", order.payType);
@@ -444,7 +444,7 @@ public class MyOrderDetailFragment extends BaseFragment implements PullToRefresh
                                 holder.go_to_pay.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        Intent intent = new Intent(getActivity(),
+                                        Intent intent = new Intent(activity,
                                                 PickUpStateActivity.class);
                                         intent.putExtra("orderId", order.orderId);
                                         startActivity(intent);
@@ -480,7 +480,7 @@ public class MyOrderDetailFragment extends BaseFragment implements PullToRefresh
                     ViewHolderChild viewHolderChild = new ViewHolderChild(rootView);
                     //商品图片
                     if (StringUtil.checkStr(SKUsList.get(i).thumbnail)) {
-                        Picasso.with(App.getApp().getApplicationContext())
+                        Picasso.with(activity)
                                 .load(MsgID.IP + SKUsList.get(i).thumbnail)
                                 .error(R.drawable.error)
                                 .placeholder(R.drawable.zhanweitu)
@@ -600,7 +600,7 @@ public class MyOrderDetailFragment extends BaseFragment implements PullToRefresh
                 @Override
                 public void onClick(View v) {
                     //点击商品跳转到订单详情界面
-                    Intent intent = new Intent(getActivity(),
+                    Intent intent = new Intent(activity,
                             MyOrderDetailActivity.class);
                     intent.putExtra("orderId",
                             order.orderId);
@@ -696,7 +696,7 @@ public class MyOrderDetailFragment extends BaseFragment implements PullToRefresh
         popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
-                showDialogBg(1, (MyOrderListActivity) getActivity());
+                showDialogBg(1, (MyOrderListActivity) activity);
                 checkedMap.clear();
             }
         });
@@ -724,12 +724,12 @@ public class MyOrderDetailFragment extends BaseFragment implements PullToRefresh
         pop_sure.setEnabled(false);
         pop_sure.setText("确定");
         //初始化数据
-        PopSkusAdapter popSkusAdapter = new PopSkusAdapter(getActivity(), skusList);
+        PopSkusAdapter popSkusAdapter = new PopSkusAdapter(activity, skusList);
         pop_listView.setAdapter(popSkusAdapter);
 
 
         //设置背景及展示
-        showDialogBg(0, (MyOrderListActivity) getActivity());
+        showDialogBg(0, (MyOrderListActivity) activity);
         popupWindow.showAtLocation(parent, Gravity.BOTTOM, 0, 0);
     }
 

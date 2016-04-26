@@ -66,7 +66,11 @@ public class AddAddressActivity extends BaseActivity {
     public void OnActCreate(Bundle savedInstanceState) {
         setTitle("新增收货地址");
         initView();
-        count = getIntent().getExtras().getInt("addressCount");
+
+        if (getIntent() != null && getIntent().getExtras() != null) {
+            count = getIntent().getExtras().getInt("addressCount");
+        }
+
         //如果新加地址是第一个 ，默认选中默认
         if (count == 0) {
             UserInfo userInfo = Store.User.queryMe();

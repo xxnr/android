@@ -17,6 +17,7 @@ import com.ksfc.newfarmer.protocol.beans.ConsumerOrderResult;
 import com.ksfc.newfarmer.protocol.beans.CustomerIsLatestResult;
 import com.ksfc.newfarmer.protocol.beans.DeliveriesResult;
 import com.ksfc.newfarmer.protocol.beans.DeliveryCodeResult;
+import com.ksfc.newfarmer.protocol.beans.EposPayResult;
 import com.ksfc.newfarmer.protocol.beans.EvaluateList;
 import com.ksfc.newfarmer.protocol.beans.GetGoodsData;
 import com.ksfc.newfarmer.protocol.beans.GetGoodsDetail;
@@ -406,7 +407,7 @@ public enum ApiType {
     /**
      * 订单相关 Epos支付:
      */
-    EPOS_PAY("/EPOSpay", ResponseResult.class),
+    EPOS_PAY("/EPOSpay", EposPayResult.class),
 
     /**
      * 订单相关 线下支付方式:

@@ -34,10 +34,12 @@ public class MyIntegralActivity extends BaseActivity {
     public void OnActCreate(Bundle savedInstanceState) {
         setTitle("我的积分");
         Bundle bundle = getIntent().getExtras();
-        String integral = bundle.getString("integral");
-        myIntegral_tv = (TextView) findViewById(R.id.myintegral_count);
-        if (StringUtil.checkStr(integral)) {
-            myIntegral_tv.setText(integral);
+        if (bundle!=null){
+            String integral = bundle.getString("integral");
+            myIntegral_tv = (TextView) findViewById(R.id.myintegral_count);
+            if (StringUtil.checkStr(integral)) {
+                myIntegral_tv.setText(integral);
+            }
         }
         getData();
     }

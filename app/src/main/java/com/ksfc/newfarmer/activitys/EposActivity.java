@@ -13,6 +13,7 @@ import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.RndApplication;
 import com.ksfc.newfarmer.db.Store;
+import com.ksfc.newfarmer.protocol.beans.EposPayResult;
 import com.ksfc.newfarmer.utils.thrid.EposServiceManager;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.Request;
@@ -54,7 +55,11 @@ public class EposActivity extends BaseActivity {
         setTitle("全民付EPOS");
         RndApplication.tempDestroyActivityList.add(EposActivity.this);
         initView();
-        EposServiceManager.getInstance().bindMpospService(getApplicationContext());
+        try {
+            EposServiceManager.getInstance().bindMpospService(getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void initView() {
@@ -82,8 +87,10 @@ public class EposActivity extends BaseActivity {
         }
 
         Bundle bundle = getIntent().getExtras();
-        orderInfo = (MyOrderDetailResult.Datas) bundle.getSerializable("orderInfo");
-        payPrice = bundle.getString("payPrice");
+        if (bundle != null) {
+            orderInfo = (MyOrderDetailResult.Datas) bundle.getSerializable("orderInfo");
+            payPrice = bundle.getString("payPrice");
+        }
 
         if (orderInfo != null && orderInfo.rows != null && orderInfo.rows.RSCInfo != null) {
             state_info_ll.setVisibility(View.VISIBLE);
@@ -131,14 +138,17 @@ public class EposActivity extends BaseActivity {
     public void onResponsed(Request req) {
         if (req.getApi() == ApiType.EPOS_PAY) {
             if (req.getData().getStatus().equals("1000")) {
-                if (orderInfo != null && orderInfo.rows != null && orderInfo.rows.payment != null) {
-                    if (StringUtil.checkStr(orderInfo.rows.id) && StringUtil.checkStr(orderInfo.rows.payment.paymentId)) {
-                        //支付
-                        memo = "商户订单号=" + orderInfo.rows.id +
-                                "&商户支付号=" + orderInfo.rows.payment.paymentId +
-                                "&支付金额=" + payPrice + "元";
-                        consumerPhone = orderInfo.rows.recipientPhone;
-                        bookOrderAndPay();
+                EposPayResult payResult = (EposPayResult) req.getData();
+                if (orderInfo != null && orderInfo.rows != null) {
+                    if (StringUtil.checkStr(orderInfo.rows.id)) {
+                        if (payResult != null) {
+                            //支付
+                            memo = "商户订单号=" + orderInfo.rows.id +
+                                    "&商户支付号=" + payResult.paymentId +
+                                    "&支付金额=" + payResult.price + "元";
+                            consumerPhone = orderInfo.rows.recipientPhone;
+                            bookOrderAndPay(payResult.paymentId, payResult.price);
+                        }
                     }
                 }
             }
@@ -163,13 +173,13 @@ public class EposActivity extends BaseActivity {
 
 
     //支付和消费
-    public void bookOrderAndPay() {
+    public void bookOrderAndPay(String merOrderId, String payPrice) {
         Bundle args = new Bundle();
         args.putString("billsMID", billsMID);
         args.putString("billsTID", billsTID);
         args.putString("merOrderDesc", merOrderDesc);
         args.putString("amount", StringUtil.unitToCent(payPrice));
-        args.putString("merOrderId", StringUtil.addZeroForNum(orderInfo.rows.payment.paymentId, 11));
+        args.putString("merOrderId", StringUtil.addZeroForNum(merOrderId, 11));
         args.putString("salesSlipType", "1");
         args.putBoolean("isShowOrderInfo", true);
         args.putString("consumerPhone", consumerPhone);
@@ -289,6 +299,10 @@ public class EposActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        EposServiceManager.getInstance().unbindMposService(getApplicationContext());
+        try {
+            EposServiceManager.getInstance().unbindMposService(getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

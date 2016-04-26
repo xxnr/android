@@ -8,6 +8,7 @@ import com.ksfc.newfarmer.db.DBManager;
 import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.protocol.beans.LoginResult;
 import com.ksfc.newfarmer.utils.CrashHandler;
+import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.thrid.UmengPush;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
@@ -24,6 +25,7 @@ import com.umeng.socialize.utils.Log;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.os.Environment;
 import android.widget.Toast;
@@ -53,6 +55,8 @@ public class RndApplication extends Application {
         applicationContext = this;
         instance = this;
         App.setApp(this);
+        //是否显示log
+        RndLog.DEBUG_MODE = false;
         //初始化图片加载器
         initImageLoader(this, null);
         //初始化数据库管理器

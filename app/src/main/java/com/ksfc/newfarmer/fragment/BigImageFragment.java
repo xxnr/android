@@ -29,12 +29,12 @@ public class BigImageFragment extends BaseFragment {
         String picture = bundle.getString("picture");
         //可以自由放大缩小图片的控键
         if (StringUtil.checkStr(picture)) {
-            Picasso.with(App.getApp().getApplicationContext()).load(MsgID.IP + picture).config(Bitmap.Config.RGB_565).error(R.drawable.error).skipMemoryCache().placeholder(R.drawable.zhanweitu).into(photoView);
+            Picasso.with(activity).load(MsgID.IP + picture).config(Bitmap.Config.RGB_565).error(R.drawable.error).skipMemoryCache().placeholder(R.drawable.zhanweitu).into(photoView);
         }
         photoView.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
             @Override
             public void onPhotoTap(View view, float x, float y) {
-                getActivity().finish();
+                activity.finish();
             }
         });
         return view;
