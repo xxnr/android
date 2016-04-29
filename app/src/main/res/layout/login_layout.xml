@@ -35,9 +35,10 @@
             <com.ksfc.newfarmer.widget.ClearEditText
                 android:id="@+id/login_layout_phone"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
+                android:gravity="center_vertical"
                 android:background="@null"
                 android:drawableRight="@drawable/delete_selector"
                 android:hint="请输入您的手机号"
@@ -63,8 +64,9 @@
             <com.ksfc.newfarmer.widget.ClearEditText
                 android:id="@+id/login_layoutpassword"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginRight="10dp"
+                android:gravity="center_vertical"
                 android:background="@null"
                 android:drawableRight="@drawable/delete_selector"
                 android:hint="请输入您的密码"

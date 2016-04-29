@@ -10,25 +10,25 @@
         android:layout_width="match_parent"
         android:layout_height="94dp"
         android:background="@color/white"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
 
         <CheckBox
-            android:enabled="false"
             android:id="@+id/btn_delivery_state_item"
             android:layout_width="18dp"
             android:layout_height="18dp"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="16dp"
+            android:layout_marginRight="9dp"
             android:background="@drawable/selector_check_box_circle_green"
             android:button="@null"
+            android:enabled="false"
             android:visibility="visible" />
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="9dp"
-            android:layout_marginRight="16dp"
             android:gravity="center_vertical"
             android:orientation="vertical">
 

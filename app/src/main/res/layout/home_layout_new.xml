@@ -23,81 +23,80 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
-            <include layout="@layout/homeheader1" />
-
-
-            <com.ksfc.newfarmer.widget.UnSwipeGridView
-                android:id="@+id/huafei_gv"
+            <!-- 广告位 -->
+            <LinearLayout
+                android:id="@+id/ll_banner_container"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:gravity="center"
-                android:horizontalSpacing="12dp"
-                android:listSelector="@null"
-                android:numColumns="2"
-                android:scrollbars="none"
-                android:stretchMode="columnWidth"
-                android:verticalSpacing="15dp" />
+                android:layout_height="175dp"
+                android:orientation="vertical" />
 
-            <RelativeLayout
-                android:id="@+id/car_bar_layout"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:visibility="gone">
+                android:background="@color/white"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/huafei_zhuanchang"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="40dp"
+                        android:layout_weight="1"
+                        android:text="化肥专场"
+                        android:textColor="#66ccee" />
+
+                    <ImageView
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_marginRight="16dp"
+                        android:background="@drawable/huafei_zhuanchang" />
+                </LinearLayout>
 
                 <TextView
-                    android:id="@+id/head_bottom_bar"
-                    android:layout_width="3dp"
-                    android:layout_height="16dp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="16dp"
-                    android:background="@color/green" />
+                    android:layout_width="1px"
+                    android:layout_height="match_parent"
+                    android:background="@color/gray" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="6dp"
-                    android:layout_toRightOf="@id/head_bottom_bar"
-                    android:text="化肥精选" />
+                <LinearLayout
+                    android:id="@+id/car_zhuanchang"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
-                <ImageView
-                    android:id="@+id/car_bottom_bar_qianjin"
-                    android:layout_width="12dp"
-                    android:layout_height="12dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="16dp"
-                    android:src="@drawable/common_icon_qianjin" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="40dp"
+                        android:layout_weight="1"
+                        android:text="汽车专场"
+                        android:textColor="#ff7700" />
 
-                <TextView
-                    android:id="@+id/car_bar_gengduo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@id/car_bottom_bar_qianjin"
-                    android:paddingRight="6dp"
-                    android:text="更多产品"
-                    android:textSize="14sp" />
-            </RelativeLayout>
+                    <ImageView
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_marginRight="16dp"
+                        android:background="@drawable/car_zhuanchang" />
+                </LinearLayout>
+            </LinearLayout>
 
-            <com.ksfc.newfarmer.widget.UnSwipeGridView
-                android:layout_marginBottom="10dp"
-                android:id="@+id/qiche_gv"
+            <include layout="@layout/line_lay" />
+
+            <LinearLayout
+                android:id="@+id/view_container"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:gravity="center"
-                android:horizontalSpacing="12dp"
-                android:listSelector="@null"
-                android:numColumns="2"
-                android:scrollbars="none"
-                android:stretchMode="columnWidth"
-                android:verticalSpacing="15dp" />
+                android:orientation="vertical" />
+
         </LinearLayout>
+
     </com.handmark.pulltorefresh.library.PullToRefreshScrollView>
 
 </LinearLayout>

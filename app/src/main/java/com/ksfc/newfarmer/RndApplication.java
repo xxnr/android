@@ -56,7 +56,7 @@ public class RndApplication extends Application {
         instance = this;
         App.setApp(this);
         //是否显示log
-        RndLog.DEBUG_MODE = false;
+        RndLog.DEBUG_MODE = true;
         //初始化图片加载器
         initImageLoader(this, null);
         //初始化数据库管理器

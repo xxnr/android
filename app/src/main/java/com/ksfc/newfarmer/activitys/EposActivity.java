@@ -56,10 +56,11 @@ public class EposActivity extends BaseActivity {
         RndApplication.tempDestroyActivityList.add(EposActivity.this);
         initView();
         try {
-            EposServiceManager.getInstance().bindMpospService(getApplicationContext());
+            EposServiceManager.getInstance().bindMpospService(EposActivity.this);
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
     private void initView() {
@@ -76,6 +77,7 @@ public class EposActivity extends BaseActivity {
         state_info_ll.setVisibility(View.GONE);
         none_state_info_rel.setVisibility(View.GONE);
         setViewClick(R.id.pay_sure_tv);
+        setViewClick(R.id.view_other_state_ll);
 
         //是否安装插件
         if (!Utils.isPkgInstalled(this, "com.chinaums.mposplugin")) {
@@ -125,11 +127,17 @@ public class EposActivity extends BaseActivity {
             case R.id.pay_sure_tv:
                 //是否安装插件
                 if (Utils.isPkgInstalled(this, "com.chinaums.mposplugin")) {
+//                    checkVersionUpdate();
                     eposPay();
                 } else {
                     Utils.addApk(this, "mpospluginphone.apk");
                 }
                 break;
+            case R.id.view_other_state_ll:
+
+                startActivity(EposSlotCardStateActivity.class);
+                break;
+
         }
 
     }
@@ -196,8 +204,6 @@ public class EposActivity extends BaseActivity {
         }
     }
 
-    //获取
-
 
     // 定义订单支付回调
     class PayOrderResultListener extends IUmsMposResultListener.Stub {
@@ -218,13 +224,18 @@ public class EposActivity extends BaseActivity {
                             if (StringUtil.checkStr(orderId)) {
                                 SignOrder(orderId);
                             }
-
                         } else if ("success".equals(payStatus)) {
                             showToast("支付成功");
                             orderSuccess();
                         }
                     } else {
-                        showToast("支付失败");
+                        String resultInfo = result.getString("resultInfo");
+                        if (resultInfo != null && resultInfo.contains("银行卡密码输入错误")) {
+                            showToast(resultInfo);
+                        } else {
+                            showToast("支付失败");
+                        }
+
                     }
                 }
             });
@@ -257,6 +268,36 @@ public class EposActivity extends BaseActivity {
             e.printStackTrace();
         }
 
+    }
+
+    //版本检查升级
+    public void checkVersionUpdate() {
+        Bundle args = new Bundle();
+        args.putString("billsMID", billsMID);
+        args.putString("billsTID", billsTID);
+        try {
+            EposServiceManager.getInstance().mUmsMposService.checkVersionUpdate(args, new VersionUpdate());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    class VersionUpdate extends IUmsMposResultListener.Stub {
+        @Override
+        public void umsServiceResult(final Bundle result) throws RemoteException {
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    String resultStatus = result.getString("resultStatus");
+                    if ("success".equals(resultStatus)) {
+                        RndLog.i(TAG, "升级成功");
+                    } else {
+                        String resultInfo = result.getString("resultInfo");
+                        RndLog.i(TAG, "升级失败：" + resultInfo);
+                    }
+                }
+            });
+        }
     }
 
 

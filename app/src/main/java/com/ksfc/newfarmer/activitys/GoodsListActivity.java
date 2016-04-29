@@ -61,7 +61,6 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
     private List<SingleGood> nycList = new ArrayList<>();
     private PullToRefreshListView listView;
     private GoodsListAdapter goodsListAdapter;
-    private String goods_flag;
 
     private ImageView return_top;
 
@@ -104,13 +103,12 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
     private boolean isReset = false;
     private List<String> commonAttr = new ArrayList<>();
 
-
     private List<Map<String, Object>> oldAttributesList;//保存的属性
     private String oldReservePrice;//保存的的价格
     private StringBuilder oldBrand;//保存的品牌
 
-
     private boolean oldFlag = false;//是否用上次的请求
+    private String className;
 
 
     @Override
@@ -125,14 +123,13 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
         // TODO Auto-generated method stub
         // 根据intent判断加载化肥还是汽车
         RndApplication.tempDestroyActivityList.add(GoodsListActivity.this);
-        goods_flag = getIntent().getStringExtra("goods");
-        if (goods_flag.equals("huafei")) {
-            setTitle("化肥");
-            classId = (String) SPUtils.get(this, "HuafeiId", "531680A5");
-        } else if (goods_flag.equals("qiche")) {
-            setTitle("汽车");
-            classId = (String) SPUtils.get(this, "CarID", "6C7D8F66");
+        className = getIntent().getStringExtra("className");
+        if (StringUtil.checkStr(className)) {
+            setTitle(className);
+        } else {
+            setTitle("商品");
         }
+        classId = getIntent().getStringExtra("classId");
         initView();
         showProgressDialog();
         getData();
@@ -330,6 +327,16 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
         popwindow_text4 = (TextView) popupWindow_view.findViewById(R.id.pop_text4);
         popwindow_text5 = (TextView) popupWindow_view.findViewById(R.id.pop_text5);
 
+        TextView good_name_price = (TextView) popupWindow_view.findViewById(R.id.good_name_price);
+
+        if (StringUtil.checkStr(className)) {
+            if (className.equals("化肥")||className.equals("汽车")){
+                good_name_price.setVisibility(View.VISIBLE);
+            }else {
+                good_name_price.setVisibility(View.GONE);
+            }
+        }
+
         pop_gv1 = (UnSwipeGridView) popupWindow_view
                 .findViewById(R.id.pop_gv1);
         pop_gv2 = (UnSwipeGridView) popupWindow_view
@@ -424,7 +431,7 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
 
         //保存上次价格 以便下次筛选时使用
         lastPrice = pri_position;
-        if (goods_flag.equals("huafei")) {
+        if (className.equals("化肥")) {
             switch (pri_position) {
                 case 0:
                     reservePrice = "0,1000";
@@ -443,7 +450,7 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
                     break;
             }
 
-        } else if (goods_flag.equals("qiche")) {
+        } else if (className.equals("汽车")) {
             switch (pri_position) {
                 case 0:
                     reservePrice = "0,50000";
@@ -604,13 +611,13 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
             }
             //价格筛选表
             List<String> prices = new ArrayList<>();
-            if (goods_flag.equals("huafei")) {
+            if (className.equals("化肥")) {
                 prices.add("0-1000元");
                 prices.add("1000-2000元");
                 prices.add("2000-3000元");
                 prices.add("3000元以上");
 
-            } else if (goods_flag.equals("qiche")) {
+            } else if (className.equals("汽车")) {
                 prices.add("0-5万");
                 prices.add("5万-6万");
                 prices.add("6万-7万");
@@ -628,7 +635,9 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
             for (String key : lastBrands) {
                 brandsAdapter.states.put(key, true);
             }
-            brandsAdapter.notifyDataSetChanged();
+            if (brandsAdapter!=null){
+                brandsAdapter.notifyDataSetChanged();
+            }
             getAttrsData();
 
         } else if (req.getApi() == ApiType.GET_GOODS_ATTR) {

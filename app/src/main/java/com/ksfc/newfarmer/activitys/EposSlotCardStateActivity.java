@@ -32,7 +32,6 @@ import com.ksfc.newfarmer.utils.PopWindowUtils;
 import com.ksfc.newfarmer.utils.PullToRefreshUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +39,7 @@ import java.util.Map;
 /**
  * Created by HePeng on 2016/3/9.
  */
-public class SelectDeliveriesStateActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener2 {
+public class EposSlotCardStateActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener2 {
 
     private TextView state_province_text;
     private ImageView state_province_img;
@@ -71,32 +70,25 @@ public class SelectDeliveriesStateActivity extends BaseActivity implements PullT
     private String cityId;
     private String countyId;
 
-    private ListView popListView;
     private LinearLayout state_county_rel;//根据需要可以隐藏
-    private TextView save_userInfo;
     private RelativeLayout pop_bg;
     private int page = 1;
 
-    private Map<String, Boolean> checkedStateMap = new HashMap<>();
     private DeliveryAdapter deliveryAdapter;
-
-    private final static int ResultState = 0x12;
 
 
     @Override
     public int getLayout() {
-        return R.layout.select_deliveries_state_layout;
+        return R.layout.view_epos_pay_state_layout;
     }
 
     @Override
     public void OnActCreate(Bundle savedInstanceState) {
-        setTitle("选择自提网点");
+        setTitle("EPOS刷卡网点");
         initView();
         setViewClick(R.id.state_province_rel);
         setViewClick(R.id.state_city_rel);
         setViewClick(R.id.state_county_rel);
-        setViewClick(R.id.save_userInfo);
-
 
         getProvinceState();
         //默认选中河南
@@ -110,8 +102,6 @@ public class SelectDeliveriesStateActivity extends BaseActivity implements PullT
         state_county_img.setBackgroundResource(R.drawable.bottom_arrow_gray);
         state_county_text.setTextColor(getResources().getColor(R.color.gray));
 
-        //默认保存不可点
-        save_userInfo.setEnabled(false);
         //默认背景不展示
         pop_bg.setVisibility(View.GONE);
     }
@@ -124,13 +114,12 @@ public class SelectDeliveriesStateActivity extends BaseActivity implements PullT
         state_city_img = (ImageView) findViewById(R.id.state_city_img);
         state_county_text = (TextView) findViewById(R.id.state_county_text);
         state_county_img = (ImageView) findViewById(R.id.state_county_img);
-        state_province_bar = (View) findViewById(R.id.state_province_bar);
-        state_city_bar = (View) findViewById(R.id.state_city_bar);
-        state_county_bar = (View) findViewById(R.id.state_county_bar);
+        state_province_bar = findViewById(R.id.state_province_bar);
+        state_city_bar = findViewById(R.id.state_city_bar);
+        state_county_bar = findViewById(R.id.state_county_bar);
         shaixuan_bar_separatrix = (TextView) findViewById(R.id.shaixuan_bar_separatrix);
         select_state_listView = (PullToRefreshListView) findViewById(R.id.select_state_listView);
         state_county_rel = (LinearLayout) findViewById(R.id.state_county_rel);
-        save_userInfo = (TextView) findViewById(R.id.save_userInfo);
         pop_bg = ((RelativeLayout) findViewById(R.id.pop_bg));
 
         select_state_listView.setMode(PullToRefreshBase.Mode.BOTH);
@@ -161,7 +150,6 @@ public class SelectDeliveriesStateActivity extends BaseActivity implements PullT
                 } else {
                     showPopupWindow(cityTag);
                 }
-
                 state_city_img.setBackgroundResource(R.drawable.top_arrow);
                 state_city_text.setTextColor(getResources().getColor(R.color.orange_goods_price));
                 state_city_bar.setVisibility(View.VISIBLE);
@@ -177,34 +165,6 @@ public class SelectDeliveriesStateActivity extends BaseActivity implements PullT
                 state_county_bar.setVisibility(View.VISIBLE);
                 break;
 
-            case R.id.save_userInfo:
-                String RSCId = null;
-                RSCStateInfoResult.RSCsEntity rsCsEntity = null;
-                //寻找选中ID
-                for (String key : checkedStateMap.keySet()) {
-                    if (checkedStateMap.get(key)) {
-                        RSCId = key;
-                    }
-                }
-                //寻找选中对象
-                if (deliveryAdapter != null) {
-                    List<RSCStateInfoResult.RSCsEntity> data = deliveryAdapter.getData();
-                    if (data != null) {
-                        for (int i = 0; i < data.size(); i++) {
-                            if (data.get(i)._id.equals(RSCId)) {
-                                rsCsEntity = data.get(i);
-                            }
-                        }
-
-                    }
-
-                }
-                //保存用户
-                Intent intent = new Intent();
-                intent.putExtra("rsCsEntity", (Serializable) rsCsEntity);
-                setResult(ResultState, intent);
-                finish();
-                break;
         }
     }
 
@@ -232,7 +192,6 @@ public class SelectDeliveriesStateActivity extends BaseActivity implements PullT
         disMissDialog();
         if (req.getApi() == ApiType.GET_RSC_ADDRESS_PROVINCE) {
             if (req.getData().getStatus().equals("1000")) {
-
                 RSCAddressListResult data = (RSCAddressListResult) req.getData();
                 List<RSCAddressListResult.ProvinceListEntity> provinceList = data.provinceList;
                 provinceAdapter = new DeliveryAddressProvinceAdapter(this, provinceList);
@@ -265,24 +224,8 @@ public class SelectDeliveriesStateActivity extends BaseActivity implements PullT
             if (req.getData().getStatus().equals("1000")) {
                 RSCStateInfoResult data = (RSCStateInfoResult) req.getData();
 
-
                 if (data.RSCs != null && !data.RSCs.isEmpty()) {
-
-
                     if (page == 1) {
-                        boolean is_clear = true;
-                        for (RSCStateInfoResult.RSCsEntity key : data.RSCs) {
-                            if (key != null) {
-                                if (checkedStateMap.containsKey(key._id) && checkedStateMap.get(key._id)) {
-                                    is_clear = false;
-                                }
-                            }
-                        }
-                        if (is_clear) {
-                            save_userInfo.setEnabled(false);
-                            checkedStateMap.clear();
-                        }
-
                         deliveryAdapter = new DeliveryAdapter(this, data.RSCs);
                         select_state_listView.setAdapter(deliveryAdapter);
                     } else {
@@ -292,7 +235,7 @@ public class SelectDeliveriesStateActivity extends BaseActivity implements PullT
                     }
                 } else {
                     if (page == 1) {
-                        if (deliveryAdapter!=null){
+                        if (deliveryAdapter != null) {
                             deliveryAdapter.clear();
                         }
                         showToast("该地区没有网点");
@@ -300,10 +243,7 @@ public class SelectDeliveriesStateActivity extends BaseActivity implements PullT
                         showToast("没有更多网点");
                         page--;
                     }
-
                 }
-
-
             }
         }
 
@@ -374,31 +314,7 @@ public class SelectDeliveriesStateActivity extends BaseActivity implements PullT
                     builder.append(companyAddress.details);
                 }
                 holder.setText(R.id.address_delivery_state_item, builder.toString());
-                final CheckBox checkBox = (CheckBox) holder.getView(R.id.btn_delivery_state_item);
-
-
-                holder.getConvertView().setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        // 重置，确保最多只有一项被选中
-                        for (String key : checkedStateMap.keySet()) {
-                            checkedStateMap.put(key, false);
-                        }
-                        checkedStateMap.put(rsCsEntity._id,
-                                true);
-                        save_userInfo.setEnabled(true);
-                        notifyDataSetChanged();
-                    }
-                });
-                Boolean res = checkedStateMap.get(rsCsEntity._id);
-                if (res != null && res) {
-                    checkBox.setChecked(true);
-                } else {
-                    checkBox.setChecked(false);
-                    checkedStateMap.put(rsCsEntity._id,
-                            false);
-                }
+                holder.getView(R.id.btn_delivery_state_item).setVisibility(View.GONE);
             }
 
         }
@@ -573,7 +489,7 @@ public class SelectDeliveriesStateActivity extends BaseActivity implements PullT
         // TODO Auto-generated method stub
         View popupWindow_view = getLayoutInflater().inflate(
                 R.layout.popwindow_select_delivery_state_layout, null, false);
-        popListView = (ListView) popupWindow_view.findViewById(R.id.popWindow_ListView);
+        ListView popListView = (ListView) popupWindow_view.findViewById(R.id.popWindow_ListView);
         popupWindow = new PopupWindow(popupWindow_view,
                 LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, true);
         // 设置动画效果
@@ -611,215 +527,72 @@ public class SelectDeliveriesStateActivity extends BaseActivity implements PullT
     //获取网点所在地区 省
     private void getProvinceState() {
         showProgressDialog();
-        Bundle bundle = getIntent().getExtras();
-        int flags = 0;
-        if (bundle!=null){
-            flags = bundle.getInt("flags");
+        RequestParams params = new RequestParams();
+        LoginResult.UserInfo userInfo = Store.User.queryMe();
+        if (userInfo != null) {
+            params.put("userId", userInfo.userid);
         }
-
-        if (flags == 1) {
-            String product_id = bundle.getString("product_id");
-            RequestParams params = new RequestParams();
-            if (StringUtil.checkStr(product_id)) {
-                params.put("products", product_id);
-            }
-            LoginResult.UserInfo userInfo = Store.User.queryMe();
-            if (userInfo != null) {
-                params.put("userId", userInfo.userid);
-            }
-            execApi(ApiType.GET_RSC_ADDRESS_PROVINCE.setMethod(ApiType.RequestMethod.GET), params);
-        } else if (flags == 2) {
-            RequestParams params = new RequestParams();
-            LoginResult.UserInfo userInfo = Store.User.queryMe();
-            if (userInfo != null) {
-                params.put("token", userInfo.token);
-            }
-            List<String> productIds = (List<String>) bundle.getSerializable("productIds");
-            StringBuilder builder = new StringBuilder();
-            if (productIds != null && productIds.size() > 0) {
-                for (int j = 0; j < productIds.size(); j++) {
-                    String _id = (String) productIds.get(j);
-                    if (StringUtil.checkStr(_id)) {
-                        builder.append(_id).append(",");
-                    }
-                }
-                String subUrl = builder.substring(0, builder.length() - 1);
-                if (StringUtil.checkStr(subUrl)) {
-                    params.put("products", subUrl);
-                }
-            }
-            execApi(ApiType.GET_RSC_ADDRESS_PROVINCE.setMethod(ApiType.RequestMethod.GET), params);
-        }
+        params.put("EPOS", "true");
+        execApi(ApiType.GET_RSC_ADDRESS_PROVINCE.setMethod(ApiType.RequestMethod.GET), params);
     }
 
 
     //获取网点所在地区 市
     private void getCityState(String provinceId) {
         showProgressDialog();
-        Bundle bundle = getIntent().getExtras();
-        int flags = 0;
-        if (bundle!=null){
-            flags = bundle.getInt("flags");
+        RequestParams params = new RequestParams();
+        LoginResult.UserInfo userInfo = Store.User.queryMe();
+        if (userInfo != null) {
+            params.put("userId", userInfo.userid);
         }
-        if (flags == 1) {
-            String product_id = bundle.getString("product_id");
-            RequestParams params = new RequestParams();
-            if (StringUtil.checkStr(product_id)) {
-                params.put("products", product_id);
-            }
-            if (StringUtil.checkStr(provinceId)) {
-                params.put("province", provinceId);
-            }
-            LoginResult.UserInfo userInfo = Store.User.queryMe();
-            if (userInfo != null) {
-                params.put("userId", userInfo.userid);
-            }
-            execApi(ApiType.GET_RSC_ADDRESS_CITY.setMethod(ApiType.RequestMethod.GET), params);
-        } else if (flags == 2) {
-            RequestParams params = new RequestParams();
-            LoginResult.UserInfo userInfo = Store.User.queryMe();
-            if (userInfo != null) {
-                params.put("userId", userInfo.userid);
-            }
-            List<String> productIds = (List<String>) bundle.getSerializable("productIds");
-            StringBuilder builder = new StringBuilder();
-            if (productIds != null && productIds.size() > 0) {
-                for (int j = 0; j < productIds.size(); j++) {
-                    String _id = (String) productIds.get(j);
-                    if (StringUtil.checkStr(_id)) {
-                        builder.append(_id).append(",");
-                    }
-                }
-                String subUrl = builder.substring(0, builder.length() - 1);
-                if (StringUtil.checkStr(subUrl)) {
-                    params.put("products", subUrl);
-                }
-                if (StringUtil.checkStr(provinceId)) {
-                    params.put("province", provinceId);
-                }
-            }
-            execApi(ApiType.GET_RSC_ADDRESS_CITY.setMethod(ApiType.RequestMethod.GET), params);
+        if (StringUtil.checkStr(provinceId)) {
+            params.put("province", provinceId);
+            params.put("EPOS", "true");
         }
+        execApi(ApiType.GET_RSC_ADDRESS_CITY.setMethod(ApiType.RequestMethod.GET), params);
     }
 
     //获取网点所在地区 县
     private void getCountyState(String provinceId, String cityId) {
         showProgressDialog();
-        Bundle bundle = getIntent().getExtras();
-        int flags = 0;
-        if (bundle!=null){
-            flags = bundle.getInt("flags");
-        }
-        if (flags == 1) {
-            RequestParams params = new RequestParams();
-            String product_id = bundle.getString("product_id");
-            if (StringUtil.checkStr(product_id)) {
-                params.put("products", product_id);
-            }
-            if (StringUtil.checkStr(provinceId)) {
-                params.put("province", provinceId);
-            }
-            if (StringUtil.checkStr(cityId)) {
-                params.put("city", cityId);
-            }
+        RequestParams params = new RequestParams();
 
-            LoginResult.UserInfo userInfo = Store.User.queryMe();
-            if (userInfo != null) {
-                params.put("userId", userInfo.userid);
-            }
-            execApi(ApiType.GET_RSC_ADDRESS_COUNTY.setMethod(ApiType.RequestMethod.GET), params);
-        } else if (flags == 2) {
-            RequestParams params = new RequestParams();
-            LoginResult.UserInfo userInfo = Store.User.queryMe();
-            if (userInfo != null) {
-                params.put("userId", userInfo.userid);
-            }
-            List<String> productIds = (List<String>) bundle.getSerializable("productIds");
-            StringBuilder builder = new StringBuilder();
-            if (productIds != null && productIds.size() > 0) {
-                for (int j = 0; j < productIds.size(); j++) {
-                    String _id = (String) productIds.get(j);
-                    if (StringUtil.checkStr(_id)) {
-                        builder.append(_id).append(",");
-                    }
-                }
-                String subUrl = builder.substring(0, builder.length() - 1);
-                if (StringUtil.checkStr(subUrl)) {
-                    params.put("products", subUrl);
-                }
-                if (StringUtil.checkStr(provinceId)) {
-                    params.put("province", provinceId);
-                }
-                if (StringUtil.checkStr(cityId)) {
-                    params.put("city", cityId);
-                }
-            }
-            execApi(ApiType.GET_RSC_ADDRESS_COUNTY.setMethod(ApiType.RequestMethod.GET), params);
+        if (StringUtil.checkStr(provinceId)) {
+            params.put("province", provinceId);
         }
+        if (StringUtil.checkStr(cityId)) {
+            params.put("city", cityId);
+        }
+        LoginResult.UserInfo userInfo = Store.User.queryMe();
+        if (userInfo != null) {
+            params.put("userId", userInfo.userid);
+        }
+        params.put("EPOS", "true");
+        execApi(ApiType.GET_RSC_ADDRESS_COUNTY.setMethod(ApiType.RequestMethod.GET), params);
+
     }
 
 
     //获取网点
     private void getStateList(String provinceId, String cityId, String countyId) {
-        Bundle bundle = getIntent().getExtras();
-        int flags = 0;
-        if (bundle!=null){
-            flags = bundle.getInt("flags");
+        RequestParams params = new RequestParams();
+        if (StringUtil.checkStr(provinceId)) {
+            params.put("province", provinceId);
         }
+        if (StringUtil.checkStr(cityId)) {
+            params.put("city", cityId);
+        }
+        if (StringUtil.checkStr(countyId)) {
+            params.put("county", countyId);
+        }
+        params.put("page", page);
+        LoginResult.UserInfo userInfo = Store.User.queryMe();
+        if (userInfo != null) {
+            params.put("userId", userInfo.userid);
+        }
+        params.put("EPOS", "true");
+        execApi(ApiType.GET_RSC_STATE_INFO.setMethod(ApiType.RequestMethod.GET), params);
 
-        if (flags == 1) {
-            String product_id = bundle.getString("product_id");
-            RequestParams params = new RequestParams();
-            if (StringUtil.checkStr(product_id)) {
-                params.put("products", product_id);
-            }
-            if (StringUtil.checkStr(provinceId)) {
-                params.put("province", provinceId);
-            }
-            if (StringUtil.checkStr(cityId)) {
-                params.put("city", cityId);
-            }
-            if (StringUtil.checkStr(countyId)) {
-                params.put("county", countyId);
-            }
-            params.put("page", page);
-            LoginResult.UserInfo userInfo = Store.User.queryMe();
-            if (userInfo != null) {
-                params.put("userId", userInfo.userid);
-            }
-            execApi(ApiType.GET_RSC_STATE_INFO.setMethod(ApiType.RequestMethod.GET), params);
-        } else if (flags == 2) {
-            RequestParams params = new RequestParams();
-            LoginResult.UserInfo userInfo = Store.User.queryMe();
-            if (userInfo != null) {
-                params.put("userId", userInfo.userid);
-            }
-            List<String> productIds = (List<String>) bundle.getSerializable("productIds");
-            StringBuilder builder = new StringBuilder();
-            if (productIds != null && productIds.size() > 0) {
-                for (int j = 0; j < productIds.size(); j++) {
-                    String _id = (String) productIds.get(j);
-                    if (StringUtil.checkStr(_id)) {
-                        builder.append(_id).append(",");
-                    }
-                }
-                String subUrl = builder.substring(0, builder.length() - 1);
-                if (StringUtil.checkStr(subUrl)) {
-                    params.put("products", subUrl);
-                }
-                if (StringUtil.checkStr(provinceId)) {
-                    params.put("province", provinceId);
-                }
-                if (StringUtil.checkStr(cityId)) {
-                    params.put("city", cityId);
-                }
-                if (StringUtil.checkStr(countyId)) {
-                    params.put("county", countyId);
-                }
-                params.put("page", page);
-            }
-            execApi(ApiType.GET_RSC_STATE_INFO.setMethod(ApiType.RequestMethod.GET), params);
-        }
     }
 
 

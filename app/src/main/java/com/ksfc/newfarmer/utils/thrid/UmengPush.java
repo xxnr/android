@@ -58,28 +58,30 @@ public class UmengPush {
         UmengNotificationClickHandler notificationClickHandler = new UmengNotificationClickHandler() {
             @Override
             public void openActivity(Context context, UMessage uMessage) {
-                String s = uMessage.getRaw().toString();
-                RndLog.v("UmengPush", s);
-                String activity = uMessage.activity;
-                Map<String, String> map = uMessage.extra;
-                String orderId = null;
-                if (map != null && map.size() > 0) {
-                    orderId = map.get("orderId");
-                }
-                if (StringUtil.checkStr(activity)) {
-                    if (StringUtil.checkStr(orderId)) {
-                        Class<?> aClass = null;
-                        try {
-                            aClass = Class.forName("com.ksfc.newfarmer.activitys." + activity);
-                            Intent intent = new Intent(context, aClass);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent.putExtra("orderId", orderId);
-                            context.startActivity(intent);
-                        } catch (ClassNotFoundException e) {
-                            e.printStackTrace();
+
+                if (uMessage!=null){
+                    String activity = uMessage.activity;
+                    Map<String, String> map = uMessage.extra;
+                    String orderId = null;
+                    if (map != null && map.size() > 0) {
+                        orderId = map.get("orderId");
+                    }
+                    if (StringUtil.checkStr(activity)) {
+                        if (StringUtil.checkStr(orderId)) {
+                            Class<?> aClass = null;
+                            try {
+                                aClass = Class.forName("com.ksfc.newfarmer.activitys." + activity);
+                                Intent intent = new Intent(context, aClass);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                intent.putExtra("orderId", orderId);
+                                context.startActivity(intent);
+                            } catch (ClassNotFoundException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                 }
+
             }
         };
         PushAgent.getInstance(context).setNotificationClickHandler(notificationClickHandler);

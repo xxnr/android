@@ -1,11 +1,13 @@
 package com.ksfc.newfarmer.activitys;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.google.gson.Gson;
+
 import com.handmark.pulltorefresh.library.ILoadingLayout;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
@@ -25,15 +27,20 @@ import com.ksfc.newfarmer.protocol.beans.GetGoodsData.SingleGood;
 import com.ksfc.newfarmer.protocol.beans.HomeImageResult;
 import com.ksfc.newfarmer.protocol.beans.HomeImageResult.Rows;
 import com.ksfc.newfarmer.protocol.beans.HomeImageResult.UserRollImage;
-import com.ksfc.newfarmer.protocol.beans.PointResult;
 import com.ksfc.newfarmer.utils.PullToRefreshUtils;
-import com.ksfc.newfarmer.utils.SPUtils;
+import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.ScreenUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.utils.Utils;
 import com.ksfc.newfarmer.widget.CarouselDiagramViewPager;
 import com.ksfc.newfarmer.widget.UnSwipeGridView;
+import com.lidroid.xutils.HttpUtils;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.umeng.common.message.Log;
 import com.umeng.update.UmengUpdateAgent;
 
 import android.content.Context;
@@ -41,41 +48,37 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
+
+import org.apache.http.entity.StringEntity;
 
 
 public class HomepageActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener {
     private LinearLayout ll_banner_container;
-    private UnSwipeGridView huafei_gv, qiche_gv;
-    private CarouselDiagramViewPager carouselDiagramViewPager;
-    private int page1 = 1;
-    private int page2 = 1;
-    List<SingleGood> hfList = new ArrayList<>();
-    List<SingleGood> qcList = new ArrayList<>();
-    private HuafeiAdapter hfAdapter;
-    private RelativeLayout go_huafei;
-    private RelativeLayout go_car;
-    private CarAdapter qcAdapter;
-    private RelativeLayout car_bar_layout;
-
     private PullToRefreshScrollView scrollView;
+    private CarouselDiagramViewPager carouselDiagramViewPager;
+    private LinearLayout view_container;
     private int itemWitch;
+    private String huaFeiClassId = "531680A5";
+    private String carClassId = "6C7D8F66";
+
+    private List<HomepageViewBean> ViewBeanList = new ArrayList<>();
 
     @Override
     public int getLayout() {
         return R.layout.home_layout_new;
     }
 
-    @SuppressWarnings("static-access")
     @Override
     public void OnActCreate(Bundle savedInstanceState) {
         UmengUpdateAgent.setUpdateOnlyWifi(false);
@@ -85,13 +88,15 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
         hideLeft();
         qiandao();
         initView();
+        showProgressDialog();
+        getClassId();
+        getBanner();
+    }
+
+    private void getBanner() {
         // 获取首页轮播图
         RequestParams params1 = new RequestParams();
         execApi(ApiType.GETHOMEPIC, params1);
-        showProgressDialog();
-        getNyc();
-        getData();
-        getClassId();
     }
 
     private void getClassId() {
@@ -116,7 +121,6 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
                 }
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     setRightImage(R.drawable.qiandao_press);
-
                 }
                 return false;
             }
@@ -128,42 +132,67 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
     /**
      *
      */
-    private void getData() {
-        RequestParams params = new RequestParams();
-        Map<String, Object> map = new HashMap<>();
-        map.put("page", page1);
-        map.put("rowCount", 6);
-        String huafeiId = (String) SPUtils.get(HomepageActivity.this, "HuafeiId", "531680A5");
-        map.put("classId", huafeiId);
-        Gson gson = new Gson();
-        params.put("JSON", gson.toJson(map));
-        execApi(ApiType.GET_HUAFEI.setMethod(RequestMethod.POSTJSON), params);
+    private void getData(final HomepageViewBean homepageViewBean) {
+        if (homepageViewBean != null) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("page", 1);
+            map.put("rowCount", 6);
+            map.put("classId", homepageViewBean.classId);
+            final Gson gson = new Gson();
+            String json = gson.toJson(map);
+
+            com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
+            try {
+                params.setBodyEntity(new StringEntity(json, "UTF-8"));
+                params.setContentType("application/json");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            HttpUtils http = new HttpUtils();
+            http.send(HttpRequest.HttpMethod.POST, ApiType.GET_HUAFEI.getOpt(), params, new RequestCallBack<String>() {
+                @Override
+                public void onSuccess(ResponseInfo<String> responseInfo) {
+                    if (responseInfo != null && StringUtil.checkStr(responseInfo.result)) {
+                        RndLog.i(TAG, responseInfo.result);
+                        GetGoodsData getGoodsData = gson.fromJson(responseInfo.result, GetGoodsData.class);
+                        if (getGoodsData != null && getGoodsData.getStatus().equals("1000")) {
+                            if (getGoodsData.datas.rows != null && !getGoodsData.datas.rows.isEmpty()) {
+                                HuafeiAdapter adapter = new HuafeiAdapter(HomepageActivity.this, getGoodsData.datas.rows);
+                                if (homepageViewBean.unSwipeGridView != null) {
+                                    homepageViewBean.unSwipeGridView.setAdapter(adapter);
+                                }
+                                if (homepageViewBean.viewGroup != null) {
+                                    homepageViewBean.viewGroup.setVisibility(View.VISIBLE);
+                                }
+                            } else {
+                                if (homepageViewBean.unSwipeGridView != null) {
+                                    homepageViewBean.unSwipeGridView.setAdapter(null);
+                                }
+                                if (homepageViewBean.viewGroup != null) {
+                                    homepageViewBean.viewGroup.setVisibility(View.GONE);
+                                }
+
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(HttpException e, String s) {
+                    e.printStackTrace();
+                }
+            });
+
+
+        }
+
+
     }
 
-    /**
-     *
-     */
-    private void getNyc() {
-        // TODO Auto-generated method stub
-        RequestParams params = new RequestParams();
-        Map<String, Object> map = new HashMap<>();
-        map.put("page", page2);
-        map.put("rowCount", 6);
-        String carID = (String) SPUtils.get(HomepageActivity.this, "CarID", "6C7D8F66");
-        map.put("classId", carID);
-        Gson gson = new Gson();
-        params.put("JSON", gson.toJson(map));
-        execApi(ApiType.GET_NYC.setMethod(RequestMethod.POSTJSON), params);
-    }
 
     private void initView() {
-
+        view_container = (LinearLayout) findViewById(R.id.view_container);
         ll_banner_container = (LinearLayout) findViewById(R.id.ll_banner_container);
-        ScreenUtil.setHeight(this,ll_banner_container,175);
-
-        go_huafei = (RelativeLayout) findViewById(R.id.huafei_zhuanchang);
-        go_car = (RelativeLayout) findViewById(R.id.car_zhuanchang);
-
         scrollView = (PullToRefreshScrollView) findViewById(R.id.pull_ll_srcoll);
         scrollView.setOnRefreshListener(this);
         //设置刷新的文字
@@ -173,19 +202,11 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
         startLabels.setRefreshingLabel("正在载入...");// 刷新时
         startLabels.setReleaseLabel("放开刷新...");// 下来达到一定距离时，显示的提示
 
-
+        ScreenUtil.setHeight(this, ll_banner_container, 175);
         // 设置点击跳转监听
-        go_huafei.setOnClickListener(this);
-        go_car.setOnClickListener(this);
-        findViewById(R.id.head_bar_gengduo).setOnClickListener(
-                this);
-        findViewById(R.id.head_bottom_bar_qianjin)
-                .setOnClickListener(this);
-        car_bar_layout = (RelativeLayout) findViewById(R.id.car_bar_layout);
+        setViewClick(R.id.huafei_zhuanchang);
+        setViewClick(R.id.car_zhuanchang);
 
-        setViewClick(R.id.car_bar_gengduo);
-        setViewClick(R.id.car_bottom_bar_qianjin);
-        initGv();
     }
 
 
@@ -202,48 +223,37 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
         }
     }
 
-    private void initGv() {
-        // 获取数据 填充化肥和农用车的gv
-        huafei_gv = (UnSwipeGridView) findViewById(R.id.huafei_gv);
-        qiche_gv = (UnSwipeGridView) findViewById(R.id.qiche_gv);
-        huafei_gv.setFocusable(false);
-        qiche_gv.setFocusable(false);
-
-
-        WindowManager windowManager = getWindowManager();
-        Display display = windowManager.getDefaultDisplay();
-        int wh = display.getWidth();
-        itemWitch = (wh - (Utils.dip2px(this, 12 + 16 * 2))) / 2;
-
-        huafei_gv.setColumnWidth(Utils.dip2px(this, itemWitch));
-        qiche_gv.setColumnWidth(Utils.dip2px(this, itemWitch));
-    }
-
     @Override
     public void OnViewClick(View v) {
 
         switch (v.getId()) {
-            case R.id.car_zhuanchang:
-            case R.id.head_bar_gengduo:     //本为化肥
-            case R.id.head_bottom_bar_qianjin://本为化肥
-                Intent intent1 = new Intent(HomepageActivity.this,
-                        GoodsListActivity.class);
-                intent1.putExtra("goods", "qiche");
-                startActivity(intent1);
-                break;
             case R.id.huafei_zhuanchang:
-            case R.id.car_bar_gengduo://本为汽车
-            case R.id.car_bottom_bar_qianjin://本为汽车
                 Intent intent = new Intent(HomepageActivity.this,
                         GoodsListActivity.class);
-                intent.putExtra("goods", "huafei");
+                intent.putExtra("className", "化肥");
+                intent.putExtra("classId", huaFeiClassId);
                 startActivity(intent);
+                break;
+            case R.id.car_zhuanchang:
+                Intent intent1 = new Intent(HomepageActivity.this,
+                        GoodsListActivity.class);
+                intent1.putExtra("className", "汽车");
+                intent1.putExtra("classId", carClassId);
+                startActivity(intent1);
                 break;
             default:
                 break;
         }
 
     }
+
+    class HomepageViewBean {
+        public String classId;
+        public UnSwipeGridView unSwipeGridView;
+        public ViewGroup viewGroup;
+
+    }
+
 
     @Override
     public void onResponsed(Request req) {
@@ -259,90 +269,251 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
             ll_banner_container.removeAllViews();
             ll_banner_container.addView(carouselDiagramViewPager.getView());
 
-        } else if (req.getApi() == ApiType.GET_HUAFEI) {
-            scrollView.getRefreshableView().fullScroll(ScrollView.FOCUS_UP);
-            GetGoodsData goodsData = (GetGoodsData) req.getData();
-            List<SingleGood> huafeiList = goodsData.datas.rows;
-            if (huafeiList != null && huafeiList.size() > 0) {
-                if (page1 == 1) {
-                    hfList.clear();
-                    hfList.addAll(huafeiList);
-                    if (hfAdapter == null) {
-                        hfAdapter = new HuafeiAdapter(this, hfList);
-                        qiche_gv.setAdapter(hfAdapter);
-                    } else {
-                        hfAdapter.notifyDataSetChanged();
-                    }
-                } else {
-                    hfList.addAll(huafeiList);
-                    hfAdapter.notifyDataSetChanged();
-                }
-            } else {
-                showToast("没有数据了");
-            }
-            disMissDialog();
-        } else if (req.getApi() == ApiType.GET_NYC) {
-            scrollView.getRefreshableView().fullScroll(ScrollView.FOCUS_UP);
-            GetGoodsData goodsData = (GetGoodsData) req.getData();
-            List<SingleGood> carList = goodsData.datas.rows;
-            if (carList != null && carList.size() > 0) {
-                car_bar_layout.setVisibility(View.VISIBLE);
-                if (page2 == 1) {
-                    qcList.clear();
-                    qcList.addAll(carList);
-                    if (qcAdapter == null) {
-                        qcAdapter = new CarAdapter(this, qcList);
-                        huafei_gv.setAdapter(qcAdapter);
-
-                    } else {
-                        qcAdapter.notifyDataSetChanged();
-                    }
-                } else {
-                    qcList.addAll(carList);
-                    qcAdapter.notifyDataSetChanged();
-                }
-            } else {
-                showToast("没有数据了");
-
-            }
-            disMissDialog();
-
         } else if (ApiType.SIGN_IN_POINT == req.getApi()) {
-            PointResult data = (PointResult) req.getData();
-            String status = data.getStatus();
-            if (status.equals("1000")) {
-                Intent intent = new Intent(HomepageActivity.this,
-                        QiandaoActivity.class);
-                startActivity(intent);
-            } else if (status.equals("1010")) {
-                showToast("您今日已签到成功，明天再来呦");
+            if (req.getData().getStatus().equals("1000")) {
+                startActivity(QiandaoActivity.class);
             }
-
         } else if (ApiType.GET_CLASSID == req.getApi()) {
             ClassIDResult data = (ClassIDResult) req.getData();
-            if (data.getStatus().equals("1000")) {
-                for (int i = 0; i < data.categories.size(); i++) {
-                    if (data.categories.get(i).name.equals("化肥")) {
-                        //保存到本地class的Id
-                        SPUtils.put(HomepageActivity.this, "HuafeiId",
-                                data.categories.get(i).id);
+            if (data.getStatus().equals("1000") && data.categories != null) {
+                if (ViewBeanList.isEmpty()) {
+                    for (int i = 0; i < data.categories.size(); i++) {
+                        HomepageViewBean homepageViewBean = new HomepageViewBean();
+                        final ClassIDResult.CategoriesEntity entity = data.categories.get(i);
+                        if (entity != null) {
+                            //设置 title_bar
+                            ViewGroup viewGroup = (ViewGroup) getLayoutInflater().inflate(R.layout.homepage_view_more_bar, null);
+                            viewGroup.setVisibility(View.GONE);
+                            ViewHolder holder = new ViewHolder(viewGroup);
+                            if (i % 2 == 1) {
+                                holder.view_bar_more_bar.setBackgroundColor(getResources().getColor(R.color.orange_goods_price));
+                            } else {
+                                holder.view_bar_more_bar.setBackgroundColor(getResources().getColor(R.color.green));
+                            }
+                            if (entity.name.equals("化肥")) {
+                                huaFeiClassId = entity.id;//设置化肥的id
+                                holder.view_bar_more_bar.setBackgroundColor(getResources().getColor(R.color.green));
+                            }
+                            if (entity.name.equals("汽车")) {
+                                carClassId = entity.id;//设置汽车的id
+                                holder.view_bar_more_bar.setBackgroundColor(getResources().getColor(R.color.orange_goods_price));
+                            }
+                            if (StringUtil.checkStr(entity.name)) {
+                                holder.view_bar_more_title.setText(entity.name + "精选");
+                            }
+                            holder.view_bar_more_qianjin.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if (StringUtil.checkStr(entity.id)) {
+                                        Intent intent = new Intent(HomepageActivity.this,
+                                                GoodsListActivity.class);
+                                        intent.putExtra("className", entity.name);
+                                        intent.putExtra("classId", entity.id);
+                                        startActivity(intent);
+                                    }
+                                }
+                            });
+                            holder.view_bar_more.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if (StringUtil.checkStr(entity.id)) {
+                                        Intent intent = new Intent(HomepageActivity.this,
+                                                GoodsListActivity.class);
+                                        intent.putExtra("className", entity.name);
+                                        intent.putExtra("classId", entity.id);
+                                        startActivity(intent);
+                                    }
+                                }
+                            });
 
-                    } else if (data.categories.get(i).name.equals("汽车")) {
-                        SPUtils.put(HomepageActivity.this, "CarID",
-                                data.categories.get(i).id);
+                            //设置GridView
+                            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                            lp.setMargins(32, 0, 32, 0);
+                            UnSwipeGridView unSwipeGridView = new UnSwipeGridView(this);
+                            unSwipeGridView.setFocusable(false);
+                            unSwipeGridView.setHorizontalSpacing(Utils.dip2px(this, 12));
+                            unSwipeGridView.setVerticalSpacing(Utils.dip2px(this, 15));
+                            unSwipeGridView.setNumColumns(2);
+                            unSwipeGridView.setGravity(Gravity.CENTER);
+                            unSwipeGridView.setStretchMode(GridView.STRETCH_COLUMN_WIDTH);
+                            WindowManager windowManager = getWindowManager();
+                            Display display = windowManager.getDefaultDisplay();
+                            int wh = display.getWidth();
+                            itemWitch = (wh - (Utils.dip2px(this, 12 + 16 * 2))) / 2;
+                            unSwipeGridView.setColumnWidth(Utils.dip2px(this, itemWitch));
+                            unSwipeGridView.setLayoutParams(lp);
+
+                            LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                            LinearLayout linearLayout = new LinearLayout(getApplicationContext());
+                            linearLayout.setLayoutParams(lp2);
+                            linearLayout.setOrientation(LinearLayout.VERTICAL);
+                            linearLayout.addView(unSwipeGridView);
+
+
+                            if (entity.name.equals("汽车")) {
+                                view_container.addView(viewGroup, 0);
+                                view_container.addView(linearLayout, 1);
+                            } else {
+                                view_container.addView(viewGroup);
+                                view_container.addView(linearLayout);
+                            }
+
+                            homepageViewBean.classId = entity.id;
+                            homepageViewBean.viewGroup = viewGroup;
+                            homepageViewBean.unSwipeGridView = unSwipeGridView;
+                            ViewBeanList.add(homepageViewBean);
+                            getData(homepageViewBean);
+                        }
+                    }
+                } else {
+
+                    if (data.categories.size() <= ViewBeanList.size()) {
+                        for (int i = 0; i < data.categories.size(); i++) {
+                            ClassIDResult.CategoriesEntity entity = data.categories.get(i);
+                            HomepageViewBean homepageViewBean = ViewBeanList.get(i);
+                            if (entity != null && homepageViewBean != null) {
+                                homepageViewBean.classId = entity.id;
+                                ViewHolder holder = new ViewHolder(homepageViewBean.viewGroup);
+                                holder.view_bar_more_title.setText(entity.name + "精选");
+                            }
+                        }
+
+                        int count = ViewBeanList.size();
+                        for (int i = 0; i < count; i++) {
+                            if (i >= data.categories.size()) {
+                                try {
+                                    HomepageViewBean homepageViewBean = ViewBeanList.get(i);
+                                    if (homepageViewBean != null) {
+                                        homepageViewBean.unSwipeGridView.setVisibility(View.GONE);
+                                        homepageViewBean.viewGroup.setVisibility(View.GONE);
+                                        homepageViewBean.unSwipeGridView.setAdapter(null);
+                                    }
+                                    ViewBeanList.remove(i);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+
+                    } else if (data.categories.size() > ViewBeanList.size()) {
+
+                        for (int i = 0; i < data.categories.size(); i++) {
+                            if (i >= (ViewBeanList.size() - 1)) {
+                                HomepageViewBean homepageViewBean = new HomepageViewBean();
+                                final ClassIDResult.CategoriesEntity entity = data.categories.get(i);
+                                if (entity != null) {
+                                    //设置 title_bar
+                                    ViewGroup viewGroup = (ViewGroup) getLayoutInflater().inflate(R.layout.homepage_view_more_bar, null);
+                                    viewGroup.setVisibility(View.GONE);
+                                    ViewHolder holder = new ViewHolder(viewGroup);
+                                    if (i % 2 == 1) {
+                                        holder.view_bar_more_bar.setBackgroundColor(getResources().getColor(R.color.orange_goods_price));
+                                    } else {
+                                        holder.view_bar_more_bar.setBackgroundColor(getResources().getColor(R.color.green));
+                                    }
+                                    if (entity.name.equals("化肥")) {
+                                        huaFeiClassId = entity.id;//设置化肥的id
+                                        holder.view_bar_more_bar.setBackgroundColor(getResources().getColor(R.color.green));
+                                    }
+                                    if (entity.name.equals("汽车")) {
+                                        carClassId = entity.id;//设置汽车的id
+                                        holder.view_bar_more_bar.setBackgroundColor(getResources().getColor(R.color.orange_goods_price));
+                                    }
+                                    if (StringUtil.checkStr(entity.name)) {
+                                        holder.view_bar_more_title.setText(entity.name + "精选");
+                                    }
+                                    holder.view_bar_more_qianjin.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            if (StringUtil.checkStr(entity.id)) {
+                                                Intent intent = new Intent(HomepageActivity.this,
+                                                        GoodsListActivity.class);
+                                                intent.putExtra("className", entity.name);
+                                                intent.putExtra("classId", entity.id);
+                                                startActivity(intent);
+                                            }
+                                        }
+                                    });
+                                    holder.view_bar_more.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            if (StringUtil.checkStr(entity.id)) {
+                                                Intent intent = new Intent(HomepageActivity.this,
+                                                        GoodsListActivity.class);
+                                                intent.putExtra("className", entity.name);
+                                                intent.putExtra("classId", entity.id);
+                                                startActivity(intent);
+                                            }
+                                        }
+                                    });
+
+                                    //设置GridView
+                                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                                    lp.setMargins(32, 0, 32, 0);
+                                    UnSwipeGridView unSwipeGridView = new UnSwipeGridView(this);
+                                    unSwipeGridView.setFocusable(false);
+                                    unSwipeGridView.setHorizontalSpacing(Utils.dip2px(this, 12));
+                                    unSwipeGridView.setVerticalSpacing(Utils.dip2px(this, 15));
+                                    unSwipeGridView.setNumColumns(2);
+                                    unSwipeGridView.setGravity(Gravity.CENTER);
+                                    unSwipeGridView.setStretchMode(GridView.STRETCH_COLUMN_WIDTH);
+                                    WindowManager windowManager = getWindowManager();
+                                    Display display = windowManager.getDefaultDisplay();
+                                    int wh = display.getWidth();
+                                    itemWitch = (wh - (Utils.dip2px(this, 12 + 16 * 2))) / 2;
+                                    unSwipeGridView.setColumnWidth(Utils.dip2px(this, itemWitch));
+                                    unSwipeGridView.setLayoutParams(lp);
+
+                                    LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                                    LinearLayout linearLayout = new LinearLayout(getApplicationContext());
+                                    linearLayout.setLayoutParams(lp2);
+                                    linearLayout.setOrientation(LinearLayout.VERTICAL);
+                                    linearLayout.addView(unSwipeGridView);
+
+
+                                    if (entity.name.equals("汽车")) {
+                                        view_container.addView(viewGroup, 0);
+                                        view_container.addView(linearLayout, 1);
+                                    } else {
+                                        view_container.addView(viewGroup);
+                                        view_container.addView(linearLayout);
+                                    }
+                                    homepageViewBean.classId = entity.id;
+                                    homepageViewBean.viewGroup = viewGroup;
+                                    homepageViewBean.unSwipeGridView = unSwipeGridView;
+                                    ViewBeanList.add(homepageViewBean);
+                                }
+                            }
+                        }
+                    }
+                    for (int i = 0; i < ViewBeanList.size(); i++) {
+                        getData(ViewBeanList.get(i));
                     }
                 }
-
-            } else {
-                //保存到本地class的Id
-                SPUtils.put(HomepageActivity.this, "HuafeiId",
-                        "531680A5");
-                SPUtils.put(HomepageActivity.this, "CarID",
-                        "6C7D8F66");
             }
 
         }
 
+    }
+
+    @Override
+    public void onRefresh(PullToRefreshBase refreshView) {
+        PullToRefreshUtils.setFreshClose(refreshView);
+        getBanner();
+        getClassId();
+    }
+
+
+    class ViewHolder {
+        private TextView view_bar_more_bar, view_bar_more_title, view_bar_more;
+        private ImageView view_bar_more_qianjin;
+
+        ViewHolder(View view) {
+            view_bar_more_bar = (TextView) view.findViewById(R.id.view_bar_more_bar);
+            view_bar_more_title = (TextView) view.findViewById(R.id.view_bar_more_title);
+            view_bar_more = (TextView) view.findViewById(R.id.view_bar_more);
+            view_bar_more_qianjin = (ImageView) view.findViewById(R.id.view_bar_more_qianjin);
+        }
     }
 
 
@@ -356,8 +527,10 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
         @Override
         public void convert(CommonViewHolder holder, final SingleGood singleGood) {
             if (singleGood != null) {
+                //商品图
+                ImageView imageView = (ImageView) holder.getView(R.id.huafei_img);
 
-                //商品图的外边
+                // 商品图的外边
                 if (itemWitch != 0) {
                     RelativeLayout relativeLayout = holder.getView(R.id.huafei_img_rel);
                     ViewGroup.LayoutParams layoutParams = relativeLayout.getLayoutParams();
@@ -366,12 +539,10 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
                     relativeLayout.setLayoutParams(layoutParams);
                 }
 
-                //商品图
-                ImageView imageView = (ImageView) holder.getView(R.id.huafei_img);
-                if (itemWitch > 4) {
+                if (itemWitch > Utils.dip2px(HomepageActivity.this, 2)) {
                     ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
-                    layoutParams.height = itemWitch - 4;
-                    layoutParams.width = itemWitch - 4;
+                    layoutParams.height = itemWitch - Utils.dip2px(HomepageActivity.this, 2);
+                    layoutParams.width = itemWitch - Utils.dip2px(HomepageActivity.this, 2);
                     imageView.setLayoutParams(layoutParams);
                     ImageLoader.getInstance().displayImage(MsgID.IP + singleGood.imgUrl, imageView);
                 }
@@ -406,99 +577,7 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
                         startActivity(intent);
                     }
                 });
-
             }
-
         }
-    }
-
-
-    class CarAdapter extends CommonAdapter<SingleGood> {
-
-        public CarAdapter(Context context, List<SingleGood> data) {
-            super(context, data, R.layout.home_gv_item);
-        }
-
-        @Override
-        public void convert(CommonViewHolder holder, final SingleGood singleGood) {
-            if (singleGood != null) {
-                //商品图的外边
-                if (itemWitch != 0) {
-                    RelativeLayout relativeLayout = holder.getView(R.id.huafei_img_rel);
-                    ViewGroup.LayoutParams layoutParams = relativeLayout.getLayoutParams();
-                    layoutParams.height = itemWitch;
-                    layoutParams.width = itemWitch;
-                    relativeLayout.setLayoutParams(layoutParams);
-                }
-
-                //商品图
-                ImageView carImage = (ImageView) holder.getView(R.id.huafei_img);
-                if (itemWitch > 4) {
-                    ViewGroup.LayoutParams layoutParams = carImage.getLayoutParams();
-                    layoutParams.height = itemWitch - 4;
-                    layoutParams.width = itemWitch - 4;
-                    carImage.setLayoutParams(layoutParams);
-                }
-                ImageLoader.getInstance().displayImage(MsgID.IP + singleGood.imgUrl, carImage);
-                //商品名
-                if (StringUtil.checkStr(singleGood.goodsName)) {
-                    holder.setText(R.id.huafei_name_tv, singleGood.goodsName);
-                }
-                //商品是否预售
-                if (singleGood.presale) {
-                    TextView huafei_xianjia = (TextView) holder.getView(R.id.huafei_xianjia);
-                    huafei_xianjia.setTextColor(Color.GRAY);
-                    huafei_xianjia.setText("即将上线");
-                } else {
-                    //商品价格
-                    TextView huafei_xianjia = (TextView) holder.getView(R.id.huafei_xianjia);
-                    huafei_xianjia.setTextColor(getResources().getColor(R.color.orange_goods_price));
-                    if (StringUtil.checkStr(singleGood.unitPrice)) {
-                        huafei_xianjia
-                                .setText("¥" + singleGood.unitPrice);
-                    }
-
-                }
-                holder.getConvertView().setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // 带商品的id过去
-                        Intent intent = new Intent(HomepageActivity.this,
-                                GoodsDetailActivity.class);
-                        intent.putExtra("goodId", singleGood.goodsId);
-                        startActivity(intent);
-                    }
-                });
-
-            }
-
-        }
-    }
-
-
-    @Override
-    public void onRefresh(PullToRefreshBase refreshView) {
-        PullToRefreshUtils.setFreshClose(refreshView);
-        getNyc();
-        getData();
-        // 获取首页轮播图
-        RequestParams params1 = new RequestParams();
-        execApi(ApiType.GETHOMEPIC, params1);
-    }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        if (!(qcAdapter != null
-                && qcAdapter.getCount() > 0
-                && hfAdapter != null
-                && huafei_gv.getCount() > 0)) {
-            showProgressDialog();
-            getNyc();
-            getData();
-        }
-
     }
 }

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.daimajia.swipe.SwipeLayout;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -35,6 +36,8 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import android.graphics.Color;
 import android.text.Editable;
 import android.text.Selection;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -81,6 +84,7 @@ public class ShoppingCartActivity extends BaseActivity {
     private CheckBox mBtnCheckAll;
     private int car_num = 1; //对话框里的数量
     private boolean isQuery = true;//是否请求购物车列表
+
     //当前activity适配器所用到的实体类
     Data data = null;
     ShoppingDao dao;
@@ -166,6 +170,7 @@ public class ShoppingCartActivity extends BaseActivity {
         } else {
             goto_pay_tv.setText("去结算(" + num + ")");
         }
+
     }
 
     /**
@@ -374,7 +379,7 @@ public class ShoppingCartActivity extends BaseActivity {
         if (localToNet.size() == 0) {
             if (adapter != null) {
                 adapter.clear();
-            }else {
+            } else {
                 adapter = new shopCartAdapter();
                 adapter.clear();
                 shopCart_expandListView.setAdapter(adapter);
@@ -603,7 +608,7 @@ public class ShoppingCartActivity extends BaseActivity {
                 if (rows == null || rows.size() == 0) {
                     if (adapter != null) {
                         adapter.clear();
-                    }else {
+                    } else {
                         adapter = new shopCartAdapter();
                         adapter.clear();
                         shopCart_expandListView.setAdapter(adapter);
@@ -740,7 +745,7 @@ public class ShoppingCartActivity extends BaseActivity {
             if (rows == null || rows.size() == 0) {
                 if (adapter != null) {
                     adapter.clear();
-                }else {
+                } else {
                     adapter = new shopCartAdapter();
                     adapter.clear();
                     shopCart_expandListView.setAdapter(adapter);
@@ -1062,6 +1067,52 @@ public class ShoppingCartActivity extends BaseActivity {
                                     dialog.show();
                                 }
                             });
+
+                            holder.swipeLayout.close();
+                            holder.shopCart_swipe_layout_child_lin.setOnClickListener(new OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    CustomDialog.Builder builder = new CustomDialog.Builder(
+                                            ShoppingCartActivity.this);
+                                    builder.setMessage("您确定要删除吗？")
+                                            .setPositiveButton("是",
+                                                    new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialog,
+                                                                            int which) {
+                                                            if (isLogin()) {
+                                                                RequestParams params = new RequestParams();
+                                                                if (isLogin()) {
+                                                                    params.put("userId", Store.User.queryMe().userid);
+                                                                }
+                                                                params.put("SKUId", goodsList.get(childPosition).SKUId);
+                                                                params.put("quantity", "0");
+                                                                execApi(ApiType.CHANGE_NUM,
+                                                                        params);
+                                                                showProgressDialog("删除中");
+
+                                                            } else {
+                                                                dao.deleteShopping(goodsList.get(childPosition).SKUId);
+                                                                getData();
+                                                                showToast("商品删除成功");
+                                                            }
+                                                            dialog.dismiss();
+                                                        }
+                                                    })
+                                            .setNegativeButton("否",
+                                                    new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialog,
+                                                                            int which) {
+                                                            dialog.dismiss();
+                                                        }
+                                                    });
+                                    CustomDialog dialog = builder.create();
+                                    dialog.show();
+                                }
+                            });
+
+
                             //是否online
                             if (goodsList.get(childPosition).online) {
 
@@ -1431,6 +1482,7 @@ public class ShoppingCartActivity extends BaseActivity {
 
 
             }
+
             return convertView;
         }
 
@@ -1460,6 +1512,8 @@ public class ShoppingCartActivity extends BaseActivity {
             private TextView ordering_item_geshu, ordering_item_attr, btn_check_item_offline;
             private TextView ordering_now_pri, ordering_item_name, goods_car_deposit, goods_car_weikuan;
             private TextView step1, step2, additions_text, additions_price;
+            private SwipeLayout swipeLayout;
+            private LinearLayout shopCart_swipe_layout_child_lin;
 
             public ViewHolderChild(View convertView) {
                 goods_car_bar = (LinearLayout) convertView.findViewById(R.id.goods_car_item_bar);
@@ -1498,6 +1552,13 @@ public class ShoppingCartActivity extends BaseActivity {
                         .findViewById(R.id.additions_text);
                 additions_price = (TextView) convertView//附加选项价格
                         .findViewById(R.id.additions_price);
+
+                swipeLayout = (SwipeLayout) convertView.findViewById(R.id.shopCart_swipe_layout);
+                //set show mode.
+                swipeLayout.setShowMode(SwipeLayout.ShowMode.PullOut);
+                //set drag edge.
+                swipeLayout.setDragEdge(SwipeLayout.DragEdge.Bottom);
+                shopCart_swipe_layout_child_lin = (LinearLayout) convertView.findViewById(R.id.shopCart_swipe_layout_child_lin);
             }
         }
 

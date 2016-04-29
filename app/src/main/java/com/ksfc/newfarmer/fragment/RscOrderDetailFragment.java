@@ -154,13 +154,10 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
                     null_layout.setVisibility(View.GONE);
                     if (page == 1) {
                         if (adapter == null) {
-                            try {
-                                adapter = new OrderAdapter(activity, orders);
-                                WidgetUtil.setListViewHeightBasedOnChildren(waitingpay_lv);
-                                waitingpay_lv.setAdapter(adapter);
-                            } catch (NullPointerException e) {
-                                //不知为何getActivity居然会空
-                            }
+                            adapter = new OrderAdapter(activity, orders);
+                            WidgetUtil.setListViewHeightBasedOnChildren(waitingpay_lv);
+                            waitingpay_lv.setAdapter(adapter);
+
                         } else {
                             adapter.clear();
                             adapter.addAll(orders);

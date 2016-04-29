@@ -199,9 +199,10 @@
         <activity
             android:name=".activitys.InviterSearchActivity"
             android:windowSoftInputMode="adjustResize" />
-
         <!-- 用户订单状态 -->
         <activity android:name=".activitys.MyOrderStateDetail" />
+        <!-- Epos刷卡网点 -->
+        <activity android:name=".activitys.EposSlotCardStateActivity" />
 
         <!-- 支付宝-->
         <activity
@@ -228,12 +229,12 @@
             android:windowSoftInputMode="adjustResize" />
 
 
-        <!-- umeng appkey   android:value=""
-        android:value="YOUR_APPKEY"
+        <!-- umeng appkey   android:value="564d588ce0f55a25e9003ec7"
+        android:value=""
         -->
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="564d588ce0f55a25e9003ec7" />
+            android:value="YOUR_APPKEY" />
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="${UMENG_CHANNEL_VALUE}" />

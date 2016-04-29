@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/default_act_bg"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/view_bar_more_bar"
+            android:layout_width="3dp"
+            android:layout_height="16dp"
+            android:layout_marginLeft="16dp"
+            android:background="@color/orange_goods_price" />
+
+        <TextView
+            android:id="@+id/view_bar_more_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6dp"
+            android:layout_weight="1"
+            android:text="汽车精选"
+
+            />
+
+        <TextView
+            android:id="@+id/view_bar_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="6dp"
+            android:text="更多产品"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:id="@+id/view_bar_more_qianjin"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_marginRight="16dp"
+            android:src="@drawable/common_icon_qianjin" />
+    </LinearLayout>
+
+</LinearLayout>

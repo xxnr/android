@@ -130,7 +130,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="3dp"
-            android:background="@drawable/address_line" />
+            android:background="@drawable/address_line_up" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -176,7 +176,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="3dp"
-            android:background="@drawable/address_line" />
+            android:background="@drawable/address_line_down" />
     </LinearLayout>
 
 
@@ -190,7 +190,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="3dp"
-            android:background="@drawable/address_line" />
+            android:background="@drawable/address_line_up" />
 
 
         <LinearLayout
@@ -285,7 +285,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="3dp"
-            android:background="@drawable/address_line" />
+            android:background="@drawable/address_line_down" />
     </LinearLayout>
 
     <TextView
