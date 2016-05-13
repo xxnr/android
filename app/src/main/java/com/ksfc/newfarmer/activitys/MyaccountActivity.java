@@ -33,6 +33,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -281,6 +282,7 @@ public class MyaccountActivity extends BaseActivity {
                                         @Override
                                         public void onClick(DialogInterface dialog,
                                                             int which) {
+                                            dialog.dismiss();
                                             exitLogin();
                                             showToast("您已退出登录");
                                             IntentUtil.activityForward(MyaccountActivity.this,MainActivity.class,null,true);

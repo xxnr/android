@@ -28,8 +28,8 @@ public class OrderSuccessActivity extends BaseActivity {
         App.getApp().partQuit();
         RndApplication.tempDestroyActivityList.add(OrderSuccessActivity.this);
         setTitle("支付成功");
-        orderId = (String) getIntent().getSerializableExtra("orderId");
-        String price = (String) getIntent().getSerializableExtra("price");
+        orderId =  getIntent().getStringExtra("orderId");
+        String price =getIntent().getStringExtra("price");
         TextView price_tv = (TextView) findViewById(R.id.pay_price);
         if (StringUtil.checkStr(price)) {
             price_tv.setText("支付金额：¥" + price + "元");

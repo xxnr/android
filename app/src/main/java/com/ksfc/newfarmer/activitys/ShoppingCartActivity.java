@@ -56,6 +56,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import net.yangentao.util.PreferenceUtil;
+
 
 public class ShoppingCartActivity extends BaseActivity {
     private PullToRefreshExpandableListView shopCart_list;
@@ -85,6 +87,10 @@ public class ShoppingCartActivity extends BaseActivity {
     private int car_num = 1; //对话框里的数量
     private boolean isQuery = true;//是否请求购物车列表
 
+
+    private String huaFeiClassId = "531680A5";
+    private String carClassId = "6C7D8F66";
+
     //当前activity适配器所用到的实体类
     Data data = null;
     ShoppingDao dao;
@@ -110,7 +116,6 @@ public class ShoppingCartActivity extends BaseActivity {
                     }
                     break;
             }
-
 
         }
     };
@@ -270,6 +275,12 @@ public class ShoppingCartActivity extends BaseActivity {
         setViewClick(R.id.my_login_sure);
         setViewClick(R.id.my_login_cancel);
         setViewClick(R.id.ordering_go_bt);
+
+        //设置classId
+
+        PreferenceUtil pu = new PreferenceUtil(this, "config");
+        huaFeiClassId = pu.getString("huafei", "531680A5");
+        carClassId=pu.getString("qiche", "6C7D8F66");
 
     }
 
@@ -579,16 +590,16 @@ public class ShoppingCartActivity extends BaseActivity {
             case R.id.my_login_sure:
                 Intent intent = new Intent(ShoppingCartActivity.this,
                         GoodsListActivity.class);
-                intent.putExtra("goods", "huafei");
+                intent.putExtra("className", "化肥");
+                intent.putExtra("classId", huaFeiClassId);
                 startActivity(intent);
-
                 break;
             case R.id.my_login_cancel:
                 Intent intent1 = new Intent(ShoppingCartActivity.this,
                         GoodsListActivity.class);
-                intent1.putExtra("goods", "qiche");
+                intent1.putExtra("className", "汽车");
+                intent1.putExtra("classId", carClassId);
                 startActivity(intent1);
-
                 break;
             default:
                 break;

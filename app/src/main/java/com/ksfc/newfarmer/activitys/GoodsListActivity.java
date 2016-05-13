@@ -588,7 +588,9 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
                     }
                 } else {
                     if (page == 1) {
-                        goodsListAdapter.clear();
+                        if (goodsListAdapter!=null){
+                            goodsListAdapter.clear();
+                        }
                         goods_none_view_rel.setVisibility(View.VISIBLE);
                         return_top.setVisibility(View.GONE);
                     } else {

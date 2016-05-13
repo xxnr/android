@@ -526,6 +526,5 @@ public class MineActivity extends BaseActivity {
             my_order_open_ll.setVisibility(View.VISIBLE);
             my_state_ll.setVisibility(View.GONE);
         }
-
     }
 }

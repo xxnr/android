@@ -23,6 +23,7 @@ import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.ksfc.newfarmer.MsgID;
+import com.ksfc.newfarmer.order.OrderUtils;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.activitys.MyOrderListActivity;
 import com.ksfc.newfarmer.activitys.MyOrderDetailActivity;
@@ -45,9 +46,8 @@ import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.RecyclerImageView;
 import com.ksfc.newfarmer.widget.WidgetUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.squareup.picasso.Picasso;
 
-import net.yangentao.util.app.App;
+import net.yangentao.util.PreferenceUtil;
 import net.yangentao.util.msg.MsgCenter;
 import net.yangentao.util.msg.MsgListener;
 
@@ -73,6 +73,9 @@ public class MyOrderDetailFragment extends BaseFragment implements PullToRefresh
     private Map<String, Boolean> checkedMap = new HashMap<>();//用于存放popWindow中选中的确认收货商品
 
     private String sureOrderId;
+
+    private String huaFeiClassId = "531680A5";
+    private String carClassId = "6C7D8F66";
 
 
     @Override
@@ -133,6 +136,11 @@ public class MyOrderDetailFragment extends BaseFragment implements PullToRefresh
             }
         }, MsgID.swipe_reFlash);
 
+        //设置classId
+        PreferenceUtil pu = new PreferenceUtil(activity, "config");
+        huaFeiClassId = pu.getString("huafei", "531680A5");
+        carClassId = pu.getString("qiche", "6C7D8F66");
+
         getData(page);
         return view;
     }
@@ -175,6 +183,7 @@ public class MyOrderDetailFragment extends BaseFragment implements PullToRefresh
                             adapter.clear();
                             adapter.addAll(rows);
                         }
+                        waitingpay_lv.getRefreshableView().setSelection(0);
                     } else {
                         if (adapter != null) {
                             adapter.addAll(rows);
@@ -209,13 +218,15 @@ public class MyOrderDetailFragment extends BaseFragment implements PullToRefresh
             case R.id.my_login_sure:
                 Intent intent = new Intent(activity,
                         GoodsListActivity.class);
-                intent.putExtra("goods", "huafei");
+                intent.putExtra("className", "化肥");
+                intent.putExtra("classId", huaFeiClassId);
                 startActivity(intent);
                 break;
             case R.id.my_login_cancel:
                 Intent intent1 = new Intent(activity,
                         GoodsListActivity.class);
-                intent1.putExtra("goods", "qiche");
+                intent1.putExtra("className", "汽车");
+                intent1.putExtra("classId", carClassId);
                 startActivity(intent1);
                 break;
 
@@ -337,8 +348,6 @@ public class MyOrderDetailFragment extends BaseFragment implements PullToRefresh
                     if (StringUtil.checkStr(order.order.orderStatus.value)) {
                         holder.pay_state_tv.setText(order.order.orderStatus.value);
                     }
-
-
                     holder.go_to_pay_rel.setVisibility(View.GONE);
                     holder.go_to_pay.setOnClickListener(null);
                     holder.change_pay_type.setVisibility(View.GONE);
@@ -371,14 +380,21 @@ public class MyOrderDetailFragment extends BaseFragment implements PullToRefresh
                             holder.go_to_pay.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    Bundle bundle = new Bundle();
-                                    if ( order.RSCInfo!= null) {
-                                        bundle.putString("companyName", order.RSCInfo.companyName);
-                                        bundle.putString("RSCPhone", order.RSCInfo.RSCPhone);
-                                        bundle.putString("RSCAddress", order.RSCInfo.RSCAddress);
+                                    if (StringUtil.checkStr(order.orderId)) {
+                                        if (!OrderUtils.isChecked(order.orderId)){
+                                            Bundle bundle = new Bundle();
+                                            if (order.RSCInfo != null) {
+                                                bundle.putString("companyName", order.RSCInfo.companyName);
+                                                bundle.putString("RSCPhone", order.RSCInfo.RSCPhone);
+                                                bundle.putString("RSCAddress", order.RSCInfo.RSCAddress);
+                                            }
+                                            bundle.putString("orderId", order.orderId);
+                                            IntentUtil.activityForward(activity, OfflinePayActivity.class, bundle, false);
+                                        }else {
+                                            page=1;
+                                            getData(page);
+                                        }
                                     }
-                                    bundle.putString("orderId", order.orderId);
-                                    IntentUtil.activityForward(activity, OfflinePayActivity.class, bundle, false);
                                 }
                             });
                             //更改支付方式
@@ -480,11 +496,9 @@ public class MyOrderDetailFragment extends BaseFragment implements PullToRefresh
                     ViewHolderChild viewHolderChild = new ViewHolderChild(rootView);
                     //商品图片
                     if (StringUtil.checkStr(SKUsList.get(i).thumbnail)) {
-                        Picasso.with(activity)
-                                .load(MsgID.IP + SKUsList.get(i).thumbnail)
-                                .error(R.drawable.error)
-                                .placeholder(R.drawable.zhanweitu)
-                                .into(viewHolderChild.ordering_item_img);
+
+                        ImageLoader.getInstance().displayImage(
+                                MsgID.IP + SKUsList.get(i).thumbnail, viewHolderChild.ordering_item_img);
 
                     }
                     //商品个数

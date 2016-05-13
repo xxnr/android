@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
+import com.ksfc.newfarmer.order.OrderUtils;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.adapter.CommonAdapter;
 import com.ksfc.newfarmer.adapter.CommonViewHolder;
@@ -117,7 +118,7 @@ public class RscOrderDetailActivity extends BaseActivity implements KeyboardList
         change_pay_type = (Button) findViewById(R.id.change_pay_type);
         pop_bg = (RelativeLayout) findViewById(R.id.pop_bg);
 
-        rootView = (KeyboardListenRelativeLayout)findViewById(R.id.order_detail_rl);
+        rootView = (KeyboardListenRelativeLayout) findViewById(R.id.order_detail_rl);
         rootView.setOnKeyboardStateChangedListener(this);
 
         //头部信息 订单号： 交易状态 送货人 地址
@@ -341,17 +342,22 @@ public class RscOrderDetailActivity extends BaseActivity implements KeyboardList
                         change_pay_type.setVisibility(View.GONE);
 
                         switch (order.orderStatus.type) {
-
                             //审核付款中的订单 点击审核付款
                             case 2:
                                 go_to_pay_rel.setVisibility(View.VISIBLE);
                                 go_to_pay.setText("审核付款");
                                 go_to_pay.setOnClickListener(new View.OnClickListener() {
                                     @Override
-                                    public void onClick(View v) {
-
-                                        showCheckOfflinePayPopUp(v, order);
-
+                                    public void onClick(final View v) {
+                                        if (StringUtil.checkStr(orderId)) {
+                                            boolean checkOffline = OrderUtils.CheckOffline(orderId);
+                                            if (checkOffline) {
+                                                showCheckOfflinePayPopUp(v, order);
+                                            } else {
+                                                requestData(orderId);
+                                                MsgCenter.fireNull(MsgID.Rsc_order_Change, "CONFIRM");
+                                            }
+                                        }
                                     }
                                 });
                                 break;
@@ -444,7 +450,7 @@ public class RscOrderDetailActivity extends BaseActivity implements KeyboardList
             if (req.getData().getStatus().equals("1000")) {
                 showCustomToast("审核成功", R.drawable.toast_success_icon);
                 requestData(orderId);
-                MsgCenter.fireNull(MsgID.Rsc_order_Change,"CONFIRM");
+                MsgCenter.fireNull(MsgID.Rsc_order_Change, "CONFIRM");
             }
         } else if (req.getApi() == ApiType.RSC_ORDER_DELIVERING) {
             if (req.getData().getStatus().equals("1000")) {
@@ -464,8 +470,6 @@ public class RscOrderDetailActivity extends BaseActivity implements KeyboardList
 
         }
     }
-
-
 
 
     //支付信息列表
@@ -565,7 +569,6 @@ public class RscOrderDetailActivity extends BaseActivity implements KeyboardList
                     item_payInfo_type.setTextColor(getResources().getColor(R.color.black_goods_titile));
                     item_payInfo_type.setText("已关闭");
                 }
-
                 //应支付金额
                 holder.setText(R.id.to_pay_price, "¥" + subOrder.price);
                 //支付类型
@@ -669,12 +672,6 @@ public class RscOrderDetailActivity extends BaseActivity implements KeyboardList
         }
     }
 
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-//        requestData(orderId);
-    }
 
     /***********************************以下是网点发货相关*************************************************************/
     /**
@@ -1005,7 +1002,6 @@ public class RscOrderDetailActivity extends BaseActivity implements KeyboardList
         //初始化组件
 
 
-
         ImageView pop_close = (ImageView) popupWindow_view.findViewById(R.id.pop_close);
         pop_close.setOnClickListener(this);
         pop_slef_delivery_order_title = (TextView) popupWindow_view.findViewById(R.id.pop_order_title);
@@ -1173,12 +1169,11 @@ public class RscOrderDetailActivity extends BaseActivity implements KeyboardList
     public void onKeyboardStateChanged(int state) {
         if (state == KeyboardListenRelativeLayout.KEYBOARD_STATE_HIDE) {
 
-            if (self_delivery_code_et!=null){
+            if (self_delivery_code_et != null) {
                 self_delivery_code_et.clearFocus();
             }
         }
     }
-
 
 
 }

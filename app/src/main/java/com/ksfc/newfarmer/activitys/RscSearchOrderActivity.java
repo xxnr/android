@@ -29,6 +29,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
+import com.ksfc.newfarmer.order.OrderUtils;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.adapter.CommonAdapter;
 import com.ksfc.newfarmer.adapter.CommonViewHolder;
@@ -317,6 +318,7 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
                             adapter.clear();
                             adapter.addAll(orders);
                         }
+                        waitingpay_lv.getRefreshableView().setSelection(0);
                     } else {
                         if (adapter != null) {
                             adapter.addAll(orders);
@@ -443,10 +445,17 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
                             go_to_pay.setText("审核付款");
                             go_to_pay.setOnClickListener(new View.OnClickListener() {
                                 @Override
-                                public void onClick(View v) {
+                                public void onClick(final View v) {
 
-                                    showCheckOfflinePayPopUp(v, ordersEntity);
-
+                                    if (StringUtil.checkStr(ordersEntity.id)) {
+                                        boolean checkOffline = OrderUtils.CheckOffline(ordersEntity.id);
+                                        if (checkOffline) {
+                                            showCheckOfflinePayPopUp(v, ordersEntity);
+                                        } else {
+                                            page=1;
+                                            RscSearchOrderActivity.this.getData(page);
+                                        }
+                                    }
                                 }
                             });
                             break;
@@ -794,8 +803,14 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
         } else {
             initCheckOfflinePayPopUptWindow();
         }
+        checkedMap.clear();
+        check_price.setText("");
+        recipient_name.setText("");
+
+
         //请求Rsc订单详情
         getRscOrderDetail(ordersEntity.id);
+
 
         //设置背景及展示
         PopWindowUtils.setBackgroundBlack(pop_bg, 0);
@@ -823,7 +838,6 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
             @Override
             public void onDismiss() {
                 PopWindowUtils.setBackgroundBlack(pop_bg, 1);
-                checkedMap.clear();
             }
         });
 

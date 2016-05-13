@@ -109,6 +109,7 @@ public class CheckPayDetailActivity extends BaseActivity {
         @Override
         public void convert(CommonViewHolder holder, MyOrderDetailResult.Rows.SubOrders.Payments payments) {
             if (payments != null) {
+
                 //文本内容
                 if (payments.payType == 1) {
                     holder.setText(R.id.order_pay_type, "支付宝支付");
@@ -131,11 +132,10 @@ public class CheckPayDetailActivity extends BaseActivity {
                 }
                 //支付结果
                 if (payments.payStatus == 1) {
-                    holder.getView(R.id.item_payInfo_times).setVisibility(View.GONE);
+                    holder.setText(R.id.item_payInfo_state, "");
                 } else if (payments.payStatus == 2) {
                     holder.setText(R.id.item_payInfo_state, "支付成功");
                 }
-
                 //第几次付款
                 holder.setText(R.id.item_payInfo_times, "第" + payments.slice + "次");
 

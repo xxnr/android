@@ -26,6 +26,7 @@ import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.ksfc.newfarmer.MsgID;
+import com.ksfc.newfarmer.order.OrderUtils;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.activitys.RSCOrderListActivity;
 import com.ksfc.newfarmer.activitys.RscOrderDetailActivity;
@@ -47,7 +48,12 @@ import com.ksfc.newfarmer.widget.KeyboardListenRelativeLayout;
 import com.ksfc.newfarmer.widget.RecyclerImageView;
 import com.ksfc.newfarmer.widget.UnSwipeGridView;
 import com.ksfc.newfarmer.widget.WidgetUtil;
-import com.squareup.picasso.Picasso;
+import com.lidroid.xutils.HttpUtils;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import net.yangentao.util.msg.MsgCenter;
 import net.yangentao.util.msg.MsgListener;
@@ -162,6 +168,7 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
                             adapter.clear();
                             adapter.addAll(orders);
                         }
+                        waitingpay_lv.getRefreshableView().setSelection(0);
                     } else {
                         if (adapter != null) {
                             adapter.addAll(orders);
@@ -410,10 +417,16 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
                             go_to_pay.setText("审核付款");
                             go_to_pay.setOnClickListener(new View.OnClickListener() {
                                 @Override
-                                public void onClick(View v) {
-
-                                    showCheckOfflinePayPopUp(v, ordersEntity);
-
+                                public void onClick(final View v) {
+                                    if (StringUtil.checkStr(ordersEntity.id)) {
+                                        boolean checkOffline = OrderUtils.CheckOffline(ordersEntity.id);
+                                        if (checkOffline) {
+                                            showCheckOfflinePayPopUp(v, ordersEntity);
+                                        } else {
+                                            page = 1;
+                                            RscOrderDetailFragment.this.getData(page);
+                                        }
+                                    }
                                 }
                             });
                             break;
@@ -502,11 +515,8 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
                         if (skUsEntity != null) {
                             //商品图片
                             if (StringUtil.checkStr(skUsEntity.thumbnail)) {
-                                Picasso.with(activity)
-                                        .load(MsgID.IP + skUsEntity.thumbnail)
-                                        .error(R.drawable.error)
-                                        .placeholder(R.drawable.zhanweitu)
-                                        .into(viewHolderChild.ordering_item_img);
+                                ImageLoader.getInstance().displayImage(
+                                        MsgID.IP + skUsEntity.thumbnail, viewHolderChild.ordering_item_img);
 
                             }
                             //商品个数
@@ -761,6 +771,9 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
         } else {
             initCheckOfflinePayPopUptWindow();
         }
+        checkedMap.clear();
+        check_price.setText("");
+        recipient_name.setText("");
         //请求Rsc订单详情
         getRscOrderDetail(ordersEntity.id);
 
@@ -790,7 +803,6 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
             @Override
             public void onDismiss() {
                 showDialogBg(1, (RSCOrderListActivity) activity);
-                checkedMap.clear();
             }
         });
 
@@ -1137,6 +1149,43 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
                 self_delivery_code_et.clearFocus();
             }
         }
+    }
+
+    //点击时，请求详情，并回调
+    public void getOrderDetail(String orderId, final int flag) {
+
+        LoginResult.UserInfo userInfo = Store.User.queryMe();
+
+        if (userInfo != null) {
+            HttpUtils http = new HttpUtils();
+
+            http.send(HttpRequest.HttpMethod.GET,
+                    ApiType.GET_RSC_ORDER_Detail.getOpt() + "?" + "orderId=" + orderId + "&token=" + userInfo.token,
+                    new RequestCallBack<String>() {
+                        @Override
+                        public void onSuccess(ResponseInfo<String> responseInfo) {
+
+                            String result = responseInfo.result;
+                            if (StringUtil.checkStr(result)) {
+
+                                try {
+                                    Gson gson = new Gson();
+                                    gson.fromJson(result, RscOrderDetailResult.class);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+
+                        }
+
+                        @Override
+                        public void onFailure(HttpException error, String msg) {
+                        }
+
+                    });
+        }
+
     }
 
 

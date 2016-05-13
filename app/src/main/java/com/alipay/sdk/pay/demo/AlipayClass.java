@@ -42,7 +42,7 @@ public class AlipayClass extends FragmentActivity {
     // 支付宝公钥
     public static final String RSA_PUBLIC = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD9nLiV35HC2M3/JXQnKaXTnpQNT+1N7QMRfmr0qKx1wVqb5n3IAGbXUzPaJbAv24nn9vwbD16W2lmiMN3qYhclLIu+jjF4RZerT1Dor2djSjPsdDz4tGGiXtSvjvSpl06q9lCIEOJJsBq6jf7wpka12VoO/gUpBUP3AQm4B35GWQIDAQAB";
     private final String price;//支付金额
-    private String notifyUrl = ApiType.url + "dynamic/alipay/nofity.asp";
+    private String notifyUrl = ApiType.url + "/dynamic/alipay/nofity.asp";
     private static final int SDK_PAY_FLAG = 1;
     private static final int SDK_CHECK_FLAG = 2;
     private String orderId;

@@ -41,7 +41,6 @@ import net.yangentao.util.app.App;
 
 public abstract class BaseActivity extends FragmentActivity implements
         OnClickListener, OnApiDataReceivedCallback {
-
     public String TAG = this.getClass().getSimpleName();
 
     private boolean titleLoaded = false; // 标题是否加载成功
@@ -52,9 +51,9 @@ public abstract class BaseActivity extends FragmentActivity implements
     private TextView tvTitleRight;
     private ImageView ivTitleRight;
     private Dialog progressDialog;
+    private CustomToast customToast;//大号对话框
 
     private HashMap<ApiType, Boolean> isReturnData = new HashMap<>();//是否请求超时（返回数据）
-    private CustomToast customToast;
 
 
     @Override
@@ -111,8 +110,7 @@ public abstract class BaseActivity extends FragmentActivity implements
         // empty
     }
 
-    // -------------------------------------------------------------
-    // 父类方法区
+    // -----------------------------父类方法区--------------------------------
 
     /**
      * 加载标题
@@ -132,7 +130,6 @@ public abstract class BaseActivity extends FragmentActivity implements
 
     }
 
-
     /**
      * 判断当前用户是否登录
      *
@@ -146,7 +143,7 @@ public abstract class BaseActivity extends FragmentActivity implements
 
     @Override
     public final void onClick(View v) {
-        if (Utils.isFastClick()) {
+        if (Utils.isFastClick()) {//防止连续点击
             return;
         }
         switch (v.getId()) {
@@ -163,8 +160,7 @@ public abstract class BaseActivity extends FragmentActivity implements
     @Override
     public final void onResponse(Request req) {
         if (!isReturnData.get(req.getApi())) {
-            //token异常登出
-            if (req.getData().getStatus().equals("1401")) {
+            if (req.getData().getStatus().equals("1401")) { //token异常登出
                 req.showErrorMsg();
                 tokenToLogin();
             } else {
@@ -174,7 +170,6 @@ public abstract class BaseActivity extends FragmentActivity implements
                 } else {
                     disMissDialog();
                     //这些Api不返回前台用户error msg
-
                     if (!(req.getApi() == ApiType.GET_MIN_PAY_PRICE
                             || req.getApi() == ApiType.SAVE_CONSIGNEE_INFO
                             || req.getApi() == ApiType.SURE_GET_GOODS
@@ -185,8 +180,6 @@ public abstract class BaseActivity extends FragmentActivity implements
                             req.showErrorMsg();
                         }
                     }
-
-
                 }
             }
         } else {

@@ -60,6 +60,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
+import net.yangentao.util.PreferenceUtil;
+
 import org.apache.http.entity.StringEntity;
 
 
@@ -292,10 +294,16 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
                             }
                             if (entity.name.equals("化肥")) {
                                 huaFeiClassId = entity.id;//设置化肥的id
+                                PreferenceUtil pu = new PreferenceUtil(this, "config");
+                                pu.putString("huafei", huaFeiClassId);
+
                                 holder.view_bar_more_bar.setBackgroundColor(getResources().getColor(R.color.green));
                             }
                             if (entity.name.equals("汽车")) {
                                 carClassId = entity.id;//设置汽车的id
+                                PreferenceUtil pu = new PreferenceUtil(this, "config");
+                                pu.putString("qiche", carClassId);
+
                                 holder.view_bar_more_bar.setBackgroundColor(getResources().getColor(R.color.orange_goods_price));
                             }
                             if (StringUtil.checkStr(entity.name)) {
