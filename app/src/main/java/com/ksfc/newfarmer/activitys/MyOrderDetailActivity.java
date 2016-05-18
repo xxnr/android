@@ -33,7 +33,10 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -77,6 +80,7 @@ public class MyOrderDetailActivity extends BaseActivity {
     private LinearLayout address_shouhuo_ll;
     private TextView RSC_state_person_info;
     private MyOrderDetailResult.Datas datas;
+
 
 
     @Override
@@ -312,21 +316,29 @@ public class MyOrderDetailActivity extends BaseActivity {
                                     go_to_pay.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            if (!OrderUtils.isChecked(orderId)) {
-                                                Bundle bundle = new Bundle();
-                                                if (rows.RSCInfo != null) {
-                                                    bundle.putString("companyName", rows.RSCInfo.companyName);
-                                                    bundle.putString("RSCPhone", rows.RSCInfo.RSCPhone);
-                                                    bundle.putString("RSCAddress", rows.RSCInfo.RSCAddress);
+                                            Handler handler =new Handler(){
+                                                @Override
+                                                public void handleMessage(Message msg) {
+                                                    super.handleMessage(msg);
+                                                    if (msg.what==0){
+                                                        Bundle bundle = new Bundle();
+                                                        if (rows.RSCInfo != null) {
+                                                            bundle.putString("companyName", rows.RSCInfo.companyName);
+                                                            bundle.putString("RSCPhone", rows.RSCInfo.RSCPhone);
+                                                            bundle.putString("RSCAddress", rows.RSCInfo.RSCAddress);
+                                                        }
+                                                        bundle.putString("orderId", orderId);
+                                                        if (rows.payment != null) {
+                                                            bundle.putString("payPrice", rows.payment.price);
+                                                        }
+                                                        IntentUtil.activityForward(MyOrderDetailActivity.this, OfflinePayActivity.class, bundle, false);
+                                                    }else {
+                                                        requestData(orderId);
+                                                        MsgCenter.fireNull(MsgID.order_Change);
+                                                    }
                                                 }
-                                                bundle.putString("orderId", orderId);
-                                                if (rows.payment != null) {
-                                                    bundle.putString("payPrice", rows.payment.price);
-                                                }
-                                                IntentUtil.activityForward(MyOrderDetailActivity.this, OfflinePayActivity.class, bundle, false);
-                                            } else {
-                                                requestData(orderId);
-                                            }
+                                            };
+                                            OrderUtils.isChecked(handler,orderId);
                                         }
                                     });
                                     //更改支付方式
@@ -413,9 +425,11 @@ public class MyOrderDetailActivity extends BaseActivity {
                     if (rows.SKUList != null && !rows.SKUList.isEmpty()) {
                         CarAdapter carAdapter = new CarAdapter(true, rows.SKUList);
                         order_shangpin_list.setAdapter(carAdapter);
-                    } else {
+                    } else if(rows.orderGoodsList!=null){
                         CarAdapter carAdapter = new CarAdapter(rows.orderGoodsList, false);
                         order_shangpin_list.setAdapter(carAdapter);
+                    }else {
+                        order_shangpin_list.setAdapter(null);
                     }
                     //点击查看订单状态详情
                     setViewClick(R.id.to_order_state_rel);

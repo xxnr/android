@@ -163,7 +163,9 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
                                 adapter.addAll(rows);
                             }
                         } else {
-                            adapter.addAll(rows);
+                            if (adapter!=null){
+                                adapter.addAll(rows);
+                            }
                         }
                     } else {
                         if (page == 1) {

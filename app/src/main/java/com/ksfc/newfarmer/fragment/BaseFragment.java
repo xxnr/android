@@ -6,6 +6,7 @@ package com.ksfc.newfarmer.fragment;
 import java.util.HashMap;
 
 import com.ksfc.newfarmer.BaseActivity;
+import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.thrid.UmengPush;
 import com.ksfc.newfarmer.activitys.LoginActivity;
 import com.ksfc.newfarmer.db.Store;
@@ -100,11 +101,11 @@ public abstract class BaseFragment extends Fragment implements
     @Override
     public void onResponse(Request req) {
         if (!isReturnData.get(req.getApi())) {
+            disMissDialog();
             if (req.getData().getStatus().equals("1401")) {
                 req.showErrorMsg();
                 tokenToLogin();
             } else {
-                disMissDialog();
                 if (req.isSuccess()) {
                     onResponsed(req);
                 } else {
@@ -112,6 +113,8 @@ public abstract class BaseFragment extends Fragment implements
                     )) {
                         if (req.getApi() == ApiType.RSC_ORDER_SELF_DELIVERY && req.getData().getStatus().equals("1429")) {
                             App.getApp().showToast("您输入错误次数较多，请1分钟后再操作");
+                        } else if (req.getData().getStatus().equals("1403")) {
+                            RndLog.d("BaseFragment：", req.getData().getMessage());
                         } else {
                             req.showErrorMsg();
                         }
@@ -145,7 +148,7 @@ public abstract class BaseFragment extends Fragment implements
         if (progressDialog != null && progressDialog.isShowing()) {
             try {
                 progressDialog.dismiss();
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             progressDialog = null;

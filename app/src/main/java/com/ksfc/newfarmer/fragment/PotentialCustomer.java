@@ -74,26 +74,19 @@ public class PotentialCustomer extends BaseFragment {
         });
 
         listView.addHeaderView(headerLayout);
-        boolean isXXNRAgent = false;
-        LoginResult.UserInfo userInfo = Store.User.queryMe();
-        if (userInfo != null) {
-            isXXNRAgent = userInfo.isXXNRAgent;//是否是新农经纪人
-        }
+        listView.setAdapter(null);
 
+        getOfflineList();
+        //如果请求是否需要请求列表
+        getIsLatest(count);
 
-        if (isXXNRAgent) {
-            getOfflineList();
-            //如果请求是否需要请求列表
-            getIsLatest(count);
-
-            //是否大于24小时 如果是就更新
-            PreferenceUtil pu = new PreferenceUtil(activity, "config");
-            long last_up_date = pu.getLong("customer_up_date", 0L);
-            long currentTimeMillis = System.currentTimeMillis();
-            if ((currentTimeMillis - last_up_date) > (24 * 60 * 60 * 1000)) {
-                //24小时未请求户，请求一次全部
-                getIsLatest(0);
-            }
+        //是否大于24小时 如果是就更新
+        PreferenceUtil pu = new PreferenceUtil(activity, "config");
+        long last_up_date = pu.getLong("customer_up_date", 0L);
+        long currentTimeMillis = System.currentTimeMillis();
+        if ((currentTimeMillis - last_up_date) > (24 * 60 * 60 * 1000)) {
+            //24小时未请求户，请求一次全部
+            getIsLatest(0);
         }
 
         //添加了用户数据

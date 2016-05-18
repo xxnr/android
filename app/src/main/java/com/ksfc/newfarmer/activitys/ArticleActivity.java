@@ -39,16 +39,18 @@ public class ArticleActivity extends BaseActivity {
     private String newsAbstract;    //分享内容的摘要
     private PopupWindow popupWindow;
     private RelativeLayout share_dialog_bg;//分享dialog的背景
+
     //友盟分享的回调
     private UMShareListener umShareListener = new UMShareListener() {
         @Override
         public void onResult(SHARE_MEDIA platform) {
             showToast("分享成功");
             //分享成功后关闭对话框
-            if (popupWindow.isShowing()) {
+            if (popupWindow != null && popupWindow.isShowing()) {
                 popupWindow.dismiss();
             }
         }
+
         @Override
         public void onError(SHARE_MEDIA platform, Throwable t) {
             showToast("抱歉，分享失败");
@@ -77,6 +79,7 @@ public class ArticleActivity extends BaseActivity {
         urlImage = getIntent().getStringExtra("urlImage");
         urlTitle = getIntent().getStringExtra("urlTitle");
         newsAbstract = getIntent().getStringExtra("newsAbstract");
+
         //默认分享的标题 和图片 摘要
         if (!StringUtil.checkStr(urlTitle)) {
             urlTitle = "新农资讯";
@@ -90,6 +93,7 @@ public class ArticleActivity extends BaseActivity {
             newsAbstract = "分享自@新新农人";
         }
         share_dialog_bg = (RelativeLayout) findViewById(R.id.share_dialog_bg);
+
         WebView web = (WebView) findViewById(R.id.webView);
         // 允许运行js脚本
         web.getSettings().setJavaScriptEnabled(true);
@@ -101,6 +105,7 @@ public class ArticleActivity extends BaseActivity {
                 return true;
             }
 
+            //加载完成之后 展示分享按钮
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
@@ -185,8 +190,6 @@ public class ArticleActivity extends BaseActivity {
                 PopWindowUtils.setBackgroundBlack(share_dialog_bg, 1);
             }
         });
-
-
 
 
     }

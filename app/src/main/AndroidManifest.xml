@@ -230,12 +230,12 @@
             android:windowSoftInputMode="adjustResize" />
 
 
-        <!-- umeng appkey   android:value="564d588ce0f55a25e9003ec7"
-        android:value=""
+        <!-- umeng appkey   android:value=""
+        android:value="YOUR_APPKEY"
         -->
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="YOUR_APPKEY" />
+            android:value="564d588ce0f55a25e9003ec7" />
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="${UMENG_CHANNEL_VALUE}" />

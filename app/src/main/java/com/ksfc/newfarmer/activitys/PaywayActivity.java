@@ -117,6 +117,7 @@ public class PaywayActivity extends BaseActivity {
                             bundle1.putString("orderId", orderId);
                             orderPaidFragment.setArguments(bundle1);
                             fragmentTransaction.replace(R.id.payWay_frameLayout, orderPaidFragment);
+                            MsgCenter.fireNull(MsgID.order_Change);//订单状态改变需要刷新列表
                             break;
                     }
                     fragmentTransaction.commit();

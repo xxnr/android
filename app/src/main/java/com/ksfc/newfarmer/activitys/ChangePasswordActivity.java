@@ -10,6 +10,7 @@ import com.ksfc.newfarmer.protocol.RequestParams;
 import com.ksfc.newfarmer.protocol.beans.PublicKeyResult;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.RSAUtil;
+import com.ksfc.newfarmer.utils.StringUtil;
 
 import android.annotation.TargetApi;
 import android.os.Build;
@@ -48,13 +49,13 @@ public class ChangePasswordActivity extends BaseActivity {
             old_pwd = old_pass.getText().toString();
             password = new_pass.getText().toString();
             confirm = confirm_pass.getText().toString();
-            if (TextUtils.isEmpty(old_pwd)) {
+            if (StringUtil.empty(old_pwd)) {
                 showToast("请填写原密码");
                 return;
-            } else if (TextUtils.isEmpty(password)) {
+            } else if (StringUtil.empty(password)) {
                 showToast("请填写新密码");
                 return;
-            } else if (TextUtils.isEmpty(confirm)) {
+            } else if (StringUtil.empty(confirm)) {
                 showToast("请填写确认密码");
                 return;
             } else if (!password.equals(confirm)) {

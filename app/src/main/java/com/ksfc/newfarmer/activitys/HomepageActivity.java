@@ -551,6 +551,8 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
                     ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
                     layoutParams.height = itemWitch - Utils.dip2px(HomepageActivity.this, 2);
                     layoutParams.width = itemWitch - Utils.dip2px(HomepageActivity.this, 2);
+                    android.util.Log.d("HuafeiAdapter", "itemWitch:" + itemWitch);
+                    android.util.Log.d("HuafeiAdapter", "layoutParams.width:" + layoutParams.width);
                     imageView.setLayoutParams(layoutParams);
                     ImageLoader.getInstance().displayImage(MsgID.IP + singleGood.imgUrl, imageView);
                 }

@@ -29,6 +29,7 @@ import com.ksfc.newfarmer.protocol.beans.MyOrderDetailResult;
 import com.ksfc.newfarmer.protocol.beans.UnionPayResponse;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
+import com.ksfc.newfarmer.utils.Utils;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -87,29 +88,32 @@ public class PayWayFragment extends BaseFragment {
 
 
             switch (msg.what) {
-
                 case 0:
                     UnionPayResponse unionPayResponse = (UnionPayResponse) msg.obj;
                     if (unionPayResponse != null) {
                         String tn = unionPayResponse.tn;
                         if (StringUtil.checkStr(tn)) {
                             doStartUnionPayPlugin(activity, tn, mMode);
+                        } else {
+                            if (StringUtil.checkStr(unionPayResponse.getMessage())) {
+                                showToast(unionPayResponse.getMessage());
+                            }
                         }
                     }
+                    handler.sendEmptyMessageDelayed(404,1000);
                     break;
-                case 1://当前是白名单
-                    disMissDialog();
+                case 1:
                     //白名单下 可以输入金额 ，并控制 不可以加减。
+                    disMissDialog();
                     payWay_discount_jian.setEnabled(false);
                     payWay_discount_jia.setEnabled(false);
                     payWay_times_price_et.setEnabled(true);
-
                     break;
                 case 404://请求错误
                     disMissDialog();
+                    pay_sure_tv.setEnabled(true);
                     break;
             }
-
         }
     };
 
@@ -292,6 +296,8 @@ public class PayWayFragment extends BaseFragment {
 
     @Override
     public void OnViewClick(View v) {
+
+
         switch (v.getId()) {
             case R.id.payWay_pay_total_rel://全额支付
                 payWay_pay_total_view.setVisibility(View.VISIBLE);
@@ -371,6 +377,7 @@ public class PayWayFragment extends BaseFragment {
                             break;
                         case 2:
                             getUnipay();
+                            pay_sure_tv.setEnabled(false);
                             break;
                         case 3://线下支付
                             showProgressDialog();
@@ -543,7 +550,7 @@ public class PayWayFragment extends BaseFragment {
         mOkHttpClient.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-
+                handler.sendEmptyMessage(404);
             }
 
             @Override

@@ -96,7 +96,7 @@
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:scaleType="center"
-                android:src="@drawable/re_psd_code" />
+                android:src="@drawable/login_code" />
 
             <com.ksfc.newfarmer.widget.ClearEditText
                 android:id="@+id/backnewpassword"
@@ -124,7 +124,7 @@
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:scaleType="center"
-                android:src="@drawable/re_psd_code" />
+                android:src="@drawable/login_code" />
 
             <com.ksfc.newfarmer.widget.ClearEditText
                 android:id="@+id/confimPasword"

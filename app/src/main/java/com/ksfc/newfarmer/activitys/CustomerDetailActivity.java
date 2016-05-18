@@ -106,7 +106,8 @@ public class CustomerDetailActivity extends BaseActivity {
                         choice_remark_text.setText(data.potentialCustomer.remarks);
                     }
 
-                    if (data.potentialCustomer.buyIntentions != null && !data.potentialCustomer.buyIntentions.isEmpty()) {
+                    if (data.potentialCustomer.buyIntentions != null
+                            && !data.potentialCustomer.buyIntentions.isEmpty()) {
 
                         StringBuilder builder = new StringBuilder();
                         for (int i = 0; i < data.potentialCustomer.buyIntentions.size(); i++) {
@@ -172,7 +173,6 @@ public class CustomerDetailActivity extends BaseActivity {
                                 dbUtils.saveOrUpdate(customersEntity);
                                 MsgCenter.fireNull(MsgID.change_potential_success, "change");
                             }
-
 
                         } catch (DbException e) {
                             e.printStackTrace();

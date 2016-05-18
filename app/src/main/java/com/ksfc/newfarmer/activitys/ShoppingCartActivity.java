@@ -38,6 +38,7 @@ import android.text.Editable;
 import android.text.Selection;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.widget.AbsListView;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -257,6 +258,20 @@ public class ShoppingCartActivity extends BaseActivity {
                 return true;
             }
         });
+        shopCart_expandListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                //滚动时，保持左滑出的view复原
+                if (adapter != null && scrollState == 1) {
+                    adapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+            }
+        });
         //设置刷新的文字
         PullToRefreshUtils.setFreshText(shopCart_list);
         //设置下拉刷新
@@ -280,7 +295,7 @@ public class ShoppingCartActivity extends BaseActivity {
 
         PreferenceUtil pu = new PreferenceUtil(this, "config");
         huaFeiClassId = pu.getString("huafei", "531680A5");
-        carClassId=pu.getString("qiche", "6C7D8F66");
+        carClassId = pu.getString("qiche", "6C7D8F66");
 
     }
 

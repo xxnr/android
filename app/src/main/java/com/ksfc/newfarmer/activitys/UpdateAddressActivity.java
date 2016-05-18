@@ -301,7 +301,6 @@ public class UpdateAddressActivity extends BaseActivity {
                 if (default_address.isChecked()) {
                     String addr = city + town
                             + room_edit.getEditableText().toString().trim();
-                    MsgCenter.fireNull(MsgID.MSG_ADD_ADDRESS, addr);
                     UserInfo queryMe = Store.User.queryMe();
                     if (queryMe!=null){
                         queryMe.defaultAddress = addr;

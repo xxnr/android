@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -381,19 +383,26 @@ public class MyOrderDetailFragment extends BaseFragment implements PullToRefresh
                                 @Override
                                 public void onClick(View v) {
                                     if (StringUtil.checkStr(order.orderId)) {
-                                        if (!OrderUtils.isChecked(order.orderId)){
-                                            Bundle bundle = new Bundle();
-                                            if (order.RSCInfo != null) {
-                                                bundle.putString("companyName", order.RSCInfo.companyName);
-                                                bundle.putString("RSCPhone", order.RSCInfo.RSCPhone);
-                                                bundle.putString("RSCAddress", order.RSCInfo.RSCAddress);
+                                        Handler handler =new Handler(){
+                                            @Override
+                                            public void handleMessage(Message msg) {
+                                                super.handleMessage(msg);
+                                                if (msg.what==0){
+                                                    Bundle bundle = new Bundle();
+                                                    if (order.RSCInfo != null) {
+                                                        bundle.putString("companyName", order.RSCInfo.companyName);
+                                                        bundle.putString("RSCPhone", order.RSCInfo.RSCPhone);
+                                                        bundle.putString("RSCAddress", order.RSCInfo.RSCAddress);
+                                                    }
+                                                    bundle.putString("orderId", order.orderId);
+                                                    IntentUtil.activityForward(activity, OfflinePayActivity.class, bundle, false);
+                                                }else {
+                                                    page=1;
+                                                    getData(page);
+                                                }
                                             }
-                                            bundle.putString("orderId", order.orderId);
-                                            IntentUtil.activityForward(activity, OfflinePayActivity.class, bundle, false);
-                                        }else {
-                                            page=1;
-                                            getData(page);
-                                        }
+                                        };
+                                        OrderUtils.isChecked(handler,order.orderId);
                                     }
                                 }
                             });

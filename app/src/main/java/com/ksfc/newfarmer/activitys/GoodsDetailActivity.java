@@ -132,6 +132,7 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
         shangpin_detail_bottom_bar = ((LinearLayout) findViewById(R.id.shangpin_detail_bottom_bar));
         //popWindow弹出的时候用于遮挡背景
         shangpin_detail_bg = ((LinearLayout) findViewById(R.id.shangpin_detail_bg));
+
         activity_rootView = (KeyboardListenRelativeLayout) findViewById(R.id.shangpin_detail_ll);
         activity_rootView.setOnKeyboardStateChangedListener(this);
 

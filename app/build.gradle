@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
+    compileSdkVersion 22
     buildToolsVersion "20"
 
     defaultConfig {
         applicationId "com.ksfc.newfarmer"
         minSdkVersion 14
-        targetSdkVersion 23
+        targetSdkVersion 22
 
 
     }
@@ -16,7 +16,7 @@ android {
         release {
             minifyEnabled false
             shrinkResources false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 
@@ -67,7 +67,7 @@ android {
 
     }
 
-    useLibrary 'org.apache.http.legacy'
+
 }
 
 
@@ -85,4 +85,5 @@ dependencies {
     compile 'com.daimajia.swipelayout:library:1.2.0'
     compile 'com.squareup.okhttp3:okhttp:3.2.0'
     compile 'com.squareup.okio:okio:1.8.0'
+    compile 'com.alibaba:fastjson:1.2.11'
 }

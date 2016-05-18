@@ -38,7 +38,6 @@ public class ChooseAddressActivity extends BaseActivity {
     HashMap<String, Integer> map = new HashMap<>();
     private final int reqestcode = 1;
     private AddressAdapter adapter;
-    private List<AddressList.Address> rows;
     private List<AddressList.Address> addlist;
     private AddressList.Address state;//接受addressId
     private RelativeLayout none_address_rel;
@@ -100,10 +99,6 @@ public class ChooseAddressActivity extends BaseActivity {
 
 
     //获得地址列表
-    private void initData() {
-        getAddressList();
-    }
-
     private void getAddressList() {
         addlist.clear();
         showProgressDialog();
@@ -131,11 +126,16 @@ public class ChooseAddressActivity extends BaseActivity {
             if (data.datas == null) {
                 return;
             }
-            rows = data.datas.rows;
+            List<AddressList.Address> rows = data.datas.rows;
             if (rows != null && rows.size() > 0) {
                 none_address_rel.setVisibility(View.GONE);
                 addlist.addAll(rows);
                 addressCount = -1;
+                for (int i = 0; i < rows.size(); i++) {
+                    if (rows.get(i).type.equals("1")) {
+                        map.put("pos", i);
+                    }
+                }
             } else {
                 addlist.clear();
                 none_address_rel.setVisibility(View.VISIBLE);
@@ -143,30 +143,17 @@ public class ChooseAddressActivity extends BaseActivity {
                 addressCount = 0;
                 state = null;
             }
-            for (int i = 0; i < rows.size(); i++) {
-                if (rows.get(i).type == "1" || rows.get(i).type.equals("1")) {
-                    map.put("pos", i);
-                }
-            }
             adapter = new AddressAdapter(this, addlist);
             address_list.setAdapter(adapter);
         } else if (req.getApi() == ApiType.DELETE_ADDRESS) {
             if ("1000".equals(req.getData().getStatus())) {
                 showToast("删除成功！");
                 getAddressList();
-                adapter.notifyDataSetChanged();
             }
         } else if (req.getApi() == ApiType.UPDATE_ADDRESS) {
             if ("1000".equals(req.getData().getStatus())) {
                 showToast("更改默认地址成功");
                 getAddressList();
-                adapter.notifyDataSetChanged();
-            }
-        } else if (req.getApi() == ApiType.SELECT_ADDRESS) {
-            if ("1000".equals(req.getData().getStatus())) {
-                MsgCenter.fireNull(MsgID.MSG_Change_ADDRESS,
-                        rows.get(map.get("pos")));
-                finish();
             }
         }
     }
@@ -235,7 +222,7 @@ public class ChooseAddressActivity extends BaseActivity {
                                                     map.put("pos", -1);
                                                 }
 
-                                                if (state!=null&&address.addressId.equals(state.addressId)) {
+                                                if (state !=null&&address.addressId.equals(state.addressId)) {
                                                     state = null;
                                                     MsgCenter.fireNull(MsgID.MSG_Change_ADDRESS,state);
                                                 }
@@ -286,7 +273,7 @@ public class ChooseAddressActivity extends BaseActivity {
     @Override
     protected void onResume() {
         map.clear();
-        initData();
+        getAddressList();
         super.onResume();
     }
 

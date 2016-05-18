@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -419,13 +421,19 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
                                 @Override
                                 public void onClick(final View v) {
                                     if (StringUtil.checkStr(ordersEntity.id)) {
-                                        boolean checkOffline = OrderUtils.CheckOffline(ordersEntity.id);
-                                        if (checkOffline) {
-                                            showCheckOfflinePayPopUp(v, ordersEntity);
-                                        } else {
-                                            page = 1;
-                                            RscOrderDetailFragment.this.getData(page);
-                                        }
+                                        Handler handler = new Handler() {
+                                            @Override
+                                            public void handleMessage(Message msg) {
+                                                super.handleMessage(msg);
+                                                if (msg.what == 2) {
+                                                    showCheckOfflinePayPopUp(v, ordersEntity);
+                                                } else {
+                                                    page = 1;
+                                                    RscOrderDetailFragment.this.getData(page);
+                                                }
+                                            }
+                                        };
+                                        OrderUtils.CheckOffline(handler, ordersEntity.id);
                                     }
                                 }
                             });

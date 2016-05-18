@@ -48,17 +48,17 @@ public class GuideFragment extends Fragment {
             case 1:
                 tv_enter1.setVisibility(View.GONE);
                 tv_enter2.setVisibility(View.GONE);
-                        view.setBackgroundResource(R.drawable.yindaoye2);
+                view.setBackgroundResource(R.drawable.yindaoye2);
                 break;
             case 2:
                 tv_enter1.setVisibility(View.VISIBLE);
                 tv_enter2.setVisibility(View.VISIBLE);
-                        view.setBackgroundResource(R.drawable.yindaoye3);
+                view.setBackgroundResource(R.drawable.yindaoye3);
                 tv_enter2.setOnClickListener(new OnClickListener() {
 
                     @Override
                     public void onClick(View arg0) {
-                        IntentUtil.activityForward(getActivity(),MainActivity.class,null,true);
+                        IntentUtil.activityForward(getActivity(), MainActivity.class, null, true);
                     }
                 });
                 break;

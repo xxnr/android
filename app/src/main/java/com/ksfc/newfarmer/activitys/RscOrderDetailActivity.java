@@ -5,6 +5,8 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -350,13 +352,20 @@ public class RscOrderDetailActivity extends BaseActivity implements KeyboardList
                                     @Override
                                     public void onClick(final View v) {
                                         if (StringUtil.checkStr(orderId)) {
-                                            boolean checkOffline = OrderUtils.CheckOffline(orderId);
-                                            if (checkOffline) {
-                                                showCheckOfflinePayPopUp(v, order);
-                                            } else {
-                                                requestData(orderId);
-                                                MsgCenter.fireNull(MsgID.Rsc_order_Change, "CONFIRM");
-                                            }
+
+                                            Handler handler = new Handler() {
+                                                @Override
+                                                public void handleMessage(Message msg) {
+                                                    super.handleMessage(msg);
+                                                    if (msg.what == 2) {
+                                                        showCheckOfflinePayPopUp(v, order);
+                                                    } else {
+                                                        requestData(orderId);
+                                                        MsgCenter.fireNull(MsgID.Rsc_order_Change, "CONFIRM");
+                                                    }
+                                                }
+                                            };
+                                            OrderUtils.CheckOffline(handler, orderId);
                                         }
                                     }
                                 });

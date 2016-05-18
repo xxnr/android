@@ -133,9 +133,11 @@ public class AddOrderActivity extends BaseActivity implements RadioGroup.OnCheck
         add_address_shouhuo_ll = head_layout.findViewById(R.id.add_address_shouhuo_ll);
         select_state_address_ll = head_layout.findViewById(R.id.select_state_address_ll);
         none_state_address_ll = head_layout.findViewById(R.id.none_state_address_ll);
+
         deliveries_way_radioGroup = ((RadioGroup) head_layout.findViewById(R.id.deliveries_way_radioGroup));
         deliveries_way_radioGroup.setOnCheckedChangeListener(this);
         deliveries_way_radioGroup.setVisibility(View.GONE);
+
         deliveries_button1 = (RadioButton) head_layout.findViewById(R.id.deliveries_way_self);
         deliveries_button2 = (RadioButton) head_layout.findViewById(R.id.deliveries_way_home);
         deliveries_button1.setVisibility(View.GONE);
@@ -680,25 +682,6 @@ public class AddOrderActivity extends BaseActivity implements RadioGroup.OnCheck
             }
         }
     }
-
-    /**
-     * 获得小计总额
-     */
-//    private void getSmallPrice(int position, TextView smallPrice) {
-//        float price = 0;
-//        for (int j = 0; j < data.category.get(position).goods.size(); j++) {
-//            Data.Goods good = data.category.get(position).goods.get(j);
-//
-//            if (data.category.get(position).goods.get(j).dingjin != 0) {
-//                price += good.num
-//                        * good.dingjin;
-//            } else {
-//                price += good.num
-//                        * good.xianjia;
-//            }
-//        }
-//        smallPrice.setText("¥" + StringUtil.toTwoString(price + ""));
-//    }
 
 
     /**

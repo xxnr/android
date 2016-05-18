@@ -1,6 +1,9 @@
 package com.ksfc.newfarmer.order;
 
 
+import android.os.Handler;
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.protocol.ApiType;
@@ -25,9 +28,7 @@ import okhttp3.Response;
 public class OrderUtils {
 
     //订单是否已经审核
-    public static boolean isChecked(final String orderId) {
-
-        final boolean[] paid = {false};
+    public static void isChecked(final Handler handler, String orderId) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.connectTimeout(10 * 1000, TimeUnit.MILLISECONDS);
         OkHttpClient mOkHttpClient = new OkHttpClient();
@@ -52,23 +53,21 @@ public class OrderUtils {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                String json = response.body().string();
-                Gson gson = new Gson();
-                if (StringUtil.checkStr(json)) {
-                    MyOrderDetailResult myOrderDetailResult = gson.fromJson(json, MyOrderDetailResult.class);
+                String result = response.body().string();
+                if (StringUtil.checkStr(result)) {
+                    Gson gson = new Gson();
+                    MyOrderDetailResult myOrderDetailResult = gson.fromJson(result, MyOrderDetailResult.class);
                     MyOrderDetailResult.Datas datas = myOrderDetailResult.datas;
                     if (datas != null
                             && datas.rows != null
                             && datas.rows.order != null
                             && datas.rows.order.orderStatus != null) {
                         switch (datas.rows.order.orderStatus.type) {
-                            case 1:
-                            case 2:
                             case 7:
-                                paid[0] = false;
+                                handler.sendEmptyMessage(0);
                                 break;
                             default:
-                                paid[0] = true;
+                                handler.sendEmptyMessage(1);
                                 break;
                         }
                     }
@@ -76,16 +75,12 @@ public class OrderUtils {
             }
         });
 
-        return paid[0];
-
     }
 
 
-
     //RSC订单是否审核过
-    public static boolean CheckOffline( String orderId) {
+    public static void CheckOffline(final Handler handler, String orderId) {
 
-        final boolean[] paid = {false};
 
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.connectTimeout(10 * 1000, TimeUnit.MILLISECONDS);
@@ -104,24 +99,17 @@ public class OrderUtils {
 
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
-                    String json = response.body().string();
-                    if (StringUtil.checkStr(json)) {
-                        String result = response.body().string();
-                        if (StringUtil.checkStr(result)) {
-                            try {
-                                Gson gson = new Gson();
-                                RscOrderDetailResult rscOrderDetailResult = gson.fromJson(result, RscOrderDetailResult.class);
-                                paid[0] = rscOrderDetailResult.order.orderStatus.type != 2;
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                paid[0] = false;
-                            }
+                    String result = response.body().string();
+                    if (StringUtil.checkStr(result)) {
+                        Gson gson = new Gson();
+                        RscOrderDetailResult rscOrderDetailResult = gson.fromJson(result, RscOrderDetailResult.class);
+                        if (rscOrderDetailResult.order != null && rscOrderDetailResult.order.orderStatus != null) {
+                            handler.sendEmptyMessage(rscOrderDetailResult.order.orderStatus.type);
                         }
                     }
                 }
             });
         }
-        return paid[0];
     }
 
 

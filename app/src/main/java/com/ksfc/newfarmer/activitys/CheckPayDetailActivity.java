@@ -71,8 +71,13 @@ public class CheckPayDetailActivity extends BaseActivity {
             to_pay_price_tv.setText("¥" + subOrder.price);
             //已支付金额
             order_yet_tv.setText("¥" + subOrder.paidPrice);
-            PayInfoAdapter payInfoAdapter = new PayInfoAdapter(CheckPayDetailActivity.this, subOrder.payments);
-            listView.setAdapter(payInfoAdapter);
+            if (subOrder.payments != null) {
+                PayInfoAdapter payInfoAdapter = new PayInfoAdapter(CheckPayDetailActivity.this, subOrder.payments);
+                listView.setAdapter(payInfoAdapter);
+            } else {
+                listView.setAdapter(null);
+            }
+
         }
 
 
@@ -109,7 +114,6 @@ public class CheckPayDetailActivity extends BaseActivity {
         @Override
         public void convert(CommonViewHolder holder, MyOrderDetailResult.Rows.SubOrders.Payments payments) {
             if (payments != null) {
-
                 //文本内容
                 if (payments.payType == 1) {
                     holder.setText(R.id.order_pay_type, "支付宝支付");
