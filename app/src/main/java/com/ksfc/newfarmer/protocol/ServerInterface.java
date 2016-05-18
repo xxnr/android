@@ -1,27 +1,16 @@
 package com.ksfc.newfarmer.protocol;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.util.Set;
-import java.util.zip.GZIPInputStream;
 
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.StatusLine;
+import com.google.gson.Gson;
+import com.ksfc.newfarmer.utils.RndLog;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.google.gson.Gson;
-import com.ksfc.newfarmer.protocol.ApiType.RequestMethod;
-import com.ksfc.newfarmer.utils.RndLog;
+import java.io.IOException;
 
-import android.text.TextUtils;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 /**
  * 服务器接口
@@ -44,50 +33,27 @@ public final class ServerInterface {
     public ResponseResult request(final ApiType api, final RequestParams params)
             throws NetworkException {
 
-        HttpResponse response = getResponseByApi(api, params);
+        Response response = getResponseByApi(api, params);
 
-        if (response != null) {// response == null�?可能是无网络引起
+        if (response != null) {// response == null   可能是无网络引起
 
-            HttpEntity entity = response.getEntity();
-            StatusLine status = response.getStatusLine();
-            if (HttpStatus.SC_OK == status.getStatusCode()) {
-                if (entity != null) {
+            ResponseBody responseBody = response.body();
+            if (response.isSuccessful()) {
+                if (responseBody != null) {
                     try {
-                        String json = "";
-
-                        InputStream is = entity.getContent();
-                        Header contentEncoding = response
-                                .getFirstHeader("Content-Encoding");
-
-                        if (contentEncoding != null
-                                && contentEncoding.getValue().equalsIgnoreCase(
-                                "gzip")) {
-                            RndLog.d(TAG, "https response has be gziped!");
-                            is = new GZIPInputStream(
-                                    new BufferedInputStream(is));
-
-                        }
-                        json = toString(is, "UTF-8");
+                        String json = responseBody.string();
                         RndLog.d(TAG, "request. json.length = " + json);
                         return parseJson(json, getJsonClassByApi(api));
                     } catch (Exception e) {
-                        // BzLog.e(TAG, e.getMessage(), e);
                         e.printStackTrace();
                         throw new NetworkException(e);
-                    } finally {
-                        try {
-                            entity.consumeContent();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
                     }
                 }
                 return null;
             } else {
-                int statusCode = status.getStatusCode();
-                RndLog.e(TAG, "HTTP CODE :" + statusCode);
-                throw new NetworkException(status.getStatusCode(),
-                        status.getReasonPhrase());
+                RndLog.e(TAG, "HTTP CODE :" + response.code());
+                throw new NetworkException(response.code(),
+                        response.message());
             }
         } else {
             // 执行过程中产生异常
@@ -118,40 +84,6 @@ public final class ServerInterface {
         return res;
     }
 
-    public static String toString(InputStream is, String charset) {
-
-        BufferedReader reader = null;
-        StringBuilder buffer = new StringBuilder();
-        try {
-
-            reader = new BufferedReader(new InputStreamReader(is, charset));
-
-            String line = reader.readLine();
-
-            while (!TextUtils.isEmpty(line)) {
-
-                buffer.append(line);
-                line = reader.readLine();
-
-            }
-
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } finally {
-
-            try {
-                if (reader != null)
-                    reader.close();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-
-        }
-        return buffer.toString();
-    }
-
     /**
      * 通过参数返回http响应
      *
@@ -159,59 +91,25 @@ public final class ServerInterface {
      * @param params
      * @return
      */
-    private HttpResponse getResponseByApi(ApiType api, RequestParams params) {
+    private Response getResponseByApi(ApiType api, RequestParams params) {
 
         params.put("user-agent", "Android-v2.0");
-
-        RndLog.i(TAG, buildDebugUrl(api, params));
-
         try {
             // TODO 判断api类型
-            if (api.getRequestMethod() == RequestMethod.GET) {
+            if (api.getRequestMethod() == ApiType.RequestMethod.GET) {
                 return mHelper.performGet(api.getOpt(), params);
-            } else if (api.getRequestMethod() == RequestMethod.FILE) {
-                return mHelper.postFile(api.getOpt(), params);
-            } else if (api.getRequestMethod() == RequestMethod.POSTJSON) {
-                try {
-                    return mHelper.postBody(api.getOpt(), params);
-                } catch (UnsupportedEncodingException e) {
-                    RndLog.e(TAG, e.getMessage());
-                    return null;
-                }
+            } else if (api.getRequestMethod() == ApiType.RequestMethod.POSTJSON) {
+                return mHelper.postBody(api.getOpt(), params);
+            } else if (api.getRequestMethod() == ApiType.RequestMethod.PUT) {
+                return mHelper.putBody(api.getOpt(), params);
             } else {
                 return mHelper.performPost(api.getOpt(), params);
-                // return mHelper.postFile(api.getOpt(), params);
             }
-        } catch (NetworkException e) {
-            RndLog.e(TAG, e.getMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
             return null;
         }
 
-    }
-
-    /**
-     * 创建调试URL，便于在浏览器中调试
-     *
-     * @param api
-     * @param params
-     * @return
-     */
-    private String buildDebugUrl(ApiType api, RequestParams params) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(api.getOpt());
-        sb.append("?");
-        Set<String> keySet = params.keySet();
-        for (String key : keySet) {
-            if (key.startsWith(NetworkHelper.Post_Entity_FILE_Data)) {
-                continue;
-            }
-            sb.append(key);
-            sb.append("=");
-            sb.append(params.get(key));
-            sb.append("&");
-        }
-        sb.deleteCharAt(sb.length() - 1);
-        return sb.toString();
     }
 
     public static Class<? extends ResponseResult> getJsonClassByApi(ApiType api) {

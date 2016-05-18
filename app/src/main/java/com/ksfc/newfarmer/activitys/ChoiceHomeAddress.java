@@ -127,7 +127,6 @@ public class ChoiceHomeAddress extends BaseActivity {
                     Map<String, Object> map1 = new HashMap<>();
                     map1.put("address", map);
                     if (isLogin()) {
-                        map1.put("userId", Store.User.queryMe().userid);
                         map1.put("token", Store.User.queryMe().token);
                     }
                     String jsonStr = gson.toJson(map1);

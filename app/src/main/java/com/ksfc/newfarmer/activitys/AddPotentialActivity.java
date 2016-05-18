@@ -44,15 +44,11 @@ public class AddPotentialActivity extends BaseActivity {
 
     private String queueid = "";
     private String buildid = "";
-    private String cityareaid;
-    private String townid;
-
 
     private String city;
     private String town;
 
 
-    private Map<String, String> map = new HashMap<>();
     private CheckBox boy_box;
     private CheckBox girl_box;
     private EditText phone;
@@ -167,7 +163,6 @@ public class AddPotentialActivity extends BaseActivity {
             switch (arg0) {
                 case cityRequestCode:
                     city = arg2.getExtras().getString("city");
-                    cityareaid = arg2.getExtras().getString("cityareaid");
                     queueid = arg2.getExtras().getString("queueid");
                     buildid = arg2.getExtras().getString("buildid");
 
@@ -178,7 +173,6 @@ public class AddPotentialActivity extends BaseActivity {
                     choice_city_text.setText(city);
                     choice_town_text.setText("");
 
-                    townid = "";
                     town = "";
 
                     //预加载乡镇
@@ -191,7 +185,6 @@ public class AddPotentialActivity extends BaseActivity {
                     break;
                 case townRequestCode:
                     town = arg2.getExtras().getString("town");
-                    townid = arg2.getExtras().getString("townid");
                     townid2 = arg2.getExtras().getString("townid2");
                     choice_town_text.setText(town);
                     break;

@@ -71,8 +71,13 @@ public class CheckPayDetailActivity extends BaseActivity {
             to_pay_price_tv.setText("¥" + subOrder.price);
             //已支付金额
             order_yet_tv.setText("¥" + subOrder.paidPrice);
-            PayInfoAdapter payInfoAdapter = new PayInfoAdapter(CheckPayDetailActivity.this, subOrder.payments);
-            listView.setAdapter(payInfoAdapter);
+            if (subOrder.payments != null) {
+                PayInfoAdapter payInfoAdapter = new PayInfoAdapter(CheckPayDetailActivity.this, subOrder.payments);
+                listView.setAdapter(payInfoAdapter);
+            } else {
+                listView.setAdapter(null);
+            }
+
         }
 
 
@@ -131,11 +136,10 @@ public class CheckPayDetailActivity extends BaseActivity {
                 }
                 //支付结果
                 if (payments.payStatus == 1) {
-                    holder.getView(R.id.item_payInfo_times).setVisibility(View.GONE);
+                    holder.setText(R.id.item_payInfo_state, "");
                 } else if (payments.payStatus == 2) {
                     holder.setText(R.id.item_payInfo_state, "支付成功");
                 }
-
                 //第几次付款
                 holder.setText(R.id.item_payInfo_times, "第" + payments.slice + "次");
 

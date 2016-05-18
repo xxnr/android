@@ -66,7 +66,7 @@ public class SelectAddressActivity extends BaseActivity implements AdapterView.O
         title_ll = ((LinearLayout) findViewById(R.id.select_address_title_ll));
 
         Bundle bundle = getIntent().getExtras();
-        if (bundle!=null){
+        if (bundle != null) {
             flag = bundle.getInt("tag");
             queueId1 = bundle.getString("queueid");
             buildId1 = bundle.getString("buildid");
@@ -129,9 +129,12 @@ public class SelectAddressActivity extends BaseActivity implements AdapterView.O
         if (req.getApi() == ApiType.FINDAREALIST) {
             CityList city = (CityList) req.getData();
             if (city.datas != null) {
+                TAG = 1;
                 cityList = city.datas.rows;
-                adapter = new AddressAdapter(cityList);
-                listView.setAdapter(adapter);
+                if (cityList != null) {
+                    adapter = new AddressAdapter(cityList);
+                    listView.setAdapter(adapter);
+                }
             } else {
                 showToast("数据加载失败");
             }
@@ -140,15 +143,17 @@ public class SelectAddressActivity extends BaseActivity implements AdapterView.O
             if (add.datas != null) {
                 TAG = 2;
                 queueList = add.datas.rows;
-                adapter = new AddressAdapter(queueList);
-                listView.setAdapter(adapter);
+                if (queueList != null) {
+                    adapter = new AddressAdapter(queueList);
+                    listView.setAdapter(adapter);
+                }
             } else {
                 showToast("数据加载失败");
             }
         } else if (req.getApi() == ApiType.QUERYBYBUSINESSID) {
 
             BuildingList add = (BuildingList) req.getData();
-            if (add.datas != null) {
+            if (add.datas != null && add.datas.rows != null) {
                 if (add.datas.rows.size() == 0) {
                     buildId = "";
                     backForResult();
@@ -158,17 +163,14 @@ public class SelectAddressActivity extends BaseActivity implements AdapterView.O
                     adapter = new AddressAdapter(bulidList);
                     listView.setAdapter(adapter);
                 }
-
-
             } else {
                 showToast("数据加载失败");
             }
         } else if (req.getApi() == ApiType.QUERYTOWNID) {
             TownList add = (TownList) req.getData();
-            if (add.datas != null) {
+            if (add.datas != null && add.datas.rows != null) {
                 if (add.datas.rows.size() == 0) {
                     showToast("此地区暂无街道地址");
-
                 } else {
                     TAG = 4;
                     townList = add.datas.rows;
@@ -187,39 +189,60 @@ public class SelectAddressActivity extends BaseActivity implements AdapterView.O
 
         switch (TAG) {
             case 1:
-                CityList.Data.Rows city = (CityList.Data.Rows) adapter.getItem(position);
-                cityId = city.id;
-                cityId2 = city._id;
-                buffer.append(city.name);
-                title_ll.setVisibility(View.VISIBLE);
-                textView.setText(buffer);
-                adapter.clear();
-                adapter = null;
-                loadQueue();
+                if (adapter != null) {
+                    CityList.Data.Rows city = (CityList.Data.Rows) adapter.getItem(position);
+                    if (city != null) {
+                        cityId = city.id;
+                        cityId2 = city._id;
+                        buffer.append(city.name);
+                        title_ll.setVisibility(View.VISIBLE);
+                        textView.setText(buffer);
+                        adapter.clear();
+                        adapter = null;
+                        loadQueue();
+                    }
+                }
+
                 break;
             case 2:
-                QueueList.Data.Rows Queue = (QueueList.Data.Rows) adapter.getItem(position);
-                queueId = Queue.id;
-                queueId2 = Queue._id;
-                buffer.append(Queue.name);
-                textView.setText(buffer);
-                adapter.clear();
-                adapter = null;
-                loadBuild();
+                if (adapter != null) {
+
+                    QueueList.Data.Rows Queue = (QueueList.Data.Rows) adapter.getItem(position);
+                    if (Queue!=null){
+                        queueId = Queue.id;
+                        queueId2 = Queue._id;
+                        buffer.append(Queue.name);
+                        textView.setText(buffer);
+                        adapter.clear();
+                        adapter = null;
+                        loadBuild();
+                    }
+                }
+
                 break;
             case 3:
-                BuildingList.BuildData build = (BuildingList.BuildData) adapter.getItem(position);
-                buildId = build.id;
-                buildId2 = build._id;
-                buffer.append(build.name);
-                backForResult();
+                if (adapter!=null){
+                    BuildingList.BuildData build = (BuildingList.BuildData) adapter.getItem(position);
+                    if (build!=null){
+                        buildId = build.id;
+                        buildId2 = build._id;
+                        buffer.append(build.name);
+                        backForResult();
+                    }
+                }
                 break;
             case 4:
-                TownList.TownData town = (TownList.TownData) adapter.getItem(position);
-                townId1 = town.id;
-                townId2 = town._id;
-                townName = town.name;
-                backForResult1();
+                if (adapter!=null){
+
+                    TownList.TownData town = (TownList.TownData) adapter.getItem(position);
+                    if (town!=null){
+                        townId1 = town.id;
+                        townId2 = town._id;
+                        townName = town.name;
+                        backForResult1();
+                    }
+                }
+
                 break;
 
         }
@@ -288,16 +311,24 @@ public class SelectAddressActivity extends BaseActivity implements AdapterView.O
             ViewHolder holder = (ViewHolder) convertView.getTag();
             if (TAG == 1) {
                 ArrayList<CityList.Data.Rows> list1 = (ArrayList<CityList.Data.Rows>) this.list;
-                holder.name.setText(list1.get(position).name);
+                if (list1.get(position)!=null){
+                    holder.name.setText(list1.get(position).name);
+                }
             } else if (TAG == 2) {
                 ArrayList<QueueList.Data.Rows> list1 = (ArrayList<QueueList.Data.Rows>) this.list;
-                holder.name.setText(list1.get(position).name);
+                if (list1.get(position)!=null) {
+                    holder.name.setText(list1.get(position).name);
+                }
             } else if (TAG == 3) {
                 ArrayList<BuildingList.BuildData> list1 = (ArrayList<BuildingList.BuildData>) this.list;
-                holder.name.setText(list1.get(position).name);
+                if (list1.get(position)!=null) {
+                    holder.name.setText(list1.get(position).name);
+                }
             } else if (TAG == 4) {
                 ArrayList<TownList.TownData> list1 = (ArrayList<TownList.TownData>) this.list;
-                holder.name.setText(list1.get(position).name);
+                if (list1!=null){
+                    holder.name.setText(list1.get(position).name);
+                }
             }
 
             return convertView;

@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.google.gson.Gson;
 import com.ksfc.newfarmer.BaseActivity;
+import com.ksfc.newfarmer.order.OrderUtils;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.adapter.CommonAdapter;
@@ -32,7 +33,10 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -78,6 +82,7 @@ public class MyOrderDetailActivity extends BaseActivity {
     private MyOrderDetailResult.Datas datas;
 
 
+
     @Override
     public int getLayout() {
         return R.layout.my_order_detail;
@@ -89,8 +94,6 @@ public class MyOrderDetailActivity extends BaseActivity {
         if (!StringUtil.empty(getIntent().getStringExtra("orderId"))) {
             orderId = getIntent().getStringExtra("orderId");
         }
-
-
         if (TextUtils.isEmpty(orderId)) {
             return;
         }
@@ -295,7 +298,6 @@ public class MyOrderDetailActivity extends BaseActivity {
                                     go_to_pay.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-
                                             if (StringUtil.checkStr(orderId)) {
                                                 Intent intent = new Intent(MyOrderDetailActivity.this,
                                                         PaywayActivity.class);
@@ -314,17 +316,29 @@ public class MyOrderDetailActivity extends BaseActivity {
                                     go_to_pay.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            Bundle bundle = new Bundle();
-                                            if (rows.RSCInfo != null) {
-                                                bundle.putString("companyName", rows.RSCInfo.companyName);
-                                                bundle.putString("RSCPhone", rows.RSCInfo.RSCPhone);
-                                                bundle.putString("RSCAddress", rows.RSCInfo.RSCAddress);
-                                            }
-                                            bundle.putString("orderId", orderId);
-                                            if (rows.payment != null) {
-                                                bundle.putString("payPrice", rows.payment.price);
-                                            }
-                                            IntentUtil.activityForward(MyOrderDetailActivity.this, OfflinePayActivity.class, bundle, false);
+                                            Handler handler =new Handler(){
+                                                @Override
+                                                public void handleMessage(Message msg) {
+                                                    super.handleMessage(msg);
+                                                    if (msg.what==0){
+                                                        Bundle bundle = new Bundle();
+                                                        if (rows.RSCInfo != null) {
+                                                            bundle.putString("companyName", rows.RSCInfo.companyName);
+                                                            bundle.putString("RSCPhone", rows.RSCInfo.RSCPhone);
+                                                            bundle.putString("RSCAddress", rows.RSCInfo.RSCAddress);
+                                                        }
+                                                        bundle.putString("orderId", orderId);
+                                                        if (rows.payment != null) {
+                                                            bundle.putString("payPrice", rows.payment.price);
+                                                        }
+                                                        IntentUtil.activityForward(MyOrderDetailActivity.this, OfflinePayActivity.class, bundle, false);
+                                                    }else {
+                                                        requestData(orderId);
+                                                        MsgCenter.fireNull(MsgID.order_Change);
+                                                    }
+                                                }
+                                            };
+                                            OrderUtils.isChecked(handler,orderId);
                                         }
                                     });
                                     //更改支付方式
@@ -411,9 +425,11 @@ public class MyOrderDetailActivity extends BaseActivity {
                     if (rows.SKUList != null && !rows.SKUList.isEmpty()) {
                         CarAdapter carAdapter = new CarAdapter(true, rows.SKUList);
                         order_shangpin_list.setAdapter(carAdapter);
-                    } else {
+                    } else if(rows.orderGoodsList!=null){
                         CarAdapter carAdapter = new CarAdapter(rows.orderGoodsList, false);
                         order_shangpin_list.setAdapter(carAdapter);
+                    }else {
+                        order_shangpin_list.setAdapter(null);
                     }
                     //点击查看订单状态详情
                     setViewClick(R.id.to_order_state_rel);

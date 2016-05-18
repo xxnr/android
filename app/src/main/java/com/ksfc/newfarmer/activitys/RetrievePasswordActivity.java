@@ -55,19 +55,19 @@ public class RetrievePasswordActivity extends BaseActivity {
         switch (v.getId()) {
             case R.id.backdengLubutton:
                 if (!StringUtil.checkStr(backedit1.getText().toString())) {
-                    Toast.makeText(this, "请输入手机号", Toast.LENGTH_SHORT).show();
+                    showToast("请输入手机号");
                     return;
                 } else if (!isMobileNum(backedit1.getText().toString())) {
-                    Toast.makeText(this, "手机号格式错误", Toast.LENGTH_SHORT).show();
+                    showToast("手机号格式错误");
                     return;
                 } else if (!StringUtil.checkStr(backyanzhengma.getText().toString())) {
-                    Toast.makeText(this, "请输入验证码", Toast.LENGTH_SHORT).show();
+                    showToast("请输入验证码");
                     return;
                 } else if (backnewpassword.getText().toString().isEmpty()) {
-                    Toast.makeText(this, "请输入密码", Toast.LENGTH_SHORT).show();
+                    showToast("请输入密码");
                     return;
                 } else if (confimPasword.getText().toString().isEmpty()) {
-                    Toast.makeText(this, "请输入确认密码", Toast.LENGTH_SHORT).show();
+                    showToast("请输入确认密码");
                     return;
                 } else if (!password.equals(backnewpassword.getText().toString())) {
                     showToast("密码不一致");

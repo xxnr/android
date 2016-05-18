@@ -42,9 +42,7 @@ public class AddressmanageActivity extends BaseActivity {
     HashMap<String, Integer> map = new HashMap<>();//创建一个map集合用于存放  是否是默认地址
     private final int reqestcode = 1;
     private AddressAdapter adapter;
-    private List<AddressList.Address> rows;
     private List<AddressList.Address> addList;
-    private AddressList.Address selectedAddress;
     private RelativeLayout none_address_rel;
 
     private int addressCount = -1;//地址列表的数量
@@ -83,9 +81,6 @@ public class AddressmanageActivity extends BaseActivity {
 
 
     //获得地址列表
-    private void initData() {
-        getAddressList();
-    }
 
     private void getAddressList() {
         addList.clear();
@@ -113,46 +108,41 @@ public class AddressmanageActivity extends BaseActivity {
                 if (data.datas == null) {
                     return;
                 }
-                rows = data.datas.rows;
-                map.clear();
-                for (int i = 0; i < rows.size(); i++) {
-                    if (rows.get(i).type.equals("1")) {
-                        map.put("pos", i);
+                List<Address> rows = data.datas.rows;
+                if (rows != null) {
+                    map.clear();
+                    for (int i = 0; i < rows.size(); i++) {
+                        if (rows.get(i).type.equals("1")) {
+                            map.put("pos", i);
+                        }
                     }
+                    if (rows.size() > 0) {
+                        addList.addAll(rows);
+                        none_address_rel.setVisibility(View.GONE);
+                        addressCount = -1;
+                    } else {
+                        addList.clear();
+                        none_address_rel.setVisibility(View.VISIBLE);
+                        showToast("请先新增地址");
+                        addressCount = 0;
+                    }
+                    adapter = new AddressAdapter(AddressmanageActivity.this, addList);
+                    address_list.setAdapter(adapter);
                 }
-                if (rows != null && rows.size() > 0) {
-                    addList.addAll(rows);
-                    none_address_rel.setVisibility(View.GONE);
-                    addressCount = -1;
-                    selectedAddress = rows.get(0);
-                } else {
-                    addList.clear();
-                    none_address_rel.setVisibility(View.VISIBLE);
-                    showToast("请先新增地址");
-                    addressCount = 0;
-                }
-                adapter = new AddressAdapter(AddressmanageActivity.this,addList);
-                address_list.setAdapter(adapter);
+
+
             }
 
         } else if (req.getApi() == ApiType.DELETE_ADDRESS) {
             if ("1000".equals(req.getData().getStatus())) {
                 showToast("删除成功！");
                 getAddressList();
-                adapter.notifyDataSetChanged();
 
             }
         } else if (req.getApi() == ApiType.UPDATE_ADDRESS) {
             if ("1000".equals(req.getData().getStatus())) {
                 showToast("更改默认地址成功");
                 getAddressList();
-                adapter.notifyDataSetChanged();
-            }
-        } else if (req.getApi() == ApiType.SELECT_ADDRESS) {
-            if ("1000".equals( req.getData().getStatus())) {
-                MsgCenter.fireNull(MsgID.MSG_Change_ADDRESS,
-                        rows.get(map.get("pos")));
-                finish();
             }
         }
     }
@@ -167,7 +157,7 @@ public class AddressmanageActivity extends BaseActivity {
         @Override
         public void convert(CommonViewHolder holder, final Address address) {
 
-            if (address!=null){
+            if (address != null) {
                 //文本内容
                 holder.setText(R.id.address_tv, StringUtil.checkBufferStrWithSpace
                         (address.areaName,
@@ -175,80 +165,78 @@ public class AddressmanageActivity extends BaseActivity {
                                 address.countyName,
                                 address.townName,
                                 address.address));
-                holder.setText(R.id.address_name_tv,address.receiptPeople);
-                holder.setText(R.id.address_phone_tv,address.receiptPhone);
+                holder.setText(R.id.address_name_tv, address.receiptPeople);
+                holder.setText(R.id.address_phone_tv, address.receiptPhone);
                 //初始化其他组件
-                CheckBox btn_check_item =  holder.getView(R.id.btn_check_item);
+                CheckBox btn_check_item = holder.getView(R.id.btn_check_item);
                 //设置控件点击区域扩大
                 ExpandViewTouch.expandViewTouchDelegate(btn_check_item, 100, 100, 100, 100);
 
                 //编辑地址
                 holder.getView(R.id.edit_address_img).setOnClickListener(new OnClickListener() {
 
-                     @Override
-                     public void onClick(View v) {
-                         Intent intent = new Intent(AddressmanageActivity.this,
-                                 UpdateAddressActivity.class);
-                         intent.putExtra("address", address);
-                         startActivity(intent);
-                     }
-                 });
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(AddressmanageActivity.this,
+                                UpdateAddressActivity.class);
+                        intent.putExtra("address", address);
+                        startActivity(intent);
+                    }
+                });
 
                 //删除地址
                 holder.getView(R.id.delete_address_img).setOnClickListener(new OnClickListener() {
 
-                   @Override
-                   public void onClick(View v) {
-                       // app/buildUser/deleteAddress
-                       // id:主键
-                       // locationUserId:操作人ID
-                       // app/user/saveUserAddress
-                       // userId:用户ID,
-                       // addressId:地址唯一标识
+                    @Override
+                    public void onClick(View v) {
+                        // app/buildUser/deleteAddress
+                        // id:主键
+                        // locationUserId:操作人ID
+                        // app/user/saveUserAddress
+                        // userId:用户ID,
+                        // addressId:地址唯一标识
 
-                       CustomDialog.Builder builder = new CustomDialog.Builder(
-                               AddressmanageActivity.this);
-                       builder.setMessage("确认要删除该地址吗")
-                               .setPositiveButton("确定",
-                                       new DialogInterface.OnClickListener() {
-                                           @Override
-                                           public void onClick(DialogInterface dialog,
-                                                               int which) {
-                                               if (address.type.equals("1")) {
-                                                   UserInfo queryMe = Store.User.queryMe();
-                                                   if (queryMe != null) {
-                                                       queryMe.defaultAddress = "";
-                                                       Store.User.saveMe(queryMe);
-                                                       map.put("pos", -1);
-                                                       selectedAddress = null;
-                                                       MsgCenter.fireNull(MsgID.MSG_ADD_ADDRESS, selectedAddress);
-                                                   }
-                                               }
-                                               showProgressDialog();
-                                               RequestParams params = new RequestParams();
-                                               UserInfo queryMe = Store.User.queryMe();
-                                               if (queryMe != null) {
-                                                   params.put("userId", queryMe.userid);
-                                               }
-                                               params.put("addressId", address.addressId);
-                                               execApi(ApiType.DELETE_ADDRESS, params);
-                                               dialog.dismiss();
-                                           }
-                                       })
-                               .setNegativeButton("取消",
-                                       new DialogInterface.OnClickListener() {
+                        CustomDialog.Builder builder = new CustomDialog.Builder(
+                                AddressmanageActivity.this);
+                        builder.setMessage("确认要删除该地址吗")
+                                .setPositiveButton("确定",
+                                        new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog,
+                                                                int which) {
+                                                if (address.type.equals("1")) {
+                                                    UserInfo queryMe = Store.User.queryMe();
+                                                    if (queryMe != null) {
+                                                        queryMe.defaultAddress = "";
+                                                        Store.User.saveMe(queryMe);
+                                                        map.put("pos", -1);
+                                                    }
+                                                }
+                                                showProgressDialog();
+                                                RequestParams params = new RequestParams();
+                                                UserInfo queryMe = Store.User.queryMe();
+                                                if (queryMe != null) {
+                                                    params.put("userId", queryMe.userid);
+                                                }
+                                                params.put("addressId", address.addressId);
+                                                execApi(ApiType.DELETE_ADDRESS, params);
+                                                dialog.dismiss();
+                                            }
+                                        })
+                                .setNegativeButton("取消",
+                                        new DialogInterface.OnClickListener() {
 
-                                           @Override
-                                           public void onClick(DialogInterface dialog,
-                                                               int which) {
+                                            @Override
+                                            public void onClick(DialogInterface dialog,
+                                                                int which) {
 
-                                               dialog.dismiss();
+                                                dialog.dismiss();
 
-                                           }
-                                       });
-                       builder.create().show();
-                   }
-               });
+                                            }
+                                        });
+                        builder.create().show();
+                    }
+                });
 
 
                 if (map.get("pos") != null) {
@@ -298,9 +286,10 @@ public class AddressmanageActivity extends BaseActivity {
 
         }
     }
+
     @Override
     protected void onResume() {
-        initData();
         super.onResume();
+        getAddressList();
     }
 }

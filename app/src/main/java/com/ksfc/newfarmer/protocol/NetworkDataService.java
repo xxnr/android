@@ -1,5 +1,6 @@
 package com.ksfc.newfarmer.protocol;
 
+
 import com.ksfc.newfarmer.utils.RndLog;
 
 public class NetworkDataService {

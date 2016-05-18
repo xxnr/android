@@ -48,7 +48,6 @@ public class SelectDeliveriesStateActivity extends BaseActivity implements PullT
     private ImageView state_city_img;
     private TextView state_county_text;
     private ImageView state_county_img;
-    private LinearLayout state_shaixuan_lin;
     private View state_province_bar;
     private View state_city_bar;
     private View state_county_bar;
@@ -125,7 +124,6 @@ public class SelectDeliveriesStateActivity extends BaseActivity implements PullT
         state_city_img = (ImageView) findViewById(R.id.state_city_img);
         state_county_text = (TextView) findViewById(R.id.state_county_text);
         state_county_img = (ImageView) findViewById(R.id.state_county_img);
-        state_shaixuan_lin = (LinearLayout) findViewById(R.id.state_shaixuan_lin);
         state_province_bar = (View) findViewById(R.id.state_province_bar);
         state_city_bar = (View) findViewById(R.id.state_city_bar);
         state_county_bar = (View) findViewById(R.id.state_county_bar);
@@ -339,10 +337,16 @@ public class SelectDeliveriesStateActivity extends BaseActivity implements PullT
             //初始化一切文本
             if (rsCsEntity != null && rsCsEntity.RSCInfo != null) {
                 //网点名
-                holder.setText(R.id.title_delivery_state_item, rsCsEntity.RSCInfo.companyName);
+                if (StringUtil.checkStr(rsCsEntity.RSCInfo.companyName)){
+                    holder.setText(R.id.title_delivery_state_item, rsCsEntity.RSCInfo.companyName);
+                }else {
+                    holder.setText(R.id.title_delivery_state_item, "");
+                }
                 //电话
                 if (StringUtil.checkStr(rsCsEntity.RSCInfo.phone)) {
                     holder.setText(R.id.phone_delivery_state_item, "电话：" + rsCsEntity.RSCInfo.phone);
+                }else {
+                    holder.setText(R.id.phone_delivery_state_item, "电话：");
                 }
                 //网点所在地址
                 String province = "";

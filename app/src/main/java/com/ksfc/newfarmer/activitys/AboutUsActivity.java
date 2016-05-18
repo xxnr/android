@@ -25,10 +25,7 @@ public class AboutUsActivity extends BaseActivity {
         findViewById(R.id.titleview).setBackgroundColor(getResources().getColor(R.color.half_green));//设置title背景
         //设置版本
         TextView version = (TextView) findViewById(R.id.about_us_version);
-        Bundle bundle = null;
-        if (getIntent() != null) {
-            bundle = getIntent().getExtras();
-        }
+        Bundle bundle = getIntent().getExtras();
         String versionName = null;
         if (bundle != null) {
             versionName = bundle.getString("versionName");

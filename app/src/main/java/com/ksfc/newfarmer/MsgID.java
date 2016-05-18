@@ -25,4 +25,5 @@ public interface MsgID {
     String Pay_success = "Pay_success";//支付成功通知各个页面
     String Rsc_order_Change = "Rsc_order_Change";//RSC订单在详情改变时列表页刷新
     String order_Change = "order_Change";//用户订单在详情改变时列表页刷新
+    String PAY_PRICE = "PAY_PRICE";//银联的回调通知支付页Activity
 }

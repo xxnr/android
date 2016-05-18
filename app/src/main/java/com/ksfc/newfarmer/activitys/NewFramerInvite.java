@@ -22,6 +22,7 @@ import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
 import com.ksfc.newfarmer.protocol.beans.CustomerIsLatestResult;
 import com.ksfc.newfarmer.protocol.beans.LoginResult;
+import com.ksfc.newfarmer.protocol.beans.PersonalData;
 import com.ksfc.newfarmer.utils.IntentUtil;
 
 import net.yangentao.util.PreferenceUtil;
@@ -37,6 +38,8 @@ public class NewFramerInvite extends BaseActivity implements
     private RelativeLayout customer_bg;
 
     private int potentialCount = 0;//0需要展示提示bg 1不需要
+    private RadioButton radioButton3;
+    private RadioGroup radioGroup;
 
     @Override
     public int getLayout() {
@@ -71,8 +74,24 @@ public class NewFramerInvite extends BaseActivity implements
             }
         });
 
+        getUser();
+
 
     }
+
+
+    /**
+     * 获取个人信息
+     */
+    private void getUser() {
+        RequestParams params = new RequestParams();
+        if (isLogin()) {
+            params.put("userId", Store.User.queryMe().userid);
+        }
+        params.put("flags", "address");
+        execApi(ApiType.PERSONAL_CENTER, params);
+    }
+
 
     //获取客户信息
     private void getIsLatest(int count) {
@@ -114,15 +133,15 @@ public class NewFramerInvite extends BaseActivity implements
         tanTransaction.add(R.id.newframentfragment, friendsList);
         tanTransaction.commit();
 
-        RadioButton radioButton = (RadioButton) findViewById(R.id.radio_button3);//客户登记按钮
+        radioButton3 = (RadioButton) findViewById(R.id.radio_button3);//客户登记按钮
         if (isXXNRAgent) {
             //如果是新农经纪人
-            radioButton.setVisibility(View.VISIBLE);
+            radioButton3.setVisibility(View.VISIBLE);
         } else {
-            radioButton.setVisibility(View.GONE);
+            radioButton3.setVisibility(View.GONE);
         }
         // 设置默认选中
-        RadioGroup radioGroup = (RadioGroup) findViewById(R.id.radioGroup_invite);
+        radioGroup = (RadioGroup) findViewById(R.id.radioGroup_invite);
         radioGroup.setOnCheckedChangeListener(this);
         radioGroup.check(R.id.radio_button1);
         setViewClick(R.id.customer_reg_bg_button);
@@ -151,6 +170,25 @@ public class NewFramerInvite extends BaseActivity implements
                     potentialCount = 0;
                 }
             }
+        } else if (req.getApi() == ApiType.PERSONAL_CENTER) {
+
+            PersonalData data = (PersonalData) req.getData();
+            PersonalData.Data user = data.datas;
+            if (user != null) {
+                isXXNRAgent = user.isXXNRAgent;
+            }
+
+            if (isXXNRAgent) {
+                //如果是新农经纪人
+                radioButton3.setVisibility(View.VISIBLE);
+            } else {
+                radioButton3.setVisibility(View.GONE);
+                if (radioButton3.isChecked()){
+                    radioGroup.check(R.id.radio_button1);
+                }
+
+            }
+
         }
     }
 

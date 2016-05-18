@@ -1,8 +1,12 @@
 package com.ksfc.newfarmer.protocol;
 
 import android.text.TextUtils;
-import net.yangentao.util.XLog;
+import android.widget.Toast;
+
+import com.ksfc.newfarmer.utils.RndLog;
+
 import net.yangentao.util.app.App;
+
 
 /**
  * 网络请求对象
@@ -15,6 +19,8 @@ public class Request {
 	public final static String HTTP_ERROR = "http_error";
 	public final static String NO_NETWORK_ERROR = "no_network";
 	public final static String PARSE_DATA_FAILED = "parse_data_failed";
+
+	public final static String TAG="Request";
 
 	private String errorMsg;
 	private ApiType api;
@@ -41,7 +47,7 @@ public class Request {
 	 * 对数据做处理,得到想要的信息
 	 */
 	private void dealData() {
-		XLog.d("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" + data.getStatus());
+		RndLog.d(TAG,"$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" + data.getStatus());
 		if ("1000".equals(data.getStatus())) {
 			errorMsg = "";
 		} else if (HTTP_ERROR.equals(data.getStatus())) {
@@ -69,9 +75,9 @@ public class Request {
 		if (!TextUtils.isEmpty(errorMsg)) {
 			if (errorMsg.equals("解析数据失败") /* || errorMsg.equals("未查询到数据") */
 					|| errorMsg.equals("连接服务器失败")) {
-
 			} else {
-				App.getApp().showToast(errorMsg);
+				Toast.makeText(App.getApp(), errorMsg, Toast.LENGTH_SHORT)
+						.show();
 			}
 		}
 	}
@@ -90,7 +96,6 @@ public class Request {
 
 	/**
 	 * 设置请求参数
-	 * 
 	 */
 	public void setParams(RequestParams params) {
 		this.params = params;
@@ -118,19 +123,18 @@ public class Request {
 	}
 
 	/**
-	 * 调用接口,扩充接口在{@link ApiType}枚举中添加实例
+	 * 调用接口,扩充接口在{ApiType}枚举中添加实例
 	 * 
-	 *  api
-	 *            接口类型
-	 *  params
-	 *            请求参数
+	 * api
+	 *      接口类型
+	 * params
+	 *      请求参数
 	 *  listener
-	 *            回调方法
+	 *     回调方法
 	 */
 	public void executeNetworkApi(final OnApiDataReceivedCallback Callback) {
 
 		this.callback = Callback;
-
 		if (api == null || params == null) {
 			errorMsg = "参数为空";
 			// 防止在处理返回数据时发生异常崩溃

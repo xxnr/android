@@ -163,7 +163,9 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
                                 adapter.addAll(rows);
                             }
                         } else {
-                            adapter.addAll(rows);
+                            if (adapter!=null){
+                                adapter.addAll(rows);
+                            }
                         }
                     } else {
                         if (page == 1) {
@@ -212,8 +214,11 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
                     case 3:
                         state = "已发货";
                         break;
+                    case 4:
+                        state = "已完成";
+                        break;
                     default:
-                        state = "未知状态";
+                        state = "";
                 }
                 holder.setText(R.id.consumer_item_payType, state);
 

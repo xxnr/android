@@ -42,8 +42,6 @@ public class CertifiedRSCActivity extends BaseActivity {
     private final int townRequestCode = 2;//乡镇
     private String queueid = "";
     private String buildid = "";
-    private String cityareaid;
-    private String townid;
 
     //以下是_id
     private String cityareaid2;
@@ -260,7 +258,6 @@ public class CertifiedRSCActivity extends BaseActivity {
             switch (requestCode) {
                 case cityRequestCode:
                     city = data.getExtras().getString("city");
-                    cityareaid = data.getExtras().getString("cityareaid");
                     queueid = data.getExtras().getString("queueid");
                     buildid = data.getExtras().getString("buildid");
 
@@ -271,7 +268,6 @@ public class CertifiedRSCActivity extends BaseActivity {
                     choice_city_text.setText(city);
                     choice_town_text.setText("");
 
-                    townid = "";
                     town = "";
 
                     //预加载乡镇
@@ -284,7 +280,6 @@ public class CertifiedRSCActivity extends BaseActivity {
                     break;
                 case townRequestCode:
                     town = data.getExtras().getString("town");
-                    townid = data.getExtras().getString("townid");
                     townid2 = data.getExtras().getString("townid2");
                     choice_town_text.setText(town);
                     break;

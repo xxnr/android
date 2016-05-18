@@ -23,16 +23,16 @@ public class AgreeMentActivity extends BaseActivity {
 
 	}
 
-	private void initView() {
-		WebView web = (WebView) findViewById(R.id.webView);
-		web.loadUrl("file:///android_asset/yonghuxieyi.html");
-
-	}
-
 	@Override
 	public void OnActCreate(Bundle savedInstanceState) {
 		setTitle("用户协议");
 		initView();
+	}
+
+	private void initView() {
+		WebView web = (WebView) findViewById(R.id.webView);
+		web.loadUrl("file:///android_asset/yonghuxieyi.html");
+
 	}
 
 	@Override

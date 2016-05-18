@@ -4,7 +4,6 @@
 package com.ksfc.newfarmer.activitys;
 
 import com.ksfc.newfarmer.BaseActivity;
-import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.protocol.ApiType;
@@ -27,7 +26,6 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import net.yangentao.util.msg.MsgCenter;
 
 /**
  * 项目名称：QianXihe518 类名称：AddAddressActivity 类描述： 创建人：王蕾 创建时间：2015-5-26 上午11:19:21
@@ -67,10 +65,10 @@ public class AddAddressActivity extends BaseActivity {
         setTitle("新增收货地址");
         initView();
 
-        if (getIntent() != null && getIntent().getExtras() != null) {
-            count = getIntent().getExtras().getInt("addressCount");
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            count = bundle.getInt("addressCount");
         }
-
         //如果新加地址是第一个 ，默认选中默认
         if (count == 0) {
             UserInfo userInfo = Store.User.queryMe();
@@ -85,8 +83,8 @@ public class AddAddressActivity extends BaseActivity {
     }
 
     private void initView() {
-        choice_city_text = (TextView) findViewById(R.id.choice_city_text);
-        choice_town_text = (TextView) findViewById(R.id.choice_town_text);
+        choice_city_text = (TextView) findViewById(R.id.choice_city_text);//选择省市县
+        choice_town_text = (TextView) findViewById(R.id.choice_town_text);//选择镇
 
         room_edit = (EditText) findViewById(R.id.choice_detail_room_edit);
         zipCode_text = (EditText) findViewById(R.id.choice_zipCode_edit);
@@ -145,7 +143,7 @@ public class AddAddressActivity extends BaseActivity {
                     showToast("请输入收货人姓名");
                     return;
                 }
-                if (TextUtils.isEmpty(receipt_phone.getText().toString().trim())) {
+                if (StringUtil.empty(receipt_phone.getText().toString().trim())) {
                     showToast("请输入手机号码");
                     return;
                 }
@@ -153,12 +151,11 @@ public class AddAddressActivity extends BaseActivity {
                     showToast("请输入正确的手机号码");
                     return;
                 }
-                if (TextUtils
-                        .isEmpty(choice_city_text.getText().toString().trim())) {
+                if (StringUtil.empty(choice_city_text.getText().toString().trim())) {
                     showToast("请选择城市");
                     return;
                 }
-                if (TextUtils.isEmpty(room_edit.getText().toString().trim())) {
+                if (StringUtil.empty(room_edit.getText().toString().trim())) {
                     showToast("请输入您的详细地址");
                     return;
                 }
@@ -184,7 +181,9 @@ public class AddAddressActivity extends BaseActivity {
                 params.put("cityId", queueid);
                 params.put("countyId", buildid);
                 params.put("townId", townid);
-                params.put("zipCode", zipCode);
+                if (StringUtil.checkStr(zipCode)) {
+                    params.put("zipCode", zipCode);
+                }
                 params.put("address", room);
 
                 if (default_address.isChecked()) {
@@ -210,15 +209,21 @@ public class AddAddressActivity extends BaseActivity {
         if (arg1 == RESULT_OK) {
             switch (arg0) {
                 case cityRequestCode:
-                    city = arg2.getExtras().getString("city");
-                    cityareaid = arg2.getExtras().getString("cityareaid");
-                    queueid = arg2.getExtras().getString("queueid");
-                    buildid = arg2.getExtras().getString("buildid");
-                    choice_city_text.setText(city);
-                    choice_town_text.setText("");
-                    room_edit.setText("");
-                    town = "";
-                    townid = "";
+
+                    Bundle bundle = arg2.getExtras();
+                    if (bundle != null) {
+                        city = bundle.getString("city");//省市县区
+                        cityareaid = bundle.getString("cityareaid");
+                        queueid = bundle.getString("queueid");
+                        buildid = bundle.getString("buildid");
+                        choice_city_text.setText(city);
+                        choice_town_text.setText("");
+                        room_edit.setText("");
+                        town = "";
+                        townid = "";
+                    }
+
+
                     break;
                 case townRequestCode:
                     town = arg2.getExtras().getString("town");
@@ -242,7 +247,6 @@ public class AddAddressActivity extends BaseActivity {
                 if (default_address.isChecked()) {
                     String addr = city + town
                             + room_edit.getEditableText().toString().trim();
-                    MsgCenter.fireNull(MsgID.MSG_ADD_ADDRESS, addr);
                     UserInfo queryMe = Store.User.queryMe();
                     if (queryMe != null) {
                         queryMe.defaultAddress = addr;

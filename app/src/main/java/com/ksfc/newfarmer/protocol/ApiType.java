@@ -465,12 +465,12 @@ public enum ApiType {
 
 
     TEST("", ResponseResult.class);
-                         private static String server_url = "http://api.xinxinnongren.com";
-//    private static String server_url = "http://101.200.194.203";
-//    private static String server_url = "http://192.168.1.15";
+//                         private static String server_url = "http://api.xinxinnongren.com";
+    private static String server_url = "http://101.200.194.203";
+//    private static String server_url = "http://192.168.1.5";
 
 
-    public static final String url = server_url + "/";
+    public static final String url = server_url;
     private String opt;
     private Class<? extends ResponseResult> clazz;
     private RequestMethod requestMethod = RequestMethod.POST;
@@ -519,7 +519,7 @@ public enum ApiType {
     }
 
     public enum RequestMethod {
-        POST("POST"), GET("GET"), FILE("FILE"), POSTJSON("POSTJSON");
+        POST("POST"), GET("GET"), PUT("PUT"), POSTJSON("POSTJSON");
         private String requestMethodName;
 
         RequestMethod(String requestMethodName) {

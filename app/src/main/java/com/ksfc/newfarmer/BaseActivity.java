@@ -41,7 +41,6 @@ import net.yangentao.util.app.App;
 
 public abstract class BaseActivity extends FragmentActivity implements
         OnClickListener, OnApiDataReceivedCallback {
-
     public String TAG = this.getClass().getSimpleName();
 
     private boolean titleLoaded = false; // 标题是否加载成功
@@ -52,43 +51,23 @@ public abstract class BaseActivity extends FragmentActivity implements
     private TextView tvTitleRight;
     private ImageView ivTitleRight;
     private Dialog progressDialog;
+    private CustomToast customToast;//大号对话框
 
     private HashMap<ApiType, Boolean> isReturnData = new HashMap<>();//是否请求超时（返回数据）
-    private CustomToast customToast;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //防止fragment中找不到getActivity Null空指针
-        try {
-            setFullScreen(false);
-            if (savedInstanceState != null) {
-                String FRAGMENTS_TAG = "android:support:fragments";
-                savedInstanceState.remove(FRAGMENTS_TAG);
-            }
-            RndApplication.unDestroyActivityList.add(this);
-            // 屏幕竖屏
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            if (getLayout() != 0) {
-                setContentView(getLayout());
-            }
-            loadTitle();
-            OnActCreate(savedInstanceState);
-        }catch (Exception e){
-            RndApplication.unDestroyActivityList.add(this);
-            // 屏幕竖屏
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            if (getLayout() != 0) {
-                setContentView(getLayout());
-            }
-            loadTitle();
-            OnActCreate(savedInstanceState);
+        RndApplication.unDestroyActivityList.add(this);
+        // 屏幕竖屏
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        if (getLayout() != 0) {
+            setContentView(getLayout());
         }
-
-
+        loadTitle();
+        OnActCreate(savedInstanceState);
     }
-
 
     // -------------------------------------------------------------
     // 重写方法区
@@ -131,8 +110,7 @@ public abstract class BaseActivity extends FragmentActivity implements
         // empty
     }
 
-    // -------------------------------------------------------------
-    // 父类方法区
+    // -----------------------------父类方法区--------------------------------
 
     /**
      * 加载标题
@@ -152,7 +130,6 @@ public abstract class BaseActivity extends FragmentActivity implements
 
     }
 
-
     /**
      * 判断当前用户是否登录
      *
@@ -166,7 +143,7 @@ public abstract class BaseActivity extends FragmentActivity implements
 
     @Override
     public final void onClick(View v) {
-        if (Utils.isFastClick()) {
+        if (Utils.isFastClick()) {//防止连续点击
             return;
         }
         switch (v.getId()) {
@@ -183,8 +160,7 @@ public abstract class BaseActivity extends FragmentActivity implements
     @Override
     public final void onResponse(Request req) {
         if (!isReturnData.get(req.getApi())) {
-            //token异常登出
-            if (req.getData().getStatus().equals("1401")) {
+            if (req.getData().getStatus().equals("1401")) { //token异常登出
                 req.showErrorMsg();
                 tokenToLogin();
             } else {
@@ -194,25 +170,24 @@ public abstract class BaseActivity extends FragmentActivity implements
                 } else {
                     disMissDialog();
                     //这些Api不返回前台用户error msg
-
                     if (!(req.getApi() == ApiType.GET_MIN_PAY_PRICE
                             || req.getApi() == ApiType.SAVE_CONSIGNEE_INFO
                             || req.getApi() == ApiType.SURE_GET_GOODS
                     )) {
                         if (req.getApi() == ApiType.RSC_ORDER_SELF_DELIVERY && req.getData().getStatus().equals("1429")) {
                             App.getApp().showToast("您输入错误次数较多，请1分钟后再操作");
+                        } else if (req.getData().getStatus().equals("1403")) {
+                            RndLog.d("BaseActivity：", req.getData().getMessage());
                         } else {
                             req.showErrorMsg();
                         }
                     }
-
-
                 }
             }
         } else {
             //请求时间过长提示
             if (!getClass().getName().equals(
-                    "com.ksfc.newfarmer.activitys.HomepageActivity")&&!getClass().getName().equals(
+                    "com.ksfc.newfarmer.activitys.HomepageActivity") && !getClass().getName().equals(
                     "com.ksfc.newfarmer.activitys.GoodsListActivity")) {
                 App.getApp().showToast("您的网络不太顺畅，重试或检查下网络吧~");
             }
@@ -471,21 +446,6 @@ public abstract class BaseActivity extends FragmentActivity implements
         }
     }
 
-    /**
-     * 是否全屏和显示标题，true为全屏和无标题，false为无标题，请在setContentView()方法前调用
-     *
-     * @param fullScreen
-     */
-    public void setFullScreen(boolean fullScreen) {
-        if (fullScreen) {
-            requestWindowFeature(Window.FEATURE_NO_TITLE);
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        } else {
-            requestWindowFeature(Window.FEATURE_NO_TITLE);
-        }
-
-    }
 
     /**
      * 短时间显示Toast

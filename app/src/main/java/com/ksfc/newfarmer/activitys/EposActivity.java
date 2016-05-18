@@ -2,6 +2,7 @@ package com.ksfc.newfarmer.activitys;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.RemoteException;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -44,6 +45,8 @@ public class EposActivity extends BaseActivity {
 
     private String memo;
 
+    private Handler handler = new Handler();
+
     @Override
     public int getLayout() {
         return R.layout.epos_layout;
@@ -55,12 +58,10 @@ public class EposActivity extends BaseActivity {
         setTitle("全民付EPOS");
         RndApplication.tempDestroyActivityList.add(EposActivity.this);
         initView();
-        try {
-            EposServiceManager.getInstance().bindMpospService(getApplicationContext());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        unBindEPOS();//解决某些情况中途卸载EPOS插件绑定不了
+        bindEPOS();
     }
+
 
     private void initView() {
 
@@ -76,6 +77,7 @@ public class EposActivity extends BaseActivity {
         state_info_ll.setVisibility(View.GONE);
         none_state_info_rel.setVisibility(View.GONE);
         setViewClick(R.id.pay_sure_tv);
+        setViewClick(R.id.view_other_state_ll);
 
         //是否安装插件
         if (!Utils.isPkgInstalled(this, "com.chinaums.mposplugin")) {
@@ -130,6 +132,11 @@ public class EposActivity extends BaseActivity {
                     Utils.addApk(this, "mpospluginphone.apk");
                 }
                 break;
+            case R.id.view_other_state_ll:
+
+                startActivity(EposSlotCardStateActivity.class);
+                break;
+
         }
 
     }
@@ -174,7 +181,7 @@ public class EposActivity extends BaseActivity {
 
     //支付和消费
     public void bookOrderAndPay(String merOrderId, String payPrice) {
-        Bundle args = new Bundle();
+        final Bundle args = new Bundle();
         args.putString("billsMID", billsMID);
         args.putString("billsTID", billsTID);
         args.putString("merOrderDesc", merOrderDesc);
@@ -186,17 +193,25 @@ public class EposActivity extends BaseActivity {
         args.putString("memo", memo);
         try {
             if (EposServiceManager.getInstance().mUmsMposService == null) {
-                EposServiceManager.getInstance().bindMpospService(
-                        getApplicationContext());
+                bindEPOS();   //此次等待一秒后 确保成功后执行
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            EposServiceManager.getInstance().mUmsMposService.pay(args, new PayOrderResultListener());
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, 1000);
                 return;
             }
+
             EposServiceManager.getInstance().mUmsMposService.pay(args, new PayOrderResultListener());
-        } catch (RemoteException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
-    //获取
 
 
     // 定义订单支付回调
@@ -218,13 +233,18 @@ public class EposActivity extends BaseActivity {
                             if (StringUtil.checkStr(orderId)) {
                                 SignOrder(orderId);
                             }
-
                         } else if ("success".equals(payStatus)) {
                             showToast("支付成功");
                             orderSuccess();
                         }
                     } else {
-                        showToast("支付失败");
+                        String resultInfo = result.getString("resultInfo");
+                        if (resultInfo != null && resultInfo.contains("银行卡密码输入错误")) {
+                            showToast(resultInfo);
+                        } else {
+                            showToast("支付失败");
+                        }
+
                     }
                 }
             });
@@ -286,7 +306,8 @@ public class EposActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         //是否安装插件
-        if (Utils.isPkgInstalled(this, "com.chinaums.mposplugin")) {
+        boolean installed = Utils.isPkgInstalled(this, "com.chinaums.mposplugin");
+        if (installed) {
             pay_sure_tv.setText("立即支付");
             install_prompt.setVisibility(View.INVISIBLE);
         } else {
@@ -296,13 +317,26 @@ public class EposActivity extends BaseActivity {
     }
 
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    private void bindEPOS() {
+        try {
+            EposServiceManager.getInstance().bindMpospService(EposActivity.this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void unBindEPOS() {
         try {
             EposServiceManager.getInstance().unbindMposService(getApplicationContext());
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unBindEPOS();
     }
 }

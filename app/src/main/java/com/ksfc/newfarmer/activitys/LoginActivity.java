@@ -40,7 +40,7 @@ public class LoginActivity extends BaseActivity {
     private int id; // 获取页面跳转过来的id,登陆之后跳转回到哪一页面
     private boolean isFromReg = false; // 是否从注册页跳转
     private String reg_phone;// 注册页注册的手机号
-    private boolean isTokenError=false;
+    private boolean isTokenError = false;
 
     @Override
     public int getLayout() {
@@ -84,7 +84,7 @@ public class LoginActivity extends BaseActivity {
                 login_layoutpassword.requestFocus();
             }
         }
-        isTokenError = getIntent().getBooleanExtra("isTokenError",false);
+        isTokenError = getIntent().getBooleanExtra("isTokenError", false);
 
 
         setLeftClickListener(new OnClickListener() {
@@ -175,34 +175,35 @@ public class LoginActivity extends BaseActivity {
             final LoginResult login = (LoginResult) req.getData();
             if ("1000".equals(login.getStatus())) {
 
-                login.datas.token = login.token;
-                Store.User.saveMe(login.datas);
-                saveMe(login.datas);
-                String uid = login.datas.userid;
-                App.getApp().setUid(uid);
+                if (login.datas != null) {
+                    login.datas.token = login.token;
+                    Store.User.saveMe(login.datas);
+                    saveMe(login.datas);
+                    String uid = login.datas.userid;
+                    App.getApp().setUid(uid);
+                    //保存到本地此购物车的Id
+                    SPUtils.put(LoginActivity.this, "shopCartId",
+                            login.datas.cartId);
+                    showToast("登录成功");
+                    //保存到本地此用户的上次登陆的手机号
+                    PreferenceUtil pu = new PreferenceUtil(this, "config");
+                    pu.putString("lastPhoneNumber", login.datas.phone);
 
-                //保存到本地此购物车的Id
-                SPUtils.put(LoginActivity.this, "shopCartId",
-                        login.datas.cartId);
-                showToast("登录成功");
-                //保存到本地此用户的上次登陆的手机号
-                PreferenceUtil pu = new PreferenceUtil(this, "config");
-                pu.putString("lastPhoneNumber", login.datas.phone);
+                    // 发广播 让首页列表再次刷新
+                    MsgCenter.fireNull(MsgID.ISLOGIN);
 
-                // 发广播 让首页列表再次刷新
-                MsgCenter.fireNull(MsgID.ISLOGIN);
+                    //注册推送alias
+                    UmengPush.addAlias(this, login.datas.userid);
 
-                //注册推送alias
-                UmengPush.addAlias(this, login.datas.userid);
+                    // 是否进入完善资料页
+                    if (login.datas.isUserInfoFullFilled) {
+                        turntoMainActivityOrFinish(id);
+                    } else {
+                        Intent intent = new Intent(this, ImprovePersonActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
 
-                // 是否进入完善资料页
-                if (login.datas.isUserInfoFullFilled) {
-                    turntoMainActivityOrFinish(id);
-                    disMissDialog();
-                } else {
-                    Intent intent = new Intent(this, ImprovePersonActivity.class);
-                    startActivity(intent);
-                    finish();
                 }
 
             } else {
@@ -215,10 +216,8 @@ public class LoginActivity extends BaseActivity {
 
     public void turntoMainActivityOrFinish(int id) {
         if (id == 0) {
-            disMissDialog();
             finish();
         } else {
-            disMissDialog();
             Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra("id", id);
             startActivity(intent);

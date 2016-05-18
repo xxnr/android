@@ -93,8 +93,8 @@
                 android:id="@+id/state_info_ll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="visible"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="visible">
 
                 <include layout="@layout/line_lay" />
 
@@ -201,19 +201,18 @@
             </LinearLayout>
 
 
-
             <RelativeLayout
-                android:visibility="visible"
                 android:id="@+id/none_state_info_rel"
                 android:layout_width="match_parent"
                 android:layout_height="153dp"
-                android:background="@color/white">
+                android:background="@color/white"
+                android:visibility="visible">
 
                 <TextView
-                    android:layout_alignParentTop="true"
-                    android:background="@color/gray"
                     android:layout_width="match_parent"
-                    android:layout_height="1px" />
+                    android:layout_height="1px"
+                    android:layout_alignParentTop="true"
+                    android:background="@color/gray" />
 
                 <ImageView
                     android:id="@+id/image"
@@ -238,6 +237,36 @@
 
             </RelativeLayout>
 
+            <include layout="@layout/line_lay" />
+
+            <LinearLayout
+                android:id="@+id/view_other_state_ll"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:background="@drawable/list_bg_selector"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:text="查看其他网点"
+                    android:textColor="@color/main_index_gary" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="16dp"
+                    android:background="@drawable/common_icon_qianjin" />
+
+
+            </LinearLayout>
 
             <include layout="@layout/line_lay" />
 
