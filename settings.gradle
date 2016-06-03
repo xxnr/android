@@ -1,3 +1,2 @@
-include ':app', ':social_sdk_library_project'
-include ':PhotoView'
+include ':app', ':social_sdk_library_project', ':photo_view'
 include ':PullToRefresh'

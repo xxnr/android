@@ -54,7 +54,7 @@
 
         <activity
             android:name=".activitys.SplashActivity"
-            android:label="@string/app_name">
+            android:theme="@style/SplashActivity_theme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -86,6 +86,7 @@
             android:windowSoftInputMode="adjustResize" />
         <!-- 商品详情的大图 -->
         <activity
+            android:theme="@style/BigImage_theme"
             android:name=".activitys.BigImageActivity"
             android:process=":picture" />
         <!-- 用户协议 -->
@@ -230,12 +231,12 @@
             android:windowSoftInputMode="adjustResize" />
 
 
-        <!-- umeng appkey   android:value=""
-        android:value="YOUR_APPKEY"
+        <!-- umeng appkey   android:value="564d588ce0f55a25e9003ec7"
+        android:value=""
         -->
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="564d588ce0f55a25e9003ec7" />
+            android:value="YOUR_APPKEY" />
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="${UMENG_CHANNEL_VALUE}" />

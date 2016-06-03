@@ -137,6 +137,8 @@
     -dontwarn com.squareup.okhttp.**
     -keep class com.squareup.okhttp.** { *;}
     -dontwarn okio.**
+    -dontwarn okhttp3.**
+    -keep class okhttp3.** { *;}
      #picasso
     -dontwarn com.squareup.picasso.**
     -keep class com.squareup.picasso.** { *;}
@@ -160,7 +162,12 @@
     -keep class com.unionpay.** {*;}
     #友盟
     -dontwarn com.umeng.**
-    -keep class com.umeng*.** {*; }
+    -keep class com.umeng.** {*; }
+    #友盟分享用到的网络请求工具
+    -dontwarn  com.squareup.wire.**
+    -keep class  com.squareup.wire.** {*; }
+    -dontwarn  org.android.**
+    -keep class  org.android.** {*; }
     #QQ分享
     -dontwarn com.tencent.**
     -keep class com.tencent.** {*;}
@@ -170,4 +177,5 @@
      #Photo
     -dontwarn uk.co.senab.photoview.**
     -keep class uk.co.senab.photoview.** { *; }
+
 

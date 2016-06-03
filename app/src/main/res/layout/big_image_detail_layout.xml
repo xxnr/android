@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/default_act_bg"
+    style="@style/base_activity"
     android:orientation="vertical">
 
     <com.ksfc.newfarmer.widget.HackyViewPager
@@ -17,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="130dp"
+        android:layout_marginBottom="140dp"
         app:centered="true"
         app:fillColor="@color/qianlv"
         app:pageColor="@color/white"

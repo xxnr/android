@@ -14,7 +14,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -78,12 +78,15 @@ dependencies {
     compile 'com.android.support:support-v4:22.2.0'
     //noinspection GradleDependency
     compile 'com.android.support:design:22.2.0'
-    compile project(':PhotoView')
     compile 'com.google.code.gson:gson:2.5'
-    compile project(':PullToRefresh')
-    compile project(':social_sdk_library_project')
     compile 'com.daimajia.swipelayout:library:1.2.0'
     compile 'com.squareup.okhttp3:okhttp:3.2.0'
     compile 'com.squareup.okio:okio:1.8.0'
     compile 'com.alibaba:fastjson:1.2.11'
+    compile 'com.readystatesoftware.systembartint:systembartint:1.0.3'
+
+    compile project(':PullToRefresh')
+    compile project(':social_sdk_library_project')
+    compile project(':photo_view')
+
 }

@@ -16,11 +16,11 @@
 package uk.co.senab.photoview.gestures;
 
 import android.content.Context;
-import android.util.FloatMath;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.ViewConfiguration;
+
+import uk.co.senab.photoview.log.LogManager;
 
 public class CupcakeGestureDetector implements GestureDetector {
 
@@ -54,8 +54,14 @@ public class CupcakeGestureDetector implements GestureDetector {
         return ev.getY();
     }
 
+    @Override
     public boolean isScaling() {
         return false;
+    }
+
+    @Override
+    public boolean isDragging() {
+        return mIsDragging;
     }
 
     @Override
@@ -66,7 +72,7 @@ public class CupcakeGestureDetector implements GestureDetector {
                 if (null != mVelocityTracker) {
                     mVelocityTracker.addMovement(ev);
                 } else {
-                    Log.i(LOG_TAG, "Velocity tracker is null");
+                    LogManager.getLogger().i(LOG_TAG, "Velocity tracker is null");
                 }
 
                 mLastTouchX = getActiveX(ev);
@@ -83,7 +89,7 @@ public class CupcakeGestureDetector implements GestureDetector {
                 if (!mIsDragging) {
                     // Use Pythagoras to see if drag length is larger than
                     // touch slop
-                    mIsDragging = FloatMath.sqrt((dx * dx) + (dy * dy)) >= mTouchSlop;
+                    mIsDragging = Math.sqrt((dx * dx) + (dy * dy)) >= mTouchSlop;
                 }
 
                 if (mIsDragging) {

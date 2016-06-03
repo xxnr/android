@@ -2,7 +2,6 @@ package com.ksfc.newfarmer.order;
 
 
 import android.os.Handler;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.ksfc.newfarmer.db.Store;

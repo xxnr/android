@@ -123,20 +123,20 @@ public class NewFramerInvite extends BaseActivity implements
         // TODO Auto-generated method stub
 
         customer_bg = ((RelativeLayout) findViewById(R.id.customer_reg_bg));
-        customer_bg.setOnClickListener(this);
 
         friendsList = new InviteFriendsList();
         myInviter = new MyInviter();
         potentialCustomer = new PotentialCustomer();
+
         fragmentManager = getSupportFragmentManager();
         FragmentTransaction tanTransaction = fragmentManager.beginTransaction();
         tanTransaction.add(R.id.newframentfragment, friendsList);
         tanTransaction.commit();
 
         radioButton3 = (RadioButton) findViewById(R.id.radio_button3);//客户登记按钮
+
         if (isXXNRAgent) {
-            //如果是新农经纪人
-            radioButton3.setVisibility(View.VISIBLE);
+            radioButton3.setVisibility(View.VISIBLE); //如果是新农经纪人
         } else {
             radioButton3.setVisibility(View.GONE);
         }

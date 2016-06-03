@@ -1,8 +1,6 @@
 package com.ksfc.newfarmer;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,6 +11,7 @@ import com.ksfc.newfarmer.protocol.OnApiDataReceivedCallback;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
 import com.ksfc.newfarmer.protocol.beans.LoginResult.UserInfo;
+import com.ksfc.newfarmer.utils.FilterClassUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.utils.thrid.UmengPush;
 import com.ksfc.newfarmer.utils.Utils;
@@ -20,6 +19,7 @@ import com.ksfc.newfarmer.widget.dialog.CustomProgressDialog;
 import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.SPUtils;
 import com.ksfc.newfarmer.widget.dialog.CustomToast;
+import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.umeng.analytics.MobclickAgent;
 
 import android.annotation.SuppressLint;
@@ -27,12 +27,12 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -62,10 +62,27 @@ public abstract class BaseActivity extends FragmentActivity implements
         RndApplication.unDestroyActivityList.add(this);
         // 屏幕竖屏
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        //透明状态栏
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
         if (getLayout() != 0) {
             setContentView(getLayout());
         }
         loadTitle();
+        //设置状态栏颜色状态栏
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            //过滤掉四个tab的Activity
+            if (!FilterClassUtils.getunSetStatusBarClasses().contains(getClass().getSimpleName())) {
+                SystemBarTintManager tintManager = new SystemBarTintManager(this);
+                tintManager.setStatusBarTintEnabled(true);
+                if (titleLoaded) {
+                    tintManager.setTintColor(getResources().getColor(R.color.green));
+                } else {
+                    tintManager.setTintColor(getResources().getColor(R.color.black));
+                }
+            }
+        }
         OnActCreate(savedInstanceState);
     }
 
@@ -148,8 +165,7 @@ public abstract class BaseActivity extends FragmentActivity implements
         }
         switch (v.getId()) {
             case R.id.ll_title_left_view:
-                // 左上角返回按钮
-                finish();
+                finish();  // 左上角返回按钮
                 break;
             default:
                 break;
@@ -160,35 +176,30 @@ public abstract class BaseActivity extends FragmentActivity implements
     @Override
     public final void onResponse(Request req) {
         if (!isReturnData.get(req.getApi())) {
-            if (req.getData().getStatus().equals("1401")) { //token异常登出
-                req.showErrorMsg();
-                tokenToLogin();
-            } else {
-                if (req.isSuccess()) {
-                    disMissDialog();
+            disMissDialog();
+            if (req.getData() != null) {
+                if (req.getData().getStatus().equals("1401")) { //token异常登出
+                    req.showErrorMsg();
+                    tokenToLogin();
+                } else if (req.isSuccess()) {
                     onResponsed(req);
                 } else {
-                    disMissDialog();
                     //这些Api不返回前台用户error msg
-                    if (!(req.getApi() == ApiType.GET_MIN_PAY_PRICE
-                            || req.getApi() == ApiType.SAVE_CONSIGNEE_INFO
-                            || req.getApi() == ApiType.SURE_GET_GOODS
-                    )) {
+                    if (!FilterClassUtils.getUnToastApis().contains(req.getApi())) {
                         if (req.getApi() == ApiType.RSC_ORDER_SELF_DELIVERY && req.getData().getStatus().equals("1429")) {
                             App.getApp().showToast("您输入错误次数较多，请1分钟后再操作");
                         } else if (req.getData().getStatus().equals("1403")) {
-                            RndLog.d("BaseActivity：", req.getData().getMessage());
+                            RndLog.d(TAG, req.getData().getMessage());
                         } else {
                             req.showErrorMsg();
                         }
                     }
                 }
             }
+
         } else {
             //请求时间过长提示
-            if (!getClass().getName().equals(
-                    "com.ksfc.newfarmer.activitys.HomepageActivity") && !getClass().getName().equals(
-                    "com.ksfc.newfarmer.activitys.GoodsListActivity")) {
+            if (!FilterClassUtils.getTimeOutUnToastClasses().contains(getClass().getSimpleName())) {
                 App.getApp().showToast("您的网络不太顺畅，重试或检查下网络吧~");
             }
             onResponsedError(req);
@@ -493,14 +504,12 @@ public abstract class BaseActivity extends FragmentActivity implements
 
     //退出登录时调用
     public void exitLogin() {
-
         UserInfo userInfo = Store.User.queryMe();
         if (userInfo != null) {
             //解除推送alias
             UmengPush.removeAlias(this, userInfo.userid);
             App.getApp().setUid("");
         }
-
         Store.User.removeMe();
         SPUtils.clear(getApplicationContext());
     }

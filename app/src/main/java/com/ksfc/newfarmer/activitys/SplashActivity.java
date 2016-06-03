@@ -23,18 +23,10 @@ public class SplashActivity extends Activity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 1:
-
                     IntentUtil.activityForward(SplashActivity.this, GuideActivity.class, null, true);
                     break;
                 case 2:
                     IntentUtil.activityForward(SplashActivity.this, MainActivity.class, null, true);
-                    break;
-                case 3://新版本的第一次登陆
-                    if (Store.User.queryMe() != null) {
-                        Store.User.removeMe();
-                        SPUtils.clear(getApplicationContext());
-                        IntentUtil.activityForward(SplashActivity.this, MainActivity.class, null, true);
-                    }
                     break;
             }
         }
@@ -48,20 +40,14 @@ public class SplashActivity extends Activity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_welcome);
         PreferenceUtil pu = new PreferenceUtil(this, "config");
-        boolean isFirst = pu.getBool("first", true);
-        boolean isFirst1 = pu.getBool("first1", true);//判断用户是否第一次登陆
+        boolean isFirst = pu.getBool("first", true); //判断用户是否是第一次打开app
         // 判断是否第一次启动
         if (isFirst) {
             handler.sendEmptyMessageDelayed(1, 3000);
         } else {
-            if (isFirst1) {//如果是第一次启动新版本
-                handler.sendEmptyMessageDelayed(3, 3000);
-            } else {
-                handler.sendEmptyMessageDelayed(2, 3000);
-            }
+            handler.sendEmptyMessageDelayed(2, 3000);
         }
         pu.putBool("first", false);
-        pu.putBool("first1", false);
 
     }
 

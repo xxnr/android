@@ -32,11 +32,11 @@ public class PullToRefreshUtils {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (View.isRefreshing()) {
+                if (View != null && View.isRefreshing()) {
                     View.onRefreshComplete();
                 }
             }
-        }, 12 * 1000);
+        }, 10 * 1000);
     }
 
 }

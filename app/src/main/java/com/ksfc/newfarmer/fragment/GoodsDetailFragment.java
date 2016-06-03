@@ -3,12 +3,11 @@ package com.ksfc.newfarmer.fragment;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
@@ -29,9 +28,10 @@ import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.CirclePageIndicator;
 import com.ksfc.newfarmer.widget.VerticalScrollView;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.squareup.picasso.Picasso;
 
-import net.yangentao.util.app.App;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -54,27 +54,9 @@ public class GoodsDetailFragment extends BaseFragment implements ViewPager.OnPag
         Bundle bundle = getArguments();
         detail = (GetGoodsDetail.GoodsDetail) bundle.getSerializable("detail");
         int position = bundle.getInt("position", 0);//当前Viewpager的index
-        int count = bundle.getInt("count", 1);//Viewpager的item 用于控制是否需要监听滑到底部
         if (position == 0) {
             View view = inflater.inflate(R.layout.goods_detail_top_layout, null);
-            if (count == 2) {//监听scrollView是否滑动到底部
-                scrollView = (VerticalScrollView) view.findViewById(R.id.scrollView_goods_detail);
-                scrollView.setOnScrollToBottomLintener(new VerticalScrollView.OnScrollToBottomListener() {
-                    @Override
-                    public void onScrollBottomListener(boolean isBottom) {
-                        if (isBottom) {
-                            scrollView.setOnTouchListener(new View.OnTouchListener() {
-                                @Override
-                                public boolean onTouch(View arg0, MotionEvent arg1) {
-                                    return arg1.getAction() == MotionEvent.ACTION_UP;
-                                }
-                            });
-                        }
-                    }
-                });
-            }
             ViewPager viewPager = (ViewPager) view.findViewById(R.id.goods_detail_top_viewpager);
-
             View goods_detail_top_viewpager_rel = view.findViewById(R.id.goods_detail_top_viewpager_rel);
             ScreenUtil.setHeight(activity,goods_detail_top_viewpager_rel,360);
 
@@ -302,10 +284,11 @@ public class GoodsDetailFragment extends BaseFragment implements ViewPager.OnPag
         public Object instantiateItem(ViewGroup container, final int position) {
 
             View view = inflater.inflate(R.layout.pic_layout, null);
-            ImageView imageView = (ImageView) view.findViewById(R.id.imageView);
+            final ImageView imageView = (ImageView) view.findViewById(R.id.imageView);
             if (StringUtil.checkStr(pictures.get(position).imgUrl)) {
                 ImageLoader.getInstance().displayImage(MsgID.IP + pictures.get(position).imgUrl, imageView);
             }
+
             container.addView(view);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -314,6 +297,11 @@ public class GoodsDetailFragment extends BaseFragment implements ViewPager.OnPag
                     intent.putExtra("detail", detail);
                     intent.putExtra("position", position);
                     activity.startActivity(intent);
+                    int version = Integer.valueOf(android.os.Build.VERSION.SDK);
+                    if (version > 5) {
+                        activity.overridePendingTransition(R.anim.zoom_enter, R.anim.animation_none);
+                    }
+
                 }
             });
             return view;

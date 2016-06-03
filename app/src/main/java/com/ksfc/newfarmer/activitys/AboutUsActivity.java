@@ -1,5 +1,6 @@
 package com.ksfc.newfarmer.activitys;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -9,6 +10,7 @@ import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.StringUtil;
+import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 /**
  * Created by HePeng on 2015/12/29.
@@ -22,7 +24,7 @@ public class AboutUsActivity extends BaseActivity {
     @Override
     public void OnActCreate(Bundle savedInstanceState) {
         setTitle("关于我们");
-        findViewById(R.id.titleview).setBackgroundColor(getResources().getColor(R.color.half_green));//设置title背景
+
         //设置版本
         TextView version = (TextView) findViewById(R.id.about_us_version);
         Bundle bundle = getIntent().getExtras();
@@ -34,6 +36,8 @@ public class AboutUsActivity extends BaseActivity {
             RndLog.d(TAG, versionName);
             version.setText("V" + versionName);
         }
+
+
 
     }
 

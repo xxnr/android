@@ -25,7 +25,6 @@ import com.umeng.socialize.utils.Log;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
-import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.os.Environment;
 import android.widget.Toast;
@@ -56,7 +55,7 @@ public class RndApplication extends Application {
         instance = this;
         App.setApp(this);
         //是否显示log
-        RndLog.DEBUG_MODE = false;
+        RndLog.DEBUG_MODE = true;
         //初始化图片加载器
         initImageLoader(this, null);
         //初始化数据库管理器

@@ -40,12 +40,13 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.umeng.common.message.Log;
+import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.umeng.update.UmengUpdateAgent;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.Gravity;
@@ -93,6 +94,7 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
         showProgressDialog();
         getClassId();
         getBanner();
+
     }
 
     private void getBanner() {

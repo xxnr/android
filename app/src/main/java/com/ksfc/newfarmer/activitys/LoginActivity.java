@@ -34,10 +34,9 @@ import net.yangentao.util.msg.MsgCenter;
  * 项目名称：newFarmer 类名称：LoginActivity 类描述： 创建人：王蕾 创建时间：2015-5-28 上午11:05:33 修改备注：
  */
 public class LoginActivity extends BaseActivity {
-    private ClearEditText login_layout_phone, login_layoutpassword;
+    private ClearEditText login_layout_phone, login_layout_password;
     private String phoneNumber;
     private String phonePassword;
-    private int id; // 获取页面跳转过来的id,登陆之后跳转回到哪一页面
     private boolean isFromReg = false; // 是否从注册页跳转
     private String reg_phone;// 注册页注册的手机号
     private boolean isTokenError = false;
@@ -49,7 +48,6 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     public void OnActCreate(Bundle savedInstanceState) {
-        id = getIntent().getIntExtra("id", 1);
         //接收注册的号码
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
@@ -64,16 +62,17 @@ public class LoginActivity extends BaseActivity {
     public void initView() {
 
         login_layout_phone = (ClearEditText) findViewById(R.id.login_layout_phone);
-        login_layoutpassword = (ClearEditText) findViewById(R.id.login_layoutpassword);
+        login_layout_password = (ClearEditText) findViewById(R.id.login_layoutpassword);
         setViewClick(R.id.login_layout_complete);
         setViewClick(R.id.login_layoutforgetpassword);
         setViewClick(R.id.login_layoutReg);
         setTitle("登录");
+
         //注册完，登陆默认填入
         if (isFromReg && StringUtil.checkStr(reg_phone)) {
             login_layout_phone.setText(reg_phone);
             login_layout_phone.clearFocus();
-            login_layoutpassword.requestFocus();
+            login_layout_password.requestFocus();
         } else {
             //获取上次保存再本地的手机号
             PreferenceUtil pu = new PreferenceUtil(this, "config");
@@ -81,11 +80,10 @@ public class LoginActivity extends BaseActivity {
             if (StringUtil.checkStr(lastPhoneNumber)) {
                 login_layout_phone.setText(lastPhoneNumber);
                 login_layout_phone.clearFocus();
-                login_layoutpassword.requestFocus();
+                login_layout_password.requestFocus();
             }
         }
         isTokenError = getIntent().getBooleanExtra("isTokenError", false);
-
 
         setLeftClickListener(new OnClickListener() {
 
@@ -93,9 +91,9 @@ public class LoginActivity extends BaseActivity {
             public void onClick(View v) {
                 if (isTokenError) {
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    MsgCenter.fireNull(MsgID.MainActivity_select_tab, 4);
                     intent.putExtra("id", 4);
                     startActivity(intent);
+                    MsgCenter.fireNull(MsgID.MainActivity_select_tab, 4);
                 }
                 finish();
             }
@@ -109,9 +107,9 @@ public class LoginActivity extends BaseActivity {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
             if (isTokenError) {
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                MsgCenter.fireNull(MsgID.MainActivity_select_tab, 4);
                 intent.putExtra("id", 4);
                 startActivity(intent);
+                MsgCenter.fireNull(MsgID.MainActivity_select_tab, 4);
             }
             finish();
             return true;
@@ -121,10 +119,11 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     public void OnViewClick(View v) {
-        phoneNumber = login_layout_phone.getText().toString();
-        phonePassword = login_layoutpassword.getText().toString();
+
         switch (v.getId()) {
             case R.id.login_layout_complete:
+                phoneNumber = login_layout_phone.getText().toString();
+                phonePassword = login_layout_password.getText().toString();
                 if (TextUtils.isEmpty(phoneNumber)) {
                     showToast("请输入您的手机号码");
                     return;
@@ -133,7 +132,6 @@ public class LoginActivity extends BaseActivity {
                     showToast("您输入的手机号码格式不正确");
                     return;
                 }
-
                 if (TextUtils.isEmpty(phonePassword)) {
                     showToast("请输入密码");
                     return;
@@ -171,58 +169,35 @@ public class LoginActivity extends BaseActivity {
                 e.printStackTrace();
             }
         } else if (req.getApi() == ApiType.LOGIN) {
-            disMissDialog();
             final LoginResult login = (LoginResult) req.getData();
-            if ("1000".equals(login.getStatus())) {
-
-                if (login.datas != null) {
-                    login.datas.token = login.token;
-                    Store.User.saveMe(login.datas);
-                    saveMe(login.datas);
-                    String uid = login.datas.userid;
-                    App.getApp().setUid(uid);
-                    //保存到本地此购物车的Id
-                    SPUtils.put(LoginActivity.this, "shopCartId",
-                            login.datas.cartId);
-                    showToast("登录成功");
-                    //保存到本地此用户的上次登陆的手机号
-                    PreferenceUtil pu = new PreferenceUtil(this, "config");
-                    pu.putString("lastPhoneNumber", login.datas.phone);
-
-                    // 发广播 让首页列表再次刷新
-                    MsgCenter.fireNull(MsgID.ISLOGIN);
-
-                    //注册推送alias
-                    UmengPush.addAlias(this, login.datas.userid);
-
-                    // 是否进入完善资料页
-                    if (login.datas.isUserInfoFullFilled) {
-                        turntoMainActivityOrFinish(id);
-                    } else {
-                        Intent intent = new Intent(this, ImprovePersonActivity.class);
-                        startActivity(intent);
-                        finish();
-                    }
-
+            if (login.datas != null) {
+                login.datas.token = login.token;
+                Store.User.saveMe(login.datas);
+                saveMe(login.datas);
+                String uid = login.datas.userid;
+                App.getApp().setUid(uid);
+                //保存到本地此购物车的Id
+                SPUtils.put(LoginActivity.this, "shopCartId",
+                        login.datas.cartId);
+                //保存到本地此用户的上次登陆的手机号
+                PreferenceUtil pu = new PreferenceUtil(this, "config");
+                pu.putString("lastPhoneNumber", login.datas.phone);
+                // 发广播 让我的新农人列表再次刷新
+                MsgCenter.fireNull(MsgID.ISLOGIN);
+                //注册推送alias
+                UmengPush.addAlias(this, login.datas.userid);
+                // 是否进入完善资料页
+                if (!login.datas.isUserInfoFullFilled) {
+                    Intent intent = new Intent(this, ImprovePersonActivity.class);
+                    startActivity(intent);
                 }
+                showToast("登录成功");
+                finish();
 
-            } else {
-                showToast(login.getMessage());
             }
+
         }
 
-    }
-
-
-    public void turntoMainActivityOrFinish(int id) {
-        if (id == 0) {
-            finish();
-        } else {
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra("id", id);
-            startActivity(intent);
-            finish();
-        }
     }
 
 

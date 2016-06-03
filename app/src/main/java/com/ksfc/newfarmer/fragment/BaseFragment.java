@@ -6,6 +6,7 @@ package com.ksfc.newfarmer.fragment;
 import java.util.HashMap;
 
 import com.ksfc.newfarmer.BaseActivity;
+import com.ksfc.newfarmer.utils.FilterClassUtils;
 import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.thrid.UmengPush;
 import com.ksfc.newfarmer.activitys.LoginActivity;
@@ -105,19 +106,16 @@ public abstract class BaseFragment extends Fragment implements
             if (req.getData().getStatus().equals("1401")) {
                 req.showErrorMsg();
                 tokenToLogin();
+            } else if (req.isSuccess()) {
+                onResponsed(req);
             } else {
-                if (req.isSuccess()) {
-                    onResponsed(req);
-                } else {
-                    if (!(req.getApi() == ApiType.SURE_GET_GOODS
-                    )) {
-                        if (req.getApi() == ApiType.RSC_ORDER_SELF_DELIVERY && req.getData().getStatus().equals("1429")) {
-                            App.getApp().showToast("您输入错误次数较多，请1分钟后再操作");
-                        } else if (req.getData().getStatus().equals("1403")) {
-                            RndLog.d("BaseFragment：", req.getData().getMessage());
-                        } else {
-                            req.showErrorMsg();
-                        }
+                if (!FilterClassUtils.getUnToastApis().contains(req.getApi())) {
+                    if (req.getApi() == ApiType.RSC_ORDER_SELF_DELIVERY && req.getData().getStatus().equals("1429")) {
+                        App.getApp().showToast("您输入错误次数较多，请1分钟后再操作");
+                    } else if (req.getData().getStatus().equals("1403")) {
+                        RndLog.d("onResponse", req.getData().getMessage());
+                    } else {
+                        req.showErrorMsg();
                     }
                 }
             }

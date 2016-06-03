@@ -10,11 +10,9 @@ import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.squareup.picasso.Picasso;
 
-
-import net.yangentao.util.app.App;
-
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
+
 
 /**
  * Created by HePeng on 2016/1/8.
@@ -24,19 +22,33 @@ public class BigImageFragment extends BaseFragment {
     @Override
     public View InItView() {
         View view = inflater.inflate(R.layout.pic_layout_scale, null);
-        PhotoView photoView = (PhotoView) view.findViewById(R.id.photoView);
+        final PhotoView photoView = (PhotoView) view.findViewById(R.id.photoView);
+
         Bundle bundle = getArguments();
-        String picture = bundle.getString("picture");
-        //可以自由放大缩小图片的控键
-        if (StringUtil.checkStr(picture)) {
-            Picasso.with(activity).load(MsgID.IP + picture).config(Bitmap.Config.RGB_565).error(R.drawable.error).skipMemoryCache().placeholder(R.drawable.zhanweitu).into(photoView);
+        final String originalUrl = bundle.getString("originalUrl");
+        //先加载缓存里的图片
+        if (StringUtil.checkStr(originalUrl)) {
+            Picasso.with(activity).load(MsgID.IP + originalUrl)
+                    .config(Bitmap.Config.RGB_565).into(photoView);
         }
         photoView.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
             @Override
             public void onPhotoTap(View view, float x, float y) {
+
                 activity.finish();
+                int version = Integer.valueOf(android.os.Build.VERSION.SDK);
+                if (version > 5) {
+                    activity.overridePendingTransition(R.anim.animation_none, R.anim.zoom_exit);
+                }
+            }
+
+            @Override
+            public void onOutsidePhotoTap() {
+
             }
         });
+
+
         return view;
     }
 

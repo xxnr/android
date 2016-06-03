@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.ksfc.newfarmer.BaseActivity;
-import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.adapter.CommonAdapter;
 import com.ksfc.newfarmer.adapter.CommonViewHolder;
@@ -32,7 +31,6 @@ import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
-import net.yangentao.util.msg.MsgCenter;
 
 /**
  * 地址管理页

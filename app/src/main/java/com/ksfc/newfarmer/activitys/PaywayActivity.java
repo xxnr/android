@@ -13,13 +13,11 @@ import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
 import com.ksfc.newfarmer.protocol.beans.MyOrderDetailResult;
 import com.ksfc.newfarmer.utils.RndLog;
-import com.ksfc.newfarmer.utils.Utils;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.View;
 
 import net.yangentao.util.app.App;

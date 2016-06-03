@@ -5,32 +5,35 @@ package com.ksfc.newfarmer.widget;
  */
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ScrollView;
 
 public class VerticalScrollView extends ScrollView {
-    private OnScrollToBottomListener onScrollToBottom;
+
+    private int mLastY = 0;
 
     public VerticalScrollView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
     }
 
+
     @Override
-    protected void onOverScrolled(int scrollX, int scrollY, boolean clampedX,
-                                  boolean clampedY) {
-        super.onOverScrolled(scrollX, scrollY, clampedX, clampedY);
-        if(scrollY != 0 && null != onScrollToBottom){
-            onScrollToBottom.onScrollBottomListener(clampedY);
+    public boolean onTouchEvent(MotionEvent ev) {
+        int y = (int) ev.getY();
+        View childView = getChildAt(0);
+        switch (ev.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                mLastY = y;
+                break;
+            case MotionEvent.ACTION_MOVE:
+                if (mLastY-y> 0&&childView != null && childView.getMeasuredHeight() <= getScrollY() + getHeight()) {
+                    return false;
+                }
+                break;
         }
-    }
-
-    public void setOnScrollToBottomLintener(OnScrollToBottomListener listener){
-        onScrollToBottom = listener;
-    }
-
-
-    public interface OnScrollToBottomListener{
-        public void onScrollBottomListener(boolean isBottom);
+        return super.onTouchEvent(ev);
     }
 
 

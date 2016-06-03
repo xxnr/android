@@ -1,6 +1,5 @@
 package com.ksfc.newfarmer.fragment;
 
-import com.google.gson.Gson;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.protocol.ApiType;
@@ -10,16 +9,10 @@ import com.ksfc.newfarmer.protocol.ResponseResult;
 import com.ksfc.newfarmer.protocol.beans.LoginResult;
 import com.ksfc.newfarmer.protocol.beans.MyInviterResult;
 import com.ksfc.newfarmer.protocol.beans.NominatedInviterResult;
-import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.utils.Utils;
 import com.ksfc.newfarmer.widget.dialog.CustomDialog;
 import com.ksfc.newfarmer.widget.dialog.CustomDialogForInviter;
-import com.lidroid.xutils.HttpUtils;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
 
 import android.content.DialogInterface;
 import android.text.TextUtils;
@@ -30,7 +23,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import net.yangentao.util.app.App;
+
 
 
 public class MyInviter extends BaseFragment {
@@ -164,9 +157,9 @@ public class MyInviter extends BaseFragment {
                         phoneNum_tv.setText("电话号码：" + phoneNum);
                         //用户类型
                         my_inviter_userType.setText("用户类型：" + data.datas.inviterUserTypeInName);
-                        if (data.datas.inviterIsVerified){
+                        if (data.datas.inviterIsVerified) {
                             my_inviter_userType_icon.setVisibility(View.VISIBLE);
-                        }else {
+                        } else {
                             my_inviter_userType_icon.setVisibility(View.GONE);
                         }
 
@@ -255,6 +248,38 @@ public class MyInviter extends BaseFragment {
             } else {
                 showToast("该手机号未注册，请确认后重新输入");
             }
+        } else if (req.getApi() == ApiType.GET_RECOMMEND_INVITER) {
+            NominatedInviterResult reqData = (NominatedInviterResult) req.getData();
+            final NominatedInviterResult.Datas datas = reqData.nominated_inviter;
+            if (datas != null) {
+                if (StringUtil.checkStr(datas.phone) && StringUtil.checkStr(datas.name)) {
+                    CustomDialogForInviter.Builder builder = new CustomDialogForInviter.Builder(activity);  //先得到构造器
+                    builder.setTitle("是否要添加该用户为您的代表？"); //设置标题
+                    builder.setMessage(datas.name); //设置内容
+                    builder.setMessage2(datas.phone);
+                    builder.setPositiveButton("是的", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            RequestParams params = new RequestParams();
+                            LoginResult.UserInfo userInfo = Store.User.queryMe();
+                            if (userInfo != null) {
+                                String uid = userInfo.userid;
+                                params.put("userId", uid);
+                            }
+                            params.put("inviter", datas.phone);
+                            execApi(ApiType.GET_BINDINVITER, params);
+                            dialog.dismiss();
+                        }
+                    });
+                    builder.setNegativeButton("不是", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    builder.create().show();
+                }
+            }
         }
     }
 
@@ -262,58 +287,9 @@ public class MyInviter extends BaseFragment {
      * 获取推荐代表
      */
     public void getRecommend() {
-        HttpUtils http = new HttpUtils();
-        com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
-        params.addQueryStringParameter("token", Store.User.queryMe().token);
-        http.send(HttpRequest.HttpMethod.GET, ApiType.GET_RECOMMEND_INVITER.getOpt(), params, new RequestCallBack<String>() {
-            @Override
-            public void onSuccess(ResponseInfo<String> responseInfo) {
-
-                RndLog.v("MyInviter", responseInfo.result);
-                NominatedInviterResult result = null;
-                Gson gson = new Gson();
-                result = gson.fromJson(responseInfo.result, NominatedInviterResult.class);
-                if (result != null && result.getStatus().equals("1000")) {
-                    final NominatedInviterResult.Datas datas = result.nominated_inviter;
-                    if (datas != null) {
-                        if (StringUtil.checkStr(datas.phone) && StringUtil.checkStr(datas.name)) {
-                            CustomDialogForInviter.Builder builder = new CustomDialogForInviter.Builder(activity);  //先得到构造器
-                            builder.setTitle("是否要添加该用户为您的代表？"); //设置标题
-                            builder.setMessage(datas.name); //设置内容
-                            builder.setMessage2(datas.phone);
-                            builder.setPositiveButton("是的", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    RequestParams params = new RequestParams();
-                                    LoginResult.UserInfo userInfo = Store.User.queryMe();
-                                    if (userInfo != null) {
-                                        String uid = userInfo.userid;
-                                        params.put("userId", uid);
-                                    }
-                                    params.put("inviter", datas.phone);
-                                    execApi(ApiType.GET_BINDINVITER, params);
-                                    dialog.dismiss();
-                                }
-                            });
-                            builder.setNegativeButton("不是", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            });
-                            builder.create().show();
-                        }
-                    }
-                }
-
-            }
-
-            @Override
-            public void onFailure(HttpException e, String s) {
-                RndLog.v("MyInviter", "获取推荐代表失败");
-            }
-        });
-
+        RequestParams params1 = new RequestParams();
+        params1.put("token", Store.User.queryMe().token);
+        execApi(ApiType.GET_RECOMMEND_INVITER.setMethod(ApiType.RequestMethod.GET), params1);
     }
 
 }

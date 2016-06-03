@@ -1,6 +1,5 @@
 package com.ksfc.newfarmer.activitys;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
@@ -12,6 +11,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -29,12 +29,12 @@ import com.ksfc.newfarmer.utils.ExpandViewTouch;
 import com.ksfc.newfarmer.utils.PullToRefreshUtils;
 import com.ksfc.newfarmer.utils.ScreenUtil;
 
+import com.ksfc.newfarmer.utils.StringUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBase.OnRefreshListener2, AbsListView.OnScrollListener {
 
     private PullToRefreshListView listView;
-    private List<ItemsEntity> items;
     private InformationAdapter adapter;
     private int page = 1;
     private ImageView return_top;
@@ -50,7 +50,6 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
         listView.setMode(PullToRefreshBase.Mode.BOTH);
         listView.setOnRefreshListener(this);
         listView.setOnScrollListener(this);
-
         //设置刷新的文字
         PullToRefreshUtils.setFreshText(listView);
         return_top = (ImageView) findViewById(R.id.return_top);
@@ -63,7 +62,7 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                ItemsEntity entity = (ItemsEntity) adapter.getItem(position);
+                ItemsEntity entity = adapter.getItem(position);
                 Intent intent = new Intent(NewFarmerInfomation.this,
                         ArticleActivity.class);
                 if (!TextUtils.isEmpty(entity.url)) {
@@ -79,16 +78,14 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
         });
         setTitle("新农资讯");
         hideLeft();
-        items = new ArrayList<>();
         showProgressDialog();
         getData();
     }
 
     private void getData() {
-
         RequestParams params = new RequestParams();
-        params.put("max", "20");
-        params.put("page", String.valueOf(page));
+        params.put("max", 20);
+        params.put("page", page);
         execApi(ApiType.GET_INFORMATION.setMethod(ApiType.RequestMethod.GET), params);
 
     }
@@ -103,41 +100,48 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
     @Override
     public void onResponsed(Request req) {
         listView.onRefreshComplete();
-        disMissDialog();
         if (req.getApi() == ApiType.GET_INFORMATION) {
             if (req.getData().getStatus().equals("1000")) {
                 InformationResult data = (InformationResult) req.getData();
-                if (data.datas != null
-                        && data.datas.items != null
-                        && data.datas.items.size() > 0) {
+                if (data.datas != null) {
                     List<ItemsEntity> list = data.datas.items;
-                    items.addAll(list);
-                    if (adapter == null) {
-                        adapter = new InformationAdapter(this, items);
-                        listView.setAdapter(adapter);
-                    }
-                    adapter.notifyDataSetChanged();
-
-                } else {
-                    if (page != 1) {
-                        showToast("没有更多资讯");
-                        page--;
-                    } else {
-                        if (adapter != null) {
-                            adapter.clear();
+                    if (list != null && !list.isEmpty()) {
+                        if (page == 1) {
+                            if (adapter == null) {
+                                adapter = new InformationAdapter(this, list);
+                                listView.setAdapter(adapter);
+                            } else {
+                                adapter.clear();
+                                adapter.addAll(list);
+                            }
+                        } else {
+                            if (adapter != null) {
+                                adapter.addAll(list);
+                            }
                         }
-                    }
-                }
-            }
+                    } else {
+                        if (page == 1) {
+                            if (adapter != null) {
+                                adapter.clear();
+                            } else {
+                                page--;
+                                showToast("没有更多资讯");
+                            }
 
+                        }
+
+                    }
+
+                }
+
+            }
         }
     }
 
-    //上拉，下拉刷新
+
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
         PullToRefreshUtils.setFreshClose(refreshView);
-        items.clear();
         page = 1;
         getData();
     }
@@ -192,6 +196,8 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
         return -top + firstVisiblePosition * c.getHeight();
     }
 
+
+
     class InformationAdapter extends CommonAdapter<ItemsEntity> {
 
 
@@ -203,8 +209,7 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
         public void convert(CommonViewHolder holder, ItemsEntity itemsEntity) {
             if (itemsEntity != null) {
 
-
-                if (!TextUtils.isEmpty(itemsEntity.image)) {
+                if (StringUtil.checkStr(itemsEntity.image)) {
                     ImageLoader.getInstance().displayImage(itemsEntity.image,
                             ((ImageView) holder.getView(R.id.information_image)));
                 }
@@ -223,7 +228,6 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
         super.onResume();
         if (!(adapter != null && adapter.getCount() > 0)) {
             showProgressDialog();
-            items.clear();
             page = 1;
             getData();
         }

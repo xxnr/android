@@ -51,6 +51,8 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -98,6 +100,10 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
     private ScrollView scrollView;
     private KeyboardListenRelativeLayout activity_rootView;
     private LinearLayout shangpin_detail_bottom;
+    private ImageView animationImage;
+    private Animation mAnimation_center;
+    private Animation mAnimation_top;
+    private ImageView rightImageView;
 
 
     @Override
@@ -113,6 +119,34 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
         initView();
         dao = new ShoppingDao(GoodsDetailActivity.this);
         getData();
+
+        mAnimation_top = AnimationUtils.loadAnimation(this, R.anim.cart_anim_top);
+
+        mAnimation_center = AnimationUtils.loadAnimation(this, R.anim.cart_anim);
+        mAnimation_center.setAnimationListener(new Animation.AnimationListener() {
+
+            @Override
+            public void onAnimationStart(Animation animation) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                // TODO Auto-generated method stub
+                animationImage.setVisibility(View.INVISIBLE);
+                rightImageView.startAnimation(mAnimation_top);
+                //动画完成之后
+                showToast("添加购物车成功");
+            }
+        });
+
 
     }
 
@@ -149,6 +183,10 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
             }
         });
         showRightImage();
+        rightImageView = getRightImageView();
+        animationImage = ((ImageView) findViewById(R.id.animation_Image));
+        animationImage.setVisibility(View.INVISIBLE);
+
     }
 
     @Override
@@ -237,7 +275,6 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
                                 public void onClick(DialogInterface dialog, int which) {
                                     Intent intent = new Intent(GoodsDetailActivity.this,
                                             LoginActivity.class);
-                                    intent.putExtra("id", 0);
                                     startActivity(intent);
                                     dialog.dismiss();
                                 }
@@ -286,7 +323,6 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
                                     public void onClick(DialogInterface dialog, int which) {
                                         Intent intent = new Intent(GoodsDetailActivity.this,
                                                 LoginActivity.class);
-                                        intent.putExtra("id", 0);
                                         startActivity(intent);
                                         dialog.dismiss();
                                     }
@@ -890,13 +926,11 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
                             dao.updateShoppingAdditions(SKUId, "[]");
                         }
                     }
-
-
                 }
-                //添加购物车成功后关闭popupWindow
-                showToast("添加购物车成功");
                 if (popupWindow != null && popupWindow.isShowing()) {
                     popupWindow.dismiss();
+                    animationImage.setVisibility(View.VISIBLE);
+                    animationImage.startAnimation(mAnimation_center);
                 }
             } else {
                 showToast("请选择商品信息");
@@ -934,7 +968,11 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
                 jinqingqidai_bar.setVisibility(View.GONE);
                 shangpin_detail_bottom_bar.setVisibility(View.VISIBLE);
             }
-
+            if (detail != null && detail.pictures != null && !detail.pictures.isEmpty()) {
+                if (StringUtil.checkStr(detail.pictures.get(0).thumbnail)) {
+                    ImageLoader.getInstance().displayImage(MsgID.IP + detail.pictures.get(0).thumbnail, animationImage);
+                }
+            }
 
             setViewClick(R.id.add_to_shopcart);
             setViewClick(R.id.discount_jian);
@@ -967,10 +1005,13 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
 
             if ("1000".equals(req.getData().getStatus())) {
                 if (toast_flag) {
-                    //添加购物车成功后关闭popupWindow
-                    showToast("添加购物车成功");
+
+
                     if (popupWindow != null && popupWindow.isShowing()) {
                         popupWindow.dismiss();
+
+                        animationImage.setVisibility(View.VISIBLE);
+                        animationImage.startAnimation(mAnimation_center);
                     }
                 }
             }
@@ -1253,4 +1294,6 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
 
         }
     }
+
+
 }

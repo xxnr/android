@@ -25,10 +25,10 @@ import android.widget.ImageView;
 
 public interface IPhotoView {
 
-    public static final float DEFAULT_MAX_SCALE = 3.0f;
-    public static final float DEFAULT_MID_SCALE = 1.75f;
-    public static final float DEFAULT_MIN_SCALE = 1.0f;
-    public static final int DEFAULT_ZOOM_DURATION = 200;
+    float DEFAULT_MAX_SCALE = 3.0f;
+    float DEFAULT_MID_SCALE = 1.75f;
+    float DEFAULT_MIN_SCALE = 1.0f;
+    int DEFAULT_ZOOM_DURATION = 200;
 
     /**
      * Returns true if the PhotoView is set to allow zooming of Photos.
@@ -58,9 +58,17 @@ public interface IPhotoView {
      * Gets the Display Matrix of the currently displayed Drawable. The Rectangle is considered
      * relative to this View and includes all scaling and translations.
      *
-     * @return - true if rectangle was applied successfully
+     * @return copy of current Display Matrix
      */
     Matrix getDisplayMatrix();
+
+    /**
+     * Copies the Display Matrix of the currently displayed Drawable. The Rectangle is considered
+     * relative to this View and includes all scaling and translations.
+     *
+     * @param matrix target matrix to copy to
+     */
+    void getDisplayMatrix(Matrix matrix);
 
     /**
      * Use {@link #getMinimumScale()} instead, this will be removed in future release
@@ -161,7 +169,7 @@ public interface IPhotoView {
     @Deprecated
     void setMidScale(float midScale);
 
-    /*
+    /**
      * Sets the medium scale level. What this value represents depends on the current {@link android.widget.ImageView.ScaleType}.
      *
      * @param mediumScale medium scale preset
@@ -189,6 +197,16 @@ public interface IPhotoView {
     void setMaximumScale(float maximumScale);
 
     /**
+     * Allows to set all three scale levels at once, so you don't run into problem with setting
+     * medium/minimum scale before the maximum one
+     *
+     * @param minimumScale minimum allowed scale
+     * @param mediumScale  medium allowed scale
+     * @param maximumScale maximum allowed scale preset
+     */
+    void setScaleLevels(float minimumScale, float mediumScale, float maximumScale);
+
+    /**
      * Register a callback to be invoked when the Photo displayed by this view is long-pressed.
      *
      * @param listener - Listener to be registered.
@@ -212,11 +230,15 @@ public interface IPhotoView {
     void setOnPhotoTapListener(PhotoViewAttacher.OnPhotoTapListener listener);
 
     /**
+     * PhotoViewAttacher.OnPhotoTapListener reference should be stored in a variable instead, this
+     * will be removed in future release.
+     * <p>&nbsp;</p>
      * Returns a listener to be invoked when the Photo displayed by this View is tapped with a
      * single tap.
      *
      * @return PhotoViewAttacher.OnPhotoTapListener currently set, may be null
      */
+    @Deprecated
     PhotoViewAttacher.OnPhotoTapListener getOnPhotoTapListener();
 
     /**
@@ -241,10 +263,14 @@ public interface IPhotoView {
     void setRotationBy(float rotationDegree);
 
     /**
+     * PhotoViewAttacher.OnViewTapListener reference should be stored in a variable instead, this
+     * will be removed in future release.
+     * <p>&nbsp;</p>
      * Returns a callback listener to be invoked when the View is tapped with a single tap.
      *
      * @return PhotoViewAttacher.OnViewTapListener currently set, may be null
      */
+    @Deprecated
     PhotoViewAttacher.OnViewTapListener getOnViewTapListener();
 
     /**
@@ -328,5 +354,19 @@ public interface IPhotoView {
      *
      * @param newOnDoubleTapListener custom OnDoubleTapListener to be set on ImageView
      */
-    public void setOnDoubleTapListener(GestureDetector.OnDoubleTapListener newOnDoubleTapListener);
+    void setOnDoubleTapListener(GestureDetector.OnDoubleTapListener newOnDoubleTapListener);
+
+    /**
+     * Will report back about scale changes
+     *
+     * @param onScaleChangeListener OnScaleChangeListener instance
+     */
+    void setOnScaleChangeListener(PhotoViewAttacher.OnScaleChangeListener onScaleChangeListener);
+
+    /**
+     * Will report back about fling(single touch)
+     *
+     * @param onSingleFlingListener OnSingleFlingListener instance
+     */
+    void setOnSingleFlingListener(PhotoViewAttacher.OnSingleFlingListener onSingleFlingListener);
 }

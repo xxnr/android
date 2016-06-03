@@ -290,7 +290,6 @@ public class MineActivity extends BaseActivity {
                 if (!isLogin()) {
                     Intent intent = new Intent(MineActivity.this,
                             LoginActivity.class);
-                    intent.putExtra("id", 4);
                     startActivity(intent);
                 }
                 break;
@@ -352,7 +351,6 @@ public class MineActivity extends BaseActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent(MineActivity.this,
                                 LoginActivity.class);
-                        intent.putExtra("id", 4);
                         startActivity(intent);
                         dialog.dismiss();
                     }

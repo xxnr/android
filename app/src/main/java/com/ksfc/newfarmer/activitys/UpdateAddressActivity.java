@@ -4,7 +4,6 @@
 package com.ksfc.newfarmer.activitys;
 
 import com.ksfc.newfarmer.BaseActivity;
-import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.protocol.ApiType;
@@ -31,7 +30,6 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import net.yangentao.util.msg.MsgCenter;
 
 /**
  * 项目名称：QianXihe518 类名称：AddAddressActivity 类描述： 创建人：王蕾 创建时间：2015-5-26 上午11:19:21

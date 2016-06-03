@@ -1,6 +1,8 @@
 package com.ksfc.newfarmer.activitys;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -14,6 +16,7 @@ import com.ksfc.newfarmer.protocol.beans.GetGoodsDetail;
 import com.ksfc.newfarmer.widget.CirclePageIndicator;
 import com.ksfc.newfarmer.widget.HackyViewPager;
 
+import java.io.Serializable;
 import java.util.List;
 
 
@@ -21,7 +24,6 @@ import java.util.List;
  * Created by HePeng on 2015/12/7.
  */
 public class BigImageActivity extends BaseActivity {
-
     @Override
     public int getLayout() {
         return R.layout.big_image_detail_layout;
@@ -31,17 +33,17 @@ public class BigImageActivity extends BaseActivity {
     public void OnActCreate(Bundle savedInstanceState) {
 
         HackyViewPager viewPager = ((HackyViewPager) findViewById(R.id.viewPager_big_image));
-        CirclePageIndicator indicator=(CirclePageIndicator)findViewById(R.id.circlePageIndicator);
+        CirclePageIndicator indicator = (CirclePageIndicator) findViewById(R.id.circlePageIndicator);
         GetGoodsDetail.GoodsDetail detail = (GetGoodsDetail.GoodsDetail) getIntent().getSerializableExtra("detail");
         int position = getIntent().getIntExtra("position", 0);
         if (detail != null && detail.pictures != null) {
             MyPagerAdapter myPagerAdapter = new MyPagerAdapter(getSupportFragmentManager(), detail.pictures);
             viewPager.setAdapter(myPagerAdapter);
-            viewPager.setOffscreenPageLimit(1);
-            if (detail.pictures.size()>1){
+            viewPager.setOffscreenPageLimit(detail.pictures.size());
+            if (detail.pictures.size() > 1) {
                 indicator.setViewPager(viewPager);
                 viewPager.setCurrentItem(position);
-            }else {
+            } else {
                 indicator.setVisibility(View.GONE);
             }
         }
@@ -67,10 +69,12 @@ public class BigImageActivity extends BaseActivity {
         }
 
         @Override
-        public Fragment getItem(int position) {
+        public Fragment getItem(int pos) {
+
+
             BigImageFragment fragment = new BigImageFragment();
             Bundle bundle = new Bundle();
-            bundle.putString("picture", pictures.get(position).originalUrl);
+            bundle.putString("originalUrl", pictures.get(pos).originalUrl);
             fragment.setArguments(bundle);
             return fragment;
         }

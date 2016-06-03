@@ -9,11 +9,15 @@ import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.utils.Constants;
 import com.ksfc.newfarmer.utils.RndLog;
+import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import android.app.TabActivity;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.WindowManager;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
@@ -48,12 +52,21 @@ public class MainActivity extends TabActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         instance = this;
+        // 屏幕竖屏
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        //透明状态栏
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
         setContentView(R.layout.activity_main);
+//        设置状态栏颜色状态栏
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            SystemBarTintManager tintManager = new SystemBarTintManager(this);
+            tintManager.setStatusBarTintEnabled(true);
+            tintManager.setTintColor(getResources().getColor(R.color.green));
+        }
         initView();
         setRadioGroupCheckById(getIntent().getIntExtra("id", 1));
-
-
-
         //滑动时刷新
         MsgCenter.addListener(new MsgListener() {
             @Override
@@ -61,8 +74,8 @@ public class MainActivity extends TabActivity {
 
                 int i = 1;
                 try {
-                    i=(Integer) args[0];
-                }catch (Exception e){
+                    i = (Integer) args[0];
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 setRadioGroupCheckById(i);

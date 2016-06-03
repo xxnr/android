@@ -98,7 +98,7 @@ public class VerticalViewPager extends ViewGroup {
         }
     };
 
-    private final ArrayList<ItemInfo> mItems = new ArrayList<>();
+    private final ArrayList<ItemInfo> mItems = new ArrayList<ItemInfo>();
     private final ItemInfo mTempItem = new ItemInfo();
 
     private final Rect mTempRect = new Rect();
@@ -1002,7 +1002,7 @@ public class VerticalViewPager extends ViewGroup {
     private void sortChildDrawingOrder() {
         if (mDrawingOrder != DRAW_ORDER_DEFAULT) {
             if (mDrawingOrderedChildren == null) {
-                mDrawingOrderedChildren = new ArrayList<>();
+                mDrawingOrderedChildren = new ArrayList<View>();
             } else {
                 mDrawingOrderedChildren.clear();
             }
@@ -1193,7 +1193,7 @@ public class VerticalViewPager extends ViewGroup {
         final LayoutParams lp = (LayoutParams) params;
         lp.isDecor |= child instanceof Decor;
         if (mInLayout) {
-            if (lp.isDecor) {
+            if (lp != null && lp.isDecor) {
                 throw new IllegalStateException("Cannot add pager decor view during layout");
             }
             lp.needsMeasure = true;

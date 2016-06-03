@@ -57,9 +57,13 @@ public class NetworkHelper {
 
     private OkHttpClient getInstance() {
         if (mOkHttpClient == null) {
-            OkHttpClient.Builder builder = new OkHttpClient.Builder();
-            builder.connectTimeout(CONNECTION_TIMEOUT, TimeUnit.MILLISECONDS);
-            mOkHttpClient = new OkHttpClient();
+            synchronized (OkHttpClient.class) {
+                if (mOkHttpClient == null) {
+                    OkHttpClient.Builder builder = new OkHttpClient.Builder();
+                    builder.connectTimeout(CONNECTION_TIMEOUT, TimeUnit.MILLISECONDS);
+                    mOkHttpClient = new OkHttpClient();
+                }
+            }
         }
         return mOkHttpClient;
     }

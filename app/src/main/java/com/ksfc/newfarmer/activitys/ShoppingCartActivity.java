@@ -480,7 +480,6 @@ public class ShoppingCartActivity extends BaseActivity {
                                                 Intent intent = new Intent(
                                                         ShoppingCartActivity.this,
                                                         LoginActivity.class);
-                                                intent.putExtra("id", 3);
                                                 startActivity(intent);
                                                 dialog.dismiss();
                                             }

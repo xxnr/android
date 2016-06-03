@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.ksfc.newfarmer.widget.KeyboardListenRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/shangpin_detail_ll"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    style="@style/base_activity"
     android:background="@color/white">
 
     <LinearLayout
@@ -23,13 +22,10 @@
             android:id="@+id/shangpin_detail_bottom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/line_chang" />
+            <include layout="@layout/line_lay" />
 
             <TextView
                 android:id="@+id/jingqingqidai_bar"
@@ -53,8 +49,8 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:visibility="gone"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:visibility="gone">
 
 
                     <LinearLayout
@@ -141,11 +137,27 @@
 
     <LinearLayout
         android:id="@+id/shangpin_detail_bg"
-        android:orientation="horizontal"
-        android:background="#90000000"
-        android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:background="#90000000"
+        android:orientation="horizontal"
+        android:visibility="gone" />
+
+
+    <RelativeLayout
+        android:id="@+id/animation_frameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/transparent"
+        android:visibility="visible">
+
+        <com.ksfc.newfarmer.widget.HeadImageView
+            android:id="@+id/animation_Image"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_centerInParent="true" />
+
+    </RelativeLayout>
 
 
 </com.ksfc.newfarmer.widget.KeyboardListenRelativeLayout>

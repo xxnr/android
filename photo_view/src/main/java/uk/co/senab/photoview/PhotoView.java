@@ -31,7 +31,7 @@ import uk.co.senab.photoview.PhotoViewAttacher.OnViewTapListener;
 
 public class PhotoView extends ImageView implements IPhotoView {
 
-    private final PhotoViewAttacher mAttacher;
+    private PhotoViewAttacher mAttacher;
 
     private ScaleType mPendingScaleType;
 
@@ -46,7 +46,13 @@ public class PhotoView extends ImageView implements IPhotoView {
     public PhotoView(Context context, AttributeSet attr, int defStyle) {
         super(context, attr, defStyle);
         super.setScaleType(ScaleType.MATRIX);
-        mAttacher = new PhotoViewAttacher(this);
+        init();
+    }
+
+    protected void init() {
+        if (null == mAttacher || null == mAttacher.getImageView()) {
+            mAttacher = new PhotoViewAttacher(this);
+        }
 
         if (null != mPendingScaleType) {
             setScaleType(mPendingScaleType);
@@ -61,7 +67,7 @@ public class PhotoView extends ImageView implements IPhotoView {
     public void setPhotoViewRotation(float rotationDegree) {
         mAttacher.setRotationTo(rotationDegree);
     }
-    
+
     @Override
     public void setRotationTo(float rotationDegree) {
         mAttacher.setRotationTo(rotationDegree);
@@ -84,7 +90,12 @@ public class PhotoView extends ImageView implements IPhotoView {
 
     @Override
     public Matrix getDisplayMatrix() {
-        return mAttacher.getDrawMatrix();
+        return mAttacher.getDisplayMatrix();
+    }
+
+    @Override
+    public void getDisplayMatrix(Matrix matrix) {
+        mAttacher.getDisplayMatrix(matrix);
     }
 
     @Override
@@ -174,6 +185,11 @@ public class PhotoView extends ImageView implements IPhotoView {
     }
 
     @Override
+    public void setScaleLevels(float minimumScale, float mediumScale, float maximumScale) {
+        mAttacher.setScaleLevels(minimumScale, mediumScale, maximumScale);
+    }
+
+    @Override
     // setImageBitmap calls through to this method
     public void setImageDrawable(Drawable drawable) {
         super.setImageDrawable(drawable);
@@ -214,6 +230,7 @@ public class PhotoView extends ImageView implements IPhotoView {
     }
 
     @Override
+    @Deprecated
     public OnPhotoTapListener getOnPhotoTapListener() {
         return mAttacher.getOnPhotoTapListener();
     }
@@ -224,6 +241,7 @@ public class PhotoView extends ImageView implements IPhotoView {
     }
 
     @Override
+    @Deprecated
     public OnViewTapListener getOnViewTapListener() {
         return mAttacher.getOnViewTapListener();
     }
@@ -278,9 +296,24 @@ public class PhotoView extends ImageView implements IPhotoView {
     }
 
     @Override
+    public void setOnScaleChangeListener(PhotoViewAttacher.OnScaleChangeListener onScaleChangeListener) {
+        mAttacher.setOnScaleChangeListener(onScaleChangeListener);
+    }
+
+    @Override
+    public void setOnSingleFlingListener(PhotoViewAttacher.OnSingleFlingListener onSingleFlingListener) {
+        mAttacher.setOnSingleFlingListener(onSingleFlingListener);
+    }
+
+    @Override
     protected void onDetachedFromWindow() {
         mAttacher.cleanup();
         super.onDetachedFromWindow();
     }
 
+    @Override
+    protected void onAttachedToWindow() {
+        init();
+        super.onAttachedToWindow();
+    }
 }
