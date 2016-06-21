@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="40dp" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/round_line_write_gary_selector"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/changing_record_icon" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@color/black_goods_titile"
+                    android:text="兑换记录"
+                    android:textSize="14sp" />
+
+
+            </LinearLayout>
+
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/integral_guide1_rel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible">
+
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="67dp"
+                android:background="@drawable/integral_guide2_img" />
+
+            <View
+                android:id="@+id/center_line"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_centerInParent="true" />
+
+            <ImageView
+                android:id="@+id/guide_finish_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/center_line"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="50dp"
+                android:background="@drawable/guide_finish_button" />
+
+        </RelativeLayout>
+
+    </FrameLayout>
+
+</LinearLayout>

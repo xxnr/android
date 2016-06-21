@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="1px"
-    android:background="@color/gray"
+    android:background="@drawable/line_chang"
     android:gravity="center_vertical"
     tools:ignore="DuplicateIncludedIds">
-
 </RelativeLayout>

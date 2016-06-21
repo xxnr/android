@@ -82,6 +82,8 @@ public class SelectDeliveriesStateActivity extends BaseActivity implements PullT
 
     private final static int ResultState = 0x12;
 
+    private static String ResultTag = "products";
+    private static String ResultTag_ID = "product_id";
 
     @Override
     public int getLayout() {
@@ -92,11 +94,23 @@ public class SelectDeliveriesStateActivity extends BaseActivity implements PullT
     public void OnActCreate(Bundle savedInstanceState) {
         setTitle("选择自提网点");
         initView();
+        //判断是为商品 还是礼品
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            String requestTag = extras.getString("requestTag");
+            if (StringUtil.checkStr(requestTag)) {
+                if (requestTag.equals("gift")) {
+                    ResultTag = "gift";
+                    ResultTag_ID = "gift_Id";
+                }
+            }
+        }
+
+
         setViewClick(R.id.state_province_rel);
         setViewClick(R.id.state_city_rel);
         setViewClick(R.id.state_county_rel);
         setViewClick(R.id.save_userInfo);
-
 
         getProvinceState();
         //默认选中河南
@@ -124,9 +138,9 @@ public class SelectDeliveriesStateActivity extends BaseActivity implements PullT
         state_city_img = (ImageView) findViewById(R.id.state_city_img);
         state_county_text = (TextView) findViewById(R.id.state_county_text);
         state_county_img = (ImageView) findViewById(R.id.state_county_img);
-        state_province_bar = (View) findViewById(R.id.state_province_bar);
-        state_city_bar = (View) findViewById(R.id.state_city_bar);
-        state_county_bar = (View) findViewById(R.id.state_county_bar);
+        state_province_bar = findViewById(R.id.state_province_bar);
+        state_city_bar = findViewById(R.id.state_city_bar);
+        state_county_bar = findViewById(R.id.state_county_bar);
         shaixuan_bar_separatrix = (TextView) findViewById(R.id.shaixuan_bar_separatrix);
         select_state_listView = (PullToRefreshListView) findViewById(R.id.select_state_listView);
         state_county_rel = (LinearLayout) findViewById(R.id.state_county_rel);
@@ -201,7 +215,7 @@ public class SelectDeliveriesStateActivity extends BaseActivity implements PullT
                 }
                 //保存用户
                 Intent intent = new Intent();
-                intent.putExtra("rsCsEntity", (Serializable) rsCsEntity);
+                intent.putExtra("rsCsEntity", rsCsEntity);
                 setResult(ResultState, intent);
                 finish();
                 break;
@@ -292,7 +306,7 @@ public class SelectDeliveriesStateActivity extends BaseActivity implements PullT
                     }
                 } else {
                     if (page == 1) {
-                        if (deliveryAdapter!=null){
+                        if (deliveryAdapter != null) {
                             deliveryAdapter.clear();
                         }
                         showToast("该地区没有网点");
@@ -337,15 +351,15 @@ public class SelectDeliveriesStateActivity extends BaseActivity implements PullT
             //初始化一切文本
             if (rsCsEntity != null && rsCsEntity.RSCInfo != null) {
                 //网点名
-                if (StringUtil.checkStr(rsCsEntity.RSCInfo.companyName)){
+                if (StringUtil.checkStr(rsCsEntity.RSCInfo.companyName)) {
                     holder.setText(R.id.title_delivery_state_item, rsCsEntity.RSCInfo.companyName);
-                }else {
+                } else {
                     holder.setText(R.id.title_delivery_state_item, "");
                 }
                 //电话
                 if (StringUtil.checkStr(rsCsEntity.RSCInfo.phone)) {
                     holder.setText(R.id.phone_delivery_state_item, "电话：" + rsCsEntity.RSCInfo.phone);
-                }else {
+                } else {
                     holder.setText(R.id.phone_delivery_state_item, "电话：");
                 }
                 //网点所在地址
@@ -437,6 +451,11 @@ public class SelectDeliveriesStateActivity extends BaseActivity implements PullT
                         countyId = null;
                         state_county_text.setText("全部地区");
                         state_city_text.setText("全部地区");
+                        //设置县为不可选
+                        state_county_rel.setEnabled(false);
+                        state_county_img.setBackgroundResource(R.drawable.bottom_arrow_gray);
+                        state_county_text.setTextColor(getResources().getColor(R.color.gray));
+
                         getStateList(provinceId, cityId, countyId);
                         if (popupWindow != null && popupWindow.isShowing()) {
                             popupWindow.dismiss();
@@ -484,7 +503,6 @@ public class SelectDeliveriesStateActivity extends BaseActivity implements PullT
                             state_county_img.setBackgroundResource(R.drawable.bottom_arrow_gray);
                             state_county_text.setTextColor(getResources().getColor(R.color.gray));
 
-
                         } else {
                             state_county_rel.setEnabled(true);
                             state_county_img.setBackgroundResource(R.drawable.bottom_arrow);
@@ -522,7 +540,7 @@ public class SelectDeliveriesStateActivity extends BaseActivity implements PullT
         @Override
         public void convert(CommonViewHolder holder, final RSCAddressListResult.CountyListEntity countyListEntity) {
             if (countyListEntity != null) {
-                TextView textView = (TextView) holder.getView(R.id.item_delivery_address_text);
+                TextView textView = holder.getView(R.id.item_delivery_address_text);
                 textView.setText(countyListEntity.name);
 
                 if (countyListEntity.name.equals(state_county_text.getText().toString())) {
@@ -613,15 +631,15 @@ public class SelectDeliveriesStateActivity extends BaseActivity implements PullT
         showProgressDialog();
         Bundle bundle = getIntent().getExtras();
         int flags = 0;
-        if (bundle!=null){
+        if (bundle != null) {
             flags = bundle.getInt("flags");
         }
 
         if (flags == 1) {
-            String product_id = bundle.getString("product_id");
+            String _id = bundle.getString(ResultTag_ID);
             RequestParams params = new RequestParams();
-            if (StringUtil.checkStr(product_id)) {
-                params.put("products", product_id);
+            if (StringUtil.checkStr(_id)) {
+                params.put(ResultTag, _id);
             }
             LoginResult.UserInfo userInfo = Store.User.queryMe();
             if (userInfo != null) {
@@ -638,7 +656,7 @@ public class SelectDeliveriesStateActivity extends BaseActivity implements PullT
             StringBuilder builder = new StringBuilder();
             if (productIds != null && productIds.size() > 0) {
                 for (int j = 0; j < productIds.size(); j++) {
-                    String _id = (String) productIds.get(j);
+                    String _id = productIds.get(j);
                     if (StringUtil.checkStr(_id)) {
                         builder.append(_id).append(",");
                     }
@@ -658,14 +676,14 @@ public class SelectDeliveriesStateActivity extends BaseActivity implements PullT
         showProgressDialog();
         Bundle bundle = getIntent().getExtras();
         int flags = 0;
-        if (bundle!=null){
+        if (bundle != null) {
             flags = bundle.getInt("flags");
         }
         if (flags == 1) {
-            String product_id = bundle.getString("product_id");
+            String _id = bundle.getString(ResultTag_ID);
             RequestParams params = new RequestParams();
-            if (StringUtil.checkStr(product_id)) {
-                params.put("products", product_id);
+            if (StringUtil.checkStr(_id)) {
+                params.put(ResultTag, _id);
             }
             if (StringUtil.checkStr(provinceId)) {
                 params.put("province", provinceId);
@@ -707,14 +725,14 @@ public class SelectDeliveriesStateActivity extends BaseActivity implements PullT
         showProgressDialog();
         Bundle bundle = getIntent().getExtras();
         int flags = 0;
-        if (bundle!=null){
+        if (bundle != null) {
             flags = bundle.getInt("flags");
         }
         if (flags == 1) {
             RequestParams params = new RequestParams();
-            String product_id = bundle.getString("product_id");
-            if (StringUtil.checkStr(product_id)) {
-                params.put("products", product_id);
+            String _id = bundle.getString(ResultTag_ID);
+            if (StringUtil.checkStr(_id)) {
+                params.put(ResultTag, _id);
             }
             if (StringUtil.checkStr(provinceId)) {
                 params.put("province", provinceId);
@@ -763,15 +781,15 @@ public class SelectDeliveriesStateActivity extends BaseActivity implements PullT
     private void getStateList(String provinceId, String cityId, String countyId) {
         Bundle bundle = getIntent().getExtras();
         int flags = 0;
-        if (bundle!=null){
+        if (bundle != null) {
             flags = bundle.getInt("flags");
         }
 
         if (flags == 1) {
-            String product_id = bundle.getString("product_id");
+            String _id = bundle.getString(ResultTag_ID);
             RequestParams params = new RequestParams();
-            if (StringUtil.checkStr(product_id)) {
-                params.put("products", product_id);
+            if (StringUtil.checkStr(_id)) {
+                params.put(ResultTag, _id);
             }
             if (StringUtil.checkStr(provinceId)) {
                 params.put("province", provinceId);
@@ -798,7 +816,7 @@ public class SelectDeliveriesStateActivity extends BaseActivity implements PullT
             StringBuilder builder = new StringBuilder();
             if (productIds != null && productIds.size() > 0) {
                 for (int j = 0; j < productIds.size(); j++) {
-                    String _id = (String) productIds.get(j);
+                    String _id = productIds.get(j);
                     if (StringUtil.checkStr(_id)) {
                         builder.append(_id).append(",");
                     }

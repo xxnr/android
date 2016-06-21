@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/base_activity"
+    android:orientation="vertical">
+
+    <include layout="@layout/title_lay" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:descendantFocusability="blocksDescendants"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/gift_detail_img"
+                    android:layout_width="match_parent"
+                    android:layout_height="360dp"
+                    android:scaleType="centerCrop" />
+
+                <include layout="@layout/line_lay" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:paddingTop="10dp">
+
+                    <TextView
+                        android:id="@+id/gift_detail_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLines="2"
+                        android:text="" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/gift_integral_icon" />
+
+                        <TextView
+                            android:id="@+id/gift_detail_integral_tv"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="9dp"
+                            android:layout_weight="1"
+                            android:text=""
+                            android:textColor="@color/orange_goods_price" />
+
+
+                        <TextView
+                            android:id="@+id/gift_detail_able_integral_text_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="可用积分"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/gift_detail_able_integral_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="9dp"
+                            android:text=""
+                            android:textColor="@color/orange_goods_price" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/gift_detail_market_price_ll"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="7dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="市场价"
+                            android:textColor="@color/deep_gray"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/gift_detail_market_price_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="9dp"
+                            android:text=""
+                            android:textColor="@color/deep_gray"
+                            android:textSize="12sp" />
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <include layout="@layout/div_view" />
+
+                <WebView
+                    android:id="@+id/gift_detail_webView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:scrollbars="none"
+                    tools:ignore="WebViewLayout" />
+            </LinearLayout>
+
+        </ScrollView>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="bottom"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <include layout="@layout/line_lay" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/gift_detail_sure_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="34dp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:background="@drawable/login_roate_orange"
+                    android:gravity="center"
+                    android:text="立即兑换"
+                    android:textColor="@color/white" />
+
+            </LinearLayout>
+
+
+            <include layout="@layout/line_lay" />
+
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+
+</LinearLayout>

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/base_activity"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <include layout="@layout/title_lay" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="积分" />
+
+            <TextView
+                android:id="@+id/my_integral_count_tv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="14dp"
+                android:layout_weight="1"
+                android:text=""
+                android:textColor="@color/orange_goods_price"
+                android:textSize="18sp" />
+
+
+            <TextView
+                android:id="@+id/sign_button_tv"
+                android:layout_width="70dp"
+                android:layout_height="25dp"
+                android:background="@drawable/selector_sgin_button"
+                android:gravity="center"
+                android:text="签到"
+                android:textColor="@color/white" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="34dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:background="@color/white">
+
+
+            <ImageView
+                android:id="@+id/sign_state_img_iv"
+                android:scaleType="fitXY"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="34dp"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
+
+            <TextView
+                android:id="@+id/sign_description_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="连续签到可以获得更多积分"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/content_ll"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <include layout="@layout/div_view" />
+
+                <com.ksfc.newfarmer.widget.UnSwipeListView
+                    android:id="@+id/unSwipeListView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:divider="@color/gray"
+                    android:dividerHeight="1px"
+                    android:scrollbars="none" />
+
+                <include layout="@layout/line_lay" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/content_empty_ll"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <include layout="@layout/line_lay" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="102dp"
+                    android:background="@drawable/integral_empty_img" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="34dp"
+                    android:text="签到拿积分啦"
+                    android:textColor="@color/deep_gray" />
+
+            </LinearLayout>
+
+
+        </FrameLayout>
+
+
+    </LinearLayout>
+
+</ScrollView>

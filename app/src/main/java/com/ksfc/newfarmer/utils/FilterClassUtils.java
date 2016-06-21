@@ -17,6 +17,9 @@ public class FilterClassUtils {
         unSetStatusBar.add("MineActivity");
         unSetStatusBar.add("ShoppingCartActivity");
         unSetStatusBar.add("NewFarmerInfomation");
+        unSetStatusBar.add("QiandaoActivity");
+        unSetStatusBar.add("FloatingLayerActivity");
+
         return unSetStatusBar;
     }
 

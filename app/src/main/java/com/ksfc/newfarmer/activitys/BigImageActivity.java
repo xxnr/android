@@ -1,8 +1,6 @@
 package com.ksfc.newfarmer.activitys;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -13,6 +11,7 @@ import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.fragment.BigImageFragment;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.beans.GetGoodsDetail;
+import com.ksfc.newfarmer.utils.ActivityAnimationUtils;
 import com.ksfc.newfarmer.widget.CirclePageIndicator;
 import com.ksfc.newfarmer.widget.HackyViewPager;
 
@@ -22,6 +21,7 @@ import java.util.List;
 
 /**
  * Created by HePeng on 2015/12/7.
+ * 商品详情查看大图
  */
 public class BigImageActivity extends BaseActivity {
     @Override
@@ -70,8 +70,6 @@ public class BigImageActivity extends BaseActivity {
 
         @Override
         public Fragment getItem(int pos) {
-
-
             BigImageFragment fragment = new BigImageFragment();
             Bundle bundle = new Bundle();
             bundle.putString("originalUrl", pictures.get(pos).originalUrl);
@@ -83,5 +81,12 @@ public class BigImageActivity extends BaseActivity {
         public int getCount() {
             return pictures.size();
         }
+    }
+
+
+    @Override
+    public void finish() {
+        super.finish();
+        ActivityAnimationUtils.setActivityAnimation(this, R.anim.animation_none, R.anim.zoom_exit);
     }
 }

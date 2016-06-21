@@ -349,6 +349,12 @@ public class EposSlotCardStateActivity extends BaseActivity implements PullToRef
                         countyId = null;
                         state_county_text.setText("全部地区");
                         state_city_text.setText("全部地区");
+
+                        //设置县为不可选
+                        state_county_rel.setEnabled(false);
+                        state_county_img.setBackgroundResource(R.drawable.bottom_arrow_gray);
+                        state_county_text.setTextColor(getResources().getColor(R.color.gray));
+
                         getStateList(provinceId, cityId, countyId);
                         if (popupWindow != null && popupWindow.isShowing()) {
                             popupWindow.dismiss();

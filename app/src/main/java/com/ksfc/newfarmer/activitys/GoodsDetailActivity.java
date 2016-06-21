@@ -265,29 +265,8 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
                 if (isLogin()) {
                     toast_flag = false;//是否显示toast
                     addToCar();
-
                 } else {
-                    CustomDialog.Builder builder = new CustomDialog.Builder(
-                            GoodsDetailActivity.this);
-                    builder.setMessage("您还没有登录,是否登录？")
-                            .setPositiveButton("是", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    Intent intent = new Intent(GoodsDetailActivity.this,
-                                            LoginActivity.class);
-                                    startActivity(intent);
-                                    dialog.dismiss();
-                                }
-                            })
-                            .setNegativeButton("否", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            });
-                    CustomDialog dialog = builder.create();
-                    dialog.setCanceledOnTouchOutside(false);
-                    dialog.show();
+                    startActivity(LoginActivity.class);
                 }
                 break;
             case R.id.pop_sure:
@@ -313,29 +292,8 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
                     if (isLogin()) {
                         toast_flag = false;//是否显示toast
                         addToCar();
-
                     } else {
-                        CustomDialog.Builder builder = new CustomDialog.Builder(
-                                GoodsDetailActivity.this);
-                        builder.setMessage("您还没有登录,是否登录？")
-                                .setPositiveButton("是", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Intent intent = new Intent(GoodsDetailActivity.this,
-                                                LoginActivity.class);
-                                        startActivity(intent);
-                                        dialog.dismiss();
-                                    }
-                                })
-                                .setNegativeButton("否", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                });
-                        CustomDialog dialog = builder.create();
-                        dialog.setCanceledOnTouchOutside(false);
-                        dialog.show();
+                      startActivity(LoginActivity.class);
                     }
                 }
                 break;

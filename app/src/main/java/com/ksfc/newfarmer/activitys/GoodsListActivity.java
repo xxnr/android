@@ -188,11 +188,9 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
             execApi(ApiType.GET_HUAFEI.setMethod(RequestMethod.POSTJSON), params);
 
         } else {
-
             RequestParams params = new RequestParams();
             Gson gson = new Gson();
             Map<String, Object> map = new HashMap<>();
-
             map.put("page", page);
             map.put("rowCount", "20");
             map.put("classId", classId);
@@ -257,6 +255,7 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
                 listView.getRefreshableView().setSelection(0);
                 break;
             case R.id.goods_zonghe_rel:
+                oldFlag = true;
                 jiage_image.setVisibility(View.GONE);
                 zonghe_text.setTextColor(getResources().getColor(R.color.orange_goods_price));
                 jiage_text.setTextColor(Color.BLACK);
@@ -264,6 +263,7 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
                 getData();
                 break;
             case R.id.goods_jiage_rel:
+                oldFlag = true;
                 zonghe_text.setTextColor(Color.BLACK);
                 jiage_image.setVisibility(View.VISIBLE);
                 jiage_text.setTextColor(getResources().getColor(R.color.orange_goods_price));
@@ -280,7 +280,6 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
                 getData();
                 break;
             case R.id.goods_shaixuan_rel:
-
                 if (popupWindow != null && popupWindow.isShowing()) {
                     popupWindow.dismiss();
                 } else {
@@ -903,6 +902,7 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
     @Override
     public void onPullDownToRefresh(PullToRefreshBase refreshView) {
         PullToRefreshUtils.setFreshClose(refreshView);
+        oldFlag = true;
         page = 1;
         getData();
     }
@@ -910,6 +910,7 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
         PullToRefreshUtils.setFreshClose(refreshView);
+        oldFlag = true;
         page++;
         getData();
     }

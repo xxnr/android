@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/activityTheme"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:background="@color/eight_transparent"
+    android:layout_height="match_parent">
+
+    <View
+        android:id="@+id/status_bar"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:visibility="gone" />
+
+    <FrameLayout
+        android:id="@+id/layer_content_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>
+

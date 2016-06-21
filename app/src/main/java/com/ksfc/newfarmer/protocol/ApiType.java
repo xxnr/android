@@ -1,9 +1,11 @@
 package com.ksfc.newfarmer.protocol;
 
 import com.ksfc.newfarmer.protocol.beans.AboutUsResult;
+import com.ksfc.newfarmer.protocol.beans.AddGiftOrderResult;
 import com.ksfc.newfarmer.protocol.beans.AddOrderResult;
 import com.ksfc.newfarmer.protocol.beans.AddressList;
 import com.ksfc.newfarmer.protocol.beans.AlipayResult;
+import com.ksfc.newfarmer.protocol.beans.AppUpgrade;
 import com.ksfc.newfarmer.protocol.beans.AttrSelectResult;
 import com.ksfc.newfarmer.protocol.beans.BannerResult;
 import com.ksfc.newfarmer.protocol.beans.BrandsResult;
@@ -22,9 +24,13 @@ import com.ksfc.newfarmer.protocol.beans.EvaluateList;
 import com.ksfc.newfarmer.protocol.beans.GetGoodsData;
 import com.ksfc.newfarmer.protocol.beans.GetGoodsDetail;
 import com.ksfc.newfarmer.protocol.beans.GetshopCart;
+import com.ksfc.newfarmer.protocol.beans.GiftCategoriesResult;
+import com.ksfc.newfarmer.protocol.beans.GiftDetailResult;
+import com.ksfc.newfarmer.protocol.beans.GiftListResult;
 import com.ksfc.newfarmer.protocol.beans.HomeImageResult;
 import com.ksfc.newfarmer.protocol.beans.HotLineResult;
 import com.ksfc.newfarmer.protocol.beans.InformationResult;
+import com.ksfc.newfarmer.protocol.beans.IntegralGetResult;
 import com.ksfc.newfarmer.protocol.beans.IntentionProductsResult;
 import com.ksfc.newfarmer.protocol.beans.InviteeResult;
 import com.ksfc.newfarmer.protocol.beans.IsPotentialCustomerResult;
@@ -37,6 +43,7 @@ import com.ksfc.newfarmer.protocol.beans.NominatedInviterResult;
 import com.ksfc.newfarmer.protocol.beans.OfflinePayWayResult;
 import com.ksfc.newfarmer.protocol.beans.Payback;
 import com.ksfc.newfarmer.protocol.beans.PersonalData;
+import com.ksfc.newfarmer.protocol.beans.PointLogsResult;
 import com.ksfc.newfarmer.protocol.beans.PointResult;
 import com.ksfc.newfarmer.protocol.beans.PotentialCustomerDetailResult;
 import com.ksfc.newfarmer.protocol.beans.PotentialListResult;
@@ -463,11 +470,42 @@ public enum ApiType {
      */
     GET_INVITEE_ORDER_BY_NAME("/api/v2.0/user/getInviteeOrderbyName", InviteeResult.class),
 
+    /**
+     * 版本升级：获取最新版本和升级地址:
+     */
+    APP_UP_GRADE("/api/v2.1/AppUpgrade", AppUpgrade.class),
+    /**
+     * 积分商城：获得积分:
+     */
+    GET_INTEGRAL("/api/v2.3/rewardshop/get", IntegralGetResult.class),
+
+    /**
+     * 积分商城：礼品分类:
+     */
+    GET_GIFT_CATEGORIES("/api/v2.3/rewardshop/gifts/categories", GiftCategoriesResult.class),
+    /**
+     * 积分商城：礼品列表:
+     */
+    GET_GIFT_LIST("/api/v2.3/rewardshop/gifts", GiftListResult.class),
+
+    /**
+     * 积分商城：礼品详情:
+     */
+    GET_GIFT_DETAIL("/api/v2.3/rewardshop/gifts/getGiftDetail", GiftDetailResult.class),
+
+    /**
+     * 积分商城：我的积分记录:
+     */
+    GET_POINTS_LOGS("/api/v2.3/rewardshop/pointslogs", PointLogsResult.class),
+    /**
+     * 积分商城：提交兑换:
+     */
+    ADD_GIFT_ORDER("/api/v2.3/rewardshop/addGiftOrder", AddGiftOrderResult.class),
 
     TEST("", ResponseResult.class);
-//                         private static String server_url = "http://api.xinxinnongren.com";
+    //                         private static String server_url = "http://api.xinxinnongren.com";
     private static String server_url = "http://101.200.194.203";
-//    private static String server_url = "http://192.168.1.5";
+//    private static String server_url = "http://192.168.1.4";
 
 
     public static final String url = server_url;

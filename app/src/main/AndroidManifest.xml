@@ -77,18 +77,15 @@
         <!-- 我的 -->
         <activity android:name=".activitys.MineActivity" />
         <!-- 签到成功 -->
-        <activity
-            android:name=".activitys.QiandaoActivity"
-            android:theme="@style/Theme.Transparent" />
         <!-- 商品详情 -->
         <activity
             android:name=".activitys.GoodsDetailActivity"
             android:windowSoftInputMode="adjustResize" />
         <!-- 商品详情的大图 -->
         <activity
-            android:theme="@style/BigImage_theme"
             android:name=".activitys.BigImageActivity"
-            android:process=":picture" />
+            android:process=":picture"
+            android:theme="@style/BigImage_theme" />
         <!-- 用户协议 -->
         <activity android:name=".activitys.AgreeMentActivity" />
         <!-- 我的账户 -->
@@ -116,7 +113,9 @@
         <!-- 支付方式 -->
         <activity android:name=".activitys.PaywayActivity" />
         <!-- 我的积分 -->
-        <activity android:name=".activitys.MyIntegralActivity" />
+        <activity
+            android:name=".activitys.IntegralTallActivity"
+            android:launchMode="singleTask" />
         <!-- 订单成功 -->
         <activity android:name=".activitys.OrderSuccessActivity" />
         <!-- 系统设置 -->
@@ -136,7 +135,7 @@
         <activity android:name=".activitys.UpdateAddressActivity" />
         <!-- 新农资讯 -->
         <activity android:name=".activitys.NewFarmerInfomation" />
-        <!-- 文章详情 -->
+        <!-- 资讯详情 -->
         <activity android:name=".activitys.ArticleActivity" />
         <!-- 商品类目页 -->
         <activity android:name=".activitys.GoodsListActivity" />
@@ -204,15 +203,24 @@
         <activity android:name=".activitys.MyOrderStateDetail" />
         <!-- Epos刷卡网点 -->
         <activity android:name=".activitys.EposSlotCardStateActivity" />
-
-
+        <!-- 浮层页 -->
+        <activity
+            android:name=".activitys.FloatingLayerActivity"
+            android:theme="@style/Theme.Transparent" />
+        <!--积分商城 礼品详情 -->
+        <activity android:name=".activitys.IntegralGiftDetailActivity" />
+        <!--积分商城 提交兑换 -->
+        <activity android:name=".activitys.IntegralGiftSubmitActivity" />
+        <!--积分商城 我的积分 -->
+        <activity android:name=".activitys.MyIntegralActivity" />
+        <!--积分商城 兑换成功 -->
+        <activity android:name=".activitys.ExchangeSuccessActivity" />
         <!-- 支付宝-->
         <activity
             android:name="com.alipay.sdk.app.H5PayActivity"
             android:configChanges="orientation|keyboardHidden|navigation"
             android:exported="false"
             android:screenOrientation="behind" />
-
 
         <!-- 银联 -->
 
@@ -232,7 +240,7 @@
 
 
         <!-- umeng appkey   android:value="564d588ce0f55a25e9003ec7"
-        android:value=""
+        android:value="YOUR_APPKEY"
         -->
         <meta-data
             android:name="UMENG_APPKEY"

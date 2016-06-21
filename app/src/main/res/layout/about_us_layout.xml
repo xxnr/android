@@ -36,8 +36,7 @@
             android:layout_below="@id/about_us_introduce"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="15dp"
-
-            android:text="V2.1.4"
+            android:text="V2.2.5"
             android:textColor="@color/white" />
 
         <TextView

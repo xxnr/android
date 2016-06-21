@@ -17,7 +17,6 @@ import com.ksfc.newfarmer.widget.dialog.CustomDialogForHead;
 import com.ksfc.newfarmer.widget.dialog.CustomDialogForSex;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.RndLog;
-import com.ksfc.newfarmer.utils.SPUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.HeadImageView;
 import com.lidroid.xutils.HttpUtils;
@@ -33,7 +32,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -45,16 +43,16 @@ import net.yangentao.util.msg.MsgListener;
 public class MyaccountActivity extends BaseActivity {
     private HeadImageView myself_userImg;
     private String path;
-    private TextView nickName;
+    private TextView nickName_tv;
     private final int nameCode = 1;
     private final int trueNameCode = 2;
     private final int honeAddress = 3;
     private final int userCode = 4;
     private UserInfo me;
-    private TextView name;
-    private TextView sex;
-    private TextView address_home;
-    private TextView type;
+    private TextView name_tv;
+    private TextView sex_tv;
+    private TextView address_home_tv;
+    private TextView type_tv;
     private boolean flag = false;//性别
     private TextView choose_type_Certified_tv;
     private View choose_type_Certified_ll; //展示县级经销商的lin
@@ -70,7 +68,7 @@ public class MyaccountActivity extends BaseActivity {
         setTitle("我");
         me = Store.User.queryMe();
         initView();
-        //通知“我的”更新数据
+
         setLeftClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,7 +83,6 @@ public class MyaccountActivity extends BaseActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-            //通知“我的”更新数据
             MsgCenter.fireNull(MsgID.UPDATE_USER, "update");
             finish();
             return true;
@@ -94,15 +91,14 @@ public class MyaccountActivity extends BaseActivity {
     }
 
     private void initView() {
-        nickName = (TextView) findViewById(R.id.nickName);
+        nickName_tv = (TextView) findViewById(R.id.nickName);
         myself_userImg = (HeadImageView) findViewById(R.id.myself_userImg);
 
-        name = (TextView) findViewById(R.id.name_tv);
-        sex = (TextView) findViewById(R.id.sex_tv);
-        address_home = (TextView) findViewById(R.id.home_address_tv);
-        type = (TextView) findViewById(R.id.type_tv);
+        name_tv = (TextView) findViewById(R.id.name_tv);
+        sex_tv = (TextView) findViewById(R.id.sex_tv);
+        address_home_tv = (TextView) findViewById(R.id.home_address_tv);
+        type_tv = (TextView) findViewById(R.id.type_tv);
         choose_type_Certified_tv = (TextView) findViewById(R.id.choose_type_Certified_tv);
-
         choose_type_Certified_ll = findViewById(R.id.choose_type_Certified_ll);//申请县级经销商的提示
 
 
@@ -139,15 +135,7 @@ public class MyaccountActivity extends BaseActivity {
                 if (me.userType.equals("5")) {
                     ShowHideUtils.showFadeOut(choose_type_Certified_ll);
                     choose_type_Certified_ll.setVisibility(View.VISIBLE);
-                    if (me.RSCInfoVerifing) {
-                        choose_type_Certified_tv.setText("资料正在审核，请耐心等候");
-                    } else {
-                        if (me.isRSC) {
-                            choose_type_Certified_tv.setText("查看认证信息");
-                        } else {
-                            choose_type_Certified_tv.setText("想成为新新农人的县级网点？去申请认证吧");
-                        }
-                    }
+                    choose_type_Certified_tv.setText(me.RSCInfoVerifing ? "资料正在审核，请耐心等候" : me.isRSC ? "查看认证信息" : "想成为新新农人的县级网点？去申请认证吧");
                 } else {
                     choose_type_Certified_ll.setVisibility(View.GONE);
                     ShowHideUtils.hideFadeIn(choose_type_Certified_ll);
@@ -159,26 +147,17 @@ public class MyaccountActivity extends BaseActivity {
         if (me == null) {
             return;
         }
-        if (!TextUtils.isEmpty((String) SPUtils.get(getApplicationContext(),
-                "head", ""))) {
-            ImageLoader.getInstance().displayImage(
-                    (String) SPUtils.get(getApplicationContext(), "head", ""),
-                    myself_userImg);
-        }
-        nickName.setText(TextUtils.isEmpty(me.nickname) ? "" : me.nickname);
-        if (me.sex) {
-            sex.setText("女");
-        } else {
-            sex.setText("男");
-        }
-        name.setText(TextUtils.isEmpty(me.name) ? "" : me.name);
-        address_home.setText(TextUtils.isEmpty(me.addressCity) ? "" : me.addressCity + me.addressTown);
 
-        if (!StringUtil.empty(me.userTypeInName)) {
-            type.setText(me.userTypeInName);
-        } else {
-            type.setText("还没填写呦~");
+        if (StringUtil.checkStr(me.photo)) {
+            ImageLoader.getInstance().displayImage(MsgID.IP + me.photo, myself_userImg);
         }
+
+        nickName_tv.setText(TextUtils.isEmpty(me.nickname) ? "" : me.nickname);
+        sex_tv.setText(me.sex ? "女" : "男");
+        name_tv.setText(TextUtils.isEmpty(me.name) ? "" : me.name);
+        address_home_tv.setText(TextUtils.isEmpty(me.addressCity) ? "" : me.addressCity + me.addressTown);
+        type_tv.setText(StringUtil.empty(me.userTypeInName) ? "还没填写呦~" : me.userTypeInName);
+
         //设置一下申请认证的标志
         MsgCenter.fireNull(MsgID.UPDATE_USER_TYPE);
     }
@@ -285,7 +264,7 @@ public class MyaccountActivity extends BaseActivity {
                                             dialog.dismiss();
                                             exitLogin();
                                             showToast("您已退出登录");
-                                            IntentUtil.activityForward(MyaccountActivity.this,MainActivity.class,null,true);
+                                            IntentUtil.activityForward(MyaccountActivity.this, MainActivity.class, null, true);
                                         }
                                     })
                             .setNegativeButton("取消",
@@ -368,13 +347,13 @@ public class MyaccountActivity extends BaseActivity {
             }
         } else if (resultCode == 0x11) {//昵称
 
-            nickName.setText(data.getStringExtra("str"));
+            nickName_tv.setText(data.getStringExtra("str"));
         } else if (resultCode == 0x12) {//姓名
-            name.setText(data.getStringExtra("str"));
+            name_tv.setText(data.getStringExtra("str"));
         } else if (resultCode == 0x13) {//所在地
-            address_home.setText(data.getStringExtra("str"));
+            address_home_tv.setText(data.getStringExtra("str"));
         } else if (resultCode == 0x14) {
-            type.setText(data.getStringExtra("str"));
+            type_tv.setText(data.getStringExtra("str"));
         }
     }
 
@@ -400,11 +379,8 @@ public class MyaccountActivity extends BaseActivity {
                 Store.User.saveMe(queryMe);
             }
             showToast("保存成功");
-            if (flag) {
-                sex.setText("女");
-            } else {
-                sex.setText("男");
-            }
+            sex_tv.setText(flag ? "女" : "男");
+
         }
     }
 
@@ -421,6 +397,7 @@ public class MyaccountActivity extends BaseActivity {
                 new RequestCallBack<String>() {
                     @Override
                     public void onFailure(HttpException arg0, String arg1) {
+
                     }
 
                     @Override

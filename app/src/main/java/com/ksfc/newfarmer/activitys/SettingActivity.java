@@ -10,6 +10,7 @@ import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.beans.InviteeResult;
 import com.ksfc.newfarmer.protocol.beans.PotentialListResult;
 import com.ksfc.newfarmer.utils.PopWindowUtils;
+import com.ksfc.newfarmer.utils.Utils;
 import com.ksfc.newfarmer.widget.dialog.CustomDialog;
 import com.ksfc.newfarmer.widget.dialog.CustomProgressDialog;
 import com.ksfc.newfarmer.widget.dialog.CustomProgressDialogForCache;
@@ -62,10 +63,9 @@ public class SettingActivity extends BaseActivity implements CompoundButton.OnCh
     private boolean toastFlag = false;
 
     private String msg = "农业互联网综合服务领先者";
-    private String title = "新新农人";
+    private String title = "新新农人-农业互联网综合服务平台";
     private String url = "http://www.xinxinnongren.com/shareApp.html";
     private UMImage image = new UMImage(SettingActivity.this, R.drawable.share_app_icon);
-    ;
 
     //去清除缓存需要三秒
     private Handler handler = new Handler() {
@@ -132,8 +132,9 @@ public class SettingActivity extends BaseActivity implements CompoundButton.OnCh
 
         //版本号
         versionName = ((TextView) findViewById(R.id.versionName));
-        if (getVersionInfo() != null) {
-            versionName.setText("V" + getVersionInfo());
+        String versionInfo = Utils.getVersionInfo(this);
+        if (StringUtil.checkStr(versionInfo)) {
+            versionName.setText("V" + versionInfo);
         }
 
         share_dialog_bg = (RelativeLayout) findViewById(R.id.share_dialog_bg);
@@ -297,7 +298,7 @@ public class SettingActivity extends BaseActivity implements CompoundButton.OnCh
                 break;
             case R.id.about_us://关于我们
                 Bundle bundle = new Bundle();
-                bundle.putString("versionName", getVersionInfo());
+                bundle.putString("versionName", Utils.getVersionInfo(this));
                 IntentUtil.activityForward(SettingActivity.this,
                         AboutUsActivity.class, bundle, false);
                 break;
@@ -326,24 +327,7 @@ public class SettingActivity extends BaseActivity implements CompoundButton.OnCh
 
     }
 
-    //获取版本号
-    public String getVersionInfo() {
 
-        PackageManager manager;
-        PackageInfo info = null;
-        manager = this.getPackageManager();
-        try {
-            info = manager.getPackageInfo(this.getPackageName(), 0);
-            String versionName = info.versionName;
-            if (StringUtil.checkStr(versionName)) {
-                return versionName;
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
 
     //推送开关
     @Override

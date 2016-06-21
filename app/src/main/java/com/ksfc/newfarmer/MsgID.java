@@ -26,4 +26,8 @@ public interface MsgID {
     String Rsc_order_Change = "Rsc_order_Change";//RSC订单在详情改变时列表页刷新
     String order_Change = "order_Change";//用户订单在详情改变时列表页刷新
     String PAY_PRICE = "PAY_PRICE";//银联的回调通知支付页Activity
+    String Integral_Guide_Change = "Integral_Guide_change";//浮层引导页切换通知
+    String IS_Signed = "IS_Signed";//用户签到通知
+
+
 }

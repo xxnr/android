@@ -12,17 +12,22 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.app.Activity;
+import android.app.DownloadManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.inputmethod.InputMethodManager;
 
+import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.widget.dialog.CustomDialog;
+import com.readystatesoftware.systembartint.SystemBarTintManager;
+import com.umeng.message.PushAgent;
 
 public class Utils {
     private static long lastClickTime;
@@ -30,10 +35,31 @@ public class Utils {
 
     // 判断是否是手机号
     public static boolean isMobileNum(String mobiles) {
+//        Pattern p = Pattern
+//                .compile("^[1]([0-8]{1}[0-9]{1}|59|58|88|89)[0-9]{8}");
         Pattern p = Pattern
-                .compile("^[1]([0-8]{1}[0-9]{1}|59|58|88|89)[0-9]{8}");
+                .compile("1\\d{10}$");
         Matcher m = p.matcher(mobiles);
         return m.matches();
+    }
+
+
+    //获取友盟的device_token
+    public static String getVersionInfo(Context context) {
+
+        PackageManager manager;
+        PackageInfo info = null;
+        manager = context.getPackageManager();
+        try {
+            info = manager.getPackageInfo(context.getPackageName(), 0);
+            String versionName = info.versionName;
+            if (StringUtil.checkStr(versionName)) {
+                return versionName;
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
@@ -225,6 +251,37 @@ public class Utils {
                         });
         builder.create().show();
 
+    }
+
+    /**
+     * 调用系统的DownloadManager 下载apk
+     */
+
+    public static long loadApk(Context context, String url, String path) {
+        try {
+            File folder = new File(path);
+            if (!(folder.exists() && folder.isDirectory())) {
+                folder.mkdirs();
+            }
+            DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+            DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+            request.setDestinationInExternalPublicDir(path, "xxnr.apk");//设置下载的路径和名称
+            return downloadManager.enqueue(request);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    /**
+     * 设置状态栏颜色
+     */
+    public static void setBarTint(Activity activity, int color) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            SystemBarTintManager tintManager = new SystemBarTintManager(activity);
+            tintManager.setStatusBarTintEnabled(true);
+            tintManager.setTintColor(activity.getResources().getColor(color));
+        }
     }
 
 

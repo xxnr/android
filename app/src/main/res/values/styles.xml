@@ -24,7 +24,6 @@
     <!-- Activity主题 -->
     <style name="activityTheme" parent="@android:style/Theme">
         <item name="android:windowIsTranslucent">true</item>
-
     </style>
 
 
@@ -60,7 +59,6 @@
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowIsFloating">true</item>
     </style>
 
     <!-- popupwindow动画 -->

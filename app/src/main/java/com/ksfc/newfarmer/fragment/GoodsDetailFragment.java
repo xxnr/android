@@ -23,6 +23,7 @@ import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.activitys.BigImageActivity;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.beans.GetGoodsDetail;
+import com.ksfc.newfarmer.utils.ActivityAnimationUtils;
 import com.ksfc.newfarmer.utils.ScreenUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.CirclePageIndicator;
@@ -297,10 +298,7 @@ public class GoodsDetailFragment extends BaseFragment implements ViewPager.OnPag
                     intent.putExtra("detail", detail);
                     intent.putExtra("position", position);
                     activity.startActivity(intent);
-                    int version = Integer.valueOf(android.os.Build.VERSION.SDK);
-                    if (version > 5) {
-                        activity.overridePendingTransition(R.anim.zoom_enter, R.anim.animation_none);
-                    }
+                    ActivityAnimationUtils.setActivityAnimation(activity,R.anim.zoom_enter,R.anim.animation_none);
 
                 }
             });

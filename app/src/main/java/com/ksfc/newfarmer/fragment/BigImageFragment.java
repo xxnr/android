@@ -34,12 +34,7 @@ public class BigImageFragment extends BaseFragment {
         photoView.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
             @Override
             public void onPhotoTap(View view, float x, float y) {
-
                 activity.finish();
-                int version = Integer.valueOf(android.os.Build.VERSION.SDK);
-                if (version > 5) {
-                    activity.overridePendingTransition(R.anim.animation_none, R.anim.zoom_exit);
-                }
             }
 
             @Override

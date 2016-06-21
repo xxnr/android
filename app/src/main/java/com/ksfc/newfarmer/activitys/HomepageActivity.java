@@ -1,13 +1,26 @@
 package com.ksfc.newfarmer.activitys;
 
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import android.app.DownloadManager;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.view.Display;
+import android.view.Gravity;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
-
 import com.handmark.pulltorefresh.library.ILoadingLayout;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
@@ -16,17 +29,20 @@ import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.adapter.CommonAdapter;
 import com.ksfc.newfarmer.adapter.CommonViewHolder;
-import com.ksfc.newfarmer.db.Store;
+import com.ksfc.newfarmer.common.CommonFunction;
+import com.ksfc.newfarmer.common.CompleteReceiver;
 import com.ksfc.newfarmer.protocol.ApiType;
-import com.ksfc.newfarmer.protocol.ApiType.RequestMethod;
+import com.ksfc.newfarmer.protocol.RemoteApi;
 import com.ksfc.newfarmer.protocol.Request;
-import com.ksfc.newfarmer.protocol.RequestParams;
+import com.ksfc.newfarmer.protocol.beans.AppUpgrade;
 import com.ksfc.newfarmer.protocol.beans.ClassIDResult;
 import com.ksfc.newfarmer.protocol.beans.GetGoodsData;
 import com.ksfc.newfarmer.protocol.beans.GetGoodsData.SingleGood;
 import com.ksfc.newfarmer.protocol.beans.HomeImageResult;
 import com.ksfc.newfarmer.protocol.beans.HomeImageResult.Rows;
 import com.ksfc.newfarmer.protocol.beans.HomeImageResult.UserRollImage;
+import com.ksfc.newfarmer.protocol.beans.IntegralGetResult;
+import com.ksfc.newfarmer.protocol.beans.PointResult;
 import com.ksfc.newfarmer.utils.PullToRefreshUtils;
 import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.ScreenUtil;
@@ -34,48 +50,50 @@ import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.utils.Utils;
 import com.ksfc.newfarmer.widget.CarouselDiagramViewPager;
 import com.ksfc.newfarmer.widget.UnSwipeGridView;
+import com.ksfc.newfarmer.widget.dialog.CustomDialog;
+import com.ksfc.newfarmer.widget.dialog.CustomDialogUpdate;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.readystatesoftware.systembartint.SystemBarTintManager;
-import com.umeng.update.UmengUpdateAgent;
-
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
-import android.os.Build;
-import android.os.Bundle;
-import android.view.Display;
-import android.view.Gravity;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-
 
 import net.yangentao.util.PreferenceUtil;
+import net.yangentao.util.msg.MsgCenter;
+import net.yangentao.util.msg.MsgListener;
 
 import org.apache.http.entity.StringEntity;
 
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 
 public class HomepageActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener {
-    private LinearLayout ll_banner_container;
-    private PullToRefreshScrollView scrollView;
+    @BindView(R.id.ll_banner_container)
+    LinearLayout ll_banner_container;
+    @BindView(R.id.view_container)
+    LinearLayout view_container;
+    @BindView(R.id.pull_ll_srcoll)
+    PullToRefreshScrollView scrollView;
     private CarouselDiagramViewPager carouselDiagramViewPager;
-    private LinearLayout view_container;
-    private int itemWitch;
+
+
+    private int itemWitch;  //gv 中item的宽度
     private String huaFeiClassId = "531680A5";
     private String carClassId = "6C7D8F66";
 
     private List<HomepageViewBean> ViewBeanList = new ArrayList<>();
+
+    private CompleteReceiver completeReceiver;//监听下载
+    private Animation shakeAnimation;//签到图标抖动的icon
+    private boolean isSigned = false;
 
     @Override
     public int getLayout() {
@@ -84,58 +102,32 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
 
     @Override
     public void OnActCreate(Bundle savedInstanceState) {
-        UmengUpdateAgent.setUpdateOnlyWifi(false);
-        UmengUpdateAgent.update(this);//在主页判断是否更新版本
-
+        ButterKnife.bind(this);
         setTitle("新新农人");
-        hideLeft();
-        qiandao();
+        //在主页判断版本是否需要升级 并注册监听下载完成之后的广播
+        completeReceiver = new CompleteReceiver();
+        registerReceiver(completeReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+
+        //app 是否需要升级
+        RemoteApi.appIsNeedUpdate(this);
+
         initView();
+
         showProgressDialog();
-        getClassId();
-        getBanner();
+        RemoteApi.getClassId(this);
+        RemoteApi.getBanner(this);
+        RemoteApi.getIntegral(this);
 
-    }
-
-    private void getBanner() {
-        // 获取首页轮播图
-        RequestParams params1 = new RequestParams();
-        execApi(ApiType.GETHOMEPIC, params1);
-    }
-
-    private void getClassId() {
-        RequestParams params = new RequestParams();
-        execApi(ApiType.GET_CLASSID.setMethod(RequestMethod.GET), params);
-    }
-
-    private void qiandao() {
-        setRightImage(R.drawable.qiandao);
-        showRightImage();
-        getRightImageView().setOnClickListener(new View.OnClickListener() {
+        //签到通知
+        MsgCenter.addListener(new MsgListener() {
             @Override
-            public void onClick(View v) {
-                initQiandao();
+            public void onMsg(Object sender, String msg, Object... args) {
+                isSigned = true;
             }
-        });
-        getRightImageView().setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    setRightImage(R.drawable.qiandao);
-                }
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    setRightImage(R.drawable.qiandao_press);
-                }
-                return false;
-            }
-        });
-
-
+        }, MsgID.IS_Signed);
     }
 
-    /**
-     *
-     */
+    //获得首页列表数据
     private void getData(final HomepageViewBean homepageViewBean) {
         if (homepageViewBean != null) {
             Map<String, Object> map = new HashMap<>();
@@ -195,9 +187,11 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
 
 
     private void initView() {
-        view_container = (LinearLayout) findViewById(R.id.view_container);
-        ll_banner_container = (LinearLayout) findViewById(R.id.ll_banner_container);
-        scrollView = (PullToRefreshScrollView) findViewById(R.id.pull_ll_srcoll);
+        hideLeft();
+        showRightImage();
+        setRightImage(R.drawable.sign_icon);
+        getRightImageView().setOnClickListener(this);
+        //设置下拉刷新
         scrollView.setOnRefreshListener(this);
         //设置刷新的文字
         ILoadingLayout startLabels = scrollView
@@ -205,27 +199,15 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
         startLabels.setPullLabel("下拉刷新...");// 刚下拉时，显示的提示
         startLabels.setRefreshingLabel("正在载入...");// 刷新时
         startLabels.setReleaseLabel("放开刷新...");// 下来达到一定距离时，显示的提示
-
+        //设置banner为的高度
         ScreenUtil.setHeight(this, ll_banner_container, 175);
-        // 设置点击跳转监听
         setViewClick(R.id.huafei_zhuanchang);
         setViewClick(R.id.car_zhuanchang);
+        //初始化抖动动画
+        shakeAnimation = AnimationUtils.loadAnimation(HomepageActivity.this, R.anim.shake_animation);
 
     }
 
-
-    private void initQiandao() {
-        if (isLogin()) {
-            showProgressDialog("请稍后...");
-            RequestParams params = new RequestParams();
-            if (isLogin()) {
-                params.put("userId", Store.User.queryMe().userid);
-            }
-            execApi(ApiType.SIGN_IN_POINT, params);
-        } else {
-            showToast("您还未登录哦，请登录后签到");
-        }
-    }
 
     @Override
     public void OnViewClick(View v) {
@@ -245,11 +227,19 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
                 intent1.putExtra("classId", carClassId);
                 startActivity(intent1);
                 break;
+            case R.id.title_right_img:
+                if (isLogin()) {
+                    RemoteApi.sign(this);
+                } else {
+                    startActivity(LoginActivity.class);
+                }
+                break;
             default:
                 break;
         }
 
     }
+
 
     class HomepageViewBean {
         public String classId;
@@ -258,12 +248,16 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
 
     }
 
-
     @Override
     public void onResponsed(Request req) {
-        disMissDialog();
         scrollView.onRefreshComplete();
-        if (req.getApi() == ApiType.GETHOMEPIC) {
+        if (req.getApi() == ApiType.GET_INTEGRAL) {
+            IntegralGetResult data = (IntegralGetResult) req.getData();
+            if (data.datas != null && data.datas.sign != null && data.datas.sign.signed == 1) {
+                isSigned = true;
+                getRightImageView().startAnimation(shakeAnimation);
+            }
+        } else if (req.getApi() == ApiType.GETHOMEPIC) {
             HomeImageResult res = (HomeImageResult) req.getData();
             UserRollImage rolls = res.datas;
             List<Rows> rowList = rolls.rows;
@@ -274,8 +268,34 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
             ll_banner_container.addView(carouselDiagramViewPager.getView());
 
         } else if (ApiType.SIGN_IN_POINT == req.getApi()) {
-            if (req.getData().getStatus().equals("1000")) {
-                startActivity(QiandaoActivity.class);
+            isSigned = true;
+            PointResult reqData = (PointResult) req.getData();
+            //展示签到成功的页面
+            CommonFunction.showSuccess(this, reqData);
+        } else if (ApiType.APP_UP_GRADE == req.getApi()) {
+            final AppUpgrade reqData = (AppUpgrade) req.getData();
+            if (StringUtil.checkStr(reqData.android_update_url)) {
+                CustomDialogUpdate.Builder builder = new CustomDialogUpdate.Builder(
+                        HomepageActivity.this);
+                builder.setMessage(reqData.getMessage())
+                        .setTitle("V" + reqData.version)
+                        .setPositiveButton("立即下载", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Utils.loadApk(HomepageActivity.this, reqData.android_update_url, "Download");
+                                showToast("正在下载请稍后...");
+                                dialog.dismiss();
+                            }
+                        })
+                        .setNegativeButton("暂不升级", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                CustomDialog dialog = builder.create();
+                dialog.setCanceledOnTouchOutside(false);
+                dialog.show();
             }
         } else if (ApiType.GET_CLASSID == req.getApi()) {
             ClassIDResult data = (ClassIDResult) req.getData();
@@ -376,7 +396,6 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
                         }
                     }
                 } else {
-
                     if (data.categories.size() <= ViewBeanList.size()) {
                         for (int i = 0; i < data.categories.size(); i++) {
                             ClassIDResult.CategoriesEntity entity = data.categories.get(i);
@@ -406,7 +425,6 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
                         }
 
                     } else if (data.categories.size() > ViewBeanList.size()) {
-
                         for (int i = 0; i < data.categories.size(); i++) {
                             if (i >= (ViewBeanList.size() - 1)) {
                                 HomepageViewBean homepageViewBean = new HomepageViewBean();
@@ -509,8 +527,8 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
     @Override
     public void onRefresh(PullToRefreshBase refreshView) {
         PullToRefreshUtils.setFreshClose(refreshView);
-        getBanner();
-        getClassId();
+        RemoteApi.getBanner(this);
+        RemoteApi.getClassId(this);
     }
 
 
@@ -529,7 +547,6 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
 
     class HuafeiAdapter extends CommonAdapter<SingleGood> {
 
-
         public HuafeiAdapter(Context context, List<SingleGood> data) {
             super(context, data, R.layout.home_gv_item);
         }
@@ -538,7 +555,7 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
         public void convert(CommonViewHolder holder, final SingleGood singleGood) {
             if (singleGood != null) {
                 //商品图
-                ImageView imageView = (ImageView) holder.getView(R.id.huafei_img);
+                ImageView imageView =  holder.getView(R.id.huafei_img);
 
                 // 商品图的外边
                 if (itemWitch != 0) {
@@ -553,8 +570,6 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
                     ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
                     layoutParams.height = itemWitch - Utils.dip2px(HomepageActivity.this, 2);
                     layoutParams.width = itemWitch - Utils.dip2px(HomepageActivity.this, 2);
-                    android.util.Log.d("HuafeiAdapter", "itemWitch:" + itemWitch);
-                    android.util.Log.d("HuafeiAdapter", "layoutParams.width:" + layoutParams.width);
                     imageView.setLayoutParams(layoutParams);
                     ImageLoader.getInstance().displayImage(MsgID.IP + singleGood.imgUrl, imageView);
                 }
@@ -566,25 +581,20 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
                 }
                 //商品是否预售
                 if (singleGood.presale) {
-                    TextView huafei_xianjia = (TextView) holder.getView(R.id.huafei_xianjia);
-                    huafei_xianjia.setTextColor(Color.GRAY);
-                    huafei_xianjia.setText("即将上线");
+                    TextView huafei_nowPrice =holder.getView(R.id.huafei_xianjia);
+                    huafei_nowPrice.setTextColor(Color.GRAY);
+                    huafei_nowPrice.setText("即将上线");
                 } else {
                     //商品价格
-                    TextView huafei_xianjia = (TextView) holder.getView(R.id.huafei_xianjia);
+                    TextView huafei_xianjia = holder.getView(R.id.huafei_xianjia);
                     huafei_xianjia.setTextColor(getResources().getColor(R.color.orange_goods_price));
-                    if (StringUtil.checkStr(singleGood.unitPrice)) {
-                        huafei_xianjia
-                                .setText("¥" + singleGood.unitPrice);
-                    }
-
+                    huafei_xianjia.setText(StringUtil.checkStr(singleGood.unitPrice) ? "¥" + singleGood.unitPrice : "");
                 }
                 holder.getConvertView().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         // 带商品的id过去
-                        Intent intent = new Intent(HomepageActivity.this,
-                                GoodsDetailActivity.class);
+                        Intent intent = new Intent(HomepageActivity.this, GoodsDetailActivity.class);
                         intent.putExtra("goodId", singleGood.goodsId);
                         startActivity(intent);
                     }
@@ -592,4 +602,26 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
             }
         }
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (isLogin()) {
+            if (!isSigned && shakeAnimation != null) {
+                getRightImageView().startAnimation(shakeAnimation);
+            }
+        } else {
+            if (shakeAnimation != null) {
+                getRightImageView().startAnimation(shakeAnimation);
+            }
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //解除对下载完成事件的监听
+        unregisterReceiver(completeReceiver);
+    }
+
 }

@@ -19,7 +19,6 @@ import com.ksfc.newfarmer.widget.dialog.CustomProgressDialog;
 import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.SPUtils;
 import com.ksfc.newfarmer.widget.dialog.CustomToast;
-import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.umeng.analytics.MobclickAgent;
 
 import android.annotation.SuppressLint;
@@ -39,10 +38,8 @@ import android.widget.TextView;
 
 import net.yangentao.util.app.App;
 
-public abstract class BaseActivity extends FragmentActivity implements
-        OnClickListener, OnApiDataReceivedCallback {
+public abstract class BaseActivity extends FragmentActivity implements OnClickListener, OnApiDataReceivedCallback {
     public String TAG = this.getClass().getSimpleName();
-
     private boolean titleLoaded = false; // 标题是否加载成功
     protected View titleLeftView;
     protected View titleRightView;
@@ -62,24 +59,22 @@ public abstract class BaseActivity extends FragmentActivity implements
         RndApplication.unDestroyActivityList.add(this);
         // 屏幕竖屏
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        if (getLayout() != 0) {
+            setContentView(getLayout());
+        }
         //透明状态栏
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        }
-        if (getLayout() != 0) {
-            setContentView(getLayout());
         }
         loadTitle();
         //设置状态栏颜色状态栏
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             //过滤掉四个tab的Activity
             if (!FilterClassUtils.getunSetStatusBarClasses().contains(getClass().getSimpleName())) {
-                SystemBarTintManager tintManager = new SystemBarTintManager(this);
-                tintManager.setStatusBarTintEnabled(true);
                 if (titleLoaded) {
-                    tintManager.setTintColor(getResources().getColor(R.color.green));
+                    Utils.setBarTint(this,R.color.green);
                 } else {
-                    tintManager.setTintColor(getResources().getColor(R.color.black));
+                    Utils.setBarTint(this,R.color.black);
                 }
             }
         }
@@ -253,7 +248,6 @@ public abstract class BaseActivity extends FragmentActivity implements
      * 显示有图片
      */
     public void showRightImage() {
-
         if (titleLoaded) {
             ivTitleRight.setVisibility(View.VISIBLE);
         }
@@ -270,7 +264,14 @@ public abstract class BaseActivity extends FragmentActivity implements
     }
 
     /*
-     * 设置右图片的监听事件
+    * 得到右图片组件
+    */
+    public ImageView getRightImageView() {
+        return ivTitleRight;
+    }
+
+    /*
+     * 设置右的监听事件
      */
     public void setRightViewListener(OnClickListener listener) {
         if (titleLoaded) {
@@ -278,12 +279,7 @@ public abstract class BaseActivity extends FragmentActivity implements
         }
     }
 
-    /*
-     * 得到右图片组件
-     */
-    public ImageView getRightImageView() {
-        return ivTitleRight;
-    }
+
 
     /*
      * 设置右文本的监听事件
@@ -495,8 +491,10 @@ public abstract class BaseActivity extends FragmentActivity implements
 
     // 判断是否是手机号
     public boolean isMobileNum(String mobiles) {
+//        Pattern p = Pattern
+//                .compile("^[1]([0-8]{1}[0-9]{1}|59|58|88|89)[0-9]{8}");
         Pattern p = Pattern
-                .compile("^[1]([0-8]{1}[0-9]{1}|59|58|88|89)[0-9]{8}");
+                .compile("1\\d{10}$");
         Matcher m = p.matcher(mobiles);
         return m.matches();
     }

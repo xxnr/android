@@ -192,8 +192,14 @@ public class LoginActivity extends BaseActivity {
                     startActivity(intent);
                 }
                 showToast("登录成功");
+                //登录成功跳转
+                if (isTokenError) {
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    intent.putExtra("id", 4);
+                    startActivity(intent);
+                    MsgCenter.fireNull(MsgID.MainActivity_select_tab, 4);
+                }
                 finish();
-
             }
 
         }

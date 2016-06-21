@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="40dp" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/round_line_write_gary_selector"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/coins_icon" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/integral_count_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="106"
+                        android:textColor="@color/orange_goods_price"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:text="积分"
+                        android:textColor="@color/black_goods_titile"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/integral_guide1_rel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible">
+
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="25dp"
+                android:layout_marginTop="45dp"
+                android:background="@drawable/integral_guide1_img" />
+
+            <View
+                android:id="@+id/center_line"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_centerInParent="true" />
+
+            <ImageView
+                android:id="@+id/guide_next_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/center_line"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="50dp"
+                android:background="@drawable/guide_next_button" />
+
+
+        </RelativeLayout>
+
+
+    </FrameLayout>
+
+</LinearLayout>

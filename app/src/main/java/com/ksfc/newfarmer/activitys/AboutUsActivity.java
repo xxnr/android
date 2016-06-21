@@ -1,6 +1,5 @@
 package com.ksfc.newfarmer.activitys;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -8,14 +7,18 @@ import android.widget.TextView;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.protocol.Request;
-import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.StringUtil;
-import com.readystatesoftware.systembartint.SystemBarTintManager;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by HePeng on 2015/12/29.
  */
 public class AboutUsActivity extends BaseActivity {
+    @BindView(R.id.about_us_version)
+    TextView aboutUsVersion;
+
     @Override
     public int getLayout() {
         return R.layout.about_us_layout;
@@ -23,22 +26,15 @@ public class AboutUsActivity extends BaseActivity {
 
     @Override
     public void OnActCreate(Bundle savedInstanceState) {
+        ButterKnife.bind(this);
         setTitle("关于我们");
-
         //设置版本
-        TextView version = (TextView) findViewById(R.id.about_us_version);
         Bundle bundle = getIntent().getExtras();
         String versionName = null;
         if (bundle != null) {
             versionName = bundle.getString("versionName");
         }
-        if (StringUtil.checkStr(versionName)) {
-            RndLog.d(TAG, versionName);
-            version.setText("V" + versionName);
-        }
-
-
-
+        aboutUsVersion.setText(StringUtil.checkStr(versionName) ? "V" + versionName : "");
     }
 
     @Override

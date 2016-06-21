@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -38,6 +39,8 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
     private InformationAdapter adapter;
     private int page = 1;
     private ImageView return_top;
+    private View load_more;
+    private TextView load_more_tv;
 
     @Override
     public int getLayout() {
@@ -47,7 +50,7 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
     @Override
     public void OnActCreate(Bundle savedInstanceState) {
         listView = (PullToRefreshListView) findViewById(R.id.information_listView);
-        listView.setMode(PullToRefreshBase.Mode.BOTH);
+        listView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
         listView.setOnRefreshListener(this);
         listView.setOnScrollListener(this);
         //设置刷新的文字
@@ -56,6 +59,11 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
         //扩大点击区域
         ExpandViewTouch.expandViewTouchDelegate(return_top, 100, 100, 100, 100);
         setViewClick(R.id.return_top);
+
+        //设置加载更多
+        load_more = getLayoutInflater().inflate(R.layout.foot_load_more_layout, null);
+        listView.getRefreshableView().addFooterView(load_more);
+        load_more_tv = ((TextView) load_more.findViewById(R.id.foot_load_text));
 
         listView.setOnItemClickListener(new OnItemClickListener() {
 
@@ -78,8 +86,6 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
         });
         setTitle("新农资讯");
         hideLeft();
-        showProgressDialog();
-        getData();
     }
 
     private void getData() {
@@ -106,6 +112,7 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
                 if (data.datas != null) {
                     List<ItemsEntity> list = data.datas.items;
                     if (list != null && !list.isEmpty()) {
+                        load_more.setVisibility(View.GONE);
                         if (page == 1) {
                             if (adapter == null) {
                                 adapter = new InformationAdapter(this, list);
@@ -123,11 +130,11 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
                         if (page == 1) {
                             if (adapter != null) {
                                 adapter.clear();
-                            } else {
-                                page--;
-                                showToast("没有更多资讯");
                             }
-
+                        } else {
+                            page--;
+                            load_more_tv.setText("没有更多资讯");
+                            load_more.setVisibility(View.VISIBLE);
                         }
 
                     }
@@ -159,10 +166,17 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
         switch (scrollState) {
             // 当不滚动时
             case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:// 是当屏幕停止滚动时
+
                 // 判断滚动到底部
                 if (listView.getRefreshableView().getLastVisiblePosition() ==
                         (listView.getRefreshableView().getCount() - 1)) {
                     return_top.setVisibility(View.VISIBLE);
+                    if (load_more.getVisibility() == View.GONE) {
+                        load_more.setVisibility(View.VISIBLE);
+                        load_more_tv.setText("正在加载...");
+                        page++;
+                        getData();
+                    }
                 }
                 // 判断滚动到顶部
                 if (listView.getRefreshableView().getFirstVisiblePosition() == 0) {
@@ -195,7 +209,6 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
         int top = c.getTop();
         return -top + firstVisiblePosition * c.getHeight();
     }
-
 
 
     class InformationAdapter extends CommonAdapter<ItemsEntity> {

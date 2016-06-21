@@ -10,35 +10,71 @@ import com.ksfc.newfarmer.protocol.RequestParams;
 import com.ksfc.newfarmer.protocol.beans.LoginResult;
 import com.ksfc.newfarmer.protocol.beans.PersonalData;
 import com.ksfc.newfarmer.protocol.beans.PersonalData.Data;
+import com.ksfc.newfarmer.utils.FastBlur;
+import com.ksfc.newfarmer.utils.ScreenUtil;
 import com.ksfc.newfarmer.utils.Utils;
-import com.ksfc.newfarmer.widget.dialog.CustomDialog;
 import com.ksfc.newfarmer.utils.IntentUtil;
-import com.ksfc.newfarmer.utils.SPUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.HeadImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import net.yangentao.util.msg.MsgCenter;
 import net.yangentao.util.msg.MsgListener;
 
 public class MineActivity extends BaseActivity {
+
+    private TextView title_tv;
+    private ImageView head_View_bg_iv;
     private HeadImageView myself_userImg;
-    private TextView userAaddress_mine, nickName_mine, mine_type;// --，送货地址,所在地,昵称
+    private TextView nickName_tv, mine_type_tv;// 昵称,用户类型
+    private ImageView isVerified_iv;
+
+
     private String nickname = "";
-    private RelativeLayout titleView, titleview_login;
-    private ImageView isVerified;
-    private String integral = ""; //用户的积分用于向，我的积分页传递
-    private LinearLayout my_order_open_ll;
-    private LinearLayout my_state_ll;
+
+    private LinearLayout my_order_open_ll;//我的订单入口
+    private LinearLayout my_state_ll;//我的网点布局
+
+
+    private ImageView arrow_right_tv;
+    private TextView unLogin_msg_tv;
+    private LinearLayout login_content_ll;
+
+
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 0:
+                    Bitmap bitmap = (Bitmap) msg.obj;
+                    if (bitmap != null) {
+                        myself_userImg.setImageBitmap(bitmap);
+                        //虚化处理
+                        Bitmap aeroBitmap = FastBlur.doBlur(bitmap, 50, false, 0);
+                        if (aeroBitmap != null) {
+                            head_View_bg_iv.setImageBitmap(aeroBitmap);
+                        }
+                    }
+                    break;
+                case 1:
+                    head_View_bg_iv.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.mine_bg));
+                    myself_userImg.setImageResource(R.drawable.mine_account_head_default_head);
+                    break;
+            }
+        }
+    };
 
 
     @Override
@@ -49,101 +85,71 @@ public class MineActivity extends BaseActivity {
 
     @Override
     public void OnActCreate(Bundle savedInstanceState) {
-        setTitle("我的新农人");
-        hideLeft();
         initView();
-        setData();
-        titleview_login = (RelativeLayout) findViewById(R.id.titleview_login);
-        titleView = (RelativeLayout) findViewById(R.id.titleview);
-        if (isLogin()) {
-            titleview_login.setVisibility(View.VISIBLE);
-            titleView.setVisibility(View.GONE);
-            getData();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            int statusHeight = ScreenUtil.getStatusHeight(this);
+            ScreenUtil.setMargins(title_tv, 0, Utils.dip2px(MineActivity.this, 10) + statusHeight, 0, 0);
         } else {
-            titleView.setVisibility(View.VISIBLE);
-            titleview_login.setVisibility(View.GONE);
+            ScreenUtil.setMargins(title_tv, 0, Utils.dip2px(MineActivity.this, 10), 0, 0);
         }
 
+        setData();
+
+        if (isLogin()) {
+            setLayout(true);
+            getData();
+        } else {
+            setLayout(false);
+        }
     }
 
     //先展示数据库的信息
     private void setData() {
         if (isLogin()) {
-
             LoginResult.UserInfo userInfo = Store.User.queryMe();
             if (userInfo != null) {
-
-                //下载并存储头像
                 final String imgUrl = userInfo.photo;
                 if (!StringUtil.empty(imgUrl)) {
-                    ImageLoader.getInstance().displayImage(MsgID.IP + imgUrl,
-                            myself_userImg);
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Bitmap bitmap = ImageLoader.getInstance().loadImageSync(MsgID.IP + imgUrl);
+                            Message msg = Message.obtain();
+                            msg.obj = bitmap;
+                            msg.what = 0;
+                            handler.sendMessage(msg);
+                        }
+                    }).start();
                 } else {
-                    myself_userImg.setImageResource(R.drawable.mine_account_head_default_head);
+                    handler.sendEmptyMessageDelayed(1, 100);
                 }
 
-                if (!StringUtil.empty(userInfo.nickname)) {
+                if (StringUtil.checkStr(userInfo.nickname)) {
                     nickname = userInfo.nickname;
-                    nickName_mine.setText("昵称：" + nickname);
+                    nickName_tv.setText(nickname);
                 } else {
-                    nickName_mine.setText("昵称：" + "新新农人");
+                    nickName_tv.setText("新新农人");
                 }
-                if (!StringUtil.empty(userInfo.userTypeInName)) {
-                    mine_type.setText("类型：" + userInfo.userTypeInName);
+                if (StringUtil.checkStr(userInfo.userTypeInName)) {
+                    mine_type_tv.setText(userInfo.userTypeInName);
                 } else {
-                    mine_type.setText("类型：还没填写呦~");
+                    mine_type_tv.setText("还没填写呦~");
                 }
-
                 if (userInfo.isVerified) {
-                    isVerified.setVisibility(View.VISIBLE);
+                    isVerified_iv.setVisibility(View.VISIBLE);
                 } else {
-                    isVerified.setVisibility(View.GONE);
+                    isVerified_iv.setVisibility(View.INVISIBLE);
                 }
-
                 if (userInfo.isRSC) {
-
                     my_order_open_ll.setVisibility(View.GONE);
                     my_state_ll.setVisibility(View.VISIBLE);
-
                 } else {
                     my_order_open_ll.setVisibility(View.VISIBLE);
                     my_state_ll.setVisibility(View.GONE);
                 }
-
-
-                if (userInfo.userAddress != null) {
-
-                    String province = "";
-                    String city = "";
-                    String county = "";
-                    String town = "";
-                    if (userInfo.userAddress.province != null) {
-                        province = userInfo.userAddress.province.name;
-                    }
-                    if (userInfo.userAddress.city != null) {
-                        city = userInfo.userAddress.city.name;
-                    }
-                    if (userInfo.userAddress.county != null) {
-                        county = userInfo.userAddress.county.name;
-                    }
-                    if (userInfo.userAddress.town != null) {
-                        town = userInfo.userAddress.town.name;
-                    }
-
-                    String address = StringUtil.checkBufferStr
-                            (province, city, county, town);
-                    if (address.equals("")) {
-                        userAaddress_mine.setText("所在地区：还没填写呦~");
-                    } else {
-                        userAaddress_mine.setText("所在地区：" + address);
-                    }
-                } else {
-                    userAaddress_mine.setText("所在地区：还没填写呦~");
-                }
             }
         }
-
-
     }
 
     /**
@@ -159,30 +165,40 @@ public class MineActivity extends BaseActivity {
     }
 
     private void initView() {
+
+        title_tv = (TextView) findViewById(R.id.title_tv);
+        head_View_bg_iv = (ImageView) findViewById(R.id.head_View_bg); //登录时的背景
         myself_userImg = (HeadImageView) findViewById(R.id.myself_userImg);//用户头像
-        userAaddress_mine = (TextView) findViewById(R.id.userAaddress_mine);//用户地址
-        nickName_mine = (TextView) findViewById(R.id.nickName_mine);//真实姓名
-        mine_type = (TextView) findViewById(R.id.mine_type);//用户类型
-        isVerified = (ImageView) findViewById(R.id.mine_type_isVerified);//是否是认证用户
+        nickName_tv = (TextView) findViewById(R.id.nickName_mine);//真实姓名
+        mine_type_tv = (TextView) findViewById(R.id.mine_type);//用户类型
+        isVerified_iv = (ImageView) findViewById(R.id.mine_type_isVerified);//是否是认证用户
+
+
+        arrow_right_tv = (ImageView) findViewById(R.id.arrow_right_tv);
+        unLogin_msg_tv = (TextView) findViewById(R.id.unLogin_msg);
+        login_content_ll = (LinearLayout) findViewById(R.id.login_content);
+
+
+        my_state_ll = (LinearLayout) findViewById(R.id.my_state_ll);
         my_order_open_ll = (LinearLayout) findViewById(R.id.my_order_open_ll);
         my_order_open_ll.setVisibility(View.GONE);
-        my_state_ll = (LinearLayout) findViewById(R.id.my_state_ll);
 
-        setViewClick(R.id.my_state_ll);
+        setViewClick(R.id.head_View);
+
+        setViewClick(R.id.my_net_state_ll);
+        setViewClick(R.id.my_order_ll_1);
         setViewClick(R.id.my_order_ll);
+
+
         setViewClick(R.id.my_yaoqing_ll);
         setViewClick(R.id.my_jifen_ll);
         setViewClick(R.id.my_set);
         setViewClick(R.id.my_kefudianhua);
-        setViewClick(R.id.my_login_cancel);
-        setViewClick(R.id.my_login_sure);
-        setViewClick(R.id.titleview_toMyCount);
 
-
+        setViewClick(R.id.mine_button1);
         setViewClick(R.id.mine_button2);
         setViewClick(R.id.mine_button3);
         setViewClick(R.id.mine_button4);
-        setViewClick(R.id.mine_button5);
 
         //修改用信息通知
         MsgCenter.addListener(new MsgListener() {
@@ -190,40 +206,32 @@ public class MineActivity extends BaseActivity {
             @Override
             public void onMsg(Object sender, String msg, Object... args) {
                 if (isLogin()) {
+                    setLayout(true);
                     getData();
-                    titleview_login.setVisibility(View.VISIBLE);
-                    titleView.setVisibility(View.GONE);
                 } else {
-                    titleView.setVisibility(View.VISIBLE);
-                    titleview_login.setVisibility(View.GONE);
+                    setLayout(false);
                 }
             }
         }, MsgID.UPDATE_USER);
         //登陆通知
         MsgCenter.addListener(new MsgListener() {
-
             @Override
             public void onMsg(Object sender, String msg, Object... args) {
                 if (isLogin()) {
-                    titleview_login.setVisibility(View.VISIBLE);
-                    titleView.setVisibility(View.GONE);
+                    setLayout(true);
                     getData();
                 } else {
-                    titleView.setVisibility(View.VISIBLE);
-                    titleview_login.setVisibility(View.GONE);
+                    setLayout(false);
                 }
             }
         }, MsgID.ISLOGIN);
+
         //退出登录通知
         MsgCenter.addListener(new MsgListener() {
 
             @Override
             public void onMsg(Object sender, String msg, Object... args) {
-                myself_userImg.setBackgroundResource(0);
-                myself_userImg
-                        .setBackgroundResource(R.drawable.person_head_img);
-                nickName_mine.setText("游客");
-                userAaddress_mine.setText("");
+                setLayout(false);
             }
         }, MsgID.CLEAR_USER);
 
@@ -233,24 +241,24 @@ public class MineActivity extends BaseActivity {
     public void OnViewClick(View v) {
 
         switch (v.getId()) {
-            case R.id.titleview_toMyCount:
+            case R.id.head_View:
                 if (!isLogin()) {
-                    DialogShow();
+                    goLogin();
                 } else {
                     startActivity(MyaccountActivity.class);
                 }
                 break;
-            case R.id.my_state_ll:
+            case R.id.my_net_state_ll:
                 if (!isLogin()) {
-                    DialogShow();
+                    goLogin();
                 } else {
-                    startActivity( RSCOrderListActivity.class);
+                    startActivity(RSCOrderListActivity.class);
                 }
                 break;
-
             case R.id.my_order_ll:
+            case R.id.my_order_ll_1:
                 if (!isLogin()) {
-                    DialogShow();
+                    goLogin();
                 } else {
                     Intent intent = new Intent(MineActivity.this,
                             MyOrderListActivity.class);
@@ -260,42 +268,24 @@ public class MineActivity extends BaseActivity {
                 break;
             case R.id.my_yaoqing_ll:
                 if (!isLogin()) {
-                    DialogShow();
+                    goLogin();
                 } else {
                     startActivity(NewFramerInvite.class);
                 }
                 break;
             case R.id.my_jifen_ll:
-                if (!isLogin()) {
-                    DialogShow();
-                } else {
-                    Bundle bundle = new Bundle();
-                    bundle.putString("integral", integral);
-                    IntentUtil.activityForward(MineActivity.this,
-                            MyIntegralActivity.class, bundle, false);
-                }
+                IntentUtil.activityForward(MineActivity.this,
+                        IntegralTallActivity.class, null, false);
                 break;
-
             case R.id.my_kefudianhua:
                 Utils.dial(this, "400-056-0371");
                 break;
             case R.id.my_set:
                 startActivity(SettingActivity.class);
                 break;
-            case R.id.my_login_cancel:
-                if (!isLogin())
-                    startActivity(RegisterActivity.class);
-                break;
-            case R.id.my_login_sure:
+            case R.id.mine_button1:
                 if (!isLogin()) {
-                    Intent intent = new Intent(MineActivity.this,
-                            LoginActivity.class);
-                    startActivity(intent);
-                }
-                break;
-            case R.id.mine_button2:
-                if (!isLogin()) {
-                    DialogShow();
+                    goLogin();
                 } else {
                     Intent intent = new Intent(MineActivity.this,
                             MyOrderListActivity.class);
@@ -303,9 +293,9 @@ public class MineActivity extends BaseActivity {
                     startActivity(intent);
                 }
                 break;
-            case R.id.mine_button3:
+            case R.id.mine_button2:
                 if (!isLogin()) {
-                    DialogShow();
+                    goLogin();
                 } else {
                     Intent intent = new Intent(MineActivity.this,
                             MyOrderListActivity.class);
@@ -313,9 +303,9 @@ public class MineActivity extends BaseActivity {
                     startActivity(intent);
                 }
                 break;
-            case R.id.mine_button4:
+            case R.id.mine_button3:
                 if (!isLogin()) {
-                    DialogShow();
+                    goLogin();
                 } else {
                     Intent intent = new Intent(MineActivity.this,
                             MyOrderListActivity.class);
@@ -323,9 +313,9 @@ public class MineActivity extends BaseActivity {
                     startActivity(intent);
                 }
                 break;
-            case R.id.mine_button5:
+            case R.id.mine_button4:
                 if (!isLogin()) {
-                    DialogShow();
+                    goLogin();
                 } else {
                     Intent intent = new Intent(MineActivity.this,
                             MyOrderListActivity.class);
@@ -339,33 +329,10 @@ public class MineActivity extends BaseActivity {
     }
 
     /**
-     * 去登陆的dialog
+     * 去登陆
      */
-    private void DialogShow() {
-        CustomDialog.Builder builder = new CustomDialog.Builder(
-                MineActivity.this);
-        builder.setMessage("您还没有登录,是否登录？")
-                .setPositiveButton("是", new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(MineActivity.this,
-                                LoginActivity.class);
-                        startActivity(intent);
-                        dialog.dismiss();
-                    }
-                })
-                .setNegativeButton("否", new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-
-        CustomDialog dialog = builder.create();
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.show();
+    private void goLogin() {
+        startActivity(LoginActivity.class);
     }
 
     @Override
@@ -375,76 +342,50 @@ public class MineActivity extends BaseActivity {
             PersonalData data = (PersonalData) req.getData();
             Data user = data.datas;
             //下载并存储头像
-            final String imgUrl = user.getImageUrl();
-            if (!StringUtil.empty(imgUrl)) {
-                ImageLoader.getInstance().displayImage(MsgID.IP + imgUrl,
-                        myself_userImg);
-                SPUtils.put(getApplicationContext(), "head", MsgID.IP + imgUrl);
-            } else {
-                myself_userImg.setImageResource(R.drawable.mine_account_head_default_head);
-                SPUtils.put(getApplicationContext(), "head", "");
-            }
-
-            if (!StringUtil.empty(user.nickname)) {
-                nickname = user.nickname;
-                nickName_mine.setText("昵称：" + nickname);
-            } else {
-                nickName_mine.setText("昵称：" + "新新农人");
-            }
-            if (!StringUtil.empty(user.userTypeInName)) {
-                mine_type.setText("类型：" + user.userTypeInName);
-            } else {
-                mine_type.setText("类型：还没填写呦~");
-            }
-
-            if (user.isVerified) {
-                isVerified.setVisibility(View.VISIBLE);
-            } else {
-                isVerified.setVisibility(View.GONE);
-            }
-
-            if (user.isRSC) {
-                my_order_open_ll.setVisibility(View.GONE);
-                my_state_ll.setVisibility(View.VISIBLE);
-            } else {
-                my_order_open_ll.setVisibility(View.VISIBLE);
-                my_state_ll.setVisibility(View.GONE);
-            }
-
-
-            if (user.address != null) {
-
-                String province = "";
-                String city = "";
-                String county = "";
-                String town = "";
-                if (user.address.province != null) {
-                    province = user.address.province.name;
-                }
-                if (user.address.city != null) {
-                    city = user.address.city.name;
-                }
-                if (user.address.county != null) {
-                    county = user.address.county.name;
-                }
-                if (user.address.town != null) {
-                    town = user.address.town.name;
-                }
-
-                String address = StringUtil.checkBufferStr
-                        (province, city, county, town);
-                if (address.equals("")) {
-                    userAaddress_mine.setText("所在地区：还没填写呦~");
+            if (user!=null){
+                final String imgUrl = user.getImageUrl();
+                if (!StringUtil.empty(imgUrl)) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Bitmap bitmap = ImageLoader.getInstance().loadImageSync(MsgID.IP + imgUrl);
+                            Message msg = Message.obtain();
+                            msg.obj = bitmap;
+                            msg.what = 0;
+                            handler.sendMessage(msg);
+                        }
+                    }).start();
                 } else {
-                    userAaddress_mine.setText("所在地区：" + address);
+                    handler.sendEmptyMessage(1);
                 }
-            } else {
-                userAaddress_mine.setText("所在地区：还没填写呦~");
+
+                if (StringUtil.checkStr(user.nickname)) {
+                    nickname = user.nickname;
+                    nickName_tv.setText(nickname);
+                } else {
+                    nickName_tv.setText("新新农人");
+                }
+                if (StringUtil.checkStr(user.userTypeInName)) {
+                    mine_type_tv.setText(user.userTypeInName);
+                } else {
+                    mine_type_tv.setText("还没填写呦~");
+                }
+
+                if (user.isVerified) {
+                    isVerified_iv.setVisibility(View.VISIBLE);
+                } else {
+                    isVerified_iv.setVisibility(View.INVISIBLE);
+                }
+                if (user.isRSC) {
+                    my_order_open_ll.setVisibility(View.GONE);
+                    my_state_ll.setVisibility(View.VISIBLE);
+                } else {
+                    my_order_open_ll.setVisibility(View.VISIBLE);
+                    my_state_ll.setVisibility(View.GONE);
+                }
+                saveMe(user);
             }
-            if (StringUtil.checkStr(user.pointLaterTrade)) {
-                integral = user.pointLaterTrade;
-            }
-            saveMe(user);
+
         }
     }
 
@@ -504,11 +445,9 @@ public class MineActivity extends BaseActivity {
         super.onResume();
         if (!isLogin()) {
             exitLogin();
-            titleView.setVisibility(View.VISIBLE);
-            titleview_login.setVisibility(View.GONE);
+            setLayout(false);
         } else {
-            titleview_login.setVisibility(View.VISIBLE);
-            titleView.setVisibility(View.GONE);
+            setLayout(true);
         }
         LoginResult.UserInfo me = Store.User.queryMe();
         if (me != null) {
@@ -519,10 +458,25 @@ public class MineActivity extends BaseActivity {
                 my_order_open_ll.setVisibility(View.VISIBLE);
                 my_state_ll.setVisibility(View.GONE);
             }
-
-        }else {
+        } else {
             my_order_open_ll.setVisibility(View.VISIBLE);
             my_state_ll.setVisibility(View.GONE);
+        }
+    }
+
+
+    public void setLayout(boolean isLogin) {
+        if (isLogin) {
+            login_content_ll.setVisibility(View.VISIBLE);
+            arrow_right_tv.setVisibility(View.VISIBLE);
+            unLogin_msg_tv.setVisibility(View.GONE);
+        } else {
+            login_content_ll.setVisibility(View.GONE);
+            unLogin_msg_tv.setVisibility(View.VISIBLE);
+            arrow_right_tv.setVisibility(View.GONE);
+            handler.sendEmptyMessage(1);
+            nickName_tv.setText("");
+            mine_type_tv.setText("");
         }
     }
 }

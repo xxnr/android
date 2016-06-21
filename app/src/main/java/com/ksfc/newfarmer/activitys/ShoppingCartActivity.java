@@ -469,32 +469,7 @@ public class ShoppingCartActivity extends BaseActivity {
                 //结算状态
                 if (!isEdit) {
                     if (!isLogin()) {
-                        CustomDialog.Builder builder = new CustomDialog.Builder(
-                                ShoppingCartActivity.this);
-                        builder.setMessage("您还没有登录,是否登录？")
-                                .setPositiveButton("是",
-                                        new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog,
-                                                                int which) {
-                                                Intent intent = new Intent(
-                                                        ShoppingCartActivity.this,
-                                                        LoginActivity.class);
-                                                startActivity(intent);
-                                                dialog.dismiss();
-                                            }
-                                        })
-                                .setNegativeButton("否",
-                                        new DialogInterface.OnClickListener() {
-
-                                            @Override
-                                            public void onClick(DialogInterface dialog,
-                                                                int which) {
-                                                dialog.dismiss();
-                                            }
-                                        });
-                        CustomDialog dialog = builder.create();
-                        dialog.show();
+                        startActivity(LoginActivity.class);
                         return;
                     } else {
                         //从购物车去支付
