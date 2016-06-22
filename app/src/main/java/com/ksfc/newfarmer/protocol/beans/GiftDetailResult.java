@@ -35,7 +35,7 @@ public class GiftDetailResult extends ResponseResult  implements Serializable{
         public String _id;
         public String id;
         public String name;
-        public String marketPrice;
+        public float marketPrice;
         public int points;
         public String dateupdated;
         public String datecreated;

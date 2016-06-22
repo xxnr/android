@@ -11,6 +11,11 @@
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:visibility="gone" />
+    <View
+        android:id="@+id/unLogin_bar"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:visibility="gone" />
 
     <FrameLayout
         android:id="@+id/layer_content_view"

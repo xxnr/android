@@ -1,6 +1,5 @@
 package com.ksfc.newfarmer.common;
 
-import android.app.Activity;
 import android.os.Bundle;
 
 import com.ksfc.newfarmer.BaseActivity;

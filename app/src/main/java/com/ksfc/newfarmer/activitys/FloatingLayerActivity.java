@@ -28,6 +28,8 @@ import butterknife.ButterKnife;
 public class FloatingLayerActivity extends BaseActivity {
     @BindView(R.id.status_bar)
     View mStatus_bar;
+    @BindView(R.id.unLogin_bar)
+    View unLogin_bar;
     private FragmentManager fragmentManager;
 
     @Override
@@ -43,7 +45,12 @@ public class FloatingLayerActivity extends BaseActivity {
         if (extras != null) {
             switch (extras.getString("activity", "IntegralTallActivity")) {
                 case "IntegralTallActivity":  //加载积分商城引导页
-                case "HomepageActivity":  //加载积分商城引导页
+                    //空出积分商城未登录时候的提示未登录的布局
+                    if (isLogin()) {
+                        unLogin_bar.setVisibility(View.GONE);
+                    } else {
+                        unLogin_bar.setVisibility(View.VISIBLE);
+                    }
                     changFragment(1);
                     //浮层引导页切换通知
                     MsgCenter.addListener(new MsgListener() {
@@ -59,6 +66,7 @@ public class FloatingLayerActivity extends BaseActivity {
                     }, MsgID.Integral_Guide_Change);
                     break;
                 case "MyIntegralActivity"://加载签到成功动画
+                case "HomepageActivity":  //加载积分商城引导页
                     if (fragmentManager == null) {
                         fragmentManager = getSupportFragmentManager();
                     }

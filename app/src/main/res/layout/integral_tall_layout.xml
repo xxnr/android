@@ -20,13 +20,10 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <LinearLayout
+                <View
                     android:id="@+id/head_unLogin_tall_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="30dp">
-
-                    <include layout="@layout/head_unlogin_tall_layout" />
-                </LinearLayout>
+                    android:layout_height="30dp"/>
 
                 <include layout="@layout/line_lay" />
 

@@ -24,6 +24,7 @@ import com.ksfc.newfarmer.protocol.beans.IntegralGetResult;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.ScreenUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
+import com.ksfc.newfarmer.utils.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import net.yangentao.util.msg.MsgCenter;
@@ -69,7 +70,7 @@ public class IntegralGiftDetailActivity extends BaseActivity {
     @Override
     public void OnActCreate(Bundle savedInstanceState) {
         ButterKnife.bind(this);
-        setTitle("商品详情");
+        setTitle("礼品详情");
 
         ScreenUtil.setHeight(this, giftDetailImg, 360);
         setViewClick(R.id.gift_detail_sure_tv);
@@ -129,9 +130,13 @@ public class IntegralGiftDetailActivity extends BaseActivity {
                 }
                 giftDetailTitle.setText(StringUtil.checkStr(gift.name) ? gift.name : "");
                 giftDetailIntegralTv.setText(String.valueOf(gift.points));
-                giftDetailMarketPriceTv.setText(gift.marketPrice);
-                giftDetailMarketPriceTv.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG); //中划线
-                giftDetailAbleIntegralTv.setText(String.valueOf(score));
+                if (gift.marketPrice!=0){
+                    giftDetailMarketPriceTv.setText(StringUtil.reduceDouble(gift.marketPrice));
+                    giftDetailMarketPriceTv.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG); //中划线
+                    giftDetailAbleIntegralTv.setText(String.valueOf(score));
+                }else {
+                    giftDetailMarketPriceLl.setVisibility(View.GONE);
+                }
 
                 //礼品介绍
                 giftDetailWebView.getSettings().setJavaScriptEnabled(true);

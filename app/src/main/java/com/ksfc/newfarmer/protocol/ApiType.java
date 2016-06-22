@@ -27,6 +27,7 @@ import com.ksfc.newfarmer.protocol.beans.GetshopCart;
 import com.ksfc.newfarmer.protocol.beans.GiftCategoriesResult;
 import com.ksfc.newfarmer.protocol.beans.GiftDetailResult;
 import com.ksfc.newfarmer.protocol.beans.GiftListResult;
+import com.ksfc.newfarmer.protocol.beans.GiftOrderListResult;
 import com.ksfc.newfarmer.protocol.beans.HomeImageResult;
 import com.ksfc.newfarmer.protocol.beans.HotLineResult;
 import com.ksfc.newfarmer.protocol.beans.InformationResult;
@@ -34,7 +35,6 @@ import com.ksfc.newfarmer.protocol.beans.IntegralGetResult;
 import com.ksfc.newfarmer.protocol.beans.IntentionProductsResult;
 import com.ksfc.newfarmer.protocol.beans.InviteeResult;
 import com.ksfc.newfarmer.protocol.beans.IsPotentialCustomerResult;
-import com.ksfc.newfarmer.protocol.beans.JifenData;
 import com.ksfc.newfarmer.protocol.beans.LoginResult;
 import com.ksfc.newfarmer.protocol.beans.MinPayPriceResult;
 import com.ksfc.newfarmer.protocol.beans.MyInviterResult;
@@ -203,10 +203,7 @@ public enum ApiType {
      */
     QUERYTOWNID("/api/v2.0/area/getAreaTown", TownList.class),
 
-    /**
-     * 签到积分
-     */
-    MY_JIFEN("/api/v2.0/point/findPointList", JifenData.class),
+
     /**
      * 保存用户地址
      */
@@ -501,6 +498,12 @@ public enum ApiType {
      * 积分商城：提交兑换:
      */
     ADD_GIFT_ORDER("/api/v2.3/rewardshop/addGiftOrder", AddGiftOrderResult.class),
+
+    /**
+     * 积分商城：礼品订单列表:
+     */
+    GET_GIFT_ORDER_LIST("/api/v2.3/rewardshop/getGiftOrderList", GiftOrderListResult.class),
+
 
     TEST("", ResponseResult.class);
     //                         private static String server_url = "http://api.xinxinnongren.com";

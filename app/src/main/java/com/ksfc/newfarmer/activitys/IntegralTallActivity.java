@@ -61,7 +61,7 @@ public class IntegralTallActivity extends BaseActivity  {
     @BindView(R.id.view_none_container)
     LinearLayout view_none_container;
     @BindView(R.id.head_unLogin_tall_layout)
-    LinearLayout headUnLoginTallLayout;
+    View headUnLoginTallLayout;
     @BindView(R.id.head_unLogin_tall_layout_float)
     LinearLayout headUnLoginTallLayoutFloat;
     @BindView(R.id.tall_srcollView)
@@ -136,7 +136,7 @@ public class IntegralTallActivity extends BaseActivity  {
                 break;
             case R.id.changing_record_ll:
                 if (isLogin()) {
-                    IntentUtil.activityForward(IntegralTallActivity.this, MyIntegralActivity.class, null, false);
+                    IntentUtil.activityForward(IntegralTallActivity.this, ExchangeRecordActivity.class, null, false);
                 } else {
                     startActivity(LoginActivity.class);
                 }

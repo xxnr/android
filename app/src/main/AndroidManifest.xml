@@ -215,6 +215,8 @@
         <activity android:name=".activitys.MyIntegralActivity" />
         <!--积分商城 兑换成功 -->
         <activity android:name=".activitys.ExchangeSuccessActivity" />
+        <!--积分商城 兑换记录 -->
+        <activity android:name=".activitys.ExchangeRecordActivity" />
         <!-- 支付宝-->
         <activity
             android:name="com.alipay.sdk.app.H5PayActivity"

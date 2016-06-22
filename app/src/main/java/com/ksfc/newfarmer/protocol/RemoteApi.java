@@ -5,6 +5,7 @@ import android.provider.Settings;
 import com.google.gson.Gson;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.db.Store;
+import com.ksfc.newfarmer.fragment.BaseFragment;
 import com.ksfc.newfarmer.protocol.beans.LoginResult;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.utils.Utils;
@@ -156,6 +157,24 @@ public class RemoteApi {
         RequestParams params = new RequestParams();
         params.put("category", categoriesBean_id);
         activity.execApi(ApiType.GET_GIFT_LIST.setMethod(ApiType.RequestMethod.GET), params);
+    }
+
+
+    /**
+     * 请求gift订单列表
+     *
+     * @param type 请求订单列表类型 1 未完成 2 已完成
+     * @param page 请求第几页
+     */
+    public static void getGiftOrderList(BaseFragment fragment, int type, int page) {
+        RequestParams params = new RequestParams();
+        LoginResult.UserInfo userInfo = Store.User.queryMe();
+        if (userInfo != null) {
+            params.put("userId", userInfo.userid);
+        }
+        params.put("type", type);
+        params.put("page", page);
+        fragment.execApi(ApiType.GET_GIFT_ORDER_LIST.setMethod(ApiType.RequestMethod.GET), params);
     }
 
 

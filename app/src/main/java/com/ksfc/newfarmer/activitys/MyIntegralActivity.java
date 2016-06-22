@@ -189,8 +189,8 @@ public class MyIntegralActivity extends BaseActivity {
                     point_log_point_tv.setTextColor(getResources().getColor(R.color.orange));
                     holder.setText(R.id.point_log_point_tv, "+" + pointslogsBean.points);
                 } else {
-                    point_log_point_tv.setTextColor(getResources().getColor(R.color.deep_orange));
-                    holder.setText(R.id.point_log_point_tv, "-" + pointslogsBean.points);
+                    point_log_point_tv.setTextColor(getResources().getColor(R.color.deep_gray));
+                    holder.setText(R.id.point_log_point_tv,String.valueOf(pointslogsBean.points) );
                 }
 
                 TextView point_log_text_tv = holder.getView(R.id.point_log_text_tv);
@@ -220,13 +220,13 @@ public class MyIntegralActivity extends BaseActivity {
      */
     public void setSignMsg(TextView textView, boolean isSign, int times) {
         if (isSign) {
-            String str = "已连续签到" + times + "天" + "明天再来呦";
+            String str = "已连续签到" + times + "天" + "，明天再来呦";
             SpannableStringBuilder style = new SpannableStringBuilder(str);
             style.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.orange)), str.indexOf(String.valueOf(times)), str.indexOf(String.valueOf(times)) + String.valueOf(times).length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             textView.setText(style);//将其添加到tv中
         } else {
             if (times > 0) {
-                String str = "已连续签到" + times + "天" + "继续签到吧";
+                String str = "已连续签到" + times + "天" + "，继续签到吧";
                 SpannableStringBuilder style = new SpannableStringBuilder(str);
                 style.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.orange)), str.indexOf(String.valueOf(times)), str.indexOf(String.valueOf(times)) + String.valueOf(times).length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 textView.setText(style);

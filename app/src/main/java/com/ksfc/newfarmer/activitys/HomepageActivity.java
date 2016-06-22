@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
@@ -116,8 +117,9 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
         showProgressDialog();
         RemoteApi.getClassId(this);
         RemoteApi.getBanner(this);
-        RemoteApi.getIntegral(this);
-
+        if (isLogin()){
+            RemoteApi.getIntegral(this);
+        }
         //签到通知
         MsgCenter.addListener(new MsgListener() {
             @Override
@@ -125,6 +127,14 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
                 isSigned = true;
             }
         }, MsgID.IS_Signed);
+
+        //登录通知
+        MsgCenter.addListener(new MsgListener() {
+            @Override
+            public void onMsg(Object sender, String msg, Object... args) {
+                RemoteApi.getIntegral(HomepageActivity.this);
+            }
+        }, MsgID.ISLOGIN);
     }
 
     //获得首页列表数据
@@ -255,6 +265,8 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
             IntegralGetResult data = (IntegralGetResult) req.getData();
             if (data.datas != null && data.datas.sign != null && data.datas.sign.signed == 1) {
                 isSigned = true;
+            }else {
+                isSigned = false;
                 getRightImageView().startAnimation(shakeAnimation);
             }
         } else if (req.getApi() == ApiType.GETHOMEPIC) {
@@ -607,6 +619,8 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
     protected void onResume() {
         super.onResume();
         if (isLogin()) {
+            Log.d("HomepageActivity", "此处执行");
+            Log.d("HomepageActivity", isSigned + "");
             if (!isSigned && shakeAnimation != null) {
                 getRightImageView().startAnimation(shakeAnimation);
             }

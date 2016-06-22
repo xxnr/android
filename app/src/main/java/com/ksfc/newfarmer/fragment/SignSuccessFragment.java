@@ -39,12 +39,11 @@ public class SignSuccessFragment extends BaseFragment {
     public View InItView() {
         View view = inflater.inflate(R.layout.sign_success_fragment_layout, null);
         unbinder = ButterKnife.bind(this, view);
-
         Bundle bundle = getArguments();
         PointResult pointResult = (PointResult) bundle.getSerializable("pointResult");
         if (pointResult != null) {
-            signSuccessTimesTv.setText(pointResult.consecutiveTimes);
-            signSuccessCountTv.setText(pointResult.pointAdded);
+            signSuccessTimesTv.setText(String.valueOf(pointResult.consecutiveTimes));
+            signSuccessCountTv.setText(String.valueOf(pointResult.pointAdded));
         }
         // 获取AnimationDrawable对象
         final AnimationDrawable animationDrawable = (AnimationDrawable) signSuccessGifImg.getBackground();
