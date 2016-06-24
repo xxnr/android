@@ -22,6 +22,7 @@ public abstract class CommonAdapter<T> extends BaseAdapter {
     protected LayoutInflater mInflater;
     protected int layoutId;
 
+
     public CommonAdapter(Context context, List<T> data, int layoutId) {
         if (context == null) {
             context = App.getApp().getApplicationContext();

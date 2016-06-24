@@ -142,6 +142,8 @@
             android:divider="@color/gray"
             android:dividerHeight="1px"
             android:scrollbars="none"
+            android:footerDividersEnabled="false"
+            android:headerDividersEnabled="false"
             ptr:ptrAnimationStyle="rotate"
             ptr:ptrDrawable="@drawable/loader"
             ptr:ptrHeaderBackground="@color/re_flash"

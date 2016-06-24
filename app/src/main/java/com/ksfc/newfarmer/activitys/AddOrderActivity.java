@@ -463,7 +463,7 @@ public class AddOrderActivity extends BaseActivity implements RadioGroup.OnCheck
                 ordering_now_pri.setText("¥" + StringUtil.toTwoString(goods.xianjia + ""));
 
                 //附加选项
-                UnSwipeListView additions_listView =  holder.getView(R.id.additions_listView);
+                UnSwipeListView additions_listView = holder.getView(R.id.additions_listView);
                 if (goods.additionsList != null && !goods.additionsList.isEmpty()) {
                     additions_listView.setVisibility(View.VISIBLE);
                     AdditionsAdapter adapter = new AdditionsAdapter(AddOrderActivity.this, goods.additionsList);
@@ -699,6 +699,8 @@ public class AddOrderActivity extends BaseActivity implements RadioGroup.OnCheck
                 } else {
                     price += good.num
                             * good.xianjia;
+                    //如果有附加选项加上附加选项的金额
+                    price += good.additionPrice * good.num;
                 }
             }
         }

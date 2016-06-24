@@ -10,30 +10,31 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.adapter.CommonAdapter;
 import com.ksfc.newfarmer.adapter.CommonViewHolder;
 import com.ksfc.newfarmer.common.CommonFunction;
+import com.ksfc.newfarmer.common.LoadMoreOnsrcollListener;
 import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.protocol.ApiType;
+import com.ksfc.newfarmer.protocol.RemoteApi;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
 import com.ksfc.newfarmer.protocol.beans.IntegralGetResult;
 import com.ksfc.newfarmer.protocol.beans.PointLogsResult;
 import com.ksfc.newfarmer.protocol.beans.PointResult;
-import com.ksfc.newfarmer.utils.ActivityAnimationUtils;
 import com.ksfc.newfarmer.utils.DateFormatUtils;
-import com.ksfc.newfarmer.utils.IntentUtil;
+import com.ksfc.newfarmer.utils.PullToRefreshUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
-import com.ksfc.newfarmer.widget.UnSwipeListView;
+import com.ksfc.newfarmer.widget.LoadingFooter;
 import com.squareup.picasso.Picasso;
 
-import net.yangentao.util.DateUtil;
 import net.yangentao.util.msg.MsgCenter;
 
-import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -42,21 +43,31 @@ import butterknife.ButterKnife;
 /**
  * Created by CAI on 2016/6/17.
  */
-public class MyIntegralActivity extends BaseActivity {
-    @BindView(R.id.my_integral_count_tv)
-    TextView myIntegralCountTv;
-    @BindView(R.id.sign_button_tv)
-    TextView signButtonTv;
-    @BindView(R.id.sign_description_tv)
-    TextView signDescriptionTv;
+public class MyIntegralActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener {
+
     @BindView(R.id.unSwipeListView)
-    UnSwipeListView unSwipeListView;
-    @BindView(R.id.content_ll)
-    LinearLayout content_ll;
+    PullToRefreshListView unSwipeListView;
     @BindView(R.id.content_empty_ll)
     LinearLayout content_empty_ll;
-    @BindView(R.id.sign_state_img_iv)
-    ImageView sign_state_img_iv;
+
+    private int page = 1;
+    private PointAdapter adapter;
+
+
+    private LoadingFooter loadingFooter;
+    private LoadMoreOnsrcollListener moreOnsrcollListener = new LoadMoreOnsrcollListener() {
+        @Override
+        public void loadMore() {
+            //加载更多
+            if (loadingFooter.getState() == LoadingFooter.State.Idle) {
+                loadingFooter.setState(LoadingFooter.State.Loading);
+                page++;
+                RemoteApi.getPointsLogs(MyIntegralActivity.this, page);
+            }
+        }
+    };
+    private ViewHolder holder;
+    private int score;
 
 
     @Override
@@ -68,34 +79,29 @@ public class MyIntegralActivity extends BaseActivity {
     public void OnActCreate(Bundle savedInstanceState) {
         ButterKnife.bind(this);
         setTitle("我的积分");
-        getIntegral();
-        getData();
-        setViewClick(R.id.sign_button_tv);
-        content_ll.setVisibility(View.GONE);
+
+        View headView = getLayoutInflater().inflate(R.layout.head_my_integral_layout, null);
+        holder = new ViewHolder(headView);
+
+        unSwipeListView.setOnScrollListener(moreOnsrcollListener);
+        loadingFooter = new LoadingFooter(this, unSwipeListView.getRefreshableView());
+
+        unSwipeListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+        unSwipeListView.setOnRefreshListener(this);
+        unSwipeListView.getRefreshableView().addHeaderView(headView);
+        unSwipeListView.setAdapter(null);
+
+        holder.signButtonTv.setOnClickListener(this);
+        holder.contentLl.setVisibility(View.GONE);
         content_empty_ll.setVisibility(View.GONE);
+
+        showProgressDialog();
+        RemoteApi.getIntegral(this);
+        RemoteApi.getPointsLogs(this, page);
+
+
     }
 
-    /**
-     * 获取积分列表
-     */
-    private void getData() {
-        RequestParams params = new RequestParams();
-        if (isLogin()) {
-            params.put("userId", Store.User.queryMe().userid);
-        }
-        execApi(ApiType.GET_POINTS_LOGS.setMethod(ApiType.RequestMethod.GET), params);
-    }
-
-    /**
-     * 获得积分
-     */
-    private void getIntegral() {
-        RequestParams params = new RequestParams();
-        if (isLogin()) {
-            params.put("userId", Store.User.queryMe().userid);
-        }
-        execApi(ApiType.GET_INTEGRAL.setMethod(ApiType.RequestMethod.GET), params);
-    }
 
     /**
      * 签到
@@ -120,43 +126,70 @@ public class MyIntegralActivity extends BaseActivity {
 
     @Override
     public void onResponsed(Request req) {
+        unSwipeListView.onRefreshComplete();
         if (req.getApi() == ApiType.GET_INTEGRAL) {
             IntegralGetResult data = (IntegralGetResult) req.getData();
             if (data.datas != null) {
                 //积分
-                myIntegralCountTv.setText(data.datas.score + "");
-                //积分为0时的布局
-                if (data.datas.score == 0 && signButtonTv.isEnabled()) {
-                    content_empty_ll.setVisibility(View.VISIBLE);
-                } else {
-                    content_empty_ll.setVisibility(View.GONE);
-                }
+                score = data.datas.score;
+                holder.myIntegralCountTv.setText(score + "");
                 //签到msg
                 if (data.datas.sign != null) {
                     int consecutiveTimes = data.datas.sign.consecutiveTimes;
                     //签到时间大于今天
                     boolean isSign = data.datas.sign.signed == 1;
                     // 签到后不能再次签到
-                    signButtonTv.setEnabled(!isSign);
-                    signButtonTv.setText(isSign ? "已签到" : "签到");
-                    setSignMsg(signDescriptionTv, isSign, consecutiveTimes);
+                    holder.signButtonTv.setEnabled(!isSign);
+                    holder.signButtonTv.setText(isSign ? "已签到" : "签到");
+                    setSignMsg(holder.signDescriptionTv, isSign, consecutiveTimes);
                     //加载图片
                     if (StringUtil.checkStr(data.datas.sign.large_imgUrl)) {
-                        Picasso.with(MyIntegralActivity.this).load(MsgID.IP + data.datas.sign.large_imgUrl).into(sign_state_img_iv);
+                        Picasso.with(MyIntegralActivity.this).load(MsgID.IP + data.datas.sign.large_imgUrl).into(holder.signStateImgIv);
                     }
                 } else {
-                    setSignMsg(signDescriptionTv, false, 0);
+                    setSignMsg(holder.signDescriptionTv, false, 0);
                 }
             }
         } else if (req.getApi() == ApiType.GET_POINTS_LOGS) {
+
             PointLogsResult reqData = (PointLogsResult) req.getData();
             if (reqData.datas != null) {
-                List<PointLogsResult.DatasBean.PointslogsBean> pointslogs = reqData.datas.pointslogs;
-                if (pointslogs != null && !pointslogs.isEmpty()) {
-                    PointAdapter adapter = new PointAdapter(MyIntegralActivity.this, pointslogs);
-                    unSwipeListView.setAdapter(adapter);
-                    content_ll.setVisibility(View.VISIBLE);
+                List<PointLogsResult.DatasBean.PointslogsBean> list = reqData.datas.pointslogs;
+                if (list != null && !list.isEmpty()) {
+
+                    loadingFooter.setSize(page, list.size());
+                    holder.contentLl.setVisibility(View.VISIBLE);
+                    if (page == 1) {
+                        if (adapter == null) {
+                            adapter = new PointAdapter(MyIntegralActivity.this, list);
+                            unSwipeListView.setAdapter(adapter);
+                        } else {
+                            adapter.clear();
+                            adapter.addAll(list);
+                        }
+                    } else {
+                        if (adapter != null) {
+                            adapter.addAll(list);
+                        }
+                    }
+                } else {
+                    if (page == 1) {
+                        if (adapter != null) {
+                            //积分为0时的布局
+                            if (score == 0 && holder.signButtonTv.isEnabled()) {
+                                content_empty_ll.setVisibility(View.VISIBLE);
+                            } else {
+                                content_empty_ll.setVisibility(View.GONE);
+                            }
+                            adapter.clear();
+                            holder.contentLl.setVisibility(View.GONE);
+                        }
+                    } else {
+                        page--;
+                    }
+
                 }
+
             }
 
         } else if (ApiType.SIGN_IN_POINT == req.getApi()) {
@@ -165,9 +198,17 @@ public class MyIntegralActivity extends BaseActivity {
             PointResult reqData = (PointResult) req.getData();
             //展示签到成功的页面
             CommonFunction.showSuccess(this, reqData);
-            getIntegral();
-            getData();
+            RemoteApi.getIntegral(this);
+            page = 1;
+            RemoteApi.getPointsLogs(this, page);
         }
+    }
+
+    @Override
+    public void onRefresh(PullToRefreshBase refreshView) {
+        PullToRefreshUtils.setFreshClose(refreshView);
+        page = 1;
+        RemoteApi.getPointsLogs(this, page);
     }
 
 
@@ -190,7 +231,7 @@ public class MyIntegralActivity extends BaseActivity {
                     holder.setText(R.id.point_log_point_tv, "+" + pointslogsBean.points);
                 } else {
                     point_log_point_tv.setTextColor(getResources().getColor(R.color.deep_gray));
-                    holder.setText(R.id.point_log_point_tv,String.valueOf(pointslogsBean.points) );
+                    holder.setText(R.id.point_log_point_tv, String.valueOf(pointslogsBean.points));
                 }
 
                 TextView point_log_text_tv = holder.getView(R.id.point_log_text_tv);
@@ -237,4 +278,20 @@ public class MyIntegralActivity extends BaseActivity {
     }
 
 
+    static class ViewHolder {
+        @BindView(R.id.my_integral_count_tv)
+        TextView myIntegralCountTv;
+        @BindView(R.id.sign_button_tv)
+        TextView signButtonTv;
+        @BindView(R.id.sign_state_img_iv)
+        ImageView signStateImgIv;
+        @BindView(R.id.sign_description_tv)
+        TextView signDescriptionTv;
+        @BindView(R.id.content_ll)
+        LinearLayout contentLl;
+
+        ViewHolder(View view) {
+            ButterKnife.bind(this, view);
+        }
+    }
 }

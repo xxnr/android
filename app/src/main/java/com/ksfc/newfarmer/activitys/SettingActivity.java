@@ -5,13 +5,18 @@ package com.ksfc.newfarmer.activitys;
 
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
+import com.ksfc.newfarmer.common.CompleteReceiver;
 import com.ksfc.newfarmer.db.XUtilsDb.XUtilsDbHelper;
+import com.ksfc.newfarmer.protocol.ApiType;
+import com.ksfc.newfarmer.protocol.RemoteApi;
 import com.ksfc.newfarmer.protocol.Request;
+import com.ksfc.newfarmer.protocol.beans.AppUpgrade;
 import com.ksfc.newfarmer.protocol.beans.InviteeResult;
 import com.ksfc.newfarmer.protocol.beans.PotentialListResult;
 import com.ksfc.newfarmer.utils.PopWindowUtils;
 import com.ksfc.newfarmer.utils.Utils;
 import com.ksfc.newfarmer.widget.dialog.CustomDialog;
+import com.ksfc.newfarmer.widget.dialog.CustomDialogUpdate;
 import com.ksfc.newfarmer.widget.dialog.CustomProgressDialog;
 import com.ksfc.newfarmer.widget.dialog.CustomProgressDialogForCache;
 import com.ksfc.newfarmer.utils.DataCleanManager;
@@ -32,8 +37,10 @@ import com.umeng.update.UpdateResponse;
 import com.umeng.update.UpdateStatus;
 
 import android.app.Dialog;
+import android.app.DownloadManager;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -60,7 +67,6 @@ public class SettingActivity extends BaseActivity implements CompoundButton.OnCh
     private TextView versionName;
     private CheckBox checkBox;
     private Dialog progressDialog;
-    private boolean toastFlag = false;
 
     private String msg = "农业互联网综合服务领先者";
     private String title = "新新农人-农业互联网综合服务平台";
@@ -106,6 +112,7 @@ public class SettingActivity extends BaseActivity implements CompoundButton.OnCh
         }
 
     };
+    private CompleteReceiver completeReceiver;
 
 
     @Override
@@ -117,6 +124,10 @@ public class SettingActivity extends BaseActivity implements CompoundButton.OnCh
     public void OnActCreate(Bundle savedInstanceState) {
         setTitle("设置");
         initView();
+
+        //在主页判断版本是否需要升级 并注册监听下载完成之后的广播
+        completeReceiver = new CompleteReceiver();
+        registerReceiver(completeReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
     }
 
     private void initView() {
@@ -234,22 +245,9 @@ public class SettingActivity extends BaseActivity implements CompoundButton.OnCh
     public void OnViewClick(View v) {
         switch (v.getId()) {
             case R.id.versionManage://检查更新
-                UmengUpdateAgent.forceUpdate(getApplicationContext());
-                UmengUpdateAgent.setUpdateListener(new UmengUpdateListener() {
-                    @Override
-                    public void onUpdateReturned(int updateStatus, UpdateResponse updateInfo) {
-                        switch (updateStatus) {
-                            case UpdateStatus.Yes: // has update
-                                UmengUpdateAgent.showUpdateDialog(SettingActivity.this, updateInfo);
-                                break;
-                            case UpdateStatus.No: // has no update
-                                if (toastFlag) {
-                                    showToast("已经是最新版本");
-                                }
-                                break;
-                        }
-                    }
-                });
+                //app 是否需要升级
+                RemoteApi.appIsNeedUpdate(this);
+
                 break;
             case R.id.clear_cache://清除缓存
                 CustomDialog.Builder builder = new CustomDialog.Builder(
@@ -324,7 +322,32 @@ public class SettingActivity extends BaseActivity implements CompoundButton.OnCh
 
     @Override
     public void onResponsed(Request req) {
-
+        if (ApiType.APP_UP_GRADE == req.getApi()) {
+            final AppUpgrade reqData = (AppUpgrade) req.getData();
+            if (StringUtil.checkStr(reqData.android_update_url)) {
+                CustomDialogUpdate.Builder builder = new CustomDialogUpdate.Builder(
+                        SettingActivity.this);
+                builder.setMessage(reqData.getMessage())
+                        .setTitle("V" + reqData.version)
+                        .setPositiveButton("立即下载", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Utils.loadApk(SettingActivity.this, reqData.android_update_url, "Download");
+                                showToast("正在下载请稍后...");
+                                dialog.dismiss();
+                            }
+                        })
+                        .setNegativeButton("暂不升级", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                CustomDialog dialog = builder.create();
+                dialog.setCanceledOnTouchOutside(false);
+                dialog.show();
+            }
+        }
     }
 
 
@@ -368,15 +391,12 @@ public class SettingActivity extends BaseActivity implements CompoundButton.OnCh
 
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        toastFlag = true;
-    }
+
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        toastFlag = false;
+    protected void onDestroy() {
+        super.onDestroy();
+        //解除对下载完成事件的监听
+        unregisterReceiver(completeReceiver);
     }
 }

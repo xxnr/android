@@ -4,36 +4,38 @@
     android:orientation="vertical">
 
     <include layout="@layout/title_lay" />
-    
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@color/white">
-        
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            
+
             <TextView
                 android:layout_width="1px"
                 android:layout_height="30dp"
-                android:background="@color/deep1_gray"
-                android:layout_centerInParent="true"/>
+                android:layout_centerInParent="true"
+                android:background="@color/deep1_gray" />
         </RelativeLayout>
-        <android.support.design.widget.TabLayout
+
+        <android.support.design.widget.TabLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:background="@color/transparent"
             app:tabIndicatorColor="@color/green"
             app:tabSelectedTextColor="@color/green"
-            app:tabTextColor="@color/black_goods_titile"
-            android:id="@+id/tabs"
-            android:background="@color/transparent"/>
+            app:tabTextColor="@color/black_goods_titile" />
     </FrameLayout>
 
+    <include layout="@layout/line_lay" />
+
     <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/viewPager"/>
+        android:layout_height="match_parent" />
 
 </LinearLayout>

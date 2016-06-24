@@ -178,4 +178,18 @@ public class RemoteApi {
     }
 
 
+    /**
+     * 获取积分列表
+     */
+    public static void getPointsLogs(BaseActivity activity, int page) {
+        RequestParams params = new RequestParams();
+        LoginResult.UserInfo userInfo = Store.User.queryMe();
+        if (userInfo != null) {
+            params.put("userId", userInfo.userid);
+        }
+        params.put("page", page);
+        activity.execApi(ApiType.GET_POINTS_LOGS.setMethod(ApiType.RequestMethod.GET), params);
+    }
+
+
 }

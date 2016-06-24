@@ -31,6 +31,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
+import com.ksfc.newfarmer.common.LoadMoreOnsrcollListener;
 import com.ksfc.newfarmer.order.OrderUtils;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.adapter.CommonAdapter;
@@ -50,6 +51,7 @@ import com.ksfc.newfarmer.utils.ShowHideUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.ClearEditText;
 import com.ksfc.newfarmer.widget.KeyboardListenRelativeLayout;
+import com.ksfc.newfarmer.widget.LoadingFooter;
 import com.ksfc.newfarmer.widget.RecyclerImageView;
 import com.ksfc.newfarmer.widget.UnSwipeGridView;
 import com.ksfc.newfarmer.widget.WidgetUtil;
@@ -68,7 +70,7 @@ import java.util.TimerTask;
 /**
  * Created by HePeng on 2016/3/28.
  */
-public class RscSearchOrderActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener2, KeyboardListenRelativeLayout.IOnKeyboardStateChangedListener {
+public class RscSearchOrderActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener, KeyboardListenRelativeLayout.IOnKeyboardStateChangedListener {
     private ClearEditText rsc_search_edit;
     private TextView rsc_search_text;
     private String search;
@@ -97,6 +99,20 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
     private OrderAdapter adapter;
     private RelativeLayout pop_bg;
     private KeyboardListenRelativeLayout rootView;
+
+    private LoadingFooter loadingFooter;
+
+    private LoadMoreOnsrcollListener moreOnsrcollListener = new LoadMoreOnsrcollListener() {
+        @Override
+        public void loadMore() {
+            //加载更多
+            if (loadingFooter.getState() == LoadingFooter.State.Idle) {
+                loadingFooter.setState(LoadingFooter.State.Loading);
+                page++;
+                getData(page);
+            }
+        }
+    };
 
 
     @Override
@@ -154,8 +170,11 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
 
 
         waitingpay_lv = (PullToRefreshListView) findViewById(R.id.waitingpay_lv);
-        waitingpay_lv.setMode(PullToRefreshBase.Mode.BOTH);
+        waitingpay_lv.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
         waitingpay_lv.setOnRefreshListener(this);
+
+        waitingpay_lv.setOnScrollListener(moreOnsrcollListener);
+        loadingFooter = new LoadingFooter(this,waitingpay_lv.getRefreshableView());
         //设置刷新的文字
         PullToRefreshUtils.setFreshText(waitingpay_lv);
         //无订单下的状态
@@ -311,11 +330,11 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
                 if (!orders.isEmpty()) {
                     null_layout.setVisibility(View.GONE);
                     if (page == 1) {
+                        loadingFooter.setSize(page,orders.size());
                         if (adapter == null) {
                             adapter = new OrderAdapter(this, orders);
                             WidgetUtil.setListViewHeightBasedOnChildren(waitingpay_lv);
                             waitingpay_lv.setAdapter(adapter);
-
                         } else {
                             adapter.clear();
                             adapter.addAll(orders);
@@ -334,7 +353,6 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
                         null_layout.setVisibility(View.VISIBLE);
                     } else {
                         page--;
-                        showToast("没有更多订单");
                     }
                 }
             }
@@ -457,7 +475,7 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
                                                 if (msg.what == 2) {
                                                     showCheckOfflinePayPopUp(v, ordersEntity);
                                                 } else {
-                                                    page=1;
+                                                    page = 1;
                                                     RscSearchOrderActivity.this.getData(page);
                                                 }
                                             }
@@ -1113,22 +1131,13 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
     }
 
 
-    //刷新的方法
     @Override
-    public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+    public void onRefresh(PullToRefreshBase refreshView) {
         PullToRefreshUtils.setFreshClose(refreshView);
         page = 1;
         getData(page);
     }
 
-    @Override
-    public void onPullUpToRefresh(PullToRefreshBase refreshView) {
-
-        PullToRefreshUtils.setFreshClose(refreshView);
-        page++;
-        getData(page);
-
-    }
 
     /**
      * 数据请求
@@ -1146,6 +1155,7 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
             if (userInfo != null) {
                 params.put("userId", userInfo.userid);
             }
+            params.put("max", 20);
             params.put("page", page);
             params.put("search", search);
             execApi(ApiType.GET_RSC_ORDER_LIST.setMethod(ApiType.RequestMethod.GET), params);

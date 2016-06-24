@@ -19,6 +19,9 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.handmark.pulltorefresh.library.ILoadingLayout;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
@@ -32,6 +35,7 @@ import com.ksfc.newfarmer.protocol.beans.GiftListResult;
 import com.ksfc.newfarmer.protocol.beans.IntegralGetResult;
 import com.ksfc.newfarmer.utils.ActivityAnimationUtils;
 import com.ksfc.newfarmer.utils.IntentUtil;
+import com.ksfc.newfarmer.utils.PullToRefreshUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.utils.Utils;
 import com.ksfc.newfarmer.widget.UnSwipeGridView;
@@ -50,7 +54,7 @@ import butterknife.ButterKnife;
 /**
  * Created by CAI on 2016/6/16.
  */
-public class IntegralTallActivity extends BaseActivity  {
+public class IntegralTallActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener {
 
     @BindView(R.id.titleview)
     RelativeLayout titleview;
@@ -65,7 +69,9 @@ public class IntegralTallActivity extends BaseActivity  {
     @BindView(R.id.head_unLogin_tall_layout_float)
     LinearLayout headUnLoginTallLayoutFloat;
     @BindView(R.id.tall_srcollView)
-    ScrollView scrollView;
+    PullToRefreshScrollView scrollView;
+    @BindView(R.id.return_top)
+    ImageView return_top;
 
 
     //GridView里宽度
@@ -120,6 +126,17 @@ public class IntegralTallActivity extends BaseActivity  {
         setViewClick(R.id.changing_record_ll);
         setViewClick(R.id.integral_rules_ll);
         setViewClick(R.id.head_unLogin_tall_layout_float);
+        setViewClick(R.id.return_top);
+
+        //设置下拉刷新
+        scrollView.setOnRefreshListener(this);
+
+        //设置刷新的文字
+        ILoadingLayout startLabels = scrollView
+                .getLoadingLayoutProxy(true, false);
+        startLabels.setPullLabel("下拉刷新...");// 刚下拉时，显示的提示
+        startLabels.setRefreshingLabel("正在载入...");// 刷新时
+        startLabels.setReleaseLabel("放开刷新...");// 下来达到一定距离时，显示的提示
 
 
     }
@@ -141,6 +158,9 @@ public class IntegralTallActivity extends BaseActivity  {
                     startActivity(LoginActivity.class);
                 }
                 break;
+            case R.id.integral_rules_ll:
+                startActivity(IntegralRulesActivity.class);
+                break;
             case R.id.head_unLogin_tall_layout_float:
                 if (!isLogin()) {
                     startActivity(LoginActivity.class);
@@ -149,10 +169,19 @@ public class IntegralTallActivity extends BaseActivity  {
                     headUnLoginTallLayout.setVisibility(View.GONE);
                 }
                 break;
+            case R.id.return_top:
+                if (scrollView != null) {
+                    scrollView.getRefreshableView().fullScroll(ScrollView.FOCUS_UP);
+                }
+                break;
         }
     }
 
-
+    @Override
+    public void onRefresh(PullToRefreshBase refreshView) {
+        PullToRefreshUtils.setFreshClose(refreshView);
+        RemoteApi.getGiftCategories(this);
+    }
 
 
     class IntegralBean {
@@ -164,6 +193,7 @@ public class IntegralTallActivity extends BaseActivity  {
     @SuppressLint("SetTextI18n")
     @Override
     public void onResponsed(Request req) {
+        scrollView.onRefreshComplete();
         if (req.getApi() == ApiType.GET_INTEGRAL) {
             IntegralGetResult data = (IntegralGetResult) req.getData();
             if (data.datas != null) {
@@ -173,56 +203,81 @@ public class IntegralTallActivity extends BaseActivity  {
         } else if (req.getApi() == ApiType.GET_GIFT_CATEGORIES) {
             GiftCategoriesResult categoriesResult = (GiftCategoriesResult) req.getData();
             if (categoriesResult.categories != null) {
-                for (int i = 0; i < categoriesResult.categories.size(); i++) {
-                    GiftCategoriesResult.CategoriesBean categoriesBean = categoriesResult.categories.get(i);
-                    if (categoriesBean != null) {
-                        //设置 title_bar
-                        ViewGroup viewGroup = (ViewGroup) getLayoutInflater().inflate(R.layout.gift_view_more_bar, null);
-                        ViewHolder holder = new ViewHolder(viewGroup);
-                        if (i % 2 == 1) {
-                            holder.view_bar_more_bar.setBackgroundColor(getResources().getColor(R.color.orange_goods_price));
-                        } else {
-                            holder.view_bar_more_bar.setBackgroundColor(getResources().getColor(R.color.green));
+                if (ViewBeanList.isEmpty() || categoriesResult.categories.size() != ViewBeanList.size()) {
+                    try {
+                        ViewBeanList.clear();
+                        view_container.removeAllViews();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    for (int i = 0; i < categoriesResult.categories.size(); i++) {
+                        GiftCategoriesResult.CategoriesBean categoriesBean = categoriesResult.categories.get(i);
+                        if (categoriesBean != null) {
+                            //设置 title_bar
+                            ViewGroup viewGroup = (ViewGroup) getLayoutInflater().inflate(R.layout.gift_view_more_bar, null);
+                            ViewHolder holder = new ViewHolder(viewGroup);
+                            if (i % 2 == 1) {
+                                holder.view_bar_more_bar.setBackgroundColor(getResources().getColor(R.color.orange_goods_price));
+                            } else {
+                                holder.view_bar_more_bar.setBackgroundColor(getResources().getColor(R.color.green));
+                            }
+                            if (StringUtil.checkStr(categoriesBean.name)) {
+                                holder.view_bar_more_title.setText(categoriesBean.name);
+                            }
+                            viewGroup.setVisibility(View.GONE);
+                            //设置GridView
+                            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                            lp.setMargins(32, 0, 32, 0);
+                            UnSwipeGridView unSwipeGridView = new UnSwipeGridView(this);
+                            unSwipeGridView.setFocusable(false);
+                            unSwipeGridView.setHorizontalSpacing(Utils.dip2px(this, 12));
+                            unSwipeGridView.setVerticalSpacing(Utils.dip2px(this, 15));
+                            unSwipeGridView.setNumColumns(2);
+                            unSwipeGridView.setGravity(Gravity.CENTER);
+                            unSwipeGridView.setStretchMode(GridView.STRETCH_COLUMN_WIDTH);
+                            WindowManager windowManager = getWindowManager();
+                            Display display = windowManager.getDefaultDisplay();
+                            int wh = display.getWidth();
+                            itemWitch = (wh - (Utils.dip2px(this, 12 + 16 * 2))) / 2;
+                            unSwipeGridView.setColumnWidth(Utils.dip2px(this, itemWitch));
+                            unSwipeGridView.setLayoutParams(lp);
+                            LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                            LinearLayout linearLayout = new LinearLayout(getApplicationContext());
+                            linearLayout.setLayoutParams(lp2);
+                            linearLayout.setOrientation(LinearLayout.VERTICAL);
+                            linearLayout.addView(unSwipeGridView);
+                            view_container.addView(viewGroup);
+                            view_container.addView(linearLayout);
+                            //加入集合
+                            IntegralBean integralBean = new IntegralBean();
+                            integralBean._id = categoriesBean._id;
+                            integralBean.unSwipeGridView = unSwipeGridView;
+                            integralBean.viewGroup = viewGroup;
+                            ViewBeanList.add(integralBean);
+                            //请求gift列表
+                            RemoteApi.getGiftList(this, categoriesBean._id);
                         }
-                        if (StringUtil.checkStr(categoriesBean.name)) {
-                            holder.view_bar_more_title.setText(categoriesBean.name);
-                        }
-                        viewGroup.setVisibility(View.GONE);
-                        //设置GridView
-                        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                        lp.setMargins(32, 0, 32, 0);
-                        UnSwipeGridView unSwipeGridView = new UnSwipeGridView(this);
-                        unSwipeGridView.setFocusable(false);
-                        unSwipeGridView.setHorizontalSpacing(Utils.dip2px(this, 12));
-                        unSwipeGridView.setVerticalSpacing(Utils.dip2px(this, 15));
-                        unSwipeGridView.setNumColumns(2);
-                        unSwipeGridView.setGravity(Gravity.CENTER);
-                        unSwipeGridView.setStretchMode(GridView.STRETCH_COLUMN_WIDTH);
-                        WindowManager windowManager = getWindowManager();
-                        Display display = windowManager.getDefaultDisplay();
-                        int wh = display.getWidth();
-                        itemWitch = (wh - (Utils.dip2px(this, 12 + 16 * 2))) / 2;
-                        unSwipeGridView.setColumnWidth(Utils.dip2px(this, itemWitch));
-                        unSwipeGridView.setLayoutParams(lp);
-                        LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                        LinearLayout linearLayout = new LinearLayout(getApplicationContext());
-                        linearLayout.setLayoutParams(lp2);
-                        linearLayout.setOrientation(LinearLayout.VERTICAL);
-                        linearLayout.addView(unSwipeGridView);
-                        view_container.addView(viewGroup);
-                        view_container.addView(linearLayout);
-                        //加入集合
-                        IntegralBean integralBean = new IntegralBean();
-                        integralBean._id = categoriesBean._id;
-                        integralBean.unSwipeGridView = unSwipeGridView;
-                        integralBean.viewGroup = viewGroup;
-                        ViewBeanList.add(integralBean);
-                        //请求gift列表
-                        RemoteApi.getGiftList(this, categoriesBean._id);
                     }
 
+                } else {
+                    if (categoriesResult.categories.size() == ViewBeanList.size()) {
+                        for (int i = 0; i < categoriesResult.categories.size(); i++) {
+                            GiftCategoriesResult.CategoriesBean categoriesBean = categoriesResult.categories.get(i);
+                            IntegralBean integralBean = ViewBeanList.get(i);
+                            if (categoriesBean != null && integralBean != null) {
+                                if (StringUtil.checkStr(categoriesBean.name)) {
+                                    ViewHolder holder = new ViewHolder(integralBean.viewGroup);
+                                    holder.view_bar_more_title.setText(categoriesBean.name);
+                                }
+                                //请求gift列表
+                                RemoteApi.getGiftList(this, categoriesBean._id);
+                            }
+                        }
+                    }
                 }
             }
+
+
         } else if (ApiType.GET_GIFT_LIST == req.getApi()) {
             GiftListResult data = (GiftListResult) req.getData();
             if (data.datas != null && data.datas.gifts != null) {

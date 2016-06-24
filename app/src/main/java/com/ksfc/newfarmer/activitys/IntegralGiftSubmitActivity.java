@@ -1,6 +1,8 @@
 package com.ksfc.newfarmer.activitys;
 
+import android.app.DownloadManager;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -11,6 +13,7 @@ import com.google.gson.Gson;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
+import com.ksfc.newfarmer.common.CompleteReceiver;
 import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.RemoteApi;
@@ -58,6 +61,9 @@ public class IntegralGiftSubmitActivity extends BaseActivity {
     TextView giftPriceTv;
     @BindView(R.id.gift_submit_sure_tv)
     TextView gift_submit_sure_tv;
+    @BindView(R.id.up_grade)
+    TextView up_grade;
+
 
     //网点和收货人的请求码
     private final static int requestState = 1;
@@ -66,6 +72,10 @@ public class IntegralGiftSubmitActivity extends BaseActivity {
     private String consigneePhone;
     private RSCStateInfoResult.RSCsEntity rsCsEntity;
     private GiftDetailResult.GiftBean gift;
+
+    private CompleteReceiver completeReceiver;
+
+    private List deliveries = new ArrayList();
 
 
     @Override
@@ -79,11 +89,14 @@ public class IntegralGiftSubmitActivity extends BaseActivity {
         setTitle("提交兑换");
         giftSubmitEmptyLl.setVisibility(View.GONE);
         giftSubmitLl.setVisibility(View.VISIBLE);
-
         InitData();
+        deliveries.add(1);
         //获取联系人
         RemoteApi.getConsignees(this);
 
+        //在主页判断版本是否需要升级 并注册监听下载完成之后的广播
+        completeReceiver = new CompleteReceiver();
+        registerReceiver(completeReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
     }
 
     /**
@@ -95,47 +108,41 @@ public class IntegralGiftSubmitActivity extends BaseActivity {
             gift = (GiftDetailResult.GiftBean) extras.getSerializable("gift");
             if (gift != null) {
                 //判断是否包含自提的配送方式
-                boolean isZITI = false;
+                boolean isSupport = false;
                 if (gift.category != null
                         && gift.category.deliveries != null
                         && !gift.category.deliveries.isEmpty()) {
                     for (int i = 0; i < gift.category.deliveries.size(); i++) {
                         GiftDetailResult.GiftBean.CategoryBean.DeliveriesBean deliveriesBean = gift.category.deliveries.get(i);
                         if (deliveriesBean != null) {
-                            if (deliveriesBean.deliveryType == 1) {
-                                isZITI = true;
+                            switch (deliveriesBean.deliveryType) {
+                                case 1:
+                                    isSupport = true;
+                                    break;
                             }
                         }
                     }
                 }
-                if (!isZITI) {
+                if (!isSupport) {
                     giftSubmitEmptyLl.setVisibility(View.VISIBLE);
                     giftSubmitLl.setVisibility(View.GONE);
-                    return;
+                } else {
+                    giftSubmitEmptyLl.setVisibility(View.GONE);
+                    giftSubmitLl.setVisibility(View.VISIBLE);
+                    if (StringUtil.checkStr(gift.thumbnail)) {
+                        ImageLoader.getInstance().displayImage(MsgID.IP + gift.thumbnail, giftImgIv);
+                    }
+                    giftNameTv.setText(StringUtil.checkStr(gift.name) ? gift.name : "");
+                    giftPriceTv.setText(String.valueOf(gift.points));
+
+                    //确定兑换
+                    gift_submit_sure_tv.setOnClickListener(this);
+
+                    setViewClick(R.id.select_state_address_ll_state);
+                    setViewClick(R.id.select_state_address_ll_person);
                 }
-
-                giftSubmitEmptyLl.setVisibility(View.GONE);
-                giftSubmitLl.setVisibility(View.VISIBLE);
-
-                if (StringUtil.checkStr(gift.thumbnail)) {
-                    ImageLoader.getInstance().displayImage(MsgID.IP + gift.thumbnail, giftImgIv);
-                }
-
-                giftNameTv.setText(StringUtil.checkStr(gift.name) ? gift.name : "");
-                giftPriceTv.setText(String.valueOf(gift.points));
-
-                //确定兑换
-                gift_submit_sure_tv.setOnClickListener(this);
-
-                setViewClick(R.id.select_state_address_ll_state);
-                setViewClick(R.id.select_state_address_ll_person);
-
-
             }
-
-
         }
-
     }
 
 
@@ -171,6 +178,10 @@ public class IntegralGiftSubmitActivity extends BaseActivity {
                 bundle1.putString("consigneePhone", consigneePhone);
                 IntentUtil.startActivityForResult(this, SelectDeliveriesPersonActivity.class,
                         requestPerson, bundle1);
+                break;
+            case R.id.up_grade://选择收货人
+                //app 是否需要升级
+                RemoteApi.appIsNeedUpdate(this);
                 break;
         }
     }
@@ -250,6 +261,14 @@ public class IntegralGiftSubmitActivity extends BaseActivity {
                 break;
         }
 
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //解除对下载完成事件的监听
+        unregisterReceiver(completeReceiver);
     }
 
 

@@ -18,14 +18,15 @@
         <RelativeLayout
             android:id="@+id/to_order_state_rel"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
+            android:layout_height="match_parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
+
                 <include layout="@layout/line_lay" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
@@ -46,7 +47,7 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:background="@color/white"
-                    android:gravity="top">
+                    android:gravity="center_vertical">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -60,6 +61,29 @@
                         android:layout_height="wrap_content"
                         android:text=""
                         android:textColor="@color/orange" />
+
+                    <LinearLayout
+                        android:id="@+id/integral_count_ll"
+                        android:visibility="invisible"
+                        android:layout_marginLeft="20dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/gift_integral_icon" />
+
+                        <TextView
+                            android:id="@+id/integral_count_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:text="200"
+                            android:textColor="@color/orange_goods_price" />
+
+                    </LinearLayout>
 
 
                 </LinearLayout>

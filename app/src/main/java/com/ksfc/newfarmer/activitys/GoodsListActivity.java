@@ -47,6 +47,7 @@ import com.ksfc.newfarmer.utils.PullToRefreshUtils;
 import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.ScreenUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
+import com.ksfc.newfarmer.widget.LoadingFooter;
 import com.ksfc.newfarmer.widget.UnSwipeGridView;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -55,7 +56,7 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-public class GoodsListActivity extends BaseActivity implements OnItemClickListener, PullToRefreshBase.OnRefreshListener2, AbsListView.OnScrollListener {
+public class GoodsListActivity extends BaseActivity implements OnItemClickListener, PullToRefreshBase.OnRefreshListener, AbsListView.OnScrollListener {
 
     private List<SingleGood> nycList = new ArrayList<>();
     private PullToRefreshListView listView;
@@ -108,6 +109,7 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
 
     private boolean oldFlag = false;//是否用上次的请求
     private String className;
+    private LoadingFooter mLoadingFooter;
 
 
     @Override
@@ -138,9 +140,11 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
     public void initView() {
         listView = (PullToRefreshListView) findViewById(R.id.information_listView);
         listView.setOnRefreshListener(this);
-        listView.setMode(PullToRefreshBase.Mode.BOTH);
+        listView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
         //监听滚动 控制return top 按钮
         listView.setOnScrollListener(this);
+        //设置加载更多
+        mLoadingFooter = new LoadingFooter(this, listView.getRefreshableView());
         //设置刷新的文字
         PullToRefreshUtils.setFreshText(listView);
         //没有商品时的layout
@@ -328,9 +332,9 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
         TextView good_name_price = (TextView) popupWindow_view.findViewById(R.id.good_name_price);
 
         if (StringUtil.checkStr(className)) {
-            if (className.equals("化肥")||className.equals("汽车")){
+            if (className.equals("化肥") || className.equals("汽车")) {
                 good_name_price.setVisibility(View.VISIBLE);
-            }else {
+            } else {
                 good_name_price.setVisibility(View.GONE);
             }
         }
@@ -571,8 +575,9 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
             GetGoodsData goodsData = (GetGoodsData) req.getData();
             if ("1000".equals(goodsData.getStatus())) {
                 List<SingleGood> list = goodsData.datas.rows;
-                if (list.size() > 0) {
+                if (list != null && list.size() > 0) {
                     goods_none_view_rel.setVisibility(View.GONE);
+                    mLoadingFooter.setSize(page, list.size());
                     if (page == 1) {
                         if (goodsListAdapter == null) {
                             goodsListAdapter = new GoodsListAdapter(this, list);
@@ -586,13 +591,12 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
                     }
                 } else {
                     if (page == 1) {
-                        if (goodsListAdapter!=null){
+                        if (goodsListAdapter != null) {
                             goodsListAdapter.clear();
                         }
                         goods_none_view_rel.setVisibility(View.VISIBLE);
                         return_top.setVisibility(View.GONE);
                     } else {
-                        showToast("没有更多商品");
                         page--;
                     }
                     if (goodsListAdapter != null) {
@@ -635,7 +639,7 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
             for (String key : lastBrands) {
                 brandsAdapter.states.put(key, true);
             }
-            if (brandsAdapter!=null){
+            if (brandsAdapter != null) {
                 brandsAdapter.notifyDataSetChanged();
             }
             getAttrsData();
@@ -730,6 +734,7 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
         pop_gv4.setVisibility(View.GONE);
         pop_gv5.setVisibility(View.GONE);
     }
+
 
     //popWindow中的品牌
     class BrandsAdapter extends CommonAdapter<BrandsResult.BrandsEntity> {
@@ -879,7 +884,7 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
                 holder.setText(R.id.goods_title, singleGood.goodsName);
             }
             String price = singleGood.unitPrice;
-            TextView price_tv = (TextView) holder.getView(R.id.goods_price);
+            TextView price_tv = holder.getView(R.id.goods_price);
 
             if (singleGood.presale) {
                 price_tv.setText("即将上线");
@@ -895,23 +900,11 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
     }
 
 
-    /**
-     * 下拉和上拉刷新
-     */
-
     @Override
-    public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+    public void onRefresh(PullToRefreshBase refreshView) {
         PullToRefreshUtils.setFreshClose(refreshView);
         oldFlag = true;
         page = 1;
-        getData();
-    }
-
-    @Override
-    public void onPullUpToRefresh(PullToRefreshBase refreshView) {
-        PullToRefreshUtils.setFreshClose(refreshView);
-        oldFlag = true;
-        page++;
         getData();
     }
 
@@ -920,7 +913,7 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position,
                             long id) {
-        SingleGood good = (SingleGood) goodsListAdapter.getItem(position);
+        SingleGood good = goodsListAdapter.getItem(position);
         Intent intent = new Intent(GoodsListActivity.this,
                 GoodsDetailActivity.class);
         if (!TextUtils.isEmpty(good.goodsId)) {
@@ -941,6 +934,12 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
                 if (listView.getRefreshableView().getLastVisiblePosition() ==
                         (listView.getRefreshableView().getCount() - 1)) {
                     return_top.setVisibility(View.VISIBLE);
+                    if (mLoadingFooter.getState() == LoadingFooter.State.Idle) {
+                        mLoadingFooter.setState(LoadingFooter.State.Loading);
+                        oldFlag = true;
+                        page++;
+                        getData();
+                    }
                 }
                 // 判断滚动到顶部
                 if (listView.getRefreshableView().getFirstVisiblePosition() == 0) {

@@ -130,13 +130,19 @@ public class IntegralGiftDetailActivity extends BaseActivity {
                 }
                 giftDetailTitle.setText(StringUtil.checkStr(gift.name) ? gift.name : "");
                 giftDetailIntegralTv.setText(String.valueOf(gift.points));
-                if (gift.marketPrice!=0){
-                    giftDetailMarketPriceTv.setText(StringUtil.reduceDouble(gift.marketPrice));
-                    giftDetailMarketPriceTv.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG); //中划线
-                    giftDetailAbleIntegralTv.setText(String.valueOf(score));
-                }else {
+                giftDetailAbleIntegralTv.setText(String.valueOf(score));
+                try {
+                    if (Double.parseDouble(gift.marketPrice)!=0){
+                        giftDetailMarketPriceTv.setText(gift.marketPrice);
+                        giftDetailMarketPriceTv.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG); //中划线
+                    }else {
+                        giftDetailMarketPriceLl.setVisibility(View.GONE);
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
                     giftDetailMarketPriceLl.setVisibility(View.GONE);
                 }
+
 
                 //礼品介绍
                 giftDetailWebView.getSettings().setJavaScriptEnabled(true);
@@ -184,4 +190,5 @@ public class IntegralGiftDetailActivity extends BaseActivity {
             }
         }
     }
+
 }

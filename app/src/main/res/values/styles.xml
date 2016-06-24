@@ -260,4 +260,14 @@
         <item name="android:background">@color/default_act_bg</item>
     </style>
 
+
+    <!--自定义加载更多时的progress-->
+    <style name="Progress_circle">
+        <item name="android:indeterminateDrawable">@drawable/progressbar_circle</item>
+        <item name="android:minWidth">25dp</item>
+        <item name="android:minHeight">25dp</item>
+        <item name="android:maxWidth">60dp</item>
+        <item name="android:maxHeight">60dp</item>
+    </style>
+
 </resources>

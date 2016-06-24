@@ -72,9 +72,9 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
             //过滤掉四个tab的Activity
             if (!FilterClassUtils.getunSetStatusBarClasses().contains(getClass().getSimpleName())) {
                 if (titleLoaded) {
-                    Utils.setBarTint(this,R.color.green);
+                    Utils.setBarTint(this, R.color.green);
                 } else {
-                    Utils.setBarTint(this,R.color.black);
+                    Utils.setBarTint(this, R.color.black);
                 }
             }
         }
@@ -119,6 +119,7 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
      * @param req
      */
     public void onResponsedError(Request req) {
+
         // empty
     }
 
@@ -185,6 +186,10 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
                             App.getApp().showToast("您输入错误次数较多，请1分钟后再操作");
                         } else if (req.getData().getStatus().equals("1403")) {
                             RndLog.d(TAG, req.getData().getMessage());
+                        } else if (req.getApi() == ApiType.APP_UP_GRADE) {
+                            if (getClass().getSimpleName().equals("SettingActivity")){
+                                req.showErrorMsg();
+                            }
                         } else {
                             req.showErrorMsg();
                         }
@@ -278,7 +283,6 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
             titleRightView.setOnClickListener(listener);
         }
     }
-
 
 
     /*

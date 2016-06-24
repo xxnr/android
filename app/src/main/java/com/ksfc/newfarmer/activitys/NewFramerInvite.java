@@ -131,7 +131,7 @@ public class NewFramerInvite extends BaseActivity implements
         fragmentManager = getSupportFragmentManager();
         FragmentTransaction tanTransaction = fragmentManager.beginTransaction();
         tanTransaction.add(R.id.newframentfragment, friendsList);
-        tanTransaction.commit();
+        tanTransaction.commitAllowingStateLoss();
 
         radioButton3 = (RadioButton) findViewById(R.id.radio_button3);//客户登记按钮
 
@@ -226,7 +226,7 @@ public class NewFramerInvite extends BaseActivity implements
             tanTransaction.hide(friendsList);
 
         }
-        tanTransaction.commit();
+        tanTransaction.commitAllowingStateLoss();
     }
 
 

@@ -82,6 +82,8 @@
         android:layout_height="match_parent"
         android:divider="@color/default_act_bg"
         android:dividerHeight="10dp"
+        android:footerDividersEnabled="false"
+        android:headerDividersEnabled="false"
         android:scrollbars="none"
         ptr:ptrAnimationStyle="rotate"
         ptr:ptrDrawable="@drawable/loader"

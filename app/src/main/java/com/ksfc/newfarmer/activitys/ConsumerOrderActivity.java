@@ -11,6 +11,7 @@ import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.adapter.CommonAdapter;
 import com.ksfc.newfarmer.adapter.CommonViewHolder;
+import com.ksfc.newfarmer.common.LoadMoreOnsrcollListener;
 import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.Request;
@@ -21,6 +22,7 @@ import com.ksfc.newfarmer.utils.DateFormatUtils;
 import com.ksfc.newfarmer.utils.PullToRefreshUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.utils.Utils;
+import com.ksfc.newfarmer.widget.LoadingFooter;
 import com.ksfc.newfarmer.widget.UnSwipeListView;
 import com.ksfc.newfarmer.widget.WidgetUtil;
 
@@ -29,7 +31,7 @@ import java.util.List;
 /**
  * Created by HePeng on 2015/12/24.
  */
-public class ConsumerOrderActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener2 {
+public class ConsumerOrderActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener {
     private TextView name;
     private TextView phone;
     private PullToRefreshListView listView;
@@ -38,6 +40,7 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
     private TextView consumer_count;
     private OrderAdapter adapter;
     private TextView consumer_address;
+    private LoadingFooter loadingFooter;
 
     @Override
     public int getLayout() {
@@ -72,8 +75,11 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
         consumer_address = (TextView) findViewById(R.id.consumer_address);//所在地区
 
         listView = ((PullToRefreshListView) findViewById(R.id.consumer_listView));
-        listView.setMode(PullToRefreshBase.Mode.BOTH);
+        listView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
         listView.setOnRefreshListener(this);
+
+        listView.setOnScrollListener(moreOnsrcollListener);
+        loadingFooter = new LoadingFooter(this, listView.getRefreshableView());
         //设置刷新的文字
         PullToRefreshUtils.setFreshText(listView);
         consumer_count = (TextView) findViewById(R.id.consumer_count);
@@ -153,6 +159,7 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
 
                     List<ConsumerOrderResult.Rows> rows = datas.rows;
                     if (rows != null && !rows.isEmpty()) {
+                        loadingFooter.setSize(page, rows.size());
                         if (page == 1) {
                             if (adapter == null) {
                                 adapter = new OrderAdapter(this, rows);
@@ -163,7 +170,7 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
                                 adapter.addAll(rows);
                             }
                         } else {
-                            if (adapter!=null){
+                            if (adapter != null) {
                                 adapter.addAll(rows);
                             }
                         }
@@ -174,7 +181,6 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
                             }
                         } else {
                             page--;
-                            showToast("没有更多订单");
                         }
                     }
                 }
@@ -184,6 +190,7 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
         }
 
     }
+
 
     //外层的适配器
     class OrderAdapter extends CommonAdapter<ConsumerOrderResult.Rows> {
@@ -286,20 +293,25 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
         }
     }
 
-    //上拉 下拉刷新
     @Override
-    public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+    public void onRefresh(PullToRefreshBase refreshView) {
         PullToRefreshUtils.setFreshClose(refreshView);
         page = 1;
         getData();
     }
 
-    @Override
-    public void onPullUpToRefresh(PullToRefreshBase refreshView) {
-        PullToRefreshUtils.setFreshClose(refreshView);
-        page++;
-        getData();
-    }
+
+    private LoadMoreOnsrcollListener moreOnsrcollListener = new LoadMoreOnsrcollListener() {
+        @Override
+        public void loadMore() {
+            //加载更多
+            if (loadingFooter.getState() == LoadingFooter.State.Idle) {
+                loadingFooter.setState(LoadingFooter.State.Loading);
+                page++;
+                getData();
+            }
+        }
+    };
 
 
 }

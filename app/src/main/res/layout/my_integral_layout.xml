@@ -1,151 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ptr="http://schemas.android.com/apk/res-auto"
     style="@style/base_activity"
-    android:scrollbars="none">
+    android:orientation="vertical">
+
+    <include layout="@layout/title_lay" />
 
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <include layout="@layout/title_lay" />
+        <com.handmark.pulltorefresh.library.PullToRefreshListView
 
-        <ScrollView
+            android:id="@+id/unSwipeListView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:divider="@drawable/line_chang"
+            android:footerDividersEnabled="false"
+            android:headerDividersEnabled="false"
+            android:scrollbars="none"
+            ptr:ptrAnimationStyle="rotate"
+            ptr:ptrDrawable="@drawable/loader"
+            ptr:ptrHeaderBackground="@color/re_flash"
+            ptr:ptrListViewExtrasEnabled="false"
+            ptr:ptrScrollingWhileRefreshingEnabled="true" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
+        <LinearLayout
+            android:id="@+id/content_empty_ll"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <include layout="@layout/line_lay" />
+
+            <ImageView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_marginTop="225dp"
+                android:background="@drawable/integral_empty_img" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:background="@color/white"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="34dp"
+                android:text="签到拿积分啦"
+                android:textColor="@color/deep_gray" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="积分" />
+        </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/my_integral_count_tv"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="14dp"
-                        android:layout_weight="1"
-                        android:text=""
-                        android:textColor="@color/orange_goods_price"
-                        android:textSize="18sp" />
+    </FrameLayout>
 
-
-                    <TextView
-                        android:id="@+id/sign_button_tv"
-                        android:layout_width="70dp"
-                        android:layout_height="25dp"
-                        android:background="@drawable/selector_sgin_button"
-                        android:gravity="center"
-                        android:text="签到"
-                        android:textColor="@color/white" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp">
-
-
-                    <ImageView
-                        android:id="@+id/sign_state_img_iv"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:scaleType="centerCrop" />
-
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="34dp"
-                    android:background="@color/white"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp">
-
-                    <TextView
-                        android:id="@+id/sign_description_tv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="连续签到可以获得更多积分"
-                        android:textSize="12sp" />
-
-                </LinearLayout>
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <LinearLayout
-                        android:id="@+id/content_ll"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:visibility="gone">
-
-                        <include layout="@layout/div_view" />
-
-                        <com.ksfc.newfarmer.widget.UnSwipeListView
-                            android:id="@+id/unSwipeListView"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:divider="@color/gray"
-                            android:dividerHeight="1px"
-                            android:scrollbars="none" />
-
-                        <include layout="@layout/line_lay" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/content_empty_ll"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center_horizontal"
-                        android:orientation="vertical"
-                        android:visibility="gone">
-
-                        <include layout="@layout/line_lay" />
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="102dp"
-                            android:background="@drawable/integral_empty_img" />
-
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="34dp"
-                            android:text="签到拿积分啦"
-                            android:textColor="@color/deep_gray" />
-
-                    </LinearLayout>
-
-                </FrameLayout>
-
-            </LinearLayout>
-
-        </ScrollView>
-
-    </LinearLayout>
 
 </LinearLayout>

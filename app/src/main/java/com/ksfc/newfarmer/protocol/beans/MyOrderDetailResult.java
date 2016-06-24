@@ -33,6 +33,8 @@ public class MyOrderDetailResult extends ResponseResult implements Serializable 
         public int payType;//支付类型
         public boolean confirmed;// 是否确认收货
         public boolean isClosed;//是否关闭;
+        public boolean isRewardPoint;//是否返积分;
+        public int rewardPoints;//积分数量;
         public String duePrice;  // 待付金额,仅用于展示，不用于付款
         public String paySubOrderType;// 本次付款的子订单类型'deposit':阶段一定金, 'balance':阶段二尾款 'full':全款，（可能没有）用于判断本次付款是什么阶段
         public Order order;

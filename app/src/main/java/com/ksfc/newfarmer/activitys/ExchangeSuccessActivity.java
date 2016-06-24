@@ -49,6 +49,7 @@ public class ExchangeSuccessActivity extends BaseActivity {
         switch (v.getId()) {
             case R.id.check_order_tv:
                 //查看兑换记录
+                IntentUtil.activityForward(ExchangeSuccessActivity.this, ExchangeRecordActivity.class, null, true);
                 break;
             case R.id.back_tall_tv:
                 IntentUtil.activityForward(ExchangeSuccessActivity.this, IntegralTallActivity.class, null, true);

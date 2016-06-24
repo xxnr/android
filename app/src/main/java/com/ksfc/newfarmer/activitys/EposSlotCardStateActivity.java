@@ -19,6 +19,7 @@ import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.adapter.CommonAdapter;
 import com.ksfc.newfarmer.adapter.CommonViewHolder;
+import com.ksfc.newfarmer.common.LoadMoreOnsrcollListener;
 import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.Request;
@@ -29,13 +30,14 @@ import com.ksfc.newfarmer.protocol.beans.RSCStateInfoResult;
 import com.ksfc.newfarmer.utils.PopWindowUtils;
 import com.ksfc.newfarmer.utils.PullToRefreshUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
+import com.ksfc.newfarmer.widget.LoadingFooter;
 
 import java.util.List;
 
 /**
  * Created by HePeng on 2016/3/9.
  */
-public class EposSlotCardStateActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener2 {
+public class EposSlotCardStateActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener {
 
     private TextView state_province_text;
     private ImageView state_province_img;
@@ -71,6 +73,20 @@ public class EposSlotCardStateActivity extends BaseActivity implements PullToRef
     private int page = 1;
 
     private DeliveryAdapter deliveryAdapter;
+
+    private LoadingFooter loadingFooter;
+
+    private LoadMoreOnsrcollListener moreOnsrcollListener =new LoadMoreOnsrcollListener() {
+        @Override
+        public void loadMore() {
+            //加载更多
+            if (loadingFooter.getState() == LoadingFooter.State.Idle) {
+                loadingFooter.setState(LoadingFooter.State.Loading);
+                page++;
+                getStateList(provinceId, cityId, countyId);
+            }
+        }
+    };
 
 
     @Override
@@ -118,8 +134,12 @@ public class EposSlotCardStateActivity extends BaseActivity implements PullToRef
         state_county_rel = (LinearLayout) findViewById(R.id.state_county_rel);
         pop_bg = ((RelativeLayout) findViewById(R.id.pop_bg));
 
-        select_state_listView.setMode(PullToRefreshBase.Mode.BOTH);
+        select_state_listView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
         select_state_listView.setOnRefreshListener(this);
+        select_state_listView.setOnScrollListener(moreOnsrcollListener);
+
+        loadingFooter = new LoadingFooter(this,select_state_listView.getRefreshableView());
+
         //设置刷新的文字
         PullToRefreshUtils.setFreshText(select_state_listView);
     }
@@ -219,8 +239,10 @@ public class EposSlotCardStateActivity extends BaseActivity implements PullToRef
             select_state_listView.onRefreshComplete();
             if (req.getData().getStatus().equals("1000")) {
                 RSCStateInfoResult data = (RSCStateInfoResult) req.getData();
-
                 if (data.RSCs != null && !data.RSCs.isEmpty()) {
+
+
+                        loadingFooter.setSize(page,data.RSCs.size());
                     if (page == 1) {
                         deliveryAdapter = new DeliveryAdapter(this, data.RSCs);
                         select_state_listView.setAdapter(deliveryAdapter);
@@ -236,7 +258,6 @@ public class EposSlotCardStateActivity extends BaseActivity implements PullToRef
                         }
                         showToast("该地区没有网点");
                     } else {
-                        showToast("没有更多网点");
                         page--;
                     }
                 }
@@ -245,19 +266,13 @@ public class EposSlotCardStateActivity extends BaseActivity implements PullToRef
 
     }
 
+
     @Override
-    public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+    public void onRefresh(PullToRefreshBase refreshView) {
         PullToRefreshUtils.setFreshClose(refreshView);
         page = 1;
         getStateList(provinceId, cityId, countyId);
 
-    }
-
-    @Override
-    public void onPullUpToRefresh(PullToRefreshBase refreshView) {
-        PullToRefreshUtils.setFreshClose(refreshView);
-        page++;
-        getStateList(provinceId, cityId, countyId);
     }
 
     //网点适配器

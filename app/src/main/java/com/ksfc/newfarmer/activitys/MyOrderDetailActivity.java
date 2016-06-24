@@ -79,7 +79,8 @@ public class MyOrderDetailActivity extends BaseActivity {
     private LinearLayout address_shouhuo_ll;
     private TextView RSC_state_person_info;
     private MyOrderDetailResult.Datas datas;
-
+    private LinearLayout integral_count_ll;
+    private TextView integral_count_tv;
 
 
     @Override
@@ -130,6 +131,9 @@ public class MyOrderDetailActivity extends BaseActivity {
         order_detail_address_tv = (TextView) head_layout.findViewById(R.id.order_detail_address_tv);
         order_tv = (TextView) head_layout.findViewById(R.id.my_order_detail_id);
         pay_state_tv = (TextView) head_layout.findViewById(R.id.pay_state);
+        integral_count_ll = (LinearLayout) head_layout.findViewById(R.id.integral_count_ll);
+        integral_count_tv = (TextView) head_layout.findViewById(R.id.integral_count_tv);
+        integral_count_ll.setVisibility(View.INVISIBLE);
 
         state_address_ll = (LinearLayout) head_layout.findViewById(R.id.select_state_address_ll); //网点自提
         address_shouhuo_ll = (LinearLayout) head_layout.findViewById(R.id.address_shouhuo_ll); //配送到户
@@ -276,6 +280,7 @@ public class MyOrderDetailActivity extends BaseActivity {
                     final MyOrderDetailResult.Rows rows = datas.rows;
                     //订单号
                     order_tv.setText("订单号：" + rows.id);
+
                     //合计 与 去支付
                     if (rows.order != null) {
                         total_price_tv.setText("¥" + rows.order.totalPrice);
@@ -284,6 +289,15 @@ public class MyOrderDetailActivity extends BaseActivity {
                             if (StringUtil.checkStr(rows.order.orderStatus.value)) {
                                 pay_state_tv.setText(rows.order.orderStatus.value);
                             }
+                            integral_count_ll.setVisibility(View.INVISIBLE);
+
+                            if (rows.order.orderStatus.type == 6 && rows.order.orderStatus.value.equals("已完成")) {
+                                if (rows.isRewardPoint && rows.rewardPoints > 0) {
+                                    integral_count_ll.setVisibility(View.VISIBLE);
+                                    integral_count_tv.setText(String.valueOf(rows.rewardPoints));
+                                }
+                            }
+
                             //不支付
                             go_to_pay_rel.setVisibility(View.GONE);
                             change_pay_type.setVisibility(View.GONE);
@@ -315,11 +329,11 @@ public class MyOrderDetailActivity extends BaseActivity {
                                     go_to_pay.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            Handler handler =new Handler(){
+                                            Handler handler = new Handler() {
                                                 @Override
                                                 public void handleMessage(Message msg) {
                                                     super.handleMessage(msg);
-                                                    if (msg.what==0){
+                                                    if (msg.what == 0) {
                                                         Bundle bundle = new Bundle();
                                                         if (rows.RSCInfo != null) {
                                                             bundle.putString("companyName", rows.RSCInfo.companyName);
@@ -331,13 +345,13 @@ public class MyOrderDetailActivity extends BaseActivity {
                                                             bundle.putString("payPrice", rows.payment.price);
                                                         }
                                                         IntentUtil.activityForward(MyOrderDetailActivity.this, OfflinePayActivity.class, bundle, false);
-                                                    }else {
+                                                    } else {
                                                         requestData(orderId);
                                                         MsgCenter.fireNull(MsgID.order_Change);
                                                     }
                                                 }
                                             };
-                                            OrderUtils.isChecked(handler,orderId);
+                                            OrderUtils.isChecked(handler, orderId);
                                         }
                                     });
                                     //更改支付方式
@@ -424,10 +438,10 @@ public class MyOrderDetailActivity extends BaseActivity {
                     if (rows.SKUList != null && !rows.SKUList.isEmpty()) {
                         CarAdapter carAdapter = new CarAdapter(true, rows.SKUList);
                         order_shangpin_list.setAdapter(carAdapter);
-                    } else if(rows.orderGoodsList!=null){
+                    } else if (rows.orderGoodsList != null) {
                         CarAdapter carAdapter = new CarAdapter(rows.orderGoodsList, false);
                         order_shangpin_list.setAdapter(carAdapter);
-                    }else {
+                    } else {
                         order_shangpin_list.setAdapter(null);
                     }
                     //点击查看订单状态详情

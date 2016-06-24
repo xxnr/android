@@ -28,6 +28,7 @@ import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.ksfc.newfarmer.MsgID;
+import com.ksfc.newfarmer.common.LoadMoreOnsrcollListener;
 import com.ksfc.newfarmer.order.OrderUtils;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.activitys.RSCOrderListActivity;
@@ -47,6 +48,7 @@ import com.ksfc.newfarmer.utils.PullToRefreshUtils;
 import com.ksfc.newfarmer.utils.ShowHideUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.KeyboardListenRelativeLayout;
+import com.ksfc.newfarmer.widget.LoadingFooter;
 import com.ksfc.newfarmer.widget.RecyclerImageView;
 import com.ksfc.newfarmer.widget.UnSwipeGridView;
 import com.ksfc.newfarmer.widget.WidgetUtil;
@@ -68,7 +70,7 @@ import java.util.Map;
 /**
  * Created by HePeng on 2015/12/3.
  */
-public class RscOrderDetailFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2, KeyboardListenRelativeLayout.IOnKeyboardStateChangedListener {
+public class RscOrderDetailFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener, KeyboardListenRelativeLayout.IOnKeyboardStateChangedListener {
 
     private PullToRefreshListView waitingpay_lv;
     private int page = 1;
@@ -94,14 +96,28 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
     private RelativeLayout pop_self_delivery_code_Rel;
     private boolean self_delivery_tag = false;
     private KeyboardListenRelativeLayout rootView;
+    private LoadingFooter loadingFooter;
 
-
+    private LoadMoreOnsrcollListener moreOnsrcollListener =new LoadMoreOnsrcollListener() {
+        @Override
+        public void loadMore() {
+            //加载更多
+            if (loadingFooter.getState() == LoadingFooter.State.Idle) {
+                loadingFooter.setState(LoadingFooter.State.Loading);
+                page++;
+                getData(page);
+            }
+        }
+    };
     @Override
     public View InItView() {
         View view = inflater.inflate(R.layout.rsc_order_list_layout, null);
         waitingpay_lv = (PullToRefreshListView) view.findViewById(R.id.waitingpay_lv);
-        waitingpay_lv.setMode(PullToRefreshBase.Mode.BOTH);
+        waitingpay_lv.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
         waitingpay_lv.setOnRefreshListener(this);
+
+        waitingpay_lv.setOnScrollListener(moreOnsrcollListener);
+        loadingFooter = new LoadingFooter(activity,waitingpay_lv.getRefreshableView());
 
         rootView = (KeyboardListenRelativeLayout) view.findViewById(R.id.root_view);
         rootView.setOnKeyboardStateChangedListener(this);
@@ -158,9 +174,10 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
             waitingpay_lv.onRefreshComplete();
             if (data.getStatus().equals("1000")) {
                 List<RscOrderResult.OrdersEntity> orders = data.orders;
-                if (!orders.isEmpty()) {
+                if (orders!=null&&!orders.isEmpty()) {
                     null_layout.setVisibility(View.GONE);
                     if (page == 1) {
+                            loadingFooter.setSize(page,orders.size());
                         if (adapter == null) {
                             adapter = new OrderAdapter(activity, orders);
                             WidgetUtil.setListViewHeightBasedOnChildren(waitingpay_lv);
@@ -184,7 +201,6 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
                         null_layout.setVisibility(View.VISIBLE);
                     } else {
                         page--;
-                        (activity).showToast("没有更多订单");
                     }
                 }
             }
@@ -363,6 +379,8 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
                 break;
         }
     }
+
+
 
 
     //外层的适配器
@@ -1079,21 +1097,12 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
     }
 
 
-    //刷新的方法
+
     @Override
-    public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+    public void onRefresh(PullToRefreshBase refreshView) {
         PullToRefreshUtils.setFreshClose(refreshView);
         page = 1;
         getData(page);
-    }
-
-    @Override
-    public void onPullUpToRefresh(PullToRefreshBase refreshView) {
-
-        PullToRefreshUtils.setFreshClose(refreshView);
-        page++;
-        getData(page);
-
     }
 
 

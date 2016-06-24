@@ -72,7 +72,7 @@ public class AddGiftOrderResult extends ResponseResult {
             public String category;
             public String thumbnail;
             public int points;
-            public int marketPrice;
+            public float marketPrice;
             public int online;
             public int soldout;
         }

@@ -70,6 +70,8 @@
             android:divider="@color/default_act_bg"
             android:dividerHeight="10dp"
             android:scrollbars="none"
+            android:footerDividersEnabled="false"
+            android:headerDividersEnabled="false"
             ptr:ptrAnimationStyle="rotate"
             ptr:ptrDrawable="@drawable/loader"
             ptr:ptrHeaderBackground="@color/re_flash"

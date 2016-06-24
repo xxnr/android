@@ -74,7 +74,7 @@ public class FloatingLayerActivity extends BaseActivity {
                     SignSuccessFragment fragment = new SignSuccessFragment();
                     fragment.setArguments(extras);
                     fragmentTransaction.replace(R.id.layer_content_view, fragment);
-                    fragmentTransaction.commit();
+                    fragmentTransaction.commitAllowingStateLoss();
                     break;
             }
         }
@@ -122,7 +122,7 @@ public class FloatingLayerActivity extends BaseActivity {
         bundle.putInt("page", page);
         guideFragment.setArguments(bundle);
         fragmentTransaction.replace(R.id.layer_content_view, guideFragment);
-        fragmentTransaction.commit();
+        fragmentTransaction.commitAllowingStateLoss();
     }
 
     @Override

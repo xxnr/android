@@ -25,6 +25,7 @@ import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.ksfc.newfarmer.MsgID;
+import com.ksfc.newfarmer.common.LoadMoreOnsrcollListener;
 import com.ksfc.newfarmer.order.OrderUtils;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.activitys.MyOrderListActivity;
@@ -45,6 +46,7 @@ import com.ksfc.newfarmer.utils.ExpandViewTouch;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.PullToRefreshUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
+import com.ksfc.newfarmer.widget.LoadingFooter;
 import com.ksfc.newfarmer.widget.RecyclerImageView;
 import com.ksfc.newfarmer.widget.WidgetUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -62,7 +64,7 @@ import java.util.Map;
 /**
  * Created by HePeng on 2015/12/3.
  */
-public class MyOrderDetailFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2 {
+public class MyOrderDetailFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener {
 
     private PullToRefreshListView waitingpay_lv;
     private int page = 1;
@@ -79,6 +81,20 @@ public class MyOrderDetailFragment extends BaseFragment implements PullToRefresh
     private String huaFeiClassId = "531680A5";
     private String carClassId = "6C7D8F66";
 
+    private LoadingFooter loadingFooter;
+
+    private LoadMoreOnsrcollListener moreOnsrcollListener =new LoadMoreOnsrcollListener() {
+        @Override
+        public void loadMore() {
+            //加载更多
+            if (loadingFooter.getState() == LoadingFooter.State.Idle) {
+                loadingFooter.setState(LoadingFooter.State.Loading);
+                page++;
+                getData(page);
+            }
+        }
+    };
+
 
     @Override
     public View InItView() {
@@ -86,8 +102,12 @@ public class MyOrderDetailFragment extends BaseFragment implements PullToRefresh
         waitingpay_lv = (PullToRefreshListView) view.findViewById(R.id.waitingpay_lv);
 
 
-        waitingpay_lv.setMode(PullToRefreshBase.Mode.BOTH);
+        waitingpay_lv.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
         waitingpay_lv.setOnRefreshListener(this);
+
+
+        waitingpay_lv.setOnScrollListener(moreOnsrcollListener);
+        loadingFooter = new LoadingFooter(activity,waitingpay_lv.getRefreshableView());
         //设置刷新的文字
         PullToRefreshUtils.setFreshText(waitingpay_lv);
         //无订单下的状态
@@ -176,7 +196,10 @@ public class MyOrderDetailFragment extends BaseFragment implements PullToRefresh
                 List<WaitingPay.Orders> rows = data.datas.rows;
                 if (!rows.isEmpty()) {
                     null_layout.setVisibility(View.GONE);
+                        loadingFooter.setSize(page,rows.size());
+
                     if (page == 1) {
+
                         if (adapter == null) {
                             adapter = new OrderAdapter(rows);
                             WidgetUtil.setListViewHeightBasedOnChildren(waitingpay_lv);
@@ -199,7 +222,6 @@ public class MyOrderDetailFragment extends BaseFragment implements PullToRefresh
                         null_layout.setVisibility(View.VISIBLE);
                     } else {
                         page--;
-                        (activity).showToast("没有更多订单");
                     }
                 }
             }
@@ -270,21 +292,12 @@ public class MyOrderDetailFragment extends BaseFragment implements PullToRefresh
         }
     }
 
-    //刷新的方法
+
     @Override
-    public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+    public void onRefresh(PullToRefreshBase refreshView) {
         PullToRefreshUtils.setFreshClose(refreshView);
         page = 1;
         getData(page);
-    }
-
-    @Override
-    public void onPullUpToRefresh(PullToRefreshBase refreshView) {
-
-        PullToRefreshUtils.setFreshClose(refreshView);
-        page++;
-        getData(page);
-
     }
 
     //外层的适配器

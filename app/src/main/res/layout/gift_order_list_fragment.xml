@@ -1,16 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    android:orientation="vertical">
+    android:background="@color/default_act_bg">
 
-
-    <ListView
-        android:id="@+id/gift_order_listView"
+    <in.srain.cube.views.ptr.PtrClassicFrameLayout xmlns:cube_ptr="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/rotate_header_list_view_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@color/default_act_bg"
-        android:dividerHeight="10dp" />
+        android:background="@color/default_act_bg"
+        cube_ptr:ptr_duration_to_close="200"
+        cube_ptr:ptr_duration_to_close_header="1000"
+        cube_ptr:ptr_header="@drawable/loader"
+        cube_ptr:ptr_keep_header_when_refresh="true"
+        cube_ptr:ptr_pull_to_fresh="false"
+        cube_ptr:ptr_ratio_of_header_height_to_refresh="1.2"
+        cube_ptr:ptr_resistance="1.7">
 
-</LinearLayout>
+
+        <com.ksfc.newfarmer.widget.AnimatedExpandableListView
+            android:id="@+id/gift_order_listView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:cacheColorHint="#00000000"
+            android:divider="@color/transparent"
+            android:dividerHeight="0dp"
+            android:scrollbars="none" />
+
+
+    </in.srain.cube.views.ptr.PtrClassicFrameLayout>
+
+    <ImageView
+        android:id="@+id/exchange_record_empty_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="85dp"
+        android:src="@drawable/exchange_record_empty_icon" />
+</FrameLayout>

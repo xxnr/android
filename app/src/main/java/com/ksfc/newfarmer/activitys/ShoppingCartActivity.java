@@ -158,13 +158,23 @@ public class ShoppingCartActivity extends BaseActivity {
                 if (isChecked != null && isChecked) {
                     Goods good = data.category.get(i).goods.get(j);
                     num += good.num;
-                    // 判断是汽车还是化肥，如果是汽车dingjin应该是0
+                    // 判断是否是一口价商品
                     if (data.category.get(i).goods.get(j).dingjin != 0) {
                         price += good.num
                                 * good.dingjin;
                     } else {
                         price += good.num
                                 * good.xianjia;
+                        //如果有附加选项加上附加选项的金额
+                        if (good.jsonList != null) {
+                            int additionsPrice = 0;
+                            for (int k = 0; k < good.jsonList.size(); k++) {
+
+                                GetshopCart.SKU.Additions additions = good.jsonList.get(k);
+                                additionsPrice += additions.price;
+                            }
+                            price += good.num * additionsPrice;
+                        }
                     }
                 }
             }

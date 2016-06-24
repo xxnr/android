@@ -118,7 +118,7 @@ public class PaywayActivity extends BaseActivity {
                             MsgCenter.fireNull(MsgID.order_Change);//订单状态改变需要刷新列表
                             break;
                     }
-                    fragmentTransaction.commit();
+                    fragmentTransaction.commitAllowingStateLoss();
 
                 }
             }

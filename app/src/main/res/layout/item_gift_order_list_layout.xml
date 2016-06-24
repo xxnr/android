@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -10,7 +11,11 @@
         android:background="@color/white"
         android:orientation="vertical">
 
-        <include layout="@layout/line_lay" />
+        <include
+            android:id="@+id/div_view"
+            layout="@layout/div_view"
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -25,14 +30,14 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="2016-05-15 14:34"
+                android:text=""
                 android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/gift_order_delivery_state"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="待自提"
+                android:text=""
                 android:textColor="@color/orange"
                 android:textSize="14sp" />
 
@@ -43,7 +48,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="120dp"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:padding="16dp">
 
@@ -53,41 +58,56 @@
                 android:layout_height="90dp"
                 android:src="@drawable/zhanweitu" />
 
-            <LinearLayout
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="11dp"
-                android:layout_marginTop="6dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/gift_order_name_iv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:maxLines="3"
-                    android:text="山寨熊本佩佩熊-可爱萌萌哒的宠物，你想要嘛快来领走" />
+                android:layout_marginTop="6dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/gift_integral_icon" />
+                    android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/gift_order_price_iv"
+                        android:id="@+id/gift_order_name_iv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
-                        android:text="200"
-                        android:textColor="@color/orange_goods_price" />
+                        android:maxLines="3"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/gift_integral_icon" />
+
+                        <TextView
+                            android:id="@+id/gift_order_price_iv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dp"
+                            android:text=""
+                            android:textColor="@color/orange_goods_price" />
+
+                    </LinearLayout>
+
                 </LinearLayout>
-            </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/item_gift_order_Indicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|right"
+                    android:src="@drawable/bottom_arrow"
+                    tools:ignore="RtlHardcoded" />
+            </FrameLayout>
+
         </LinearLayout>
 
         <include layout="@layout/line_lay" />
