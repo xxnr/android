@@ -30,7 +30,6 @@ import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.utils.PopWindowUtils;
 import com.ksfc.newfarmer.utils.Utils;
 import com.ksfc.newfarmer.widget.KeyboardListenRelativeLayout;
-import com.ksfc.newfarmer.widget.dialog.CustomDialog;
 import com.ksfc.newfarmer.widget.VerticalViewPager;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -41,7 +40,6 @@ import android.view.Gravity;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -382,7 +380,6 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
         // 设置动画效果
         popupWindow.setAnimationStyle(R.style.popWindow_anim_style);
         popupWindow.setFocusable(true);
-
         popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override

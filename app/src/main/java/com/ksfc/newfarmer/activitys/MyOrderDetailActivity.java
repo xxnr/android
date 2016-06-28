@@ -8,7 +8,7 @@ import java.util.Map;
 
 import com.google.gson.Gson;
 import com.ksfc.newfarmer.BaseActivity;
-import com.ksfc.newfarmer.order.OrderUtils;
+import com.ksfc.newfarmer.common.OrderUtils;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.adapter.CommonAdapter;

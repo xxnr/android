@@ -14,12 +14,10 @@ import android.widget.ImageView;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
-import com.handmark.pulltorefresh.library.internal.LoadingLayout;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.adapter.CommonAdapter;
 import com.ksfc.newfarmer.adapter.CommonViewHolder;
-import com.ksfc.newfarmer.common.LoadMoreOnsrcollListener;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
@@ -107,7 +105,7 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
         listView.onRefreshComplete();
         if (req.getApi() == ApiType.GET_INFORMATION) {
             if (req.getData().getStatus().equals("1000")) {
-                mLoadingFooter.setState(LoadingFooter.State.Idle);
+
                 if (adapter != null) {
                     adapter.notifyDataSetChanged();
                 }
@@ -115,9 +113,7 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
                 if (data.datas != null) {
                     List<ItemsEntity> list = data.datas.items;
                     if (list != null && !list.isEmpty()) {
-                        if (list.size() < 20) {
-                            mLoadingFooter.setState(LoadingFooter.State.TheEnd);
-                        }
+                        mLoadingFooter.setSize(page,list.size());
                         if (page == 1) {
                             if (adapter == null) {
                                 adapter = new InformationAdapter(this, list);
@@ -132,6 +128,8 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
                             }
                         }
                     } else {
+                        mLoadingFooter.setSize(page,0);
+
                         if (page == 1) {
                             if (adapter != null) {
                                 adapter.clear();
@@ -196,6 +194,7 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
                         return_top.setVisibility(View.VISIBLE);
 
                         //加载更多
+
                         if (mLoadingFooter.getState() == LoadingFooter.State.Idle) {
                             mLoadingFooter.setState(LoadingFooter.State.Loading);
                             page++;

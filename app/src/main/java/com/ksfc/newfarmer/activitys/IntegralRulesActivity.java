@@ -10,6 +10,8 @@ import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.protocol.Request;
 
+import net.yangentao.util.NetUtil;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -46,8 +48,12 @@ public class IntegralRulesActivity extends BaseActivity {
                 disMissDialog();
             }
         });
-        webView.loadUrl(MsgID.IP + "/rewardshop/rules");
-        showProgressDialog();
+        if (NetUtil.isConnected(this)) {
+            showProgressDialog();
+            webView.loadUrl(MsgID.IP + "/rewardshop/rules");
+        }else {
+            showToast("网络未连接");
+        }
     }
 
     @Override

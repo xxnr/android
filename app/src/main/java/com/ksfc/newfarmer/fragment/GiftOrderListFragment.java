@@ -24,11 +24,13 @@ import com.ksfc.newfarmer.widget.LoadingFooter;
 import com.ksfc.newfarmer.widget.PtrHeaderView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import net.yangentao.util.msg.MsgCenter;
+import net.yangentao.util.msg.MsgListener;
+
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import in.srain.cube.views.ptr.PtrClassicFrameLayout;
 import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
@@ -44,7 +46,6 @@ public class GiftOrderListFragment extends BaseFragment implements SwipeRefreshL
     PtrClassicFrameLayout frameLayout;
     @BindView(R.id.exchange_record_empty_iv)
     ImageView exchange_record_empty_iv;
-    private Unbinder unbinder;
     private int type;
     private int page = 1;
 
@@ -62,6 +63,7 @@ public class GiftOrderListFragment extends BaseFragment implements SwipeRefreshL
         }
     };
     private GiftOrderListAdapter adapter;
+    private int position;
 
     @Override
     public void OnViewClick(View v) {
@@ -71,18 +73,15 @@ public class GiftOrderListFragment extends BaseFragment implements SwipeRefreshL
     @Override
     public View InItView() {
         View rootView = inflater.inflate(R.layout.gift_order_list_fragment, null);
-        unbinder = ButterKnife.bind(this, rootView);
+        ButterKnife.bind(this, rootView);
         listView.setGroupIndicator(null);
-
         listView.setOnScrollListener(moreOnsrcollListener);
-        loadingFooter = new LoadingFooter(activity,listView);
-
+        loadingFooter = new LoadingFooter(activity, listView);
         PtrHeaderView header = new PtrHeaderView(activity);
            /* 设置刷新头部view */
         frameLayout.setHeaderView(header);
         /* 设置回调 */
         frameLayout.addPtrUIHandler(header);
-
         frameLayout.setLastUpdateTimeRelateObject(this);
         frameLayout.setPtrHandler(new PtrHandler() {
             @Override
@@ -90,7 +89,7 @@ public class GiftOrderListFragment extends BaseFragment implements SwipeRefreshL
                 frameLayout.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        if (frameLayout!=null){
+                        if (frameLayout != null) {
                             frameLayout.refreshComplete();
                         }
                     }
@@ -108,7 +107,7 @@ public class GiftOrderListFragment extends BaseFragment implements SwipeRefreshL
 
         Bundle arguments = getArguments();
         if (arguments != null) {
-            int position = arguments.getInt("position");
+            position = arguments.getInt("position");
             if (position == 0) {
                 type = 1;
             } else {
@@ -129,11 +128,17 @@ public class GiftOrderListFragment extends BaseFragment implements SwipeRefreshL
                 public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
 
                     if (parent.isGroupExpanded(groupPosition)) {
+                        //展开被选的group
                         listView.collapseGroupWithAnimation(groupPosition);
+                        //设置被选中的group置于顶端
+                        listView.setSelectedGroup(groupPosition);
                     } else {
-                        listView.setSelection(groupPosition);
+                        //展开被选的group
                         listView.expandGroupWithAnimation(groupPosition);
+                        //设置被选中的group置于顶端
+                        listView.setSelectedGroup(groupPosition);
                     }
+
                     return true;
                 }
             });
@@ -150,10 +155,24 @@ public class GiftOrderListFragment extends BaseFragment implements SwipeRefreshL
                 }
             });
         }
+        //滑动时刷新
+        MsgCenter.addListener(new MsgListener() {
+            @Override
+            public void onMsg(Object sender, String msg, Object... args) {
+                try {
+                    if (((Integer) args[0]) == position) {
+                        showProgressDialog();
+                        page = 1;
+                        RemoteApi.getGiftOrderList(GiftOrderListFragment.this, type, page);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
+            }
+        }, MsgID.gift_swipe_reFlash);
 
         RemoteApi.getGiftOrderList(this, type, page);
-
         return rootView;
     }
 
@@ -167,9 +186,7 @@ public class GiftOrderListFragment extends BaseFragment implements SwipeRefreshL
                 List<GiftOrderListResult.DatasBean.GiftordersBean> list = reqData.datas.giftorders;
                 if (list != null && !list.isEmpty()) {
                     exchange_record_empty_iv.setVisibility(View.GONE);
-
-
-                        loadingFooter.setSize(page,list.size());
+                    loadingFooter.setSize(page, list.size());
                     if (page == 1) {
                         if (adapter == null) {
                             adapter = new GiftOrderListAdapter(list);
@@ -184,15 +201,15 @@ public class GiftOrderListFragment extends BaseFragment implements SwipeRefreshL
                         }
                     }
                 } else {
+                    loadingFooter.setSize(page, 0);
                     if (page == 1) {
                         if (adapter != null) {
                             adapter.clear();
-                            exchange_record_empty_iv.setVisibility(View.VISIBLE);
                         }
+                        exchange_record_empty_iv.setVisibility(View.VISIBLE);
                     } else {
                         page--;
                     }
-
                 }
             }
         }
@@ -323,7 +340,6 @@ public class GiftOrderListFragment extends BaseFragment implements SwipeRefreshL
             GiftOrderListResult.DatasBean.GiftordersBean giftordersBean = giftorders.get(groupPosition);
             if (giftordersBean != null) {
                 if (giftordersBean.deliveryType == 1) {
-
                     holder.item_gift_detail_ll.setVisibility(View.VISIBLE);
                     holder.item_gift_up_grade_ll.setVisibility(View.GONE);
                     //设置RSCInfo
@@ -394,6 +410,5 @@ public class GiftOrderListFragment extends BaseFragment implements SwipeRefreshL
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        unbinder.unbind();
     }
 }

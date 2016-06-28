@@ -17,8 +17,10 @@ import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.activitys.EposActivity;
 import com.ksfc.newfarmer.activitys.OfflinePayActivity;
+import com.ksfc.newfarmer.common.HttpsConfig;
 import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.protocol.ApiType;
+import com.ksfc.newfarmer.protocol.NetworkHelper;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
 import com.ksfc.newfarmer.protocol.ResponseResult;
@@ -85,7 +87,6 @@ public class PayWayFragment extends BaseFragment {
         @Override
         public void handleMessage(Message msg) {
 
-
             switch (msg.what) {
                 case 0:
                     UnionPayResponse unionPayResponse = (UnionPayResponse) msg.obj;
@@ -99,7 +100,7 @@ public class PayWayFragment extends BaseFragment {
                             }
                         }
                     }
-                    handler.sendEmptyMessageDelayed(404,1000);
+                    handler.sendEmptyMessageDelayed(404, 1000);
                     break;
                 case 1:
                     //白名单下 可以输入金额 ，并控制 不可以加减。
@@ -519,15 +520,13 @@ public class PayWayFragment extends BaseFragment {
 
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.connectTimeout(10 * 1000, TimeUnit.MILLISECONDS);
-        OkHttpClient mOkHttpClient = new OkHttpClient();
-        FormBody.Builder builder1 = new FormBody.Builder();
 
+        FormBody.Builder builder1 = new FormBody.Builder();
         builder1.add("consumer", "app");
         builder1.add("orderId", orderId);
         if (StringUtil.checkStr("token")) {
             builder1.add("token", token);
         }
-
 
         if (payWay_pay_times_view.getVisibility() == View.VISIBLE) { //分次支付金额
             price = payWay_times_price_et.getText().toString().trim();
@@ -542,11 +541,16 @@ public class PayWayFragment extends BaseFragment {
         }
 
         FormBody formBody = builder1.build();
+        String url = ApiType.GET_UNI.getOpt();
+
+        if (HttpsConfig.httpsConfig().contains(ApiType.GET_UNI)) {
+            url = url.replaceFirst("http", "https");
+        }
         okhttp3.Request request = new okhttp3.Request.Builder()
-                .url(ApiType.GET_UNI.getOpt())
+                .url(url)
                 .post(formBody)
                 .build();
-        mOkHttpClient.newCall(request).enqueue(new Callback() {
+        new NetworkHelper().getInstance().newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 handler.sendEmptyMessage(404);

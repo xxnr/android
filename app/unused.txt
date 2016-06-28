@@ -6294,7 +6294,7 @@ com.ksfc.newfarmer.fragment.PayWayFragment:
 com.ksfc.newfarmer.fragment.RscOrderDetailFragment:
     1165:1197:public void getOrderDetail(java.lang.String,int)
 com.ksfc.newfarmer.fragment.RscOrderDetailFragment$7
-com.ksfc.newfarmer.order.OrderUtils:
+com.ksfc.newfarmer.common.OrderUtils:
     28:28:public OrderUtils()
 com.ksfc.newfarmer.protocol.ApiType:
     476:497:private ApiType(java.lang.String,int,java.lang.String,com.ksfc.newfarmer.protocol.ApiType$RequestMethod)

@@ -11,20 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.handmark.pulltorefresh.library.PullToRefreshListView
-
-            android:id="@+id/unSwipeListView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@drawable/line_chang"
-            android:footerDividersEnabled="false"
-            android:headerDividersEnabled="false"
-            android:scrollbars="none"
-            ptr:ptrAnimationStyle="rotate"
-            ptr:ptrDrawable="@drawable/loader"
-            ptr:ptrHeaderBackground="@color/re_flash"
-            ptr:ptrListViewExtrasEnabled="false"
-            ptr:ptrScrollingWhileRefreshingEnabled="true" />
 
         <LinearLayout
             android:id="@+id/content_empty_ll"
@@ -50,6 +36,22 @@
                 android:textColor="@color/deep_gray" />
 
         </LinearLayout>
+
+        <com.handmark.pulltorefresh.library.PullToRefreshListView
+
+            android:id="@+id/unSwipeListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@drawable/line_chang"
+            android:footerDividersEnabled="false"
+            android:headerDividersEnabled="false"
+            android:scrollbars="none"
+            ptr:ptrAnimationStyle="rotate"
+            ptr:ptrDrawable="@drawable/loader"
+            ptr:ptrHeaderBackground="@color/re_flash"
+            ptr:ptrListViewExtrasEnabled="false"
+            ptr:ptrScrollingWhileRefreshingEnabled="true" />
+
 
     </FrameLayout>
 

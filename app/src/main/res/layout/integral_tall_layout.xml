@@ -164,7 +164,7 @@
                         android:layout_marginTop="100dp"
                         android:gravity="center_horizontal"
                         android:orientation="vertical"
-                        android:visibility="gone">
+                        android:visibility="visible">
 
                         <ImageView
                             android:id="@+id/view_none_img"

@@ -156,7 +156,6 @@ public class MyIntegralActivity extends BaseActivity implements PullToRefreshBas
             if (reqData.datas != null) {
                 List<PointLogsResult.DatasBean.PointslogsBean> list = reqData.datas.pointslogs;
                 if (list != null && !list.isEmpty()) {
-
                     loadingFooter.setSize(page, list.size());
                     holder.contentLl.setVisibility(View.VISIBLE);
                     if (page == 1) {
@@ -173,14 +172,15 @@ public class MyIntegralActivity extends BaseActivity implements PullToRefreshBas
                         }
                     }
                 } else {
+                    loadingFooter.setSize(page, 0);
                     if (page == 1) {
+                        //积分为0时的布局
+                        if (score == 0 && holder.signButtonTv.isEnabled()) {
+                            content_empty_ll.setVisibility(View.VISIBLE);
+                        } else {
+                            content_empty_ll.setVisibility(View.GONE);
+                        }
                         if (adapter != null) {
-                            //积分为0时的布局
-                            if (score == 0 && holder.signButtonTv.isEnabled()) {
-                                content_empty_ll.setVisibility(View.VISIBLE);
-                            } else {
-                                content_empty_ll.setVisibility(View.GONE);
-                            }
                             adapter.clear();
                             holder.contentLl.setVisibility(View.GONE);
                         }

@@ -24,10 +24,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.view.inputmethod.InputMethodManager;
 
-import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.widget.dialog.CustomDialog;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
-import com.umeng.message.PushAgent;
 
 public class Utils {
     private static long lastClickTime;

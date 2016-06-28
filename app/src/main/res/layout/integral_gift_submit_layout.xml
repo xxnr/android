@@ -286,7 +286,7 @@
             android:layout_height="match_parent"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:visibility="visible">
 
 
             <ImageView
@@ -306,10 +306,14 @@
 
             <TextView
                 android:id="@+id/up_grade"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="点击升级版本" />
+                android:layout_width="130dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/btn_selector_greentran_green_round"
+                android:gravity="center"
+                android:text="版本更新"
+                android:textColor="@color/shop_car_text_selector"
+                android:textSize="14sp" />
 
         </LinearLayout>
 

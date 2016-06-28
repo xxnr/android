@@ -1,9 +1,7 @@
 package com.ksfc.newfarmer.activitys;
 
 import com.ksfc.newfarmer.R;
-import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.utils.IntentUtil;
-import com.ksfc.newfarmer.utils.SPUtils;
 
 import android.app.Activity;
 import android.content.pm.ActivityInfo;

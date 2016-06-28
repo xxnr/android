@@ -34,7 +34,6 @@ import com.ksfc.newfarmer.utils.PullToRefreshUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.LoadingFooter;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -322,6 +321,7 @@ public class SelectDeliveriesStateActivity extends BaseActivity implements PullT
                         }
                     }
                 } else {
+                    loadingFooter.setSize(page,0);
                     if (page == 1) {
                         if (deliveryAdapter != null) {
                             deliveryAdapter.clear();

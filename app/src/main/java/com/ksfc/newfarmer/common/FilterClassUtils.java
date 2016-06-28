@@ -1,4 +1,4 @@
-package com.ksfc.newfarmer.utils;
+package com.ksfc.newfarmer.common;
 
 import com.ksfc.newfarmer.protocol.ApiType;
 

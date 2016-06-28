@@ -590,6 +590,7 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
                         goodsListAdapter.addAll(list);
                     }
                 } else {
+                    mLoadingFooter.setSize(page, 0);
                     if (page == 1) {
                         if (goodsListAdapter != null) {
                             goodsListAdapter.clear();

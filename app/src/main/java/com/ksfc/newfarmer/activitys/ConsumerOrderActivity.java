@@ -175,6 +175,7 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
                             }
                         }
                     } else {
+                        loadingFooter.setSize(page, 0);
                         if (page == 1) {
                             if (adapter != null) {
                                 adapter.clear();

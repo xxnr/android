@@ -9,30 +9,22 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.common.CompleteReceiver;
-import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.RemoteApi;
 import com.ksfc.newfarmer.protocol.Request;
-import com.ksfc.newfarmer.protocol.RequestParams;
 import com.ksfc.newfarmer.protocol.beans.AddGiftOrderResult;
 import com.ksfc.newfarmer.protocol.beans.ConsigneeResult;
-import com.ksfc.newfarmer.protocol.beans.GetGoodsDetail;
 import com.ksfc.newfarmer.protocol.beans.GiftDetailResult;
 import com.ksfc.newfarmer.protocol.beans.RSCStateInfoResult;
 import com.ksfc.newfarmer.utils.IntentUtil;
-import com.ksfc.newfarmer.utils.SPUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -72,10 +64,7 @@ public class IntegralGiftSubmitActivity extends BaseActivity {
     private String consigneePhone;
     private RSCStateInfoResult.RSCsEntity rsCsEntity;
     private GiftDetailResult.GiftBean gift;
-
     private CompleteReceiver completeReceiver;
-
-    private List deliveries = new ArrayList();
 
 
     @Override
@@ -90,7 +79,6 @@ public class IntegralGiftSubmitActivity extends BaseActivity {
         giftSubmitEmptyLl.setVisibility(View.GONE);
         giftSubmitLl.setVisibility(View.VISIBLE);
         InitData();
-        deliveries.add(1);
         //获取联系人
         RemoteApi.getConsignees(this);
 
@@ -124,6 +112,7 @@ public class IntegralGiftSubmitActivity extends BaseActivity {
                     }
                 }
                 if (!isSupport) {
+                    setViewClick(R.id.up_grade);
                     giftSubmitEmptyLl.setVisibility(View.VISIBLE);
                     giftSubmitLl.setVisibility(View.GONE);
                 } else {
@@ -137,7 +126,6 @@ public class IntegralGiftSubmitActivity extends BaseActivity {
 
                     //确定兑换
                     gift_submit_sure_tv.setOnClickListener(this);
-
                     setViewClick(R.id.select_state_address_ll_state);
                     setViewClick(R.id.select_state_address_ll_person);
                 }

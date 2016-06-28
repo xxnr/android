@@ -26,7 +26,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.common.LoadMoreOnsrcollListener;
-import com.ksfc.newfarmer.order.OrderUtils;
+import com.ksfc.newfarmer.common.OrderUtils;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.activitys.MyOrderListActivity;
 import com.ksfc.newfarmer.activitys.MyOrderDetailActivity;
@@ -215,6 +215,8 @@ public class MyOrderDetailFragment extends BaseFragment implements PullToRefresh
                         }
                     }
                 } else {
+                    loadingFooter.setSize(page,0);
+
                     if (page == 1) {
                         if (adapter != null) {
                             adapter.clear();

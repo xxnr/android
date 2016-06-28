@@ -15,7 +15,6 @@ import com.ksfc.newfarmer.utils.StringUtil;
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 

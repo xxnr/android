@@ -26,7 +26,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="兑换码：" />
+            android:text="自提码：" />
 
         <TextView
             android:id="@+id/exchange_code"
@@ -39,7 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:singleLine="true"
-            android:text=" 请凭兑换码到网点自提" />
+            android:text=" 请凭自提码到网点自提" />
 
     </LinearLayout>
 

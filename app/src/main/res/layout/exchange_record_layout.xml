@@ -33,7 +33,7 @@
 
     <include layout="@layout/line_lay" />
 
-    <android.support.v4.view.ViewPager
+    <com.ksfc.newfarmer.widget.UnSwipeViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

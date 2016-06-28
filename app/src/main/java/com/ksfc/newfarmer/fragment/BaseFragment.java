@@ -6,7 +6,7 @@ package com.ksfc.newfarmer.fragment;
 import java.util.HashMap;
 
 import com.ksfc.newfarmer.BaseActivity;
-import com.ksfc.newfarmer.utils.FilterClassUtils;
+import com.ksfc.newfarmer.common.FilterClassUtils;
 import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.thrid.UmengPush;
 import com.ksfc.newfarmer.activitys.LoginActivity;

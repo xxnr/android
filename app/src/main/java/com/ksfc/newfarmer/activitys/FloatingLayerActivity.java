@@ -1,21 +1,25 @@
 package com.ksfc.newfarmer.activitys;
 
+import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
+import com.ksfc.newfarmer.RndApplication;
 import com.ksfc.newfarmer.fragment.IntegralTallGuideFragment;
 import com.ksfc.newfarmer.fragment.SignSuccessFragment;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.utils.ActivityAnimationUtils;
 import com.ksfc.newfarmer.utils.ScreenUtil;
 
+import net.yangentao.util.app.App;
 import net.yangentao.util.msg.MsgCenter;
 import net.yangentao.util.msg.MsgListener;
 
@@ -64,9 +68,10 @@ public class FloatingLayerActivity extends BaseActivity {
                             }
                         }
                     }, MsgID.Integral_Guide_Change);
+
                     break;
                 case "MyIntegralActivity"://加载签到成功动画
-                case "HomepageActivity":  //加载积分商城引导页
+                case "MainActivity":  //加载积分商城引导页
                     if (fragmentManager == null) {
                         fragmentManager = getSupportFragmentManager();
                     }

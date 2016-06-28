@@ -127,7 +127,9 @@ public class EposActivity extends BaseActivity {
             case R.id.pay_sure_tv:
                 //是否安装插件
                 if (Utils.isPkgInstalled(this, "com.chinaums.mposplugin")) {
-                    eposPay();
+                    if (isLogin()){
+                        eposPay();
+                    }
                 } else {
                     Utils.addApk(this, "mpospluginphone.apk");
                 }
@@ -171,7 +173,6 @@ public class EposActivity extends BaseActivity {
         if (orderInfo != null && orderInfo.rows != null) {
             params.put("orderId", orderInfo.rows.id);
         }
-
         if (StringUtil.checkStr(payPrice)) {
             params.put("price", payPrice);
         }

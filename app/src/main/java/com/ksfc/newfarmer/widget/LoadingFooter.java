@@ -1,7 +1,6 @@
 package com.ksfc.newfarmer.widget;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ListView;
@@ -12,10 +11,12 @@ import com.ksfc.newfarmer.R;
 
 
 public class LoadingFooter {
+
     protected View mLoadingFooter;
 
     protected TextView mLoadingText;
-
+    protected  TextView line_lift;
+    protected  TextView line_right;
     protected State mState = State.Deal;
 
     private ProgressBar mProgress;
@@ -31,6 +32,8 @@ public class LoadingFooter {
         mLoadingFooter.setOnClickListener(null);
         mProgress = (ProgressBar) mLoadingFooter.findViewById(R.id.progressBar);
         mLoadingText = (TextView) mLoadingFooter.findViewById(R.id.foot_load_text);
+        line_right = (TextView) mLoadingFooter.findViewById(R.id.line_right);
+        line_lift = (TextView) mLoadingFooter.findViewById(R.id.line_lift);
         this.listView = listView;
         setState(State.Deal);
     }
@@ -54,17 +57,31 @@ public class LoadingFooter {
     public void hideProgress() {
         addFooter();
         mProgress.setVisibility(View.GONE);
+        line_right.setVisibility(View.VISIBLE);
+        line_lift.setVisibility(View.VISIBLE);
     }
 
     public void showLoading() {
         addFooter();
+        line_right.setVisibility(View.INVISIBLE);
+        line_lift.setVisibility(View.INVISIBLE);
         mProgress.setVisibility(View.VISIBLE);
+
+        listView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (getState()==State.Loading){
+                    removeFooter();
+                    setState(State.Idle);
+                }
+            }
+        },5000);
     }
 
     public void removeFooter() {
         try {
             if (listView != null) {
-                boolean footerView = listView.removeFooterView(mLoadingFooter);
+                listView.removeFooterView(mLoadingFooter);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -108,6 +125,8 @@ public class LoadingFooter {
                 hideProgress();
                 break;
             case Idle:
+                mLoadingText.setText("");
+                break;
             case Deal:
                 removeFooter();
                 break;

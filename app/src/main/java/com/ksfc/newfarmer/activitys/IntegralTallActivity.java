@@ -6,7 +6,10 @@ package com.ksfc.newfarmer.activitys;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
@@ -80,7 +83,9 @@ public class IntegralTallActivity extends BaseActivity implements PullToRefreshB
     private List<IntegralBean> ViewBeanList = new ArrayList<>();
     //用户积分
     private int score = 0;
-
+    private static int count;
+    private boolean isShow = false;
+    private Handler handler = new Handler();
 
     @Override
     public int getLayout() {
@@ -110,6 +115,14 @@ public class IntegralTallActivity extends BaseActivity implements PullToRefreshB
                 headUnLoginTallLayoutFloat.setVisibility(View.GONE);
             }
         }, MsgID.ISLOGIN);
+
+        //签到通知
+        MsgCenter.addListener(new MsgListener() {
+            @Override
+            public void onMsg(Object sender, String msg, Object... args) {
+                RemoteApi.getIntegral(IntegralTallActivity.this);
+            }
+        }, MsgID.IS_Signed);
     }
 
 
@@ -180,6 +193,7 @@ public class IntegralTallActivity extends BaseActivity implements PullToRefreshB
     @Override
     public void onRefresh(PullToRefreshBase refreshView) {
         PullToRefreshUtils.setFreshClose(refreshView);
+        count = 0;
         RemoteApi.getGiftCategories(this);
     }
 
@@ -284,11 +298,9 @@ public class IntegralTallActivity extends BaseActivity implements PullToRefreshB
                 List<GiftListResult.DatasBean.GiftsBean> gifts = data.datas.gifts;
                 if (!gifts.isEmpty()) {
                     GiftListResult.DatasBean.GiftsBean giftsBean = gifts.get(0);
-                    int count = 0;
                     for (int i = 0; i < ViewBeanList.size(); i++) {
                         IntegralBean integralBean = ViewBeanList.get(i);
-                        if (integralBean != null && giftsBean.category != null
-                                && integralBean._id.equals(giftsBean.category._id)) {
+                        if (integralBean != null && giftsBean.category != null && integralBean._id.equals(giftsBean.category._id)) {
                             GiftAdapter adapter = new GiftAdapter(IntegralTallActivity.this, gifts);
                             integralBean.unSwipeGridView.setAdapter(adapter);
                             integralBean.viewGroup.setVisibility(View.VISIBLE);
@@ -296,23 +308,33 @@ public class IntegralTallActivity extends BaseActivity implements PullToRefreshB
                             if (i == ViewBeanList.size() - 1) {
                                 try {
                                     //加载完成数据后展示引导页
-                                    GiftListResult.DatasBean.GiftsBean giftsBean1 = (GiftListResult.DatasBean.GiftsBean) ViewBeanList.get(0).unSwipeGridView.getAdapter().getItem(0);
-                                    showGuide(score, giftsBean1);
+                                    final GiftListResult.DatasBean.GiftsBean giftsBean1 = (GiftListResult.DatasBean.GiftsBean) ViewBeanList.get(0).unSwipeGridView.getAdapter().getItem(0);
+                                    handler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if (isShow) {
+                                                showGuide(score, giftsBean1);
+                                            }
+                                        }
+                                    }, 1000);
+
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
-                                //是否显示没有商品的布局
-                                if (count == 0) {
-                                    view_none_container.setVisibility(View.VISIBLE);
-                                } else {
-                                    view_none_container.setVisibility(View.GONE);
-                                }
+
                             }
                         }
                     }
+
                 }
             }
 
+            //是否显示没有商品的布局
+            if (count == 0) {
+                view_none_container.setVisibility(View.VISIBLE);
+            } else {
+                view_none_container.setVisibility(View.GONE);
+            }
         }
 
     }
@@ -400,5 +422,15 @@ public class IntegralTallActivity extends BaseActivity implements PullToRefreshB
         pu.putBool("firstInIntegral", false);
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        isShow = false;
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isShow = true;
+    }
 }

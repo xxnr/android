@@ -29,7 +29,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.common.LoadMoreOnsrcollListener;
-import com.ksfc.newfarmer.order.OrderUtils;
+import com.ksfc.newfarmer.common.OrderUtils;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.activitys.RSCOrderListActivity;
 import com.ksfc.newfarmer.activitys.RscOrderDetailActivity;
@@ -98,7 +98,7 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
     private KeyboardListenRelativeLayout rootView;
     private LoadingFooter loadingFooter;
 
-    private LoadMoreOnsrcollListener moreOnsrcollListener =new LoadMoreOnsrcollListener() {
+    private LoadMoreOnsrcollListener moreOnsrcollListener = new LoadMoreOnsrcollListener() {
         @Override
         public void loadMore() {
             //加载更多
@@ -109,6 +109,7 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
             }
         }
     };
+
     @Override
     public View InItView() {
         View view = inflater.inflate(R.layout.rsc_order_list_layout, null);
@@ -117,7 +118,7 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
         waitingpay_lv.setOnRefreshListener(this);
 
         waitingpay_lv.setOnScrollListener(moreOnsrcollListener);
-        loadingFooter = new LoadingFooter(activity,waitingpay_lv.getRefreshableView());
+        loadingFooter = new LoadingFooter(activity, waitingpay_lv.getRefreshableView());
 
         rootView = (KeyboardListenRelativeLayout) view.findViewById(R.id.root_view);
         rootView.setOnKeyboardStateChangedListener(this);
@@ -174,10 +175,10 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
             waitingpay_lv.onRefreshComplete();
             if (data.getStatus().equals("1000")) {
                 List<RscOrderResult.OrdersEntity> orders = data.orders;
-                if (orders!=null&&!orders.isEmpty()) {
+                if (orders != null && !orders.isEmpty()) {
                     null_layout.setVisibility(View.GONE);
                     if (page == 1) {
-                            loadingFooter.setSize(page,orders.size());
+                        loadingFooter.setSize(page, orders.size());
                         if (adapter == null) {
                             adapter = new OrderAdapter(activity, orders);
                             WidgetUtil.setListViewHeightBasedOnChildren(waitingpay_lv);
@@ -194,6 +195,7 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
                         }
                     }
                 } else {
+                    loadingFooter.setSize(page, 0);
                     if (page == 1) {
                         if (adapter != null) {
                             adapter.clear();
@@ -379,8 +381,6 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
                 break;
         }
     }
-
-
 
 
     //外层的适配器
@@ -1097,7 +1097,6 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
     }
 
 
-
     @Override
     public void onRefresh(PullToRefreshBase refreshView) {
         PullToRefreshUtils.setFreshClose(refreshView);
@@ -1164,47 +1163,9 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
         if (state == KeyboardListenRelativeLayout.KEYBOARD_STATE_HIDE) {
             if (self_delivery_code_et != null) {
                 self_delivery_code_et.clearFocus();
+
             }
         }
     }
-
-    //点击时，请求详情，并回调
-    public void getOrderDetail(String orderId, final int flag) {
-
-        LoginResult.UserInfo userInfo = Store.User.queryMe();
-
-        if (userInfo != null) {
-            HttpUtils http = new HttpUtils();
-
-            http.send(HttpRequest.HttpMethod.GET,
-                    ApiType.GET_RSC_ORDER_Detail.getOpt() + "?" + "orderId=" + orderId + "&token=" + userInfo.token,
-                    new RequestCallBack<String>() {
-                        @Override
-                        public void onSuccess(ResponseInfo<String> responseInfo) {
-
-                            String result = responseInfo.result;
-                            if (StringUtil.checkStr(result)) {
-
-                                try {
-                                    Gson gson = new Gson();
-                                    gson.fromJson(result, RscOrderDetailResult.class);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-
-                            }
-
-                        }
-
-                        @Override
-                        public void onFailure(HttpException error, String msg) {
-                        }
-
-                    });
-        }
-
-    }
-
-
 }
 

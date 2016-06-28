@@ -76,7 +76,7 @@ public class EposSlotCardStateActivity extends BaseActivity implements PullToRef
 
     private LoadingFooter loadingFooter;
 
-    private LoadMoreOnsrcollListener moreOnsrcollListener =new LoadMoreOnsrcollListener() {
+    private LoadMoreOnsrcollListener moreOnsrcollListener = new LoadMoreOnsrcollListener() {
         @Override
         public void loadMore() {
             //加载更多
@@ -138,7 +138,7 @@ public class EposSlotCardStateActivity extends BaseActivity implements PullToRef
         select_state_listView.setOnRefreshListener(this);
         select_state_listView.setOnScrollListener(moreOnsrcollListener);
 
-        loadingFooter = new LoadingFooter(this,select_state_listView.getRefreshableView());
+        loadingFooter = new LoadingFooter(this, select_state_listView.getRefreshableView());
 
         //设置刷新的文字
         PullToRefreshUtils.setFreshText(select_state_listView);
@@ -240,9 +240,7 @@ public class EposSlotCardStateActivity extends BaseActivity implements PullToRef
             if (req.getData().getStatus().equals("1000")) {
                 RSCStateInfoResult data = (RSCStateInfoResult) req.getData();
                 if (data.RSCs != null && !data.RSCs.isEmpty()) {
-
-
-                        loadingFooter.setSize(page,data.RSCs.size());
+                    loadingFooter.setSize(page, data.RSCs.size());
                     if (page == 1) {
                         deliveryAdapter = new DeliveryAdapter(this, data.RSCs);
                         select_state_listView.setAdapter(deliveryAdapter);
@@ -252,6 +250,7 @@ public class EposSlotCardStateActivity extends BaseActivity implements PullToRef
                         }
                     }
                 } else {
+                    loadingFooter.setSize(page, 0);
                     if (page == 1) {
                         if (deliveryAdapter != null) {
                             deliveryAdapter.clear();
@@ -288,15 +287,15 @@ public class EposSlotCardStateActivity extends BaseActivity implements PullToRef
             //初始化一切文本
             if (rsCsEntity != null && rsCsEntity.RSCInfo != null) {
                 //网点名
-                if (StringUtil.checkStr(rsCsEntity.RSCInfo.companyName)){
+                if (StringUtil.checkStr(rsCsEntity.RSCInfo.companyName)) {
                     holder.setText(R.id.title_delivery_state_item, rsCsEntity.RSCInfo.companyName);
-                }else {
+                } else {
                     holder.setText(R.id.title_delivery_state_item, "");
                 }
                 //电话
                 if (StringUtil.checkStr(rsCsEntity.RSCInfo.phone)) {
                     holder.setText(R.id.phone_delivery_state_item, "电话：" + rsCsEntity.RSCInfo.phone);
-                }else {
+                } else {
                     holder.setText(R.id.phone_delivery_state_item, "电话：");
                 }
                 //网点所在地址

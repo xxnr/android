@@ -15,7 +15,6 @@ import com.ksfc.newfarmer.utils.ActivityAnimationUtils;
 import com.ksfc.newfarmer.widget.CirclePageIndicator;
 import com.ksfc.newfarmer.widget.HackyViewPager;
 
-import java.io.Serializable;
 import java.util.List;
 
 

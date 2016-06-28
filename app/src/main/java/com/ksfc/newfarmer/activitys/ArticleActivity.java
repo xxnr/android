@@ -28,6 +28,8 @@ import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.media.UMImage;
 
+import net.yangentao.util.NetUtil;
+
 
 @SuppressLint("SetJavaScriptEnabled")
 public class ArticleActivity extends BaseActivity {
@@ -120,10 +122,12 @@ public class ArticleActivity extends BaseActivity {
                 });
             }
         });
-        if (StringUtil.checkStr(url)) {
+        if (StringUtil.checkStr(url)&& NetUtil.isConnected(this)) {
             RndLog.d(TAG, url);
             showProgressDialog();
             web.loadUrl(url);
+        }else {
+            showToast("网络未连接");
         }
 
     }

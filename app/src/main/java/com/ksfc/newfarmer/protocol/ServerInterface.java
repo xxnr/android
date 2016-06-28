@@ -1,7 +1,9 @@
 package com.ksfc.newfarmer.protocol;
 
 
+
 import com.google.gson.Gson;
+import com.ksfc.newfarmer.common.HttpsConfig;
 import com.ksfc.newfarmer.utils.RndLog;
 
 import org.json.JSONException;
@@ -94,16 +96,24 @@ public final class ServerInterface {
     private Response getResponseByApi(ApiType api, RequestParams params) {
 
         params.put("user-agent", "Android-v2.0");
+        //判断是否加https
+        String url;
+        if (HttpsConfig.httpsConfig().contains(api)) {
+            url = api.getOpt().replaceFirst("http://", "https://");
+        } else {
+            url = api.getOpt();
+        }
+
         try {
             // TODO 判断api类型
             if (api.getRequestMethod() == ApiType.RequestMethod.GET) {
-                return mHelper.performGet(api.getOpt(), params);
+                return mHelper.performGet(url, params);
             } else if (api.getRequestMethod() == ApiType.RequestMethod.POSTJSON) {
-                return mHelper.postBody(api.getOpt(), params);
+                return mHelper.postBody(url, params);
             } else if (api.getRequestMethod() == ApiType.RequestMethod.PUT) {
-                return mHelper.putBody(api.getOpt(), params);
+                return mHelper.putBody(url, params);
             } else {
-                return mHelper.performPost(api.getOpt(), params);
+                return mHelper.performPost(url, params);
             }
         } catch (IOException e) {
             e.printStackTrace();

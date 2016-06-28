@@ -32,7 +32,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.common.LoadMoreOnsrcollListener;
-import com.ksfc.newfarmer.order.OrderUtils;
+import com.ksfc.newfarmer.common.OrderUtils;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.adapter.CommonAdapter;
 import com.ksfc.newfarmer.adapter.CommonViewHolder;
@@ -327,7 +327,7 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
             waitingpay_lv.onRefreshComplete();
             if (data.getStatus().equals("1000")) {
                 List<RscOrderResult.OrdersEntity> orders = data.orders;
-                if (!orders.isEmpty()) {
+                if (orders!=null&&!orders.isEmpty()) {
                     null_layout.setVisibility(View.GONE);
                     if (page == 1) {
                         loadingFooter.setSize(page,orders.size());
@@ -346,6 +346,7 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
                         }
                     }
                 } else {
+                    loadingFooter.setSize(page,0);
                     if (page == 1) {
                         if (adapter != null) {
                             adapter.clear();

@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
@@ -283,7 +282,7 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
             isSigned = true;
             PointResult reqData = (PointResult) req.getData();
             //展示签到成功的页面
-            CommonFunction.showSuccess(this, reqData);
+            CommonFunction.showSuccess(MainActivity.getInstance(), reqData);
         } else if (ApiType.APP_UP_GRADE == req.getApi()) {
             final AppUpgrade reqData = (AppUpgrade) req.getData();
             if (StringUtil.checkStr(reqData.android_update_url)) {
@@ -471,7 +470,6 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
             if (singleGood != null) {
                 //商品图
                 ImageView imageView = holder.getView(R.id.huafei_img);
-
                 // 商品图的外边
                 if (itemWitch != 0) {
                     RelativeLayout relativeLayout = holder.getView(R.id.huafei_img_rel);
@@ -480,16 +478,13 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
                     layoutParams.width = itemWitch;
                     relativeLayout.setLayoutParams(layoutParams);
                 }
-
                 if (itemWitch > Utils.dip2px(HomepageActivity.this, 2)) {
                     ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
                     layoutParams.height = itemWitch - Utils.dip2px(HomepageActivity.this, 2);
                     layoutParams.width = itemWitch - Utils.dip2px(HomepageActivity.this, 2);
                     imageView.setLayoutParams(layoutParams);
-                    ImageLoader.getInstance().displayImage(MsgID.IP + singleGood.imgUrl, imageView);
                 }
                 ImageLoader.getInstance().displayImage(MsgID.IP + singleGood.imgUrl, imageView);
-
                 //商品名
                 if (StringUtil.checkStr(singleGood.goodsName)) {
                     holder.setText(R.id.huafei_name_tv, singleGood.goodsName);
@@ -522,8 +517,6 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
     protected void onResume() {
         super.onResume();
         if (isLogin()) {
-            Log.d("HomepageActivity", "此处执行");
-            Log.d("HomepageActivity", isSigned + "");
             if (!isSigned && shakeAnimation != null) {
                 getRightImageView().startAnimation(shakeAnimation);
             }

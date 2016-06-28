@@ -36,5 +36,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="85dp"
+        android:visibility="gone"
         android:src="@drawable/exchange_record_empty_icon" />
 </FrameLayout>

@@ -10,22 +10,30 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:orientation="vertical"
-        android:paddingBottom="10dp"
-        android:paddingTop="10dp">
+        android:visibility="visible">
 
         <include layout="@layout/line_lay" />
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:text="本版本不支持该商品兑换，升级应用享受更多福利吧~"
-            android:textColor="@color/deep_gray"
-            android:textSize="14sp" />
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:text="本版本不支持该商品兑换，升级应用享受更多福利吧~"
+                android:textColor="@color/deep_gray"
+                android:textSize="14sp" />
+
+        </LinearLayout>
 
         <include layout="@layout/line_lay" />
+
 
     </LinearLayout>
 
@@ -35,7 +43,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <include layout="@layout/line_lay" />
 
@@ -52,7 +60,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="请凭自提码到网点发货"
+                android:text="请凭自提码到网点提货"
                 android:textSize="14sp" />
 
             <TextView

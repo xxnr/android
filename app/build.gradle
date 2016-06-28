@@ -16,7 +16,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -87,10 +87,6 @@ dependencies {
     compile project(':photo_view')
     compile 'com.jakewharton:butterknife:8.1.0'
     apt 'com.jakewharton:butterknife-compiler:8.1.0'
-
     compile 'in.srain.cube:ultra-ptr:1.0.11'
-    // Because RxAndroid releases are few and far between, it is recommended you also
-    // explicitly depend on RxJava's latest version for bug fixes and new features.
-    //    compile 'io.reactivex:rxandroid:1.2.1'
-    //    compile 'io.reactivex:rxjava:1.1.6'
+
 }

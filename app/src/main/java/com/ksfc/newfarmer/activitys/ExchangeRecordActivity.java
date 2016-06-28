@@ -7,13 +7,15 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 
 import com.ksfc.newfarmer.BaseActivity;
+import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.fragment.GiftOrderListFragment;
 import com.ksfc.newfarmer.protocol.Request;
+import com.ksfc.newfarmer.widget.UnSwipeViewPager;
+
+import net.yangentao.util.msg.MsgCenter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +30,7 @@ public class ExchangeRecordActivity extends BaseActivity {
     @BindView(R.id.tabs)
     TabLayout tabs;
     @BindView(R.id.viewPager)
-    ViewPager viewPager;
+    UnSwipeViewPager viewPager;
     private List<String> titleList;
 
     @Override
@@ -45,7 +47,25 @@ public class ExchangeRecordActivity extends BaseActivity {
 
         GiftOrderListAdapter adapter = new GiftOrderListAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
+        viewPager.setScanScroll(false);
         tabs.setupWithViewPager(viewPager);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                //通知 订单列表刷新
+                MsgCenter.fireNull(MsgID.gift_swipe_reFlash, position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
     }
 

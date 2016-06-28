@@ -36,8 +36,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import android.graphics.Color;
 import android.text.Editable;
 import android.text.Selection;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.widget.AbsListView;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.CompoundButton;

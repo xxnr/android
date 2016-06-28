@@ -3,9 +3,7 @@ package com.ksfc.newfarmer.fragment;
 
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -38,7 +36,7 @@ public class SignSuccessFragment extends BaseFragment {
     @Override
     public View InItView() {
         View view = inflater.inflate(R.layout.sign_success_fragment_layout, null);
-        unbinder = ButterKnife.bind(this, view);
+        ButterKnife.bind(this, view);
         Bundle bundle = getArguments();
         PointResult pointResult = (PointResult) bundle.getSerializable("pointResult");
         if (pointResult != null) {
@@ -72,9 +70,6 @@ public class SignSuccessFragment extends BaseFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (unbinder != null) {
-            unbinder.unbind();
-        }
     }
 }
 

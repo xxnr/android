@@ -1,13 +1,24 @@
 package com.ksfc.newfarmer.protocol;
 
 
+
 import com.google.gson.Gson;
 import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.StringUtil;
 
+import net.yangentao.util.app.App;
+
 import java.io.IOException;
+import java.io.InputStream;
+import java.security.KeyStore;
+import java.security.SecureRandom;
+import java.security.cert.CertificateFactory;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManagerFactory;
 
 import okhttp3.*;
 import okhttp3.Request;
@@ -28,6 +39,27 @@ public class NetworkHelper {
 
     private static OkHttpClient mOkHttpClient;
 
+
+    public OkHttpClient getInstance() {
+
+        if (mOkHttpClient == null) {
+            synchronized (NetworkHelper.class) {
+                if (mOkHttpClient == null) {
+                    OkHttpClient.Builder builder = new OkHttpClient.Builder();
+                    builder.connectTimeout(CONNECTION_TIMEOUT, TimeUnit.MILLISECONDS);
+                    try {
+                        builder.sslSocketFactory(setCertificates(App.getApp().getAssets().open("xxnr.cer")));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    mOkHttpClient = builder.build();
+                }
+            }
+        }
+        return mOkHttpClient;
+    }
+
+
     /**
      * GET
      */
@@ -43,7 +75,6 @@ public class NetworkHelper {
             }
             String subUrl = urlBuilder.substring(0, urlBuilder.length() - 1);
             RndLog.d(TAG, "performGet. Data=" + subUrl);
-
             //创建一个Request
             final Request request = new Request.Builder()
                     .url(subUrl)
@@ -52,20 +83,6 @@ public class NetworkHelper {
 
         }
         return null;
-    }
-
-
-    private OkHttpClient getInstance() {
-        if (mOkHttpClient == null) {
-            synchronized (OkHttpClient.class) {
-                if (mOkHttpClient == null) {
-                    OkHttpClient.Builder builder = new OkHttpClient.Builder();
-                    builder.connectTimeout(CONNECTION_TIMEOUT, TimeUnit.MILLISECONDS);
-                    mOkHttpClient = new OkHttpClient();
-                }
-            }
-        }
-        return mOkHttpClient;
     }
 
 
@@ -130,6 +147,43 @@ public class NetworkHelper {
                         .build();
                 return getInstance().newCall(request).execute();
             }
+        }
+        return null;
+    }
+
+
+    public SSLSocketFactory setCertificates(InputStream... certificates) {
+        try {
+            CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
+            KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+            keyStore.load(null);
+            int index = 0;
+            for (InputStream certificate : certificates) {
+                String certificateAlias = Integer.toString(index++);
+                keyStore.setCertificateEntry(certificateAlias, certificateFactory.generateCertificate(certificate));
+
+                try {
+                    if (certificate != null)
+                        certificate.close();
+                } catch (IOException e) {
+                }
+            }
+
+            SSLContext sslContext = SSLContext.getInstance("TLS");
+
+            TrustManagerFactory trustManagerFactory =
+                    TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+
+            trustManagerFactory.init(keyStore);
+            sslContext.init
+                    (
+                            null,
+                            trustManagerFactory.getTrustManagers(),
+                            new SecureRandom()
+                    );
+            return sslContext.getSocketFactory();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }

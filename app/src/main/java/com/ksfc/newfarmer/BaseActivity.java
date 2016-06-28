@@ -11,7 +11,7 @@ import com.ksfc.newfarmer.protocol.OnApiDataReceivedCallback;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
 import com.ksfc.newfarmer.protocol.beans.LoginResult.UserInfo;
-import com.ksfc.newfarmer.utils.FilterClassUtils;
+import com.ksfc.newfarmer.common.FilterClassUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.utils.thrid.UmengPush;
 import com.ksfc.newfarmer.utils.Utils;
@@ -187,7 +187,7 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
                         } else if (req.getData().getStatus().equals("1403")) {
                             RndLog.d(TAG, req.getData().getMessage());
                         } else if (req.getApi() == ApiType.APP_UP_GRADE) {
-                            if (getClass().getSimpleName().equals("SettingActivity")){
+                            if (!getClass().getSimpleName().equals("HomepageActivity")){
                                 req.showErrorMsg();
                             }
                         } else {

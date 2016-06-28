@@ -105,7 +105,7 @@
                 android:layout_marginRight="10dp"
                 android:background="@null"
                 android:drawableRight="@drawable/delete_selector"
-                android:hint="@string/newPasswork"
+                android:hint="请输入您的密码"
                 android:inputType="textPassword"
                 android:maxLength="20" />
         </LinearLayout>
@@ -133,7 +133,7 @@
                 android:layout_marginRight="10dp"
                 android:background="@null"
                 android:drawableRight="@drawable/delete_selector"
-                android:hint="@string/confirmpassword"
+                android:hint="请输入您的确认密码"
                 android:inputType="textPassword"
                 android:maxLength="20" />
         </LinearLayout>
