@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.view.ViewGroup;
 
 import com.ksfc.newfarmer.fragment.GoodsDetailFragment;
-import com.ksfc.newfarmer.protocol.beans.GetGoodsDetail;
+import com.ksfc.newfarmer.http.beans.GetGoodsDetail;
 
 /**
  * Created by HePeng on 2015/11/23. 商品详情的适配器

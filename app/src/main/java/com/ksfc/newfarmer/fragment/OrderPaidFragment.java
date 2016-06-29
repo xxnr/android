@@ -5,13 +5,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import com.ksfc.newfarmer.BaseFragment;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.activitys.MainActivity;
 import com.ksfc.newfarmer.activitys.MyOrderDetailActivity;
-import com.ksfc.newfarmer.protocol.Request;
+import com.ksfc.newfarmer.http.Request;
 
-import net.yangentao.util.app.App;
+import com.ksfc.newfarmer.App;
 import net.yangentao.util.msg.MsgCenter;
 
 /**
@@ -22,7 +23,7 @@ public class OrderPaidFragment extends BaseFragment {
 
     @Override
     public View InItView() {
-        View view = inflater.inflate(R.layout.order_paid_layout, null);
+        View view = inflater.inflate(R.layout.fragment_order_paid, null);
         Bundle bundle = getArguments();
         if (bundle != null) {
             orderId = bundle.getString("orderId");

@@ -12,18 +12,18 @@ import android.widget.TextView;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.RndApplication;
-import com.ksfc.newfarmer.adapter.CommonAdapter;
-import com.ksfc.newfarmer.adapter.CommonViewHolder;
+import com.ksfc.newfarmer.common.CommonAdapter;
+import com.ksfc.newfarmer.common.CommonViewHolder;
 import com.ksfc.newfarmer.db.Store;
-import com.ksfc.newfarmer.protocol.ApiType;
-import com.ksfc.newfarmer.protocol.Request;
-import com.ksfc.newfarmer.protocol.RequestParams;
-import com.ksfc.newfarmer.protocol.beans.MyOrderDetailResult;
-import com.ksfc.newfarmer.protocol.beans.OfflinePayWayResult;
+import com.ksfc.newfarmer.http.ApiType;
+import com.ksfc.newfarmer.http.Request;
+import com.ksfc.newfarmer.http.RequestParams;
+import com.ksfc.newfarmer.http.beans.MyOrderDetailResult;
+import com.ksfc.newfarmer.http.beans.OfflinePayWayResult;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.UnSwipeListView;
 
-import net.yangentao.util.app.App;
+import com.ksfc.newfarmer.App;
 
 import java.util.List;
 
@@ -43,7 +43,7 @@ public class OfflinePayActivity extends BaseActivity {
     @Override
     public int getLayout() {
 
-        return R.layout.offline_pay_layout;
+        return R.layout.activity_offline_pay;
     }
 
     @Override
@@ -200,7 +200,7 @@ public class OfflinePayActivity extends BaseActivity {
 
 
         public PayWayAdapter(Context context, List<OfflinePayWayResult.OfflinePayTypeEntity> data) {
-            super(context, data, R.layout.city);
+            super(context, data, R.layout.item_only_text);
         }
 
         @Override

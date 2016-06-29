@@ -20,11 +20,6 @@ public class IntentUtil {
 		if (null != bundle)
 			intent.putExtras(bundle);
 		activity.startActivity(intent);
-		/*
-		 * if(!isFinish){
-		 * ((Activity)activity).overridePendingTransition(R.anim.push_left_in,
-		 * R.anim.push_left_out); return; }
-		 */
 		if (isFinish && activity instanceof Activity)
 			((Activity) activity).finish();
 	}
@@ -43,18 +38,6 @@ public class IntentUtil {
 		}
 	}
 
-	/*
-	 * 启动一个服务
-	 */
-	public static void serviceForward(Context activity, Class clazz,
-			Bundle bundle, boolean isFinish) {
-		Intent intent = new Intent(activity, clazz);
-		if (null != bundle)
-			intent.putExtras(bundle);
-		activity.startService(intent);
-		Log.d("UpdateVersionActivity", "更新===服务启动22222222222222");
-		if (isFinish && activity instanceof Activity)
-			((Activity) activity).finish();
-	}
+
 
 }

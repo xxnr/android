@@ -6,7 +6,7 @@ import android.widget.TextView;
 
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
-import com.ksfc.newfarmer.protocol.Request;
+import com.ksfc.newfarmer.http.Request;
 import com.ksfc.newfarmer.utils.StringUtil;
 
 import butterknife.BindView;
@@ -21,7 +21,7 @@ public class AboutUsActivity extends BaseActivity {
 
     @Override
     public int getLayout() {
-        return R.layout.about_us_layout;
+        return R.layout.activity_about_us;
     }
 
     @Override

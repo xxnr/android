@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.ksfc.newfarmer.BaseFragment;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.common.LoadMoreOnsrcollListener;
 import com.ksfc.newfarmer.common.OrderUtils;
@@ -34,14 +35,14 @@ import com.ksfc.newfarmer.activitys.OfflinePayActivity;
 import com.ksfc.newfarmer.activitys.PaywayActivity;
 import com.ksfc.newfarmer.activitys.GoodsListActivity;
 import com.ksfc.newfarmer.activitys.PickUpStateActivity;
-import com.ksfc.newfarmer.adapter.CommonAdapter;
-import com.ksfc.newfarmer.adapter.CommonViewHolder;
+import com.ksfc.newfarmer.common.CommonAdapter;
+import com.ksfc.newfarmer.common.CommonViewHolder;
 import com.ksfc.newfarmer.db.Store;
-import com.ksfc.newfarmer.protocol.ApiType;
-import com.ksfc.newfarmer.protocol.Request;
-import com.ksfc.newfarmer.protocol.RequestParams;
-import com.ksfc.newfarmer.protocol.beans.LoginResult;
-import com.ksfc.newfarmer.protocol.beans.WaitingPay;
+import com.ksfc.newfarmer.http.ApiType;
+import com.ksfc.newfarmer.http.Request;
+import com.ksfc.newfarmer.http.RequestParams;
+import com.ksfc.newfarmer.http.beans.LoginResult;
+import com.ksfc.newfarmer.http.beans.WaitingPay;
 import com.ksfc.newfarmer.utils.ExpandViewTouch;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.PullToRefreshUtils;
@@ -339,7 +340,7 @@ public class MyOrderDetailFragment extends BaseFragment implements PullToRefresh
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
-                convertView = inflater.inflate(R.layout.my_order_list_item, null);
+                convertView = inflater.inflate(R.layout.item_my_order_list, null);
                 convertView.setTag(new ViewHolder(convertView));
             }
 
@@ -515,7 +516,7 @@ public class MyOrderDetailFragment extends BaseFragment implements PullToRefresh
             if (SKUsList != null && !SKUsList.isEmpty()) {
 
                 for (int i = 0; i < SKUsList.size(); i++) {
-                    ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.order_list_item_item, null);
+                    ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.item_item_order_list, null);
 
                     ViewHolderChild viewHolderChild = new ViewHolderChild(rootView);
                     //商品图片
@@ -594,7 +595,7 @@ public class MyOrderDetailFragment extends BaseFragment implements PullToRefresh
             } else if (goodsList != null && !goodsList.isEmpty()) {
 
                 for (int i = 0; i < goodsList.size(); i++) {
-                    ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.order_list_item_item, null);
+                    ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.item_item_order_list, null);
                     ViewHolderChild viewHolderChild = new ViewHolderChild(rootView);
                     //商品图片
                     if (StringUtil.checkStr(goodsList.get(i).thumbnail)) {
@@ -776,7 +777,7 @@ public class MyOrderDetailFragment extends BaseFragment implements PullToRefresh
         private List<WaitingPay.SKUS> list;
 
         public PopSkusAdapter(Context context, List<WaitingPay.SKUS> data) {
-            super(context, data, R.layout.item_pop_sureorder_layout);
+            super(context, data, R.layout.item_pop_sure_order);
             this.list = data;
         }
 

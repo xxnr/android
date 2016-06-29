@@ -9,13 +9,13 @@ import android.widget.ListView;
 
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
-import com.ksfc.newfarmer.adapter.CommonAdapter;
-import com.ksfc.newfarmer.adapter.CommonViewHolder;
+import com.ksfc.newfarmer.common.CommonAdapter;
+import com.ksfc.newfarmer.common.CommonViewHolder;
 import com.ksfc.newfarmer.db.Store;
-import com.ksfc.newfarmer.protocol.ApiType;
-import com.ksfc.newfarmer.protocol.Request;
-import com.ksfc.newfarmer.protocol.RequestParams;
-import com.ksfc.newfarmer.protocol.beans.IntentionProductsResult;
+import com.ksfc.newfarmer.http.ApiType;
+import com.ksfc.newfarmer.http.Request;
+import com.ksfc.newfarmer.http.RequestParams;
+import com.ksfc.newfarmer.http.beans.IntentionProductsResult;
 import com.ksfc.newfarmer.utils.StringUtil;
 
 import java.io.Serializable;
@@ -34,7 +34,7 @@ public class SelectIntentProductActivity extends BaseActivity {
 
     @Override
     public int getLayout() {
-        return R.layout.select_intent_product_layout;
+        return R.layout.activity_select_intent_product;
     }
 
     @Override
@@ -112,7 +112,7 @@ public class SelectIntentProductActivity extends BaseActivity {
         private HashMap<String, Boolean> checkNameMap = new HashMap<>();
 
         public ProductAdapter(Context context, List<IntentionProductsResult.IntentionProductsEntity> data) {
-            super(context, data, R.layout.item_select_intent_layout);
+            super(context, data, R.layout.item_select_intent_goods);
         }
 
         @Override

@@ -9,10 +9,10 @@ import android.widget.TextView;
 
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
-import com.ksfc.newfarmer.adapter.CommonAdapter;
-import com.ksfc.newfarmer.adapter.CommonViewHolder;
-import com.ksfc.newfarmer.protocol.Request;
-import com.ksfc.newfarmer.protocol.beans.MyOrderDetailResult;
+import com.ksfc.newfarmer.common.CommonAdapter;
+import com.ksfc.newfarmer.common.CommonViewHolder;
+import com.ksfc.newfarmer.http.Request;
+import com.ksfc.newfarmer.http.beans.MyOrderDetailResult;
 import com.ksfc.newfarmer.utils.DateFormatUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
 
@@ -27,7 +27,7 @@ public class CheckPayDetailActivity extends BaseActivity {
 
     @Override
     public int getLayout() {
-        return R.layout.my_order_detail;
+        return R.layout.activity_my_order_detail;
     }
 
     @Override
@@ -84,7 +84,7 @@ public class CheckPayDetailActivity extends BaseActivity {
     }
 
     private void initView() {
-        View headView = LayoutInflater.from(this).inflate(R.layout.check_pay_detail_head_layout, null);
+        View headView = LayoutInflater.from(this).inflate(R.layout.head_check_pay_detail, null);
         orderId_tv = ((TextView) headView.findViewById(R.id.check_pay_orderId));    //订单号
         orderStep_tv = ((TextView) headView.findViewById(R.id.check_pay_orderStep)); //阶段状态
         orderState_tv = ((TextView) headView.findViewById(R.id.check_pay_orderState));//付款状态

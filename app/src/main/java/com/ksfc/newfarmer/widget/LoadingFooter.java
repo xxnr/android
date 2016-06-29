@@ -28,7 +28,7 @@ public class LoadingFooter {
     }
 
     public LoadingFooter(Context context, ListView listView) {
-        mLoadingFooter = LayoutInflater.from(context).inflate(R.layout.foot_load_more_layout, null);
+        mLoadingFooter = LayoutInflater.from(context).inflate(R.layout.foot_load_more, null);
         mLoadingFooter.setOnClickListener(null);
         mProgress = (ProgressBar) mLoadingFooter.findViewById(R.id.progressBar);
         mLoadingText = (TextView) mLoadingFooter.findViewById(R.id.foot_load_text);

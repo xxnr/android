@@ -2,10 +2,10 @@ package com.ksfc.newfarmer.db;
 
 
 import com.alibaba.fastjson.JSON;
-import com.ksfc.newfarmer.protocol.beans.LoginResult.UserInfo;
+import com.ksfc.newfarmer.http.beans.LoginResult.UserInfo;
 
 import net.yangentao.util.SerialMap;
-import net.yangentao.util.app.App;
+import com.ksfc.newfarmer.App;
 
 public class Store {
 

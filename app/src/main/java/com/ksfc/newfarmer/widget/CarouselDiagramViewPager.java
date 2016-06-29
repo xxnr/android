@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
-import com.ksfc.newfarmer.protocol.beans.HomeImageResult.Rows;
+import com.ksfc.newfarmer.http.beans.HomeImageResult.Rows;
 import com.ksfc.newfarmer.utils.BaseTools;
 import com.ksfc.newfarmer.utils.ImageLoaderUtils;
 import com.ksfc.newfarmer.utils.Utils;
@@ -322,7 +322,7 @@ public class CarouselDiagramViewPager extends ViewPager {
 		}
 		// 将轮播图的布局文件转化为View对象
 		layout_roll_view = View.inflate(context,
-				R.layout.layout_roll_viewpager, null);
+				R.layout.roll_viewpager, null);
 		ll_viewpager_container = (LinearLayout) layout_roll_view
 				.findViewById(R.id.ll_viewpager_container);
 		ll_dots = (LinearLayout) layout_roll_view.findViewById(R.id.ll_dots);
@@ -352,7 +352,7 @@ public class CarouselDiagramViewPager extends ViewPager {
 		}
 		// 将轮播图的布局文件转化为View对象
 		layout_roll_view = View.inflate(context,
-				R.layout.layout_roll_viewpager, null);
+				R.layout.roll_viewpager, null);
 		ll_viewpager_container = (LinearLayout) layout_roll_view
 				.findViewById(R.id.ll_viewpager_container);
 

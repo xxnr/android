@@ -109,7 +109,7 @@ public class CustomDialog extends Dialog {
 			// instantiate the dialog with the custom Theme
 			final CustomDialog dialog = new CustomDialog(context,
 					R.style.MyAlertDialog);
-			View layout = inflater.inflate(R.layout.dialog_new_layout, null);
+			View layout = inflater.inflate(R.layout.dialog_normal, null);
 			dialog.addContentView(layout, new LayoutParams(
 					LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 			// set the dialog title

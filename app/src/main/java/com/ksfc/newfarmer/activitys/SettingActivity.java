@@ -7,12 +7,12 @@ import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.common.CompleteReceiver;
 import com.ksfc.newfarmer.db.XUtilsDb.XUtilsDbHelper;
-import com.ksfc.newfarmer.protocol.ApiType;
-import com.ksfc.newfarmer.protocol.RemoteApi;
-import com.ksfc.newfarmer.protocol.Request;
-import com.ksfc.newfarmer.protocol.beans.AppUpgrade;
-import com.ksfc.newfarmer.protocol.beans.InviteeResult;
-import com.ksfc.newfarmer.protocol.beans.PotentialListResult;
+import com.ksfc.newfarmer.http.ApiType;
+import com.ksfc.newfarmer.http.RemoteApi;
+import com.ksfc.newfarmer.http.Request;
+import com.ksfc.newfarmer.http.beans.AppUpgrade;
+import com.ksfc.newfarmer.http.beans.InviteeResult;
+import com.ksfc.newfarmer.http.beans.PotentialListResult;
 import com.ksfc.newfarmer.utils.PopWindowUtils;
 import com.ksfc.newfarmer.utils.Utils;
 import com.ksfc.newfarmer.widget.dialog.CustomDialog;
@@ -51,7 +51,7 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import net.yangentao.util.app.App;
+import com.ksfc.newfarmer.App;
 
 /**
  * 项目名称：newFarmer 类名称：SettingActivity 类描述： 创建人：王蕾 创建时间：2015-5-29 下午2:28:31 修改备注：
@@ -111,7 +111,7 @@ public class SettingActivity extends BaseActivity implements CompoundButton.OnCh
 
     @Override
     public int getLayout() {
-        return R.layout.setting_layout;
+        return R.layout.activity_setting;
     }
 
     @Override

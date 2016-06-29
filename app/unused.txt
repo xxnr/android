@@ -8129,7 +8129,7 @@ net.yangentao.util.XLog$Level
 net.yangentao.util.XLog$StreamPrinter
 net.yangentao.util.XLog$TreePrinter
 net.yangentao.util.app.AlarmUtil
-net.yangentao.util.app.App:
+com.ksfc.newfarmer.App:
     private static java.lang.String imei
     8:8:public App()
     22:27:public static java.lang.String imei()

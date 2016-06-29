@@ -6,15 +6,15 @@ import java.util.List;
 
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
-import com.ksfc.newfarmer.adapter.CommonAdapter;
-import com.ksfc.newfarmer.adapter.CommonViewHolder;
+import com.ksfc.newfarmer.common.CommonAdapter;
+import com.ksfc.newfarmer.common.CommonViewHolder;
 import com.ksfc.newfarmer.db.Store;
-import com.ksfc.newfarmer.protocol.ApiType;
-import com.ksfc.newfarmer.protocol.Request;
-import com.ksfc.newfarmer.protocol.RequestParams;
-import com.ksfc.newfarmer.protocol.beans.AddressList;
-import com.ksfc.newfarmer.protocol.beans.AddressList.Address;
-import com.ksfc.newfarmer.protocol.beans.LoginResult.UserInfo;
+import com.ksfc.newfarmer.http.ApiType;
+import com.ksfc.newfarmer.http.Request;
+import com.ksfc.newfarmer.http.RequestParams;
+import com.ksfc.newfarmer.http.beans.AddressList;
+import com.ksfc.newfarmer.http.beans.AddressList.Address;
+import com.ksfc.newfarmer.http.beans.LoginResult.UserInfo;
 import com.ksfc.newfarmer.widget.dialog.CustomDialog;
 import com.ksfc.newfarmer.utils.ExpandViewTouch;
 import com.ksfc.newfarmer.utils.IntentUtil;
@@ -48,7 +48,7 @@ public class AddressmanageActivity extends BaseActivity {
 
     @Override
     public int getLayout() {
-        return R.layout.address_manage_layout1;
+        return R.layout.activity_address_manage;
     }
 
     @Override
@@ -149,7 +149,7 @@ public class AddressmanageActivity extends BaseActivity {
 
 
         public AddressAdapter(Context context, List<Address> data) {
-            super(context, data, R.layout.address_list_item);
+            super(context, data, R.layout.item_address_list);
         }
 
         @Override

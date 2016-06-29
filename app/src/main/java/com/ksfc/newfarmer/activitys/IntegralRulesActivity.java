@@ -8,7 +8,7 @@ import android.webkit.WebViewClient;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
-import com.ksfc.newfarmer.protocol.Request;
+import com.ksfc.newfarmer.http.Request;
 
 import net.yangentao.util.NetUtil;
 
@@ -25,7 +25,7 @@ public class IntegralRulesActivity extends BaseActivity {
 
     @Override
     public int getLayout() {
-        return R.layout.web_view_layout;
+        return R.layout.activity_web_view;
     }
 
     @Override

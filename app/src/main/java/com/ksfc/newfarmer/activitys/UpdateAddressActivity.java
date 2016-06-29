@@ -6,12 +6,12 @@ package com.ksfc.newfarmer.activitys;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.db.Store;
-import com.ksfc.newfarmer.protocol.ApiType;
-import com.ksfc.newfarmer.protocol.Request;
-import com.ksfc.newfarmer.protocol.RequestParams;
-import com.ksfc.newfarmer.protocol.ResponseResult;
-import com.ksfc.newfarmer.protocol.beans.AddressList;
-import com.ksfc.newfarmer.protocol.beans.LoginResult.UserInfo;
+import com.ksfc.newfarmer.http.ApiType;
+import com.ksfc.newfarmer.http.Request;
+import com.ksfc.newfarmer.http.RequestParams;
+import com.ksfc.newfarmer.http.ResponseResult;
+import com.ksfc.newfarmer.http.beans.AddressList;
+import com.ksfc.newfarmer.http.beans.LoginResult.UserInfo;
 import com.ksfc.newfarmer.widget.dialog.CustomDialog;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
@@ -61,7 +61,7 @@ public class UpdateAddressActivity extends BaseActivity {
 
     @Override
     public int getLayout() {
-        return R.layout.choose_address;
+        return R.layout.activity_add_edit_address;
     }
 
     @Override

@@ -8,10 +8,10 @@ import com.ksfc.newfarmer.RndApplication;
 import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.fragment.OrderPaidFragment;
 import com.ksfc.newfarmer.fragment.PayWayFragment;
-import com.ksfc.newfarmer.protocol.ApiType;
-import com.ksfc.newfarmer.protocol.Request;
-import com.ksfc.newfarmer.protocol.RequestParams;
-import com.ksfc.newfarmer.protocol.beans.MyOrderDetailResult;
+import com.ksfc.newfarmer.http.ApiType;
+import com.ksfc.newfarmer.http.Request;
+import com.ksfc.newfarmer.http.RequestParams;
+import com.ksfc.newfarmer.http.beans.MyOrderDetailResult;
 import com.ksfc.newfarmer.utils.RndLog;
 
 import android.content.Intent;
@@ -20,7 +20,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 
-import net.yangentao.util.app.App;
+import com.ksfc.newfarmer.App;
 import net.yangentao.util.msg.MsgCenter;
 import net.yangentao.util.msg.MsgListener;
 
@@ -34,7 +34,7 @@ public class PaywayActivity extends BaseActivity {
 
     @Override
     public int getLayout() {
-        return R.layout.payway_activity_layout;
+        return R.layout.activity_payway;
     }
 
     @Override

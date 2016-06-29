@@ -12,13 +12,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
-import com.ksfc.newfarmer.adapter.CommonAdapter;
-import com.ksfc.newfarmer.adapter.CommonViewHolder;
+import com.ksfc.newfarmer.common.CommonAdapter;
+import com.ksfc.newfarmer.common.CommonViewHolder;
 import com.ksfc.newfarmer.db.Store;
-import com.ksfc.newfarmer.protocol.ApiType;
-import com.ksfc.newfarmer.protocol.Request;
-import com.ksfc.newfarmer.protocol.RequestParams;
-import com.ksfc.newfarmer.protocol.beans.LoginResult;
+import com.ksfc.newfarmer.http.ApiType;
+import com.ksfc.newfarmer.http.Request;
+import com.ksfc.newfarmer.http.RequestParams;
+import com.ksfc.newfarmer.http.beans.LoginResult;
 import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.lidroid.xutils.HttpUtils;
@@ -48,7 +48,7 @@ public class SelectUserTypeActivity extends BaseActivity implements AdapterView.
 
     @Override
     public int getLayout() {
-        return R.layout.selector_address_list_layout;
+        return R.layout.activity_selector_address_list;
     }
 
 
@@ -146,7 +146,7 @@ public class SelectUserTypeActivity extends BaseActivity implements AdapterView.
     class AddressAdapter extends CommonAdapter<String> {
 
         public AddressAdapter(Context context, List<String> data) {
-            super(context, data, R.layout.city);
+            super(context, data, R.layout.item_only_text);
         }
 
         @Override

@@ -10,7 +10,7 @@ import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.adapter.MyOrderListFragmentPagerAdapter;
 import com.ksfc.newfarmer.fragment.MyOrderDetailFragment;
-import com.ksfc.newfarmer.protocol.Request;
+import com.ksfc.newfarmer.http.Request;
 import com.ksfc.newfarmer.utils.PopWindowUtils;
 import com.ksfc.newfarmer.widget.UnSwipeViewPager;
 
@@ -39,7 +39,7 @@ public class MyOrderListActivity extends BaseActivity implements MyOrderDetailFr
 
     @Override
     public int getLayout() {
-        return R.layout.waitingpay_layout;
+        return R.layout.fragment_order_list;
     }
 
     @Override

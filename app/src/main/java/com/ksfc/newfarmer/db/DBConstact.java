@@ -6,7 +6,7 @@ import com.ksfc.newfarmer.db.dao.ShoppingDao;
 
 import android.content.Context;
 
-import net.yangentao.util.app.App;
+import com.ksfc.newfarmer.App;
 
 /**
  * 

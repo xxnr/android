@@ -15,12 +15,12 @@ import android.widget.TextView;
 
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
-import com.ksfc.newfarmer.adapter.CommonAdapter;
-import com.ksfc.newfarmer.adapter.CommonViewHolder;
+import com.ksfc.newfarmer.common.CommonAdapter;
+import com.ksfc.newfarmer.common.CommonViewHolder;
 import com.ksfc.newfarmer.db.XUtilsDb.XUtilsDbHelper;
-import com.ksfc.newfarmer.protocol.Request;
-import com.ksfc.newfarmer.protocol.beans.InviteeResult;
-import com.ksfc.newfarmer.protocol.beans.PotentialListResult;
+import com.ksfc.newfarmer.http.Request;
+import com.ksfc.newfarmer.http.beans.InviteeResult;
+import com.ksfc.newfarmer.http.beans.PotentialListResult;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.ClearEditText;
 import com.ksfc.newfarmer.widget.UnSwipeListView;
@@ -28,7 +28,7 @@ import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.db.sqlite.Selector;
 import com.lidroid.xutils.exception.DbException;
 
-import net.yangentao.util.app.App;
+import com.ksfc.newfarmer.App;
 
 import java.util.List;
 import java.util.Timer;
@@ -48,7 +48,7 @@ public class InviterSearchActivity extends BaseActivity {
 
     @Override
     public int getLayout() {
-        return R.layout.inviter_seach_layout;
+        return R.layout.activity_inviter_seach;
     }
 
     @Override
@@ -106,7 +106,7 @@ public class InviterSearchActivity extends BaseActivity {
 
                         if (potentialCustomersEntities != null && !potentialCustomersEntities.isEmpty()) {
                             invitee_search_potential_listView.setVisibility(View.VISIBLE);
-                            View headView = getLayoutInflater().inflate(R.layout.common_tab_bar, null);
+                            View headView = getLayoutInflater().inflate(R.layout.item_tab_bar, null);
                             TextView tab_text = (TextView) headView.findViewById(R.id.common_tab_bar_text);
                             tab_text.setText("客户登记");
                             if (invitee_search_potential_listView.getHeaderViewsCount() == 0) {
@@ -119,7 +119,7 @@ public class InviterSearchActivity extends BaseActivity {
 
                         if (inviteeEntityList != null && !inviteeEntityList.isEmpty()) {
                             invitee_search_customer_listView.setVisibility(View.VISIBLE);
-                            View headView = getLayoutInflater().inflate(R.layout.common_tab_bar, null);
+                            View headView = getLayoutInflater().inflate(R.layout.item_tab_bar, null);
                             TextView tab_text = (TextView) headView.findViewById(R.id.common_tab_bar_text);
                             tab_text.setText("我的客户");
                             if (invitee_search_customer_listView.getHeaderViewsCount() == 0) {
@@ -234,7 +234,7 @@ public class InviterSearchActivity extends BaseActivity {
         private List<PotentialListResult.PotentialCustomersEntity> list;
 
         public PotentialCustomerAdapter(Context context, List<PotentialListResult.PotentialCustomersEntity> data) {
-            super(context, data, R.layout.item_already_customr_layout);
+            super(context, data, R.layout.item_already_customer);
         }
 
         @Override

@@ -17,7 +17,7 @@ public class CustomProgressDialogForCache {
 	public static Dialog createLoadingDialog(Context context, String msg) {
 
 		LayoutInflater inflater = LayoutInflater.from(context);
-		View v = inflater.inflate(R.layout.clear_cache_loading_dialog, null);// 得到加载view
+		View v = inflater.inflate(R.layout.dialog_clear_cache, null);// 得到加载view
 		LinearLayout layout = (LinearLayout) v.findViewById(R.id.dialog_view);// 加载布局
 		// main.xml中的ImageView
 		ImageView spaceshipImage = (ImageView) v.findViewById(R.id.img);

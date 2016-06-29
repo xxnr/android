@@ -17,11 +17,12 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.ksfc.newfarmer.BaseFragment;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.activitys.BigImageActivity;
-import com.ksfc.newfarmer.protocol.Request;
-import com.ksfc.newfarmer.protocol.beans.GetGoodsDetail;
+import com.ksfc.newfarmer.http.Request;
+import com.ksfc.newfarmer.http.beans.GetGoodsDetail;
 import com.ksfc.newfarmer.utils.ActivityAnimationUtils;
 import com.ksfc.newfarmer.utils.ScreenUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
@@ -53,7 +54,7 @@ public class GoodsDetailFragment extends BaseFragment implements ViewPager.OnPag
         detail = (GetGoodsDetail.GoodsDetail) bundle.getSerializable("detail");
         int position = bundle.getInt("position", 0);//当前Viewpager的index
         if (position == 0) {
-            View view = inflater.inflate(R.layout.goods_detail_top_layout, null);
+            View view = inflater.inflate(R.layout.goods_detail_top, null);
             ViewPager viewPager = (ViewPager) view.findViewById(R.id.goods_detail_top_viewpager);
             View goods_detail_top_viewpager_rel = view.findViewById(R.id.goods_detail_top_viewpager_rel);
             ScreenUtil.setHeight(activity,goods_detail_top_viewpager_rel,360);
@@ -161,7 +162,7 @@ public class GoodsDetailFragment extends BaseFragment implements ViewPager.OnPag
             return view;
         } else {
 
-            View view = inflater.inflate(R.layout.goods_detail_buttom_layout, null);
+            View view = inflater.inflate(R.layout.goods_detail_buttom, null);
             web = (WebView) view.findViewById(R.id.goods_detail_list);
             guild_1 = (TextView) view.findViewById(R.id.tv_guid1);
             guild_2 = (TextView) view.findViewById(R.id.tv_guid2);
@@ -281,7 +282,7 @@ public class GoodsDetailFragment extends BaseFragment implements ViewPager.OnPag
         @Override
         public Object instantiateItem(ViewGroup container, final int position) {
 
-            View view = inflater.inflate(R.layout.pic_layout, null);
+            View view = inflater.inflate(R.layout.viewpager_pic, null);
             final ImageView imageView = (ImageView) view.findViewById(R.id.imageView);
             if (StringUtil.checkStr(pictures.get(position).imgUrl)) {
                 ImageLoader.getInstance().displayImage(MsgID.IP + pictures.get(position).imgUrl, imageView);

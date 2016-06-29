@@ -9,8 +9,8 @@ import android.widget.TextView;
 
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
-import com.ksfc.newfarmer.protocol.Request;
-import com.ksfc.newfarmer.protocol.beans.MyOrderDetailResult;
+import com.ksfc.newfarmer.http.Request;
+import com.ksfc.newfarmer.http.beans.MyOrderDetailResult;
 import com.ksfc.newfarmer.utils.DateFormatUtils;
 
 /**
@@ -23,7 +23,7 @@ public class MyOrderStateDetail extends BaseActivity {
 
     @Override
     public int getLayout() {
-        return R.layout.order_state_detail_layout;
+        return R.layout.activity_order_state_detail;
     }
 
     @Override
@@ -56,7 +56,7 @@ public class MyOrderStateDetail extends BaseActivity {
             switch (datas.rows.order.orderStatus.type) {
 
                 case 0:
-                    ViewGroup rootView0_0 = (ViewGroup) getLayoutInflater().inflate(R.layout.item_order_detail_layout, null);
+                    ViewGroup rootView0_0 = (ViewGroup) getLayoutInflater().inflate(R.layout.item_order_detail, null);
                     ViewHolder holder0_0 = new ViewHolder(rootView0_0);
                     setCommonAttribute(holder0_0, true);
                     holder0_0.order_state_time.setVisibility(View.GONE);
@@ -66,7 +66,7 @@ public class MyOrderStateDetail extends BaseActivity {
                     view_container.addView(rootView0_0);
 
 
-                    ViewGroup rootView0_1 = (ViewGroup) getLayoutInflater().inflate(R.layout.item_order_detail_layout, null);
+                    ViewGroup rootView0_1 = (ViewGroup) getLayoutInflater().inflate(R.layout.item_order_detail, null);
                     ViewHolder holder0_1 = new ViewHolder(rootView0_1);
                     setCommonAttribute(holder0_1, false);
                     holder0_1.dividing_line.setVisibility(View.GONE);
@@ -79,7 +79,7 @@ public class MyOrderStateDetail extends BaseActivity {
                 case 1:
                 case 2:
                 case 7:
-                    ViewGroup rootView2_0 = (ViewGroup) getLayoutInflater().inflate(R.layout.item_order_detail_layout, null);
+                    ViewGroup rootView2_0 = (ViewGroup) getLayoutInflater().inflate(R.layout.item_order_detail, null);
                     ViewHolder holder2_0 = new ViewHolder(rootView2_0);
                     setCommonAttribute(holder2_0, true);
                     holder2_0.dividing_line.setVisibility(View.INVISIBLE);
@@ -92,7 +92,7 @@ public class MyOrderStateDetail extends BaseActivity {
                     view_container.addView(rootView2_0);
                     break;
                 case 3:
-                    ViewGroup rootView3_0 = (ViewGroup) getLayoutInflater().inflate(R.layout.item_order_detail_layout, null);
+                    ViewGroup rootView3_0 = (ViewGroup) getLayoutInflater().inflate(R.layout.item_order_detail, null);
                     ViewHolder holder3_0 = new ViewHolder(rootView3_0);
                     setCommonAttribute(holder3_0, true);
                     holder3_0.order_state_icon.setImageResource(R.drawable.order_state_payment);
@@ -101,7 +101,7 @@ public class MyOrderStateDetail extends BaseActivity {
                     holder3_0.order_state_time.setText(DateFormatUtils.convertTime(order.datePaid));
                     view_container.addView(rootView3_0);
 
-                    ViewGroup rootView3_1 = (ViewGroup) getLayoutInflater().inflate(R.layout.item_order_detail_layout, null);
+                    ViewGroup rootView3_1 = (ViewGroup) getLayoutInflater().inflate(R.layout.item_order_detail, null);
                     ViewHolder holder3_1 = new ViewHolder(rootView3_1);
                     setCommonAttribute(holder3_1, false);
                     holder3_1.dividing_line.setVisibility(View.INVISIBLE);
@@ -114,7 +114,7 @@ public class MyOrderStateDetail extends BaseActivity {
                     break;
                 case 4:
                 case 5:
-                    ViewGroup rootView4_0 = (ViewGroup) getLayoutInflater().inflate(R.layout.item_order_detail_layout, null);
+                    ViewGroup rootView4_0 = (ViewGroup) getLayoutInflater().inflate(R.layout.item_order_detail, null);
                     ViewHolder holder4_0 = new ViewHolder(rootView4_0);
                     setCommonAttribute(holder4_0, true);
                     holder4_0.order_state_icon.setImageResource(R.drawable.order_state_delivery);
@@ -123,7 +123,7 @@ public class MyOrderStateDetail extends BaseActivity {
                     holder4_0.order_state_time.setText(DateFormatUtils.convertTime(order.datePendingDeliver));
                     view_container.addView(rootView4_0);
 
-                    ViewGroup rootView4_1 = (ViewGroup) getLayoutInflater().inflate(R.layout.item_order_detail_layout, null);
+                    ViewGroup rootView4_1 = (ViewGroup) getLayoutInflater().inflate(R.layout.item_order_detail, null);
                     ViewHolder holder4_1 = new ViewHolder(rootView4_1);
                     setCommonAttribute(holder4_1, false);
                     holder4_1.order_state_icon.setImageResource(R.drawable.order_state_payment);
@@ -131,7 +131,7 @@ public class MyOrderStateDetail extends BaseActivity {
                     holder4_1.order_state_time.setText(DateFormatUtils.convertTime(order.datePaid));
                     view_container.addView(rootView4_1);
 
-                    ViewGroup rootView4_2 = (ViewGroup) getLayoutInflater().inflate(R.layout.item_order_detail_layout, null);
+                    ViewGroup rootView4_2 = (ViewGroup) getLayoutInflater().inflate(R.layout.item_order_detail, null);
                     ViewHolder holder4_2 = new ViewHolder(rootView4_2);
                     setCommonAttribute(holder4_2, false);
                     holder4_2.dividing_line.setVisibility(View.INVISIBLE);
@@ -144,7 +144,7 @@ public class MyOrderStateDetail extends BaseActivity {
 
                     break;
                 case 6:
-                    ViewGroup rootView5_0 = (ViewGroup) getLayoutInflater().inflate(R.layout.item_order_detail_layout, null);
+                    ViewGroup rootView5_0 = (ViewGroup) getLayoutInflater().inflate(R.layout.item_order_detail, null);
                     ViewHolder holder5_0 = new ViewHolder(rootView5_0);
                     setCommonAttribute(holder5_0, true);
                     holder5_0.order_state_icon.setImageResource(R.drawable.order_state_finished);
@@ -153,7 +153,7 @@ public class MyOrderStateDetail extends BaseActivity {
                     holder5_0.order_state_time.setText(DateFormatUtils.convertTime(order.dateCompleted));
                     view_container.addView(rootView5_0);
 
-                    ViewGroup rootView5_1 = (ViewGroup) getLayoutInflater().inflate(R.layout.item_order_detail_layout, null);
+                    ViewGroup rootView5_1 = (ViewGroup) getLayoutInflater().inflate(R.layout.item_order_detail, null);
                     ViewHolder holder5_1 = new ViewHolder(rootView5_1);
                     setCommonAttribute(holder5_1, false);
                     holder5_1.order_state_icon.setImageResource(R.drawable.order_state_delivery);
@@ -161,7 +161,7 @@ public class MyOrderStateDetail extends BaseActivity {
                     holder5_1.order_state_time.setText(DateFormatUtils.convertTime(order.datePendingDeliver));
                     view_container.addView(rootView5_1);
 
-                    ViewGroup rootView5_2 = (ViewGroup) getLayoutInflater().inflate(R.layout.item_order_detail_layout, null);
+                    ViewGroup rootView5_2 = (ViewGroup) getLayoutInflater().inflate(R.layout.item_order_detail, null);
                     ViewHolder holder5_2 = new ViewHolder(rootView5_2);
                     setCommonAttribute(holder5_2, false);
                     holder5_2.order_state_icon.setImageResource(R.drawable.order_state_payment);
@@ -169,7 +169,7 @@ public class MyOrderStateDetail extends BaseActivity {
                     holder5_2.order_state_time.setText(DateFormatUtils.convertTime(order.datePaid));
                     view_container.addView(rootView5_2);
 
-                    ViewGroup rootView5_3 = (ViewGroup) getLayoutInflater().inflate(R.layout.item_order_detail_layout, null);
+                    ViewGroup rootView5_3 = (ViewGroup) getLayoutInflater().inflate(R.layout.item_order_detail, null);
                     ViewHolder holder5_3 = new ViewHolder(rootView5_3);
                     setCommonAttribute(holder5_3, false);
                     holder5_3.order_state_bottom_divide.setVisibility(View.INVISIBLE);

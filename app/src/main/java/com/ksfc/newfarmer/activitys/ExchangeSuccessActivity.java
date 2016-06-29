@@ -6,8 +6,8 @@ import android.widget.TextView;
 
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
-import com.ksfc.newfarmer.protocol.Request;
-import com.ksfc.newfarmer.protocol.beans.AddGiftOrderResult;
+import com.ksfc.newfarmer.http.Request;
+import com.ksfc.newfarmer.http.beans.AddGiftOrderResult;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
 
@@ -24,7 +24,7 @@ public class ExchangeSuccessActivity extends BaseActivity {
 
     @Override
     public int getLayout() {
-        return R.layout.exchange_success_layout;
+        return R.layout.activity_exchange_success;
     }
 
     @Override

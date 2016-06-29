@@ -10,10 +10,11 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.ksfc.newfarmer.BaseFragment;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
-import com.ksfc.newfarmer.protocol.Request;
-import com.ksfc.newfarmer.protocol.beans.GiftListResult;
+import com.ksfc.newfarmer.http.Request;
+import com.ksfc.newfarmer.http.beans.GiftListResult;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.utils.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -57,7 +58,7 @@ public class IntegralTallGuideFragment extends BaseFragment {
         View view = null;
         switch (page) {
             case 1:
-                view = inflater.inflate(R.layout.integral_guide1_layout, null);
+                view = inflater.inflate(R.layout.fragment_integral_guide1, null);
                 view.findViewById(R.id.guide_next_button).setOnClickListener(this);
                 TextView integral_count_tv = (TextView) view.findViewById(R.id.integral_count_tv);
                 if (arguments != null) {
@@ -68,7 +69,7 @@ public class IntegralTallGuideFragment extends BaseFragment {
                 }
                 break;
             case 2:
-                view = inflater.inflate(R.layout.integral_guide2_layout, null);
+                view = inflater.inflate(R.layout.fragment_integral_guide2, null);
                 //设置content内容
                 GiftListResult.DatasBean.GiftsBean gift = (GiftListResult.DatasBean.GiftsBean) arguments.getSerializable("gift");
                 if (gift != null) {
@@ -104,7 +105,7 @@ public class IntegralTallGuideFragment extends BaseFragment {
                 }
                 break;
             case 3:
-                view = inflater.inflate(R.layout.integral_guide3_layout, null);
+                view = inflater.inflate(R.layout.fragment_integral_guide3, null);
                 view.findViewById(R.id.guide_finish_button).setOnClickListener(this);
                 break;
         }

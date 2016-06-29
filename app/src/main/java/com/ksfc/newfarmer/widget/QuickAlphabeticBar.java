@@ -17,8 +17,8 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.ksfc.newfarmer.protocol.beans.InviteeResult;
-import com.ksfc.newfarmer.protocol.beans.PotentialListResult;
+import com.ksfc.newfarmer.http.beans.InviteeResult;
+import com.ksfc.newfarmer.http.beans.PotentialListResult;
 import com.ksfc.newfarmer.utils.Utils;
 
 

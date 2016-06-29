@@ -27,22 +27,22 @@ import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
-import com.ksfc.newfarmer.adapter.CommonAdapter;
-import com.ksfc.newfarmer.adapter.CommonViewHolder;
+import com.ksfc.newfarmer.common.CommonAdapter;
+import com.ksfc.newfarmer.common.CommonViewHolder;
 import com.ksfc.newfarmer.common.CommonFunction;
 import com.ksfc.newfarmer.common.CompleteReceiver;
-import com.ksfc.newfarmer.protocol.ApiType;
-import com.ksfc.newfarmer.protocol.RemoteApi;
-import com.ksfc.newfarmer.protocol.Request;
-import com.ksfc.newfarmer.protocol.beans.AppUpgrade;
-import com.ksfc.newfarmer.protocol.beans.ClassIDResult;
-import com.ksfc.newfarmer.protocol.beans.GetGoodsData;
-import com.ksfc.newfarmer.protocol.beans.GetGoodsData.SingleGood;
-import com.ksfc.newfarmer.protocol.beans.HomeImageResult;
-import com.ksfc.newfarmer.protocol.beans.HomeImageResult.Rows;
-import com.ksfc.newfarmer.protocol.beans.HomeImageResult.UserRollImage;
-import com.ksfc.newfarmer.protocol.beans.IntegralGetResult;
-import com.ksfc.newfarmer.protocol.beans.PointResult;
+import com.ksfc.newfarmer.http.ApiType;
+import com.ksfc.newfarmer.http.RemoteApi;
+import com.ksfc.newfarmer.http.Request;
+import com.ksfc.newfarmer.http.beans.AppUpgrade;
+import com.ksfc.newfarmer.http.beans.ClassIDResult;
+import com.ksfc.newfarmer.http.beans.GetGoodsData;
+import com.ksfc.newfarmer.http.beans.GetGoodsData.SingleGood;
+import com.ksfc.newfarmer.http.beans.HomeImageResult;
+import com.ksfc.newfarmer.http.beans.HomeImageResult.Rows;
+import com.ksfc.newfarmer.http.beans.HomeImageResult.UserRollImage;
+import com.ksfc.newfarmer.http.beans.IntegralGetResult;
+import com.ksfc.newfarmer.http.beans.PointResult;
 import com.ksfc.newfarmer.utils.PullToRefreshUtils;
 import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.ScreenUtil;
@@ -97,7 +97,7 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
 
     @Override
     public int getLayout() {
-        return R.layout.home_layout_new;
+        return R.layout.activity_home_page;
     }
 
     @Override
@@ -159,7 +159,13 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
                 public void onSuccess(ResponseInfo<String> responseInfo) {
                     if (responseInfo != null && StringUtil.checkStr(responseInfo.result)) {
                         RndLog.i(TAG, responseInfo.result);
-                        GetGoodsData getGoodsData = gson.fromJson(responseInfo.result, GetGoodsData.class);
+                        GetGoodsData getGoodsData=null;
+                        try {
+                            getGoodsData = gson.fromJson(responseInfo.result, GetGoodsData.class);
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+
                         if (getGoodsData != null && getGoodsData.getStatus().equals("1000")) {
                             if (getGoodsData.datas.rows != null && !getGoodsData.datas.rows.isEmpty()) {
                                 HuafeiAdapter adapter = new HuafeiAdapter(HomepageActivity.this, getGoodsData.datas.rows);
@@ -323,7 +329,7 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
                         final ClassIDResult.CategoriesEntity entity = data.categories.get(i);
                         if (entity != null) {
                             //设置 title_bar
-                            ViewGroup viewGroup = (ViewGroup) getLayoutInflater().inflate(R.layout.homepage_view_more_bar, null);
+                            ViewGroup viewGroup = (ViewGroup) getLayoutInflater().inflate(R.layout.home_page_view_more_bar, null);
                             viewGroup.setVisibility(View.GONE);
                             ViewHolder holder = new ViewHolder(viewGroup);
                             if (i % 2 == 1) {
@@ -462,7 +468,7 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
     class HuafeiAdapter extends CommonAdapter<SingleGood> {
 
         public HuafeiAdapter(Context context, List<SingleGood> data) {
-            super(context, data, R.layout.home_gv_item);
+            super(context, data, R.layout.item_home_gv);
         }
 
         @Override

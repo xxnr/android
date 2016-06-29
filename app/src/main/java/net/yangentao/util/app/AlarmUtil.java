@@ -8,6 +8,9 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+
+import com.ksfc.newfarmer.App;
+
 import net.yangentao.util.XLog;
 import net.yangentao.util.sql.KvDb;
 import net.yangentao.util.sql.RowItem;

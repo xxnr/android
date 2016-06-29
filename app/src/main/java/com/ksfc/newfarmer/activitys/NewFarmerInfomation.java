@@ -16,13 +16,13 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
-import com.ksfc.newfarmer.adapter.CommonAdapter;
-import com.ksfc.newfarmer.adapter.CommonViewHolder;
-import com.ksfc.newfarmer.protocol.ApiType;
-import com.ksfc.newfarmer.protocol.Request;
-import com.ksfc.newfarmer.protocol.RequestParams;
-import com.ksfc.newfarmer.protocol.beans.InformationResult;
-import com.ksfc.newfarmer.protocol.beans.InformationResult.DatasEntity.ItemsEntity;
+import com.ksfc.newfarmer.common.CommonAdapter;
+import com.ksfc.newfarmer.common.CommonViewHolder;
+import com.ksfc.newfarmer.http.ApiType;
+import com.ksfc.newfarmer.http.Request;
+import com.ksfc.newfarmer.http.RequestParams;
+import com.ksfc.newfarmer.http.beans.InformationResult;
+import com.ksfc.newfarmer.http.beans.InformationResult.DatasEntity.ItemsEntity;
 import com.ksfc.newfarmer.utils.DateFormatUtils;
 import com.ksfc.newfarmer.utils.ExpandViewTouch;
 import com.ksfc.newfarmer.utils.PullToRefreshUtils;
@@ -43,7 +43,7 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
 
     @Override
     public int getLayout() {
-        return R.layout.information_newfarmer_layout;
+        return R.layout.activity_information_and_filter;
     }
 
     @Override
@@ -158,7 +158,7 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
     class InformationAdapter extends CommonAdapter<ItemsEntity> {
 
         public InformationAdapter(Context context, List<ItemsEntity> data) {
-            super(context, data, R.layout.item_information_layout);
+            super(context, data, R.layout.item_information);
         }
 
         @Override

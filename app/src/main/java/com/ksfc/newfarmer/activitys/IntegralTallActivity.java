@@ -6,10 +6,8 @@ package com.ksfc.newfarmer.activitys;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
@@ -28,14 +26,14 @@ import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
-import com.ksfc.newfarmer.adapter.CommonAdapter;
-import com.ksfc.newfarmer.adapter.CommonViewHolder;
-import com.ksfc.newfarmer.protocol.ApiType;
-import com.ksfc.newfarmer.protocol.RemoteApi;
-import com.ksfc.newfarmer.protocol.Request;
-import com.ksfc.newfarmer.protocol.beans.GiftCategoriesResult;
-import com.ksfc.newfarmer.protocol.beans.GiftListResult;
-import com.ksfc.newfarmer.protocol.beans.IntegralGetResult;
+import com.ksfc.newfarmer.common.CommonAdapter;
+import com.ksfc.newfarmer.common.CommonViewHolder;
+import com.ksfc.newfarmer.http.ApiType;
+import com.ksfc.newfarmer.http.RemoteApi;
+import com.ksfc.newfarmer.http.Request;
+import com.ksfc.newfarmer.http.beans.GiftCategoriesResult;
+import com.ksfc.newfarmer.http.beans.GiftListResult;
+import com.ksfc.newfarmer.http.beans.IntegralGetResult;
 import com.ksfc.newfarmer.utils.ActivityAnimationUtils;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.PullToRefreshUtils;
@@ -89,7 +87,7 @@ public class IntegralTallActivity extends BaseActivity implements PullToRefreshB
 
     @Override
     public int getLayout() {
-        return R.layout.integral_tall_layout;
+        return R.layout.activity_integral_tall;
     }
 
     @Override
@@ -228,7 +226,7 @@ public class IntegralTallActivity extends BaseActivity implements PullToRefreshB
                         GiftCategoriesResult.CategoriesBean categoriesBean = categoriesResult.categories.get(i);
                         if (categoriesBean != null) {
                             //设置 title_bar
-                            ViewGroup viewGroup = (ViewGroup) getLayoutInflater().inflate(R.layout.gift_view_more_bar, null);
+                            ViewGroup viewGroup = (ViewGroup) getLayoutInflater().inflate(R.layout.view_more_bar_gift, null);
                             ViewHolder holder = new ViewHolder(viewGroup);
                             if (i % 2 == 1) {
                                 holder.view_bar_more_bar.setBackgroundColor(getResources().getColor(R.color.orange_goods_price));
@@ -353,7 +351,7 @@ public class IntegralTallActivity extends BaseActivity implements PullToRefreshB
     class GiftAdapter extends CommonAdapter<GiftListResult.DatasBean.GiftsBean> {
 
         public GiftAdapter(Context context, List<GiftListResult.DatasBean.GiftsBean> data) {
-            super(context, data, R.layout.gift_gv_item);
+            super(context, data, R.layout.item_gift_gv);
         }
 
         @Override

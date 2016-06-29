@@ -13,11 +13,11 @@ import android.widget.TextView;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
-import com.ksfc.newfarmer.protocol.ApiType;
-import com.ksfc.newfarmer.protocol.RemoteApi;
-import com.ksfc.newfarmer.protocol.Request;
-import com.ksfc.newfarmer.protocol.beans.GiftDetailResult;
-import com.ksfc.newfarmer.protocol.beans.IntegralGetResult;
+import com.ksfc.newfarmer.http.ApiType;
+import com.ksfc.newfarmer.http.RemoteApi;
+import com.ksfc.newfarmer.http.Request;
+import com.ksfc.newfarmer.http.beans.GiftDetailResult;
+import com.ksfc.newfarmer.http.beans.IntegralGetResult;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.ScreenUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
@@ -59,7 +59,7 @@ public class IntegralGiftDetailActivity extends BaseActivity {
 
     @Override
     public int getLayout() {
-        return R.layout.integral_gift_detail_layout;
+        return R.layout.activity_gift_detail;
     }
 
     @SuppressLint("SetJavaScriptEnabled")

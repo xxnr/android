@@ -2,8 +2,8 @@ package com.ksfc.newfarmer.db.XUtilsDb;
 
 import android.content.Context;
 
-import com.ksfc.newfarmer.protocol.beans.InviteeResult;
-import com.ksfc.newfarmer.protocol.beans.PotentialListResult;
+import com.ksfc.newfarmer.http.beans.InviteeResult;
+import com.ksfc.newfarmer.http.beans.PotentialListResult;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.exception.DbException;
 

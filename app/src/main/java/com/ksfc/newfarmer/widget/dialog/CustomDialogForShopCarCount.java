@@ -123,7 +123,7 @@ public class CustomDialogForShopCarCount extends Dialog {
             // instantiate the dialog with the custom Theme
             final CustomDialogForShopCarCount dialog = new CustomDialogForShopCarCount(context,
                     R.style.MyAlertDialog);
-            View layout = inflater.inflate(R.layout.dialog_new_layout_shop_car, null);
+            View layout = inflater.inflate(R.layout.dialog_shop_car_count, null);
             dialog.addContentView(layout, new LayoutParams(
                     LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
             // set the dialog title

@@ -7,9 +7,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.ksfc.newfarmer.BaseFragment;
 import com.ksfc.newfarmer.R;
-import com.ksfc.newfarmer.protocol.Request;
-import com.ksfc.newfarmer.protocol.beans.PointResult;
+import com.ksfc.newfarmer.http.Request;
+import com.ksfc.newfarmer.http.beans.PointResult;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,7 +36,7 @@ public class SignSuccessFragment extends BaseFragment {
 
     @Override
     public View InItView() {
-        View view = inflater.inflate(R.layout.sign_success_fragment_layout, null);
+        View view = inflater.inflate(R.layout.fragment_sign_success, null);
         ButterKnife.bind(this, view);
         Bundle bundle = getArguments();
         PointResult pointResult = (PointResult) bundle.getSerializable("pointResult");

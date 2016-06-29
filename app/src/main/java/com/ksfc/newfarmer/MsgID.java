@@ -1,6 +1,6 @@
 package com.ksfc.newfarmer;
 
-import com.ksfc.newfarmer.protocol.ApiType;
+import com.ksfc.newfarmer.http.ApiType;
 
 /**
  * 广播ID

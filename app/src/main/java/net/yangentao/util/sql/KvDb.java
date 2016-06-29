@@ -5,7 +5,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import android.content.Context;
 import net.yangentao.util.StrBuilder;
-import net.yangentao.util.app.App;
+import com.ksfc.newfarmer.App;
 
 public class KvDb {
 	public static final int KEY_LIMIT = 512;

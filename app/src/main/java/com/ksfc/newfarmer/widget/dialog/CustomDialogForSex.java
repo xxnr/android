@@ -129,7 +129,7 @@ public class CustomDialogForSex extends Dialog {
             // instantiate the dialog with the custom Theme
             final CustomDialogForSex dialog = new CustomDialogForSex(context,
                     R.style.MyAlertDialog);
-            View layout = inflater.inflate(R.layout.dialog_new_layout_sex , null);
+            View layout = inflater.inflate(R.layout.dialog_sex, null);
             dialog.addContentView(layout, new LayoutParams(
                     LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
             // set the dialog title

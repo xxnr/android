@@ -14,17 +14,17 @@ import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.RndApplication;
 import com.ksfc.newfarmer.db.Store;
-import com.ksfc.newfarmer.protocol.beans.EposPayResult;
+import com.ksfc.newfarmer.http.beans.EposPayResult;
 import com.ksfc.newfarmer.utils.thrid.EposServiceManager;
-import com.ksfc.newfarmer.protocol.ApiType;
-import com.ksfc.newfarmer.protocol.Request;
-import com.ksfc.newfarmer.protocol.RequestParams;
-import com.ksfc.newfarmer.protocol.beans.MyOrderDetailResult;
+import com.ksfc.newfarmer.http.ApiType;
+import com.ksfc.newfarmer.http.Request;
+import com.ksfc.newfarmer.http.RequestParams;
+import com.ksfc.newfarmer.http.beans.MyOrderDetailResult;
 import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.utils.Utils;
 
-import net.yangentao.util.app.App;
+import com.ksfc.newfarmer.App;
 
 
 /**
@@ -49,7 +49,7 @@ public class EposActivity extends BaseActivity {
 
     @Override
     public int getLayout() {
-        return R.layout.epos_layout;
+        return R.layout.activity_epos;
     }
 
     @Override

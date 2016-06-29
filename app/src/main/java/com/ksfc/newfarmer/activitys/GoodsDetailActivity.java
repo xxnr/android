@@ -18,11 +18,11 @@ import com.ksfc.newfarmer.RndApplication;
 import com.ksfc.newfarmer.adapter.GoodsDetailAdapter;
 import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.db.dao.ShoppingDao;
-import com.ksfc.newfarmer.protocol.ApiType;
-import com.ksfc.newfarmer.protocol.Request;
-import com.ksfc.newfarmer.protocol.RequestParams;
-import com.ksfc.newfarmer.protocol.beans.GetGoodsDetail;
-import com.ksfc.newfarmer.protocol.beans.RemainGoodsAttr;
+import com.ksfc.newfarmer.http.ApiType;
+import com.ksfc.newfarmer.http.Request;
+import com.ksfc.newfarmer.http.RequestParams;
+import com.ksfc.newfarmer.http.beans.GetGoodsDetail;
+import com.ksfc.newfarmer.http.beans.RemainGoodsAttr;
 import com.ksfc.newfarmer.utils.ExpandViewTouch;
 import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.ScreenUtil;
@@ -106,7 +106,7 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
 
     @Override
     public int getLayout() {
-        return R.layout.shangpin_detail_layout;
+        return R.layout.activity_goods_detail;
     }
 
     @Override
@@ -522,7 +522,7 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
-                convertView = getLayoutInflater().inflate(R.layout.item_popwindow_gv_attr, parent, false);
+                convertView = getLayoutInflater().inflate(R.layout.item_pop_gv_attr, parent, false);
                 convertView.setTag(new ViewHolder(convertView));
             }
             final ViewHolder holder = (ViewHolder) convertView.getTag();
@@ -619,7 +619,7 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
-                convertView = getLayoutInflater().inflate(R.layout.item_popwindow_gv_attr, parent, false);
+                convertView = getLayoutInflater().inflate(R.layout.item_pop_gv_attr, parent, false);
                 convertView.setTag(new ViewHolder(convertView));
             }
             final ViewHolder holder = (ViewHolder) convertView.getTag();

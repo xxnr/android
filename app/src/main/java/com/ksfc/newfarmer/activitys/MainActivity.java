@@ -1,7 +1,7 @@
 package com.ksfc.newfarmer.activitys;
 
 import net.yangentao.util.PreferenceUtil;
-import net.yangentao.util.app.App;
+import com.ksfc.newfarmer.App;
 import net.yangentao.util.msg.MsgCenter;
 import net.yangentao.util.msg.MsgListener;
 
@@ -9,7 +9,7 @@ import net.yangentao.util.msg.MsgListener;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.db.Store;
-import com.ksfc.newfarmer.protocol.beans.LoginResult;
+import com.ksfc.newfarmer.http.beans.LoginResult;
 import com.ksfc.newfarmer.utils.Constants;
 import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.ScreenUtil;

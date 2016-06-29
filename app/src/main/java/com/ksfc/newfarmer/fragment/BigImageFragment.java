@@ -4,9 +4,10 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
 
+import com.ksfc.newfarmer.BaseFragment;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
-import com.ksfc.newfarmer.protocol.Request;
+import com.ksfc.newfarmer.http.Request;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.squareup.picasso.Picasso;
 
@@ -21,7 +22,7 @@ public class BigImageFragment extends BaseFragment {
 
     @Override
     public View InItView() {
-        View view = inflater.inflate(R.layout.pic_layout_scale, null);
+        View view = inflater.inflate(R.layout.activity_big_pic, null);
         final PhotoView photoView = (PhotoView) view.findViewById(R.id.photoView);
 
         Bundle bundle = getArguments();

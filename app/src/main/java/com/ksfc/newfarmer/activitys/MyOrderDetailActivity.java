@@ -11,14 +11,14 @@ import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.common.OrderUtils;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
-import com.ksfc.newfarmer.adapter.CommonAdapter;
-import com.ksfc.newfarmer.adapter.CommonViewHolder;
+import com.ksfc.newfarmer.common.CommonAdapter;
+import com.ksfc.newfarmer.common.CommonViewHolder;
 import com.ksfc.newfarmer.db.Store;
-import com.ksfc.newfarmer.protocol.ApiType;
-import com.ksfc.newfarmer.protocol.Request;
-import com.ksfc.newfarmer.protocol.RequestParams;
-import com.ksfc.newfarmer.protocol.beans.LoginResult;
-import com.ksfc.newfarmer.protocol.beans.MyOrderDetailResult;
+import com.ksfc.newfarmer.http.ApiType;
+import com.ksfc.newfarmer.http.Request;
+import com.ksfc.newfarmer.http.RequestParams;
+import com.ksfc.newfarmer.http.beans.LoginResult;
+import com.ksfc.newfarmer.http.beans.MyOrderDetailResult;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.PopWindowUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
@@ -85,7 +85,7 @@ public class MyOrderDetailActivity extends BaseActivity {
 
     @Override
     public int getLayout() {
-        return R.layout.my_order_detail;
+        return R.layout.activity_my_order_detail;
     }
 
 
@@ -126,7 +126,7 @@ public class MyOrderDetailActivity extends BaseActivity {
         pop_bg = (RelativeLayout) findViewById(R.id.pop_bg);
 
         //头部信息 订单号： 交易状态 送货人 地址
-        View head_layout = LayoutInflater.from(MyOrderDetailActivity.this).inflate(R.layout.my_orderdetail_head_layout, null);
+        View head_layout = LayoutInflater.from(MyOrderDetailActivity.this).inflate(R.layout.my_order_detail_head, null);
         name_phone_tv = (TextView) head_layout.findViewById(R.id.order_detail_name_tv);
         order_detail_address_tv = (TextView) head_layout.findViewById(R.id.order_detail_address_tv);
         order_tv = (TextView) head_layout.findViewById(R.id.my_order_detail_id);
@@ -151,7 +151,7 @@ public class MyOrderDetailActivity extends BaseActivity {
 
         pay_info_listView = (UnSwipeListView) head_layout.findViewById(R.id.pay_info_listView);
         //尾部信息 去付款
-        View foot_layout = LayoutInflater.from(MyOrderDetailActivity.this).inflate(R.layout.my_orderdetail_foot_layout, null);
+        View foot_layout = LayoutInflater.from(MyOrderDetailActivity.this).inflate(R.layout.my_order_detail_foot, null);
         total_price_tv = (TextView) foot_layout.findViewById(R.id.my_order_detail_price);
 
         order_shangpin_list = (ListView) findViewById(R.id.order_shangpin_list);
@@ -466,7 +466,7 @@ public class MyOrderDetailActivity extends BaseActivity {
         private int orderType;
 
         public PayInfoAdapter(Context context, List<MyOrderDetailResult.Rows.SubOrders> data, int orderType) {
-            super(context, data, R.layout.item_payinfo_orderdetail);
+            super(context, data, R.layout.item_payinfo_order_detail);
             this.data = data;
             this.orderType = orderType;
         }
@@ -686,7 +686,7 @@ public class MyOrderDetailActivity extends BaseActivity {
         public View getView(final int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
                 convertView = LayoutInflater.from(MyOrderDetailActivity.this)
-                        .inflate(R.layout.order_list_item_item, null);
+                        .inflate(R.layout.item_item_order_list, null);
                 convertView.setTag(new ViewHolder(convertView));
             }
             ViewHolder holder = (ViewHolder) convertView.getTag();
@@ -838,7 +838,7 @@ public class MyOrderDetailActivity extends BaseActivity {
 
 
         public AdditionsAdapter(Context context, List<MyOrderDetailResult.Rows.SKUS.Additions> data) {
-            super(context, data, R.layout.item_for_additions_layout);
+            super(context, data, R.layout.item_for_additions);
         }
 
         @Override
@@ -917,7 +917,7 @@ public class MyOrderDetailActivity extends BaseActivity {
 
 
         public PopSkusAdapter(Context context, List<MyOrderDetailResult.Rows.SKUS> data) {
-            super(context, data, R.layout.item_pop_sureorder_layout);
+            super(context, data, R.layout.item_pop_sure_order);
             this.list = data;
         }
 

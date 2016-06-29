@@ -4,7 +4,7 @@ import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.RndApplication;
-import com.ksfc.newfarmer.protocol.Request;
+import com.ksfc.newfarmer.http.Request;
 import com.ksfc.newfarmer.utils.StringUtil;
 
 import android.content.Intent;
@@ -12,7 +12,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-import net.yangentao.util.app.App;
+import com.ksfc.newfarmer.App;
 import net.yangentao.util.msg.MsgCenter;
 
 public class OrderSuccessActivity extends BaseActivity {
@@ -20,7 +20,7 @@ public class OrderSuccessActivity extends BaseActivity {
 
     @Override
     public int getLayout() {
-        return R.layout.order_success_layout;
+        return R.layout.activity_order_success;
     }
 
     @Override

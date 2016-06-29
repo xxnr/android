@@ -15,18 +15,18 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
-import com.ksfc.newfarmer.adapter.CommonAdapter;
-import com.ksfc.newfarmer.adapter.CommonViewHolder;
+import com.ksfc.newfarmer.common.CommonAdapter;
+import com.ksfc.newfarmer.common.CommonViewHolder;
 import com.ksfc.newfarmer.common.CommonFunction;
 import com.ksfc.newfarmer.common.LoadMoreOnsrcollListener;
 import com.ksfc.newfarmer.db.Store;
-import com.ksfc.newfarmer.protocol.ApiType;
-import com.ksfc.newfarmer.protocol.RemoteApi;
-import com.ksfc.newfarmer.protocol.Request;
-import com.ksfc.newfarmer.protocol.RequestParams;
-import com.ksfc.newfarmer.protocol.beans.IntegralGetResult;
-import com.ksfc.newfarmer.protocol.beans.PointLogsResult;
-import com.ksfc.newfarmer.protocol.beans.PointResult;
+import com.ksfc.newfarmer.http.ApiType;
+import com.ksfc.newfarmer.http.RemoteApi;
+import com.ksfc.newfarmer.http.Request;
+import com.ksfc.newfarmer.http.RequestParams;
+import com.ksfc.newfarmer.http.beans.IntegralGetResult;
+import com.ksfc.newfarmer.http.beans.PointLogsResult;
+import com.ksfc.newfarmer.http.beans.PointResult;
 import com.ksfc.newfarmer.utils.DateFormatUtils;
 import com.ksfc.newfarmer.utils.PullToRefreshUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
@@ -72,7 +72,7 @@ public class MyIntegralActivity extends BaseActivity implements PullToRefreshBas
 
     @Override
     public int getLayout() {
-        return R.layout.my_integral_layout;
+        return R.layout.activity_my_integral;
     }
 
     @Override
@@ -80,7 +80,7 @@ public class MyIntegralActivity extends BaseActivity implements PullToRefreshBas
         ButterKnife.bind(this);
         setTitle("我的积分");
 
-        View headView = getLayoutInflater().inflate(R.layout.head_my_integral_layout, null);
+        View headView = getLayoutInflater().inflate(R.layout.head_my_integral, null);
         holder = new ViewHolder(headView);
 
         unSwipeListView.setOnScrollListener(moreOnsrcollListener);
@@ -215,7 +215,7 @@ public class MyIntegralActivity extends BaseActivity implements PullToRefreshBas
     class PointAdapter extends CommonAdapter<PointLogsResult.DatasBean.PointslogsBean> {
 
         public PointAdapter(Context context, List<PointLogsResult.DatasBean.PointslogsBean> data) {
-            super(context, data, R.layout.item_point_logs_layout);
+            super(context, data, R.layout.item_point_logs);
         }
 
         @Override

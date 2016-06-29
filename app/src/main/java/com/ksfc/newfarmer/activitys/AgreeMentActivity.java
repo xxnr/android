@@ -9,7 +9,7 @@ import android.webkit.WebView;
 
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
-import com.ksfc.newfarmer.protocol.Request;
+import com.ksfc.newfarmer.http.Request;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,7 +25,7 @@ public class AgreeMentActivity extends BaseActivity {
 
     @Override
     public int getLayout() {
-        return R.layout.web_view_layout;
+        return R.layout.activity_web_view;
 
     }
 

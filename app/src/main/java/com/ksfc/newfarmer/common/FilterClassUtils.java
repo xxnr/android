@@ -1,6 +1,6 @@
 package com.ksfc.newfarmer.common;
 
-import com.ksfc.newfarmer.protocol.ApiType;
+import com.ksfc.newfarmer.http.ApiType;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -8,20 +8,21 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.ksfc.newfarmer.BaseFragment;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.activitys.AddPotentialActivity;
 import com.ksfc.newfarmer.activitys.CustomerDetailActivity;
-import com.ksfc.newfarmer.adapter.CommonAdapter;
-import com.ksfc.newfarmer.adapter.CommonViewHolder;
+import com.ksfc.newfarmer.common.CommonAdapter;
+import com.ksfc.newfarmer.common.CommonViewHolder;
 import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.db.XUtilsDb.XUtilsDbHelper;
-import com.ksfc.newfarmer.protocol.ApiType;
-import com.ksfc.newfarmer.protocol.Request;
-import com.ksfc.newfarmer.protocol.RequestParams;
-import com.ksfc.newfarmer.protocol.beans.CustomerIsLatestResult;
-import com.ksfc.newfarmer.protocol.beans.LoginResult;
-import com.ksfc.newfarmer.protocol.beans.PotentialListResult;
+import com.ksfc.newfarmer.http.ApiType;
+import com.ksfc.newfarmer.http.Request;
+import com.ksfc.newfarmer.http.RequestParams;
+import com.ksfc.newfarmer.http.beans.CustomerIsLatestResult;
+import com.ksfc.newfarmer.http.beans.LoginResult;
+import com.ksfc.newfarmer.http.beans.PotentialListResult;
 import com.ksfc.newfarmer.widget.QuickAlphabeticBar;
 import com.ksfc.newfarmer.utils.ScreenUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
@@ -31,7 +32,7 @@ import com.lidroid.xutils.db.sqlite.Selector;
 import com.lidroid.xutils.exception.DbException;
 
 import net.yangentao.util.PreferenceUtil;
-import net.yangentao.util.app.App;
+import com.ksfc.newfarmer.App;
 import net.yangentao.util.msg.MsgCenter;
 import net.yangentao.util.msg.MsgListener;
 
@@ -54,8 +55,8 @@ public class PotentialCustomer extends BaseFragment {
     @Override
     public View InItView() {
 
-        View view = inflater.inflate(R.layout.potential_customer_layout, null);
-        View headerLayout = inflater.inflate(R.layout.potential_customer_header_layout, null);
+        View view = inflater.inflate(R.layout.fragment_potential_customer, null);
+        View headerLayout = inflater.inflate(R.layout.head_potential_customer, null);
 
         listView = (ListView) view.findViewById(R.id.potential_customer_listView);
         alphabeticBar = (QuickAlphabeticBar) view.findViewById(R.id.fast_scroller);
@@ -226,7 +227,7 @@ public class PotentialCustomer extends BaseFragment {
         private List<PotentialListResult.PotentialCustomersEntity> list;
 
         public PotentialCustomerAdapter(Context context, List<PotentialListResult.PotentialCustomersEntity> data) {
-            super(context, data, R.layout.item_already_customr_layout);
+            super(context, data, R.layout.item_already_customer);
             this.list = data;
 
 

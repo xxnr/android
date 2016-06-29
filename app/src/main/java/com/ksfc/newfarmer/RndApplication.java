@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.ksfc.newfarmer.db.DBManager;
 import com.ksfc.newfarmer.db.Store;
-import com.ksfc.newfarmer.protocol.beans.LoginResult;
+import com.ksfc.newfarmer.http.beans.LoginResult;
 import com.ksfc.newfarmer.utils.CrashHandler;
 import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.thrid.UmengPush;
@@ -28,8 +28,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Environment;
 import android.widget.Toast;
-
-import net.yangentao.util.app.App;
 
 
 public class RndApplication extends Application {

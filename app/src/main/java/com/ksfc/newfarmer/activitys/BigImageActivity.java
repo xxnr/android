@@ -9,8 +9,8 @@ import android.view.View;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.fragment.BigImageFragment;
-import com.ksfc.newfarmer.protocol.Request;
-import com.ksfc.newfarmer.protocol.beans.GetGoodsDetail;
+import com.ksfc.newfarmer.http.Request;
+import com.ksfc.newfarmer.http.beans.GetGoodsDetail;
 import com.ksfc.newfarmer.utils.ActivityAnimationUtils;
 import com.ksfc.newfarmer.widget.CirclePageIndicator;
 import com.ksfc.newfarmer.widget.HackyViewPager;
@@ -25,7 +25,7 @@ import java.util.List;
 public class BigImageActivity extends BaseActivity {
     @Override
     public int getLayout() {
-        return R.layout.big_image_detail_layout;
+        return R.layout.activity_big_image;
     }
 
     @Override

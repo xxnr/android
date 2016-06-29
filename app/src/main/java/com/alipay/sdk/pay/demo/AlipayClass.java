@@ -15,7 +15,7 @@ import java.util.Random;
 import com.alipay.sdk.app.PayTask;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.activitys.OrderSuccessActivity;
-import com.ksfc.newfarmer.protocol.ApiType;
+import com.ksfc.newfarmer.http.ApiType;
 
 import android.app.Activity;
 import android.app.AlertDialog;

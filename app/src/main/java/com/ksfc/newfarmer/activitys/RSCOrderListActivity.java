@@ -12,7 +12,7 @@ import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.adapter.RSCOrderListFragmentPagerAdapter;
 import com.ksfc.newfarmer.fragment.RscOrderDetailFragment;
-import com.ksfc.newfarmer.protocol.Request;
+import com.ksfc.newfarmer.http.Request;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.PopWindowUtils;
 import com.ksfc.newfarmer.widget.UnSwipeViewPager;
@@ -34,7 +34,7 @@ public class RSCOrderListActivity extends BaseActivity implements RscOrderDetail
 
     @Override
     public int getLayout() {
-        return R.layout.waitingpay_layout;
+        return R.layout.fragment_order_list;
     }
 
     @Override

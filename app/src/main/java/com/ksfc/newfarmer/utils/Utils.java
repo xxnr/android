@@ -31,18 +31,35 @@ public class Utils {
     private static long lastClickTime;
 
 
-    // 判断是否是手机号
+    /**
+     * 设置状态栏颜色
+     */
+    public static void setBarTint(Activity activity, int color) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            SystemBarTintManager tintManager = new SystemBarTintManager(activity);
+            tintManager.setStatusBarTintEnabled(true);
+            tintManager.setTintColor(activity.getResources().getColor(color));
+        }
+    }
+
+
+    /**
+     * 判断是否是手机号
+     * @param mobiles
+     * @return
+     */
     public static boolean isMobileNum(String mobiles) {
-//        Pattern p = Pattern
-//                .compile("^[1]([0-8]{1}[0-9]{1}|59|58|88|89)[0-9]{8}");
-        Pattern p = Pattern
-                .compile("1\\d{10}$");
+//        Pattern p = Pattern.compile("^[1]([0-8]{1}[0-9]{1}|59|58|88|89)[0-9]{8}");
+        Pattern p = Pattern.compile("1\\d{10}$");
         Matcher m = p.matcher(mobiles);
         return m.matches();
     }
 
 
-    //获取友盟的device_token
+    /**
+     * 获取版本号
+     * @return
+     */
     public static String getVersionInfo(Context context) {
 
         PackageManager manager;
@@ -72,8 +89,6 @@ public class Utils {
                         "[Xx0-9])|([0-9]{2}[0|1][0-9][0-3][0-9][0-9]{3}))");
         Matcher m = p.matcher(IDCards);
         return m.matches();
-
-
     }
 
 
@@ -93,7 +108,10 @@ public class Utils {
         return (int) (pxValue / scale + 0.5f);
     }
 
-
+    /**
+     * 防止连点
+     * @return
+     */
     public synchronized static boolean isFastClick() {
         long time = System.currentTimeMillis();
         if (time - lastClickTime < 500) {
@@ -103,7 +121,10 @@ public class Utils {
         return false;
     }
 
-    //判断某个app是否安装
+    /**
+     * app是否安装
+     * @return
+     */
     public static boolean isPkgInstalled(Context context, String pkgName) {
         PackageInfo packageInfo = null;
         try {
@@ -115,7 +136,10 @@ public class Utils {
         return packageInfo != null;
     }
 
-    //从Assets中判断是否存在
+    /**
+     * 从Assets中判断文件是否存在
+     * @return
+     */
     public static boolean copyApkFromAssets(Context context, String fileName, String path) {
         boolean copyIsFinish = false;
         try {
@@ -137,7 +161,10 @@ public class Utils {
         return copyIsFinish;
     }
 
-
+    /**
+     * 从Assets中安装apk
+     * @return
+     */
     public static void addApk(final Context mContext, final String fileName) {
 
         if (copyApkFromAssets(mContext, fileName, Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + fileName)) {
@@ -181,30 +208,14 @@ public class Utils {
         return sb.toString();
     }
 
+
+
     /**
-     * 格式化日期
-     *
-     * @param time
+     * 将字母装换成数字
+     * @param letter
+     * @param list
      * @return
      */
-    public static String getDateToString(long time) {
-        Date date = new Date(time);
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年MM月dd日");
-        return simpleDateFormat.format(date);
-    }
-
-    //隐藏输入法
-    public static void hideInputMethod(Activity activity) {
-        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (imm.isActive() && activity.getCurrentFocus() != null) {
-            imm.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(),
-                    InputMethodManager.HIDE_NOT_ALWAYS);
-        }
-    }
-
-
-    // 将字母装换成数字
-
     public static int getNum(String letter, List<String> list) {
 
         for (int i = 0; i < list.size(); i++) {
@@ -217,7 +228,10 @@ public class Utils {
         return 0;
     }
 
-
+    /**
+     * 拨号
+     * @return
+     */
     public static void dial(final Activity activity, final String phoneNum) {
 
         CustomDialog.Builder builder = new CustomDialog.Builder(
@@ -271,16 +285,7 @@ public class Utils {
         return 0;
     }
 
-    /**
-     * 设置状态栏颜色
-     */
-    public static void setBarTint(Activity activity, int color) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            SystemBarTintManager tintManager = new SystemBarTintManager(activity);
-            tintManager.setStatusBarTintEnabled(true);
-            tintManager.setTintColor(activity.getResources().getColor(color));
-        }
-    }
+
 
 
 }

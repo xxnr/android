@@ -10,13 +10,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.ksfc.newfarmer.BaseFragment;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.common.LoadMoreOnsrcollListener;
-import com.ksfc.newfarmer.protocol.ApiType;
-import com.ksfc.newfarmer.protocol.RemoteApi;
-import com.ksfc.newfarmer.protocol.Request;
-import com.ksfc.newfarmer.protocol.beans.GiftOrderListResult;
+import com.ksfc.newfarmer.http.ApiType;
+import com.ksfc.newfarmer.http.RemoteApi;
+import com.ksfc.newfarmer.http.Request;
+import com.ksfc.newfarmer.http.beans.GiftOrderListResult;
 import com.ksfc.newfarmer.utils.DateFormatUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.AnimatedExpandableListView;
@@ -72,7 +73,7 @@ public class GiftOrderListFragment extends BaseFragment implements SwipeRefreshL
 
     @Override
     public View InItView() {
-        View rootView = inflater.inflate(R.layout.gift_order_list_fragment, null);
+        View rootView = inflater.inflate(R.layout.fragment_gift_order_list, null);
         ButterKnife.bind(this, rootView);
         listView.setGroupIndicator(null);
         listView.setOnScrollListener(moreOnsrcollListener);
@@ -285,7 +286,7 @@ public class GiftOrderListFragment extends BaseFragment implements SwipeRefreshL
             GiftOrderListResult.DatasBean.GiftordersBean giftordersBean = giftorders.get(groupPosition);
             if (convertView == null) {
                 convertView = LayoutInflater.from(activity)
-                        .inflate(R.layout.item_gift_order_list_layout, null);
+                        .inflate(R.layout.item_gift_order_list, null);
                 convertView.setTag(new GroupViewHolder(convertView));
             }
 
@@ -331,7 +332,7 @@ public class GiftOrderListFragment extends BaseFragment implements SwipeRefreshL
         public View getRealChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
             if (convertView == null) {
                 convertView = LayoutInflater.from(activity)
-                        .inflate(R.layout.item_gift_order_list_child_layout, null);
+                        .inflate(R.layout.item_gift_order_list_child, null);
                 convertView.setTag(new ChildViewHolder(convertView));
             }
             ChildViewHolder holder = (ChildViewHolder) convertView.getTag();

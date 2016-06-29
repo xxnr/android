@@ -34,16 +34,16 @@ import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.common.LoadMoreOnsrcollListener;
 import com.ksfc.newfarmer.common.OrderUtils;
 import com.ksfc.newfarmer.R;
-import com.ksfc.newfarmer.adapter.CommonAdapter;
-import com.ksfc.newfarmer.adapter.CommonViewHolder;
+import com.ksfc.newfarmer.common.CommonAdapter;
+import com.ksfc.newfarmer.common.CommonViewHolder;
 import com.ksfc.newfarmer.db.Store;
-import com.ksfc.newfarmer.protocol.ApiType;
-import com.ksfc.newfarmer.protocol.Request;
-import com.ksfc.newfarmer.protocol.RequestParams;
-import com.ksfc.newfarmer.protocol.beans.LoginResult;
-import com.ksfc.newfarmer.protocol.beans.OfflinePayWayResult;
-import com.ksfc.newfarmer.protocol.beans.RscOrderDetailResult;
-import com.ksfc.newfarmer.protocol.beans.RscOrderResult;
+import com.ksfc.newfarmer.http.ApiType;
+import com.ksfc.newfarmer.http.Request;
+import com.ksfc.newfarmer.http.RequestParams;
+import com.ksfc.newfarmer.http.beans.LoginResult;
+import com.ksfc.newfarmer.http.beans.OfflinePayWayResult;
+import com.ksfc.newfarmer.http.beans.RscOrderDetailResult;
+import com.ksfc.newfarmer.http.beans.RscOrderResult;
 import com.ksfc.newfarmer.utils.DateFormatUtils;
 import com.ksfc.newfarmer.utils.PopWindowUtils;
 import com.ksfc.newfarmer.utils.PullToRefreshUtils;
@@ -117,7 +117,7 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
 
     @Override
     public int getLayout() {
-        return R.layout.rsc_seach_order_layout;
+        return R.layout.activity_rsc_seach_order;
     }
 
     @Override
@@ -417,7 +417,7 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
 
 
         public OrderAdapter(Context context, List<RscOrderResult.OrdersEntity> data) {
-            super(context, data, R.layout.my_order_list_item);
+            super(context, data, R.layout.item_my_order_list);
         }
 
         @Override
@@ -565,7 +565,7 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
                 List<RscOrderResult.OrdersEntity.SKUsEntity> SKUsList = ordersEntity.SKUs;
                 if (SKUsList != null && !SKUsList.isEmpty()) {
                     for (int i = 0; i < SKUsList.size(); i++) {
-                        ViewGroup rootView = (ViewGroup) getLayoutInflater().inflate(R.layout.rsc_order_list_item_item, null);
+                        ViewGroup rootView = (ViewGroup) getLayoutInflater().inflate(R.layout.item_item_rsc_order_list, null);
                         ViewHolderChild viewHolderChild = new ViewHolderChild(rootView);
                         RscOrderResult.OrdersEntity.SKUsEntity skUsEntity = SKUsList.get(i);
                         if (skUsEntity != null) {
@@ -721,7 +721,7 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
         private List<RscOrderResult.OrdersEntity.SKUsEntity> list;
 
         public PopSkusDeliveryAdapter(Context context, List<RscOrderResult.OrdersEntity.SKUsEntity> data) {
-            super(context, data, R.layout.item_pop_sureorder_layout);
+            super(context, data, R.layout.item_pop_sure_order);
             this.list = data;
         }
 
@@ -884,7 +884,7 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
     class PayWayAdapter extends CommonAdapter<OfflinePayWayResult.OfflinePayTypeEntity> {
 
         public PayWayAdapter(Context context, List<OfflinePayWayResult.OfflinePayTypeEntity> data) {
-            super(context, data, R.layout.item_rsc_pay_way_gird_layout);
+            super(context, data, R.layout.item_pop_rsc_pay_way_gv);
         }
 
         @Override
@@ -1018,7 +1018,7 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
         private List<RscOrderResult.OrdersEntity.SKUsEntity> list;
 
         public PopSkusSelfDeliveryAdapter(Context context, List<RscOrderResult.OrdersEntity.SKUsEntity> data) {
-            super(context, data, R.layout.item_pop_sureorder_layout);
+            super(context, data, R.layout.item_pop_sure_order);
             this.list = data;
         }
 

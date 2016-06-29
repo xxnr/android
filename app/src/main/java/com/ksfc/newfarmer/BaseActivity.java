@@ -6,11 +6,11 @@ import java.util.regex.Pattern;
 
 import com.ksfc.newfarmer.activitys.LoginActivity;
 import com.ksfc.newfarmer.db.Store;
-import com.ksfc.newfarmer.protocol.ApiType;
-import com.ksfc.newfarmer.protocol.OnApiDataReceivedCallback;
-import com.ksfc.newfarmer.protocol.Request;
-import com.ksfc.newfarmer.protocol.RequestParams;
-import com.ksfc.newfarmer.protocol.beans.LoginResult.UserInfo;
+import com.ksfc.newfarmer.http.ApiType;
+import com.ksfc.newfarmer.http.OnApiDataReceivedCallback;
+import com.ksfc.newfarmer.http.Request;
+import com.ksfc.newfarmer.http.RequestParams;
+import com.ksfc.newfarmer.http.beans.LoginResult.UserInfo;
 import com.ksfc.newfarmer.common.FilterClassUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.utils.thrid.UmengPush;
@@ -35,8 +35,6 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import net.yangentao.util.app.App;
 
 public abstract class BaseActivity extends FragmentActivity implements OnClickListener, OnApiDataReceivedCallback {
     public String TAG = this.getClass().getSimpleName();
@@ -495,12 +493,7 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
 
     // 判断是否是手机号
     public boolean isMobileNum(String mobiles) {
-//        Pattern p = Pattern
-//                .compile("^[1]([0-8]{1}[0-9]{1}|59|58|88|89)[0-9]{8}");
-        Pattern p = Pattern
-                .compile("1\\d{10}$");
-        Matcher m = p.matcher(mobiles);
-        return m.matches();
+        return Utils.isMobileNum(mobiles);
     }
 
 

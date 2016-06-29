@@ -1,5 +1,7 @@
 package net.yangentao.util.app;
 
+import com.ksfc.newfarmer.App;
+
 import java.util.Set;
 
 import net.yangentao.util.PreferenceUtil;

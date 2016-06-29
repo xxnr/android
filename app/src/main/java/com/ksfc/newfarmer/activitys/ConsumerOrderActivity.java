@@ -9,15 +9,15 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
-import com.ksfc.newfarmer.adapter.CommonAdapter;
-import com.ksfc.newfarmer.adapter.CommonViewHolder;
+import com.ksfc.newfarmer.common.CommonAdapter;
+import com.ksfc.newfarmer.common.CommonViewHolder;
 import com.ksfc.newfarmer.common.LoadMoreOnsrcollListener;
 import com.ksfc.newfarmer.db.Store;
-import com.ksfc.newfarmer.protocol.ApiType;
-import com.ksfc.newfarmer.protocol.Request;
-import com.ksfc.newfarmer.protocol.RequestParams;
-import com.ksfc.newfarmer.protocol.beans.ConsumerOrderResult;
-import com.ksfc.newfarmer.protocol.beans.InviteeResult;
+import com.ksfc.newfarmer.http.ApiType;
+import com.ksfc.newfarmer.http.Request;
+import com.ksfc.newfarmer.http.RequestParams;
+import com.ksfc.newfarmer.http.beans.ConsumerOrderResult;
+import com.ksfc.newfarmer.http.beans.InviteeResult;
 import com.ksfc.newfarmer.utils.DateFormatUtils;
 import com.ksfc.newfarmer.utils.PullToRefreshUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
@@ -44,7 +44,7 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
 
     @Override
     public int getLayout() {
-        return R.layout.consumer_order_layout;
+        return R.layout.activity_consumer_order;
     }
 
     @Override
@@ -198,7 +198,7 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
 
 
         public OrderAdapter(Context context, List<ConsumerOrderResult.Rows> data) {
-            super(context, data, R.layout.consumer_order_item);
+            super(context, data, R.layout.item_consumer_order);
         }
 
         @Override
@@ -258,7 +258,7 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
     class ProductsAdapter extends CommonAdapter<ConsumerOrderResult.Product> {
 
         public ProductsAdapter(Context context, List<ConsumerOrderResult.Product> data) {
-            super(context, data, R.layout.consumer_order_item_tem);
+            super(context, data, R.layout.item_item_consumer_order);
         }
 
         @Override
@@ -278,7 +278,7 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
     class SkusAdapter extends CommonAdapter<ConsumerOrderResult.SKUS> {
 
         public SkusAdapter(Context context, List<ConsumerOrderResult.SKUS> data) {
-            super(context, data, R.layout.consumer_order_item_tem);
+            super(context, data, R.layout.item_item_consumer_order);
         }
 
         @Override

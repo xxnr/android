@@ -5,7 +5,7 @@ import android.os.Bundle;
 
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.activitys.FloatingLayerActivity;
-import com.ksfc.newfarmer.protocol.beans.PointResult;
+import com.ksfc.newfarmer.http.beans.PointResult;
 import com.ksfc.newfarmer.utils.ActivityAnimationUtils;
 import com.ksfc.newfarmer.utils.IntentUtil;
 

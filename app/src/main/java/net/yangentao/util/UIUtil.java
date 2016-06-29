@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import net.yangentao.util.TaskUtil.BackFore;
-import net.yangentao.util.app.App;
+import com.ksfc.newfarmer.App;
 
 //TODO 
 public class UIUtil {

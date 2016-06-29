@@ -18,12 +18,12 @@ import com.ksfc.newfarmer.activitys.ShoppingCartActivity.Data.Category;
 import com.ksfc.newfarmer.activitys.ShoppingCartActivity.Data.Goods;
 import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.db.dao.ShoppingDao;
-import com.ksfc.newfarmer.protocol.ApiType;
-import com.ksfc.newfarmer.protocol.Request;
-import com.ksfc.newfarmer.protocol.RequestParams;
-import com.ksfc.newfarmer.protocol.beans.GetGoodsDetail;
-import com.ksfc.newfarmer.protocol.beans.GetshopCart;
-import com.ksfc.newfarmer.protocol.beans.GetshopCart.shopCart;
+import com.ksfc.newfarmer.http.ApiType;
+import com.ksfc.newfarmer.http.Request;
+import com.ksfc.newfarmer.http.RequestParams;
+import com.ksfc.newfarmer.http.beans.GetGoodsDetail;
+import com.ksfc.newfarmer.http.beans.GetshopCart;
+import com.ksfc.newfarmer.http.beans.GetshopCart.shopCart;
 import com.ksfc.newfarmer.widget.dialog.CustomDialog;
 import com.ksfc.newfarmer.widget.dialog.CustomDialogForShopCarCount;
 import com.ksfc.newfarmer.utils.ExpandViewTouch;
@@ -203,7 +203,7 @@ public class ShoppingCartActivity extends BaseActivity {
 
     @Override
     public int getLayout() {
-        return R.layout.shop_cart_layout;
+        return R.layout.activity_shop_cart;
     }
 
     @Override
@@ -931,7 +931,7 @@ public class ShoppingCartActivity extends BaseActivity {
         public View getGroupView(final int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
             if (convertView == null) {
                 convertView = LayoutInflater.from(ShoppingCartActivity.this)
-                        .inflate(R.layout.shopcart_list_item, null);
+                        .inflate(R.layout.item_shopcart_list, null);
                 convertView.setTag(new ViewHolder(convertView));
             }
             final ViewHolder holder = (ViewHolder) convertView.getTag();
@@ -1000,7 +1000,7 @@ public class ShoppingCartActivity extends BaseActivity {
         public View getChildView(int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
             if (convertView == null) {
                 convertView = LayoutInflater.from(ShoppingCartActivity.this)
-                        .inflate(R.layout.shopcart_list_item_item, null);
+                        .inflate(R.layout.item_item_shopcart_list, null);
                 convertView.setTag(new ViewHolderChild(convertView));
             }
             final ViewHolderChild holder = (ViewHolderChild) convertView.getTag();

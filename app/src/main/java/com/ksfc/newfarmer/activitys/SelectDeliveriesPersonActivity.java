@@ -17,14 +17,14 @@ import android.widget.TextView;
 
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
-import com.ksfc.newfarmer.adapter.CommonAdapter;
-import com.ksfc.newfarmer.adapter.CommonViewHolder;
+import com.ksfc.newfarmer.common.CommonAdapter;
+import com.ksfc.newfarmer.common.CommonViewHolder;
 import com.ksfc.newfarmer.db.Store;
-import com.ksfc.newfarmer.protocol.ApiType;
-import com.ksfc.newfarmer.protocol.Request;
-import com.ksfc.newfarmer.protocol.RequestParams;
-import com.ksfc.newfarmer.protocol.beans.ConsigneeResult;
-import com.ksfc.newfarmer.protocol.beans.LoginResult;
+import com.ksfc.newfarmer.http.ApiType;
+import com.ksfc.newfarmer.http.Request;
+import com.ksfc.newfarmer.http.RequestParams;
+import com.ksfc.newfarmer.http.beans.ConsigneeResult;
+import com.ksfc.newfarmer.http.beans.LoginResult;
 import com.ksfc.newfarmer.utils.StringUtil;
 
 
@@ -50,7 +50,7 @@ public class SelectDeliveriesPersonActivity extends BaseActivity {
 
     @Override
     public int getLayout() {
-        return R.layout.select_deliveries_person_layout;
+        return R.layout.activity_select_deliveries_person;
     }
 
     @Override
@@ -222,7 +222,7 @@ public class SelectDeliveriesPersonActivity extends BaseActivity {
 
 
         public ConsigneesAdapter(Context context, List<ConsigneeResult.DatasEntity.RowsEntity> data) {
-            super(context, data, R.layout.item_consignees_layout);
+            super(context, data, R.layout.item_consignees);
         }
 
         @Override

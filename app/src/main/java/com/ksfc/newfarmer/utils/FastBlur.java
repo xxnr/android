@@ -3,7 +3,7 @@ package com.ksfc.newfarmer.utils;
 import android.graphics.Bitmap;
 
 /**
- * Created by paveld on 3/6/14.
+ * Created by paveld on 3/6/14.  毛玻璃化图片
  */
 public class FastBlur {
 

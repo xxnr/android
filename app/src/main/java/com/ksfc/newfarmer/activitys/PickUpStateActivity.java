@@ -7,14 +7,14 @@ import android.widget.TextView;
 
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
-import com.ksfc.newfarmer.adapter.CommonAdapter;
-import com.ksfc.newfarmer.adapter.CommonViewHolder;
+import com.ksfc.newfarmer.common.CommonAdapter;
+import com.ksfc.newfarmer.common.CommonViewHolder;
 import com.ksfc.newfarmer.db.Store;
-import com.ksfc.newfarmer.protocol.ApiType;
-import com.ksfc.newfarmer.protocol.Request;
-import com.ksfc.newfarmer.protocol.RequestParams;
-import com.ksfc.newfarmer.protocol.beans.DeliveryCodeResult;
-import com.ksfc.newfarmer.protocol.beans.MyOrderDetailResult;
+import com.ksfc.newfarmer.http.ApiType;
+import com.ksfc.newfarmer.http.Request;
+import com.ksfc.newfarmer.http.RequestParams;
+import com.ksfc.newfarmer.http.beans.DeliveryCodeResult;
+import com.ksfc.newfarmer.http.beans.MyOrderDetailResult;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.UnSwipeListView;
 
@@ -33,7 +33,7 @@ public class PickUpStateActivity extends BaseActivity {
 
     @Override
     public int getLayout() {
-        return R.layout.pick_up_state;
+        return R.layout.activity_pick_up_state;
     }
 
     @Override
@@ -140,7 +140,7 @@ public class PickUpStateActivity extends BaseActivity {
 
 
         public PickUpGoodsAdapter(Context context, List<MyOrderDetailResult.Rows.SKUS> data) {
-            super(context, data, R.layout.item_pickupstate_goods_layout);
+            super(context, data, R.layout.item_pick_up_state_goods);
         }
 
         @Override

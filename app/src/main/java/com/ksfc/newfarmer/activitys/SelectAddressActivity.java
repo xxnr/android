@@ -13,13 +13,13 @@ import android.widget.TextView;
 
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
-import com.ksfc.newfarmer.protocol.ApiType;
-import com.ksfc.newfarmer.protocol.Request;
-import com.ksfc.newfarmer.protocol.RequestParams;
-import com.ksfc.newfarmer.protocol.beans.BuildingList;
-import com.ksfc.newfarmer.protocol.beans.CityList;
-import com.ksfc.newfarmer.protocol.beans.QueueList;
-import com.ksfc.newfarmer.protocol.beans.TownList;
+import com.ksfc.newfarmer.http.ApiType;
+import com.ksfc.newfarmer.http.Request;
+import com.ksfc.newfarmer.http.RequestParams;
+import com.ksfc.newfarmer.http.beans.BuildingList;
+import com.ksfc.newfarmer.http.beans.CityList;
+import com.ksfc.newfarmer.http.beans.QueueList;
+import com.ksfc.newfarmer.http.beans.TownList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +54,7 @@ public class SelectAddressActivity extends BaseActivity implements AdapterView.O
 
     @Override
     public int getLayout() {
-        return R.layout.selector_address_list_layout;
+        return R.layout.activity_selector_address_list;
 
     }
 
@@ -305,7 +305,7 @@ public class SelectAddressActivity extends BaseActivity implements AdapterView.O
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
-                convertView = LayoutInflater.from(SelectAddressActivity.this).inflate(R.layout.city, null);
+                convertView = LayoutInflater.from(SelectAddressActivity.this).inflate(R.layout.item_only_text, null);
                 convertView.setTag(new ViewHolder(convertView));
             }
             ViewHolder holder = (ViewHolder) convertView.getTag();

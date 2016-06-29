@@ -29,15 +29,15 @@ import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.common.OrderUtils;
 import com.ksfc.newfarmer.R;
-import com.ksfc.newfarmer.adapter.CommonAdapter;
-import com.ksfc.newfarmer.adapter.CommonViewHolder;
+import com.ksfc.newfarmer.common.CommonAdapter;
+import com.ksfc.newfarmer.common.CommonViewHolder;
 import com.ksfc.newfarmer.db.Store;
-import com.ksfc.newfarmer.protocol.ApiType;
-import com.ksfc.newfarmer.protocol.Request;
-import com.ksfc.newfarmer.protocol.RequestParams;
-import com.ksfc.newfarmer.protocol.beans.LoginResult;
-import com.ksfc.newfarmer.protocol.beans.OfflinePayWayResult;
-import com.ksfc.newfarmer.protocol.beans.RscOrderDetailResult;
+import com.ksfc.newfarmer.http.ApiType;
+import com.ksfc.newfarmer.http.Request;
+import com.ksfc.newfarmer.http.RequestParams;
+import com.ksfc.newfarmer.http.beans.LoginResult;
+import com.ksfc.newfarmer.http.beans.OfflinePayWayResult;
+import com.ksfc.newfarmer.http.beans.RscOrderDetailResult;
 import com.ksfc.newfarmer.utils.DateFormatUtils;
 import com.ksfc.newfarmer.utils.PopWindowUtils;
 import com.ksfc.newfarmer.utils.ShowHideUtils;
@@ -96,7 +96,7 @@ public class RscOrderDetailActivity extends BaseActivity implements KeyboardList
 
     @Override
     public int getLayout() {
-        return R.layout.rsc_order_detail;
+        return R.layout.activity_rsc_order_detail;
     }
 
 
@@ -124,7 +124,7 @@ public class RscOrderDetailActivity extends BaseActivity implements KeyboardList
         rootView.setOnKeyboardStateChangedListener(this);
 
         //头部信息 订单号： 交易状态 送货人 地址
-        View head_layout = LayoutInflater.from(RscOrderDetailActivity.this).inflate(R.layout.rsc_orderdetail_head_layout, null);
+        View head_layout = LayoutInflater.from(RscOrderDetailActivity.this).inflate(R.layout.head_rsc_orderdetail, null);
         name_phone_tv = (TextView) head_layout.findViewById(R.id.order_detail_name_tv);
         order_detail_address_tv = (TextView) head_layout.findViewById(R.id.order_detail_address_tv);
         order_tv = (TextView) head_layout.findViewById(R.id.my_order_detail_id);
@@ -143,7 +143,7 @@ public class RscOrderDetailActivity extends BaseActivity implements KeyboardList
 
         pay_info_listView = (UnSwipeListView) head_layout.findViewById(R.id.pay_info_listView);
         //尾部信息 去付款
-        View foot_layout = LayoutInflater.from(RscOrderDetailActivity.this).inflate(R.layout.my_orderdetail_foot_layout, null);
+        View foot_layout = LayoutInflater.from(RscOrderDetailActivity.this).inflate(R.layout.my_order_detail_foot, null);
         total_price_tv = (TextView) foot_layout.findViewById(R.id.my_order_detail_price);
 
         order_shangpin_list = (ListView) findViewById(R.id.order_shangpin_list);
@@ -487,7 +487,7 @@ public class RscOrderDetailActivity extends BaseActivity implements KeyboardList
         private List<RscOrderDetailResult.OrderEntity.SubOrdersEntity> data;
 
         public PayInfoAdapter(Context context, List<RscOrderDetailResult.OrderEntity.SubOrdersEntity> data) {
-            super(context, data, R.layout.item_payinfo_orderdetail);
+            super(context, data, R.layout.item_payinfo_order_detail);
             this.data = data;
         }
 
@@ -595,7 +595,7 @@ public class RscOrderDetailActivity extends BaseActivity implements KeyboardList
     class CarAdapter extends CommonAdapter<RscOrderDetailResult.OrderEntity.SKUListEntity> {
 
         public CarAdapter(Context context, List<RscOrderDetailResult.OrderEntity.SKUListEntity> data) {
-            super(context, data, R.layout.rsc_order_list_item_item);
+            super(context, data, R.layout.item_item_rsc_order_list);
 
         }
 
@@ -744,7 +744,7 @@ public class RscOrderDetailActivity extends BaseActivity implements KeyboardList
         private List<RscOrderDetailResult.OrderEntity.SKUListEntity> list;
 
         public PopSkusDeliveryAdapter(Context context, List<RscOrderDetailResult.OrderEntity.SKUListEntity> data) {
-            super(context, data, R.layout.item_pop_sureorder_layout);
+            super(context, data, R.layout.item_pop_sure_order);
             this.list = data;
         }
 
@@ -918,7 +918,7 @@ public class RscOrderDetailActivity extends BaseActivity implements KeyboardList
     class PayWayAdapter extends CommonAdapter<OfflinePayWayResult.OfflinePayTypeEntity> {
 
         public PayWayAdapter(Context context, List<OfflinePayWayResult.OfflinePayTypeEntity> data) {
-            super(context, data, R.layout.item_rsc_pay_way_gird_layout);
+            super(context, data, R.layout.item_pop_rsc_pay_way_gv);
         }
 
         @Override
@@ -1053,7 +1053,7 @@ public class RscOrderDetailActivity extends BaseActivity implements KeyboardList
         private List<RscOrderDetailResult.OrderEntity.SKUListEntity> list;
 
         public PopSkusSelfDeliveryAdapter(Context context, List<RscOrderDetailResult.OrderEntity.SKUListEntity> data) {
-            super(context, data, R.layout.item_pop_sureorder_layout);
+            super(context, data, R.layout.item_pop_sure_order);
             this.list = data;
         }
 

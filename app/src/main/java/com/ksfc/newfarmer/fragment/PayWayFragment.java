@@ -13,22 +13,23 @@ import android.widget.TextView;
 
 import com.alipay.sdk.pay.demo.AlipayClass;
 import com.google.gson.Gson;
+import com.ksfc.newfarmer.BaseFragment;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.activitys.EposActivity;
 import com.ksfc.newfarmer.activitys.OfflinePayActivity;
 import com.ksfc.newfarmer.common.HttpsConfig;
 import com.ksfc.newfarmer.db.Store;
-import com.ksfc.newfarmer.protocol.ApiType;
-import com.ksfc.newfarmer.protocol.NetworkHelper;
-import com.ksfc.newfarmer.protocol.Request;
-import com.ksfc.newfarmer.protocol.RequestParams;
-import com.ksfc.newfarmer.protocol.ResponseResult;
-import com.ksfc.newfarmer.protocol.beans.AlipayResult;
-import com.ksfc.newfarmer.protocol.beans.LoginResult;
-import com.ksfc.newfarmer.protocol.beans.MinPayPriceResult;
-import com.ksfc.newfarmer.protocol.beans.MyOrderDetailResult;
-import com.ksfc.newfarmer.protocol.beans.UnionPayResponse;
+import com.ksfc.newfarmer.http.ApiType;
+import com.ksfc.newfarmer.http.NetworkHelper;
+import com.ksfc.newfarmer.http.Request;
+import com.ksfc.newfarmer.http.RequestParams;
+import com.ksfc.newfarmer.http.ResponseResult;
+import com.ksfc.newfarmer.http.beans.AlipayResult;
+import com.ksfc.newfarmer.http.beans.LoginResult;
+import com.ksfc.newfarmer.http.beans.MinPayPriceResult;
+import com.ksfc.newfarmer.http.beans.MyOrderDetailResult;
+import com.ksfc.newfarmer.http.beans.UnionPayResponse;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.lidroid.xutils.HttpUtils;
@@ -120,7 +121,7 @@ public class PayWayFragment extends BaseFragment {
 
     @Override
     public View InItView() {
-        View view = inflater.inflate(R.layout.payway_layout, null);
+        View view = inflater.inflate(R.layout.fragment_payway, null);
 
         alipay_img = (ImageView) view.findViewById(R.id.alipay_img);
         bank_img = (ImageView) view.findViewById(R.id.bank_img);

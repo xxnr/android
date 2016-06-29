@@ -13,13 +13,13 @@ import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.common.CompleteReceiver;
-import com.ksfc.newfarmer.protocol.ApiType;
-import com.ksfc.newfarmer.protocol.RemoteApi;
-import com.ksfc.newfarmer.protocol.Request;
-import com.ksfc.newfarmer.protocol.beans.AddGiftOrderResult;
-import com.ksfc.newfarmer.protocol.beans.ConsigneeResult;
-import com.ksfc.newfarmer.protocol.beans.GiftDetailResult;
-import com.ksfc.newfarmer.protocol.beans.RSCStateInfoResult;
+import com.ksfc.newfarmer.http.ApiType;
+import com.ksfc.newfarmer.http.RemoteApi;
+import com.ksfc.newfarmer.http.Request;
+import com.ksfc.newfarmer.http.beans.AddGiftOrderResult;
+import com.ksfc.newfarmer.http.beans.ConsigneeResult;
+import com.ksfc.newfarmer.http.beans.GiftDetailResult;
+import com.ksfc.newfarmer.http.beans.RSCStateInfoResult;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -69,7 +69,7 @@ public class IntegralGiftSubmitActivity extends BaseActivity {
 
     @Override
     public int getLayout() {
-        return R.layout.integral_gift_submit_layout;
+        return R.layout.activity_gift_submit;
     }
 
     @Override

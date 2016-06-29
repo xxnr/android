@@ -4,7 +4,7 @@ package com.ksfc.newfarmer.db;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
-import net.yangentao.util.app.App;
+import com.ksfc.newfarmer.App;
 
 /**
  * 

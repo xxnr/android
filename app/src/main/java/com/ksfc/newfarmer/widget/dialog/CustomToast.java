@@ -46,7 +46,7 @@ public class CustomToast extends Toast {
 
             CustomToast toast = new CustomToast(context);
 
-            View layout = inflater.inflate(R.layout.large_center_toast_layout, null);
+            View layout = inflater.inflate(R.layout.toast_large_center, null);
 
             toast_image = ((ImageView) layout.findViewById(R.id.toast_image));
             toast_text = ((TextView) layout.findViewById(R.id.toast_text));

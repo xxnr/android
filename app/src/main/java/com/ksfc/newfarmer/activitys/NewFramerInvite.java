@@ -14,15 +14,15 @@ import android.widget.RelativeLayout;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.db.Store;
-import com.ksfc.newfarmer.fragment.InviteFriendsList;
-import com.ksfc.newfarmer.fragment.MyInviter;
+import com.ksfc.newfarmer.fragment.InviteFriendsListFragment;
+import com.ksfc.newfarmer.fragment.MyInviterFragment;
 import com.ksfc.newfarmer.fragment.PotentialCustomer;
-import com.ksfc.newfarmer.protocol.ApiType;
-import com.ksfc.newfarmer.protocol.Request;
-import com.ksfc.newfarmer.protocol.RequestParams;
-import com.ksfc.newfarmer.protocol.beans.CustomerIsLatestResult;
-import com.ksfc.newfarmer.protocol.beans.LoginResult;
-import com.ksfc.newfarmer.protocol.beans.PersonalData;
+import com.ksfc.newfarmer.http.ApiType;
+import com.ksfc.newfarmer.http.Request;
+import com.ksfc.newfarmer.http.RequestParams;
+import com.ksfc.newfarmer.http.beans.CustomerIsLatestResult;
+import com.ksfc.newfarmer.http.beans.LoginResult;
+import com.ksfc.newfarmer.http.beans.PersonalData;
 import com.ksfc.newfarmer.utils.IntentUtil;
 
 import net.yangentao.util.PreferenceUtil;
@@ -30,9 +30,9 @@ import net.yangentao.util.PreferenceUtil;
 
 public class NewFramerInvite extends BaseActivity implements
         OnCheckedChangeListener {
-    private InviteFriendsList friendsList;
+    private InviteFriendsListFragment friendsList;
     private FragmentManager fragmentManager;
-    private MyInviter myInviter;
+    private MyInviterFragment myInviter;
     private PotentialCustomer potentialCustomer;
     private boolean isXXNRAgent = false;
     private RelativeLayout customer_bg;
@@ -44,7 +44,7 @@ public class NewFramerInvite extends BaseActivity implements
     @Override
     public int getLayout() {
         // TODO Auto-generated method stub
-        return R.layout.invite_layout;
+        return R.layout.activity_invite;
     }
 
     @Override
@@ -124,8 +124,8 @@ public class NewFramerInvite extends BaseActivity implements
 
         customer_bg = ((RelativeLayout) findViewById(R.id.customer_reg_bg));
 
-        friendsList = new InviteFriendsList();
-        myInviter = new MyInviter();
+        friendsList = new InviteFriendsListFragment();
+        myInviter = new MyInviterFragment();
         potentialCustomer = new PotentialCustomer();
 
         fragmentManager = getSupportFragmentManager();

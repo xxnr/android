@@ -31,16 +31,16 @@ import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.RndApplication;
-import com.ksfc.newfarmer.adapter.CommonAdapter;
-import com.ksfc.newfarmer.adapter.CommonViewHolder;
-import com.ksfc.newfarmer.protocol.ApiType;
-import com.ksfc.newfarmer.protocol.ApiType.RequestMethod;
-import com.ksfc.newfarmer.protocol.Request;
-import com.ksfc.newfarmer.protocol.RequestParams;
-import com.ksfc.newfarmer.protocol.beans.AttrSelectResult;
-import com.ksfc.newfarmer.protocol.beans.BrandsResult;
-import com.ksfc.newfarmer.protocol.beans.GetGoodsData;
-import com.ksfc.newfarmer.protocol.beans.GetGoodsData.SingleGood;
+import com.ksfc.newfarmer.common.CommonAdapter;
+import com.ksfc.newfarmer.common.CommonViewHolder;
+import com.ksfc.newfarmer.http.ApiType;
+import com.ksfc.newfarmer.http.ApiType.RequestMethod;
+import com.ksfc.newfarmer.http.Request;
+import com.ksfc.newfarmer.http.RequestParams;
+import com.ksfc.newfarmer.http.beans.AttrSelectResult;
+import com.ksfc.newfarmer.http.beans.BrandsResult;
+import com.ksfc.newfarmer.http.beans.GetGoodsData;
+import com.ksfc.newfarmer.http.beans.GetGoodsData.SingleGood;
 import com.ksfc.newfarmer.utils.ExpandViewTouch;
 import com.ksfc.newfarmer.utils.ImageLoaderUtils;
 import com.ksfc.newfarmer.utils.PullToRefreshUtils;
@@ -115,7 +115,7 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
     @Override
     public int getLayout() {
         // TODO Auto-generated method stub
-        return R.layout.information_newfarmer_layout;
+        return R.layout.activity_information_and_filter;
 
     }
 
@@ -309,7 +309,7 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
         // TODO Auto-generated method stub
         // 获取自定义布局文件activity_popupwindow_left.xml的视图
         View popupWindow_view = getLayoutInflater().inflate(
-                R.layout.goods_popwindow_layout, null, false);
+                R.layout.popwindow_goods_layout, null, false);
         // 创建PopupWindow实例,200,LayoutParams.MATCH_PARENT分别是宽度和高度
         popupWindow = new PopupWindow(popupWindow_view,
                 LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, true);
@@ -742,7 +742,7 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
         private HashMap<String, Boolean> states = new HashMap<>();
 
         public BrandsAdapter(Context context, List<BrandsResult.BrandsEntity> data) {
-            super(context, data, R.layout.item_popwindow_gv);
+            super(context, data, R.layout.item_pop_gv_filter);
         }
 
         @Override
@@ -784,7 +784,7 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
         HashMap<String, Boolean> states = new HashMap<>();
 
         public AttrAdapter(Context context, List<String> data, String tag) {
-            super(context, data, R.layout.item_popwindow_gv);
+            super(context, data, R.layout.item_pop_gv_filter);
             this.tag = tag;
             for (String key : data) {
                 states.put(key, false);
@@ -830,7 +830,7 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
         HashMap<String, Boolean> states = new HashMap<>();
 
         public PriceAdapter(Context context, List<String> data) {
-            super(context, data, R.layout.item_popwindow_gv);
+            super(context, data, R.layout.item_pop_gv_filter);
         }
 
         @Override
@@ -871,7 +871,7 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
 
 
         public GoodsListAdapter(Context context, List<SingleGood> data) {
-            super(context, data, R.layout.item_shangpin_list_layout);
+            super(context, data, R.layout.item_goods_list);
         }
 
         @Override

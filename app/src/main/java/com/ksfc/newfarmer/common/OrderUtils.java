@@ -5,10 +5,10 @@ import android.os.Handler;
 
 import com.google.gson.Gson;
 import com.ksfc.newfarmer.db.Store;
-import com.ksfc.newfarmer.protocol.ApiType;
-import com.ksfc.newfarmer.protocol.beans.LoginResult;
-import com.ksfc.newfarmer.protocol.beans.MyOrderDetailResult;
-import com.ksfc.newfarmer.protocol.beans.RscOrderDetailResult;
+import com.ksfc.newfarmer.http.ApiType;
+import com.ksfc.newfarmer.http.beans.LoginResult;
+import com.ksfc.newfarmer.http.beans.MyOrderDetailResult;
+import com.ksfc.newfarmer.http.beans.RscOrderDetailResult;
 import com.ksfc.newfarmer.utils.StringUtil;
 
 import java.io.IOException;

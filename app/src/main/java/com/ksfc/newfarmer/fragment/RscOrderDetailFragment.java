@@ -27,22 +27,23 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.ksfc.newfarmer.BaseFragment;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.common.LoadMoreOnsrcollListener;
 import com.ksfc.newfarmer.common.OrderUtils;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.activitys.RSCOrderListActivity;
 import com.ksfc.newfarmer.activitys.RscOrderDetailActivity;
-import com.ksfc.newfarmer.adapter.CommonAdapter;
-import com.ksfc.newfarmer.adapter.CommonViewHolder;
+import com.ksfc.newfarmer.common.CommonAdapter;
+import com.ksfc.newfarmer.common.CommonViewHolder;
 import com.ksfc.newfarmer.db.Store;
-import com.ksfc.newfarmer.protocol.ApiType;
-import com.ksfc.newfarmer.protocol.Request;
-import com.ksfc.newfarmer.protocol.RequestParams;
-import com.ksfc.newfarmer.protocol.beans.LoginResult;
-import com.ksfc.newfarmer.protocol.beans.OfflinePayWayResult;
-import com.ksfc.newfarmer.protocol.beans.RscOrderDetailResult;
-import com.ksfc.newfarmer.protocol.beans.RscOrderResult;
+import com.ksfc.newfarmer.http.ApiType;
+import com.ksfc.newfarmer.http.Request;
+import com.ksfc.newfarmer.http.RequestParams;
+import com.ksfc.newfarmer.http.beans.LoginResult;
+import com.ksfc.newfarmer.http.beans.OfflinePayWayResult;
+import com.ksfc.newfarmer.http.beans.RscOrderDetailResult;
+import com.ksfc.newfarmer.http.beans.RscOrderResult;
 import com.ksfc.newfarmer.utils.DateFormatUtils;
 import com.ksfc.newfarmer.utils.PullToRefreshUtils;
 import com.ksfc.newfarmer.utils.ShowHideUtils;
@@ -52,11 +53,6 @@ import com.ksfc.newfarmer.widget.LoadingFooter;
 import com.ksfc.newfarmer.widget.RecyclerImageView;
 import com.ksfc.newfarmer.widget.UnSwipeGridView;
 import com.ksfc.newfarmer.widget.WidgetUtil;
-import com.lidroid.xutils.HttpUtils;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import net.yangentao.util.msg.MsgCenter;
@@ -112,7 +108,7 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
 
     @Override
     public View InItView() {
-        View view = inflater.inflate(R.layout.rsc_order_list_layout, null);
+        View view = inflater.inflate(R.layout.fragment_rsc_order_list, null);
         waitingpay_lv = (PullToRefreshListView) view.findViewById(R.id.waitingpay_lv);
         waitingpay_lv.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
         waitingpay_lv.setOnRefreshListener(this);
@@ -389,7 +385,7 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
 
 
         public OrderAdapter(Context context, List<RscOrderResult.OrdersEntity> data) {
-            super(context, data, R.layout.my_order_list_item);
+            super(context, data, R.layout.item_my_order_list);
         }
 
         @Override
@@ -535,7 +531,7 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
                 List<RscOrderResult.OrdersEntity.SKUsEntity> SKUsList = ordersEntity.SKUs;
                 if (SKUsList != null && !SKUsList.isEmpty()) {
                     for (int i = 0; i < SKUsList.size(); i++) {
-                        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.rsc_order_list_item_item, null);
+                        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.item_item_rsc_order_list, null);
                         ViewHolderChild viewHolderChild = new ViewHolderChild(rootView);
                         RscOrderResult.OrdersEntity.SKUsEntity skUsEntity = SKUsList.get(i);
                         if (skUsEntity != null) {
@@ -688,7 +684,7 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
         private List<RscOrderResult.OrdersEntity.SKUsEntity> list;
 
         public PopSkusDeliveryAdapter(Context context, List<RscOrderResult.OrdersEntity.SKUsEntity> data) {
-            super(context, data, R.layout.item_pop_sureorder_layout);
+            super(context, data, R.layout.item_pop_sure_order);
             this.list = data;
         }
 
@@ -848,7 +844,7 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
     class PayWayAdapter extends CommonAdapter<OfflinePayWayResult.OfflinePayTypeEntity> {
 
         public PayWayAdapter(Context context, List<OfflinePayWayResult.OfflinePayTypeEntity> data) {
-            super(context, data, R.layout.item_rsc_pay_way_gird_layout);
+            super(context, data, R.layout.item_pop_rsc_pay_way_gv);
         }
 
         @Override
@@ -983,7 +979,7 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
         private List<RscOrderResult.OrdersEntity.SKUsEntity> list;
 
         public PopSkusSelfDeliveryAdapter(Context context, List<RscOrderResult.OrdersEntity.SKUsEntity> data) {
-            super(context, data, R.layout.item_pop_sureorder_layout);
+            super(context, data, R.layout.item_pop_sure_order);
             this.list = data;
         }
 

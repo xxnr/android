@@ -19,16 +19,16 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
-import com.ksfc.newfarmer.adapter.CommonAdapter;
-import com.ksfc.newfarmer.adapter.CommonViewHolder;
+import com.ksfc.newfarmer.common.CommonAdapter;
+import com.ksfc.newfarmer.common.CommonViewHolder;
 import com.ksfc.newfarmer.common.LoadMoreOnsrcollListener;
 import com.ksfc.newfarmer.db.Store;
-import com.ksfc.newfarmer.protocol.ApiType;
-import com.ksfc.newfarmer.protocol.Request;
-import com.ksfc.newfarmer.protocol.RequestParams;
-import com.ksfc.newfarmer.protocol.beans.LoginResult;
-import com.ksfc.newfarmer.protocol.beans.RSCAddressListResult;
-import com.ksfc.newfarmer.protocol.beans.RSCStateInfoResult;
+import com.ksfc.newfarmer.http.ApiType;
+import com.ksfc.newfarmer.http.Request;
+import com.ksfc.newfarmer.http.RequestParams;
+import com.ksfc.newfarmer.http.beans.LoginResult;
+import com.ksfc.newfarmer.http.beans.RSCAddressListResult;
+import com.ksfc.newfarmer.http.beans.RSCStateInfoResult;
 import com.ksfc.newfarmer.utils.PopWindowUtils;
 import com.ksfc.newfarmer.utils.PullToRefreshUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
@@ -102,7 +102,7 @@ public class SelectDeliveriesStateActivity extends BaseActivity implements PullT
 
     @Override
     public int getLayout() {
-        return R.layout.select_deliveries_state_layout;
+        return R.layout.activity_select_deliveries_state;
     }
 
     @Override
@@ -352,7 +352,7 @@ public class SelectDeliveriesStateActivity extends BaseActivity implements PullT
 
 
         public DeliveryAdapter(Context context, List<RSCStateInfoResult.RSCsEntity> data) {
-            super(context, data, R.layout.item_delivery_state_layout);
+            super(context, data, R.layout.item_delivery_state);
         }
 
         @Override
@@ -432,7 +432,7 @@ public class SelectDeliveriesStateActivity extends BaseActivity implements PullT
 
 
         public DeliveryAddressProvinceAdapter(Context context, List<RSCAddressListResult.ProvinceListEntity> data) {
-            super(context, data, R.layout.item_delivery_address_layout);
+            super(context, data, R.layout.item_pop_delivery_address);
         }
 
         @Override
@@ -483,7 +483,7 @@ public class SelectDeliveriesStateActivity extends BaseActivity implements PullT
     class DeliveryAddressCityAdapter extends CommonAdapter<RSCAddressListResult.CityListEntity> {
 
         public DeliveryAddressCityAdapter(Context context, List<RSCAddressListResult.CityListEntity> data) {
-            super(context, data, R.layout.item_delivery_address_layout);
+            super(context, data, R.layout.item_pop_delivery_address);
         }
 
         @Override
@@ -543,7 +543,7 @@ public class SelectDeliveriesStateActivity extends BaseActivity implements PullT
     class DeliveryAddressCountyAdapter extends CommonAdapter<RSCAddressListResult.CountyListEntity> {
 
         public DeliveryAddressCountyAdapter(Context context, List<RSCAddressListResult.CountyListEntity> data) {
-            super(context, data, R.layout.item_delivery_address_layout);
+            super(context, data, R.layout.item_pop_delivery_address);
         }
 
         @Override

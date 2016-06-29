@@ -12,24 +12,24 @@ import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.RndApplication;
 
-import com.ksfc.newfarmer.adapter.CommonAdapter;
-import com.ksfc.newfarmer.adapter.CommonViewHolder;
+import com.ksfc.newfarmer.common.CommonAdapter;
+import com.ksfc.newfarmer.common.CommonViewHolder;
 import com.ksfc.newfarmer.db.Store;
-import com.ksfc.newfarmer.protocol.ApiType;
-import com.ksfc.newfarmer.protocol.Request;
-import com.ksfc.newfarmer.protocol.RequestParams;
-import com.ksfc.newfarmer.protocol.beans.AddOrderResult;
-import com.ksfc.newfarmer.protocol.beans.AddressList;
-import com.ksfc.newfarmer.protocol.beans.ConsigneeResult;
-import com.ksfc.newfarmer.protocol.beans.DeliveriesResult;
-import com.ksfc.newfarmer.protocol.beans.GetGoodsDetail;
-import com.ksfc.newfarmer.protocol.beans.GetshopCart;
-import com.ksfc.newfarmer.protocol.beans.AddressList.Address;
-import com.ksfc.newfarmer.protocol.beans.GetshopCart.shopCart;
+import com.ksfc.newfarmer.http.ApiType;
+import com.ksfc.newfarmer.http.Request;
+import com.ksfc.newfarmer.http.RequestParams;
+import com.ksfc.newfarmer.http.beans.AddOrderResult;
+import com.ksfc.newfarmer.http.beans.AddressList;
+import com.ksfc.newfarmer.http.beans.ConsigneeResult;
+import com.ksfc.newfarmer.http.beans.DeliveriesResult;
+import com.ksfc.newfarmer.http.beans.GetGoodsDetail;
+import com.ksfc.newfarmer.http.beans.GetshopCart;
+import com.ksfc.newfarmer.http.beans.AddressList.Address;
+import com.ksfc.newfarmer.http.beans.GetshopCart.shopCart;
 
 
-import com.ksfc.newfarmer.protocol.beans.LoginResult;
-import com.ksfc.newfarmer.protocol.beans.RSCStateInfoResult;
+import com.ksfc.newfarmer.http.beans.LoginResult;
+import com.ksfc.newfarmer.http.beans.RSCStateInfoResult;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.SPUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
@@ -108,7 +108,7 @@ public class AddOrderActivity extends BaseActivity implements RadioGroup.OnCheck
 
     @Override
     public int getLayout() {
-        return R.layout.order_layout;
+        return R.layout.activity_add_order;
     }
 
     @Override
@@ -127,7 +127,7 @@ public class AddOrderActivity extends BaseActivity implements RadioGroup.OnCheck
         ordering_go_bt_tv = (TextView) findViewById(R.id.ordering_go_bt_tv);
 
         //头布局
-        head_layout = LayoutInflater.from(AddOrderActivity.this).inflate(R.layout.orderdetail_head_layout, null);
+        head_layout = LayoutInflater.from(AddOrderActivity.this).inflate(R.layout.head_add_order, null);
 
         address_shouhuo_ll = head_layout.findViewById(R.id.address_shouhuo_ll);
         add_address_shouhuo_ll = head_layout.findViewById(R.id.add_address_shouhuo_ll);
@@ -383,7 +383,7 @@ public class AddOrderActivity extends BaseActivity implements RadioGroup.OnCheck
 
 
         public OrderListAdapter(Context context, List<Data.Category> data) {
-            super(context, data, R.layout.order_list_item);
+            super(context, data, R.layout.item_order_list);
         }
 
         @Override
@@ -409,7 +409,7 @@ public class AddOrderActivity extends BaseActivity implements RadioGroup.OnCheck
 
 
         public CarAdapter(Context context, List<Data.Goods> data) {
-            super(context, data, R.layout.order_list_item_item);
+            super(context, data, R.layout.item_item_order_list);
         }
 
         @Override
@@ -484,7 +484,7 @@ public class AddOrderActivity extends BaseActivity implements RadioGroup.OnCheck
 
 
         public AdditionsAdapter(Context context, List<GetshopCart.SKU.Additions> data) {
-            super(context, data, R.layout.item_for_additions_layout);
+            super(context, data, R.layout.item_for_additions);
         }
 
         @Override

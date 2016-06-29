@@ -121,7 +121,7 @@ public class CustomDialogForInviter extends Dialog {
 			// instantiate the dialog with the custom Theme
 			final CustomDialogForInviter dialog = new CustomDialogForInviter(context,
 					R.style.MyAlertDialog);
-			View layout = inflater.inflate(R.layout.dialog_new_layout_invater, null);
+			View layout = inflater.inflate(R.layout.dialog_add_inviter, null);
 			dialog.addContentView(layout, new LayoutParams(
 					LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 			// set the dialog title

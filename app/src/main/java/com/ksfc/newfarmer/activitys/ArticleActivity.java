@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
-import com.ksfc.newfarmer.protocol.Request;
+import com.ksfc.newfarmer.http.Request;
 import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.utils.PopWindowUtils;
@@ -69,7 +69,7 @@ public class ArticleActivity extends BaseActivity {
     @Override
     public int getLayout() {
         // TODO Auto-generated method stub
-        return R.layout.article_layout;
+        return R.layout.activity_information_detail;
     }
 
 

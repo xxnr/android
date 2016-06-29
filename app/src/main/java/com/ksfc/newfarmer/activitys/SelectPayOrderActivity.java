@@ -9,10 +9,10 @@ import android.widget.ListView;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.RndApplication;
-import com.ksfc.newfarmer.adapter.CommonAdapter;
-import com.ksfc.newfarmer.adapter.CommonViewHolder;
-import com.ksfc.newfarmer.protocol.Request;
-import com.ksfc.newfarmer.protocol.beans.AddOrderResult;
+import com.ksfc.newfarmer.common.CommonAdapter;
+import com.ksfc.newfarmer.common.CommonViewHolder;
+import com.ksfc.newfarmer.http.Request;
+import com.ksfc.newfarmer.http.beans.AddOrderResult;
 import com.ksfc.newfarmer.utils.StringUtil;
 
 
@@ -26,7 +26,7 @@ public class SelectPayOrderActivity extends BaseActivity {
 
     @Override
     public int getLayout() {
-        return R.layout.select_pay_order_layout;
+        return R.layout.activity_split_order;
     }
 
     @Override
@@ -60,7 +60,7 @@ public class SelectPayOrderActivity extends BaseActivity {
 
 
         public OrderAdapter(Context context, List<AddOrderResult.Orders> data) {
-            super(context, data, R.layout.item_select_payorder);
+            super(context, data, R.layout.item_select_pay_order);
         }
 
         @Override

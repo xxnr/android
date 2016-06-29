@@ -12,7 +12,7 @@ import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.text.TextUtils;
 import net.yangentao.util.XLog;
-import net.yangentao.util.app.App;
+import com.ksfc.newfarmer.App;
 
 public class IoUtils {
 
