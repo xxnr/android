@@ -216,7 +216,7 @@ public class MyOrderDetailActivity extends BaseActivity {
                 if (datas != null) {
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("order_state", datas);
-                    IntentUtil.activityForward(this, MyOrderStateDetail.class, bundle, false);
+                    IntentUtil.activityForward(this, MyOrderStateDetailActivity.class, bundle, false);
                 }
                 break;
 

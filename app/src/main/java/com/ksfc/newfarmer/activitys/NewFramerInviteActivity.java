@@ -28,7 +28,7 @@ import com.ksfc.newfarmer.utils.IntentUtil;
 import net.yangentao.util.PreferenceUtil;
 
 
-public class NewFramerInvite extends BaseActivity implements
+public class NewFramerInviteActivity extends BaseActivity implements
         OnCheckedChangeListener {
     private InviteFriendsListFragment friendsList;
     private FragmentManager fragmentManager;
@@ -66,7 +66,7 @@ public class NewFramerInvite extends BaseActivity implements
         setRightViewListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                IntentUtil.activityForward(NewFramerInvite.this, InviterSearchActivity.class, null, false);
+                IntentUtil.activityForward(NewFramerInviteActivity.this, InviterSearchActivity.class, null, false);
                 int version = Integer.valueOf(android.os.Build.VERSION.SDK);
                 if (version > 5) {
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);

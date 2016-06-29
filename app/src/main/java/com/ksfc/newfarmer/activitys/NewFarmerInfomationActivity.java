@@ -32,7 +32,7 @@ import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.LoadingFooter;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBase.OnRefreshListener {
+public class NewFarmerInfomationActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener {
 
     private PullToRefreshListView listView;
     private InformationAdapter adapter;
@@ -43,7 +43,7 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
 
     @Override
     public int getLayout() {
-        return R.layout.activity_information_and_filter;
+        return R.layout.activity_information;
     }
 
     @Override
@@ -68,7 +68,7 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 ItemsEntity entity = adapter.getItem(position);
-                Intent intent = new Intent(NewFarmerInfomation.this,
+                Intent intent = new Intent(NewFarmerInfomationActivity.this,
                         ArticleActivity.class);
                 if (!TextUtils.isEmpty(entity.url)) {
                     intent.putExtra("articleUrl", entity.url);
@@ -213,7 +213,7 @@ public class NewFarmerInfomation extends BaseActivity implements PullToRefreshBa
         public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
             // 当开始滑动且ListView底部的Y轴点超出屏幕最大范围时，显示或隐藏顶部按钮
             if (getScrollY() >= ScreenUtil
-                    .getScreenHeight(NewFarmerInfomation.this)) {
+                    .getScreenHeight(NewFarmerInfomationActivity.this)) {
                 return_top.setVisibility(View.VISIBLE);
             }
         }

@@ -136,7 +136,7 @@
         <!-- 修改地址 -->
         <activity android:name=".activitys.UpdateAddressActivity" />
         <!-- 新农资讯 -->
-        <activity android:name=".activitys.NewFarmerInfomation" />
+        <activity android:name=".activitys.NewFarmerInfomationActivity" />
         <!-- 资讯详情 -->
         <activity android:name=".activitys.ArticleActivity" />
         <!-- 商品类目页 -->
@@ -194,7 +194,7 @@
             android:windowSoftInputMode="adjustResize" />
         <!-- 新农邀请 -->
         <activity
-            android:name=".activitys.NewFramerInvite"
+            android:name=".activitys.NewFramerInviteActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
 
@@ -203,7 +203,7 @@
             android:name=".activitys.InviterSearchActivity"
             android:windowSoftInputMode="adjustResize" />
         <!-- 用户订单状态 -->
-        <activity android:name=".activitys.MyOrderStateDetail" />
+        <activity android:name=".activitys.MyOrderStateDetailActivity" />
         <!-- Epos刷卡网点 -->
         <activity android:name=".activitys.EposSlotCardStateActivity" />
         <!-- 浮层页 -->

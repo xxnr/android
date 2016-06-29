@@ -85,7 +85,6 @@ public class AddAddressActivity extends BaseActivity {
     private void initView() {
         choice_city_text = (TextView) findViewById(R.id.choice_city_text);//选择省市县
         choice_town_text = (TextView) findViewById(R.id.choice_town_text);//选择镇
-
         room_edit = (EditText) findViewById(R.id.choice_detail_room_edit);
         zipCode_text = (EditText) findViewById(R.id.choice_zipCode_edit);
 

@@ -115,7 +115,7 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
     @Override
     public int getLayout() {
         // TODO Auto-generated method stub
-        return R.layout.activity_information_and_filter;
+        return R.layout.activity_goods_show;
 
     }
 

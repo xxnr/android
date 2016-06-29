@@ -115,7 +115,7 @@ public class MainActivity extends TabActivity implements View.OnClickListener {
 
         homepage.setChecked(true);
         mTabHost.setCurrentTab(0);
-        setBarTint( true);
+        setBarTint(true);
 
         mRadioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
@@ -144,7 +144,6 @@ public class MainActivity extends TabActivity implements View.OnClickListener {
                                 ScreenUtil.setMargins(integral_mall_content_rel, 0, Utils.dip2px(MainActivity.this, 298f), 0, 0);
                             }else {
                                 ScreenUtil.setMargins(integral_mall_content_rel, 0, Utils.dip2px(MainActivity.this, 318f), 0, 0);
-
                             }
                             integral_mall_guide_rel.setVisibility(View.VISIBLE);
                         }

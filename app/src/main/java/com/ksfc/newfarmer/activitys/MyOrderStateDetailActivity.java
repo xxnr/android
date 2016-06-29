@@ -16,7 +16,7 @@ import com.ksfc.newfarmer.utils.DateFormatUtils;
 /**
  * Created by CAI on 2016/4/19.
  */
-public class MyOrderStateDetail extends BaseActivity {
+public class MyOrderStateDetailActivity extends BaseActivity {
     private LinearLayout view_container;
     private MyOrderDetailResult.Datas datas;
 

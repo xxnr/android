@@ -2,7 +2,7 @@ package com.ksfc.newfarmer.utils;
 
 import com.ksfc.newfarmer.activitys.HomepageActivity;
 import com.ksfc.newfarmer.activitys.MineActivity;
-import com.ksfc.newfarmer.activitys.NewFarmerInfomation;
+import com.ksfc.newfarmer.activitys.NewFarmerInfomationActivity;
 import com.ksfc.newfarmer.activitys.ShoppingCartActivity;
 
 /**
@@ -15,7 +15,7 @@ public interface Constants {
     String TAB_LIST[] = {"主页", "资讯", "购物车", "我的"};
 
     Class mHomeTabClassArray[] = {HomepageActivity.class,
-            NewFarmerInfomation.class, ShoppingCartActivity.class,
+            NewFarmerInfomationActivity.class, ShoppingCartActivity.class,
             MineActivity.class};
 
 }

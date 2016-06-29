@@ -270,7 +270,7 @@ public class MineActivity extends BaseActivity {
                 if (!isLogin()) {
                     goLogin();
                 } else {
-                    startActivity(NewFramerInvite.class);
+                    startActivity(NewFramerInviteActivity.class);
                 }
                 break;
             case R.id.my_jifen_ll:

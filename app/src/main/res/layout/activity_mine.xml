@@ -136,6 +136,7 @@
             android:visibility="gone">
 
             <LinearLayout
+                android:background="@drawable/list_bg_selector"
                 android:id="@+id/my_net_state_ll"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
