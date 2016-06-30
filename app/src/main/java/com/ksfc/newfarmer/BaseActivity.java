@@ -414,7 +414,6 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
         }
         progressDialog = CustomProgressDialog.createLoadingDialog(this, msg, Color.parseColor("#000000"));
         progressDialog.setCanceledOnTouchOutside(false);

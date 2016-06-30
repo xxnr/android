@@ -158,6 +158,7 @@ public class AddAddressActivity extends BaseActivity {
                     showToast("请输入您的详细地址");
                     return;
                 }
+                String zipCode = zipCode_text.getEditableText().toString().trim();
 
                 // userId:用户ID,
                 // areaId：省份ID
@@ -166,10 +167,6 @@ public class AddAddressActivity extends BaseActivity {
                 // receiptPhone:收货人手机号
                 // receiptPeople：收货人名称
 
-                if (StringUtil.empty(zipCode_text.getEditableText().toString()
-                        .trim())) {
-                    zipCode = zipCode_text.getEditableText().toString().trim();
-                }
 
                 showProgressDialog();
                 RequestParams params = new RequestParams();
@@ -208,7 +205,6 @@ public class AddAddressActivity extends BaseActivity {
         if (arg1 == RESULT_OK) {
             switch (arg0) {
                 case cityRequestCode:
-
                     Bundle bundle = arg2.getExtras();
                     if (bundle != null) {
                         city = bundle.getString("city");//省市县区
@@ -221,8 +217,6 @@ public class AddAddressActivity extends BaseActivity {
                         town = "";
                         townid = "";
                     }
-
-
                     break;
                 case townRequestCode:
                     town = arg2.getExtras().getString("town");
@@ -230,7 +224,6 @@ public class AddAddressActivity extends BaseActivity {
                     choice_town_text.setText(town);
                     room_edit.setText("");
                     break;
-
                 default:
                     break;
             }
@@ -241,23 +234,10 @@ public class AddAddressActivity extends BaseActivity {
     public void onResponsed(Request req) {
         disMissDialog();
         if (req.getApi() == ApiType.SAVE_ADDRESS) {
-            saveAddress save = (saveAddress) req.getData();
-            if ("1000".equals(save.getStatus())) {
-                if (default_address.isChecked()) {
-                    String addr = city + town
-                            + room_edit.getEditableText().toString().trim();
-                    UserInfo queryMe = Store.User.queryMe();
-                    if (queryMe != null) {
-                        queryMe.defaultAddress = addr;
-                    }
-                    Store.User.saveMe(queryMe);
-                }
+            if ("1000".equals(req.getData().getStatus())) {
                 showToast("成功新增了地址");
                 finish();
-            } else {
-                showToast("新增地址失败");
             }
-
         }
     }
 }

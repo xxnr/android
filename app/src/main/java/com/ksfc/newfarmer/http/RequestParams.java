@@ -16,9 +16,7 @@ public final class RequestParams extends HashMap<String, String> {
 	public RequestParams() {
 		initParams();
 	}
-
 	private void initParams() {
-
 	}
 
 	/**
@@ -33,6 +31,5 @@ public final class RequestParams extends HashMap<String, String> {
 		super.clear();
 		initParams();
 	}
-
 
 }

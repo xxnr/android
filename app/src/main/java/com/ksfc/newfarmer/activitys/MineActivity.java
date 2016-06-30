@@ -33,6 +33,13 @@ import android.widget.TextView;
 import net.yangentao.util.msg.MsgCenter;
 import net.yangentao.util.msg.MsgListener;
 
+import rx.Observable;
+import rx.Scheduler;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
+
 public class MineActivity extends BaseActivity {
 
     private TextView title_tv;
@@ -58,14 +65,27 @@ public class MineActivity extends BaseActivity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 0:
-                    Bitmap bitmap = (Bitmap) msg.obj;
+                    final Bitmap bitmap = (Bitmap) msg.obj;
                     if (bitmap != null) {
                         myself_userImg.setImageBitmap(bitmap);
                         //虚化处理
-                        Bitmap aeroBitmap = FastBlur.doBlur(bitmap, 50, false, 0);
-                        if (aeroBitmap != null) {
-                            head_View_bg_iv.setImageBitmap(aeroBitmap);
-                        }
+                        Observable.create(new Observable.OnSubscribe<Bitmap>() {
+                            @Override
+                            public void call(Subscriber<? super Bitmap> subscriber) {
+                                Bitmap aeroBitmap = FastBlur.doBlur(bitmap, 50, false, 0);
+                                subscriber.onNext(aeroBitmap);
+                            }
+                        }).subscribeOn(Schedulers.computation())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new Action1<Bitmap>() {
+                                    @Override
+                                    public void call(Bitmap bitmap) {
+                                        if (bitmap != null) {
+                                            head_View_bg_iv.setImageBitmap(bitmap);
+
+                                        }
+                                    }
+                                });
                     }
                     break;
                 case 1:

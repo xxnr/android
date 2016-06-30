@@ -23,14 +23,14 @@ import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.utils.Log;
 
 import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Environment;
+import android.support.multidex.MultiDexApplication;
 import android.widget.Toast;
 
 
-public class RndApplication extends Application {
+public class RndApplication extends MultiDexApplication {
     private static final String TAG = "RndApplication";
     public static Context applicationContext;
     private static RndApplication instance;

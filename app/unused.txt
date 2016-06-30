@@ -4224,6 +4224,97 @@ bolts.WebViewAppLinkResolver$2
 bolts.WebViewAppLinkResolver$2$1
 bolts.WebViewAppLinkResolver$2$2
 bolts.WebViewAppLinkResolver$3
+butterknife.BindArray:
+    public abstract int value()
+butterknife.BindBitmap:
+    public abstract int value()
+butterknife.BindBool:
+    public abstract int value()
+butterknife.BindColor:
+    public abstract int value()
+butterknife.BindDimen:
+    public abstract int value()
+butterknife.BindDrawable:
+    public abstract int value()
+    public abstract int tint()
+butterknife.BindInt:
+    public abstract int value()
+butterknife.BindString:
+    public abstract int value()
+butterknife.BindView:
+    public abstract int value()
+butterknife.BindViews:
+    public abstract int[] value()
+butterknife.BuildConfig:
+    public static final boolean DEBUG
+    public static final java.lang.String APPLICATION_ID
+    public static final java.lang.String BUILD_TYPE
+    public static final java.lang.String FLAVOR
+    public static final int VERSION_CODE
+    public static final java.lang.String VERSION_NAME
+butterknife.ButterKnife:
+    private static final java.lang.String TAG
+    112:113:public static void setDebug(boolean)
+    133:133:public static butterknife.Unbinder bind(android.view.View)
+    144:144:public static butterknife.Unbinder bind(android.app.Dialog)
+    155:155:public static butterknife.Unbinder bind(java.lang.Object,android.app.Activity)
+    179:179:public static butterknife.Unbinder bind(java.lang.Object,android.app.Dialog)
+    221:226:public static varargs void apply(java.util.List,butterknife.ButterKnife$Action[])
+    231:236:public static varargs void apply(android.view.View[],butterknife.ButterKnife$Action[])
+    241:244:public static void apply(java.util.List,butterknife.ButterKnife$Action)
+    248:251:public static void apply(android.view.View[],butterknife.ButterKnife$Action)
+    256:259:public static varargs void apply(android.view.View,butterknife.ButterKnife$Action[])
+    263:264:public static void apply(android.view.View,butterknife.ButterKnife$Action)
+    269:272:public static void apply(java.util.List,butterknife.ButterKnife$Setter,java.lang.Object)
+    277:280:public static void apply(android.view.View[],butterknife.ButterKnife$Setter,java.lang.Object)
+    285:286:public static void apply(android.view.View,butterknife.ButterKnife$Setter,java.lang.Object)
+    295:298:public static void apply(java.util.List,android.util.Property,java.lang.Object)
+    307:310:public static void apply(android.view.View[],android.util.Property,java.lang.Object)
+    316:317:public static void apply(android.view.View,android.util.Property,java.lang.Object)
+    323:323:public static android.view.View findById(android.view.View,int)
+    330:330:public static android.view.View findById(android.app.Activity,int)
+    337:337:public static android.view.View findById(android.app.Dialog,int)
+butterknife.ButterKnife$Action:
+    public abstract void apply(android.view.View,int)
+butterknife.ButterKnife$Setter:
+    public abstract void set(android.view.View,java.lang.Object,int)
+butterknife.OnCheckedChanged:
+    public abstract int[] value()
+butterknife.OnClick:
+    public abstract int[] value()
+butterknife.OnEditorAction:
+    public abstract int[] value()
+butterknife.OnFocusChange:
+    public abstract int[] value()
+butterknife.OnItemClick:
+    public abstract int[] value()
+butterknife.OnItemLongClick:
+    public abstract int[] value()
+butterknife.OnItemSelected:
+    public abstract int[] value()
+    public abstract butterknife.OnItemSelected$Callback callback()
+butterknife.OnLongClick:
+    public abstract int[] value()
+butterknife.OnPageChange:
+    public abstract int[] value()
+    public abstract butterknife.OnPageChange$Callback callback()
+butterknife.OnTextChanged:
+    public abstract int[] value()
+    public abstract butterknife.OnTextChanged$Callback callback()
+butterknife.OnTouch:
+    public abstract int[] value()
+butterknife.Unbinder:
+    public abstract void unbind()
+butterknife.Unbinder$1:
+    8:8:public void unbind()
+butterknife.internal.DebouncingOnClickListener
+butterknife.internal.DebouncingOnClickListener$1
+butterknife.internal.ImmutableList
+butterknife.internal.ListenerClass
+butterknife.internal.ListenerClass$NONE
+butterknife.internal.ListenerMethod
+butterknife.internal.Utils
+butterknife.internal.Utils$SupportV4
 com.UCMobile.PayPlugin.PayInterface
 com.UCMobile.PayPlugin.PluginIcon
 com.UCMobile.PayPlugin.PluginSurfaceView:
@@ -6153,8 +6244,10 @@ com.hp.hpl.sparta.xpath.TrueExpr
 com.hp.hpl.sparta.xpath.Visitor
 com.hp.hpl.sparta.xpath.XPath
 com.hp.hpl.sparta.xpath.XPathException
+com.ksfc.newfarmer.App:
+    3:3:public App()
 com.ksfc.newfarmer.BaseActivity:
-    216:219:public void hideTitle()
+    225:228:public void hideTitle()
 com.ksfc.newfarmer.BuildConfig
 com.ksfc.newfarmer.MsgID:
     public static final java.lang.String ISLOGIN
@@ -6164,7 +6257,6 @@ com.ksfc.newfarmer.MsgID:
     public static final java.lang.String rsc_swipe_reFlash
     public static final java.lang.String swipe_reFlash
     public static final java.lang.String MainActivity_select_tab
-    public static final java.lang.String MSG_ADD_ADDRESS
     public static final java.lang.String MSG_Change_ADDRESS
     public static final java.lang.String add_potential_success
     public static final java.lang.String change_potential_success
@@ -6173,8 +6265,11 @@ com.ksfc.newfarmer.MsgID:
     public static final java.lang.String Rsc_order_Change
     public static final java.lang.String order_Change
     public static final java.lang.String PAY_PRICE
+    public static final java.lang.String Integral_Guide_Change
+    public static final java.lang.String IS_Signed
+    public static final java.lang.String gift_swipe_reFlash
 com.ksfc.newfarmer.R:
-    10:4964:public R()
+    10:5184:public R()
 com.ksfc.newfarmer.R$anim
 com.ksfc.newfarmer.R$attr
 com.ksfc.newfarmer.R$bool
@@ -6187,17 +6282,21 @@ com.ksfc.newfarmer.R$layout
 com.ksfc.newfarmer.R$string
 com.ksfc.newfarmer.R$style
 com.ksfc.newfarmer.R$styleable:
-    4964:4964:public R$styleable()
+    5184:5184:public R$styleable()
 com.ksfc.newfarmer.RndApplication:
     private static final java.lang.String TAG
     private static final java.lang.String dbname
     public static final java.lang.String DB_NAME
-    134:134:public static com.ksfc.newfarmer.RndApplication getInstance()
-    197:198:public void setPwd(java.lang.String)
-    201:201:public java.lang.String getPwd()
+    131:131:public static com.ksfc.newfarmer.RndApplication getInstance()
+    194:195:public void setPwd(java.lang.String)
+    198:198:public java.lang.String getPwd()
+com.ksfc.newfarmer.activitys.AboutUsActivity$$ViewBinder$InnerUnbinder:
+    29:35:public void unbind()
 com.ksfc.newfarmer.activitys.AddOrderActivity:
     private static final int requestState
     private static final int requestPerson
+com.ksfc.newfarmer.activitys.AgreeMentActivity$$ViewBinder$InnerUnbinder:
+    29:35:public void unbind()
 com.ksfc.newfarmer.activitys.ChoicePicActivity:
     public static final java.lang.String EXTRA_IS_FROM_CAMRA
     public static final java.lang.String EXTRA_IS_NEED_ZOOM
@@ -6213,16 +6312,37 @@ com.ksfc.newfarmer.activitys.EposSlotCardStateActivity:
     private static final int provinceTag
     private static final int cityTag
     private static final int countyTag
+com.ksfc.newfarmer.activitys.ExchangeRecordActivity$$ViewBinder$InnerUnbinder:
+    31:38:public void unbind()
+com.ksfc.newfarmer.activitys.ExchangeSuccessActivity$$ViewBinder$InnerUnbinder:
+    29:35:public void unbind()
+com.ksfc.newfarmer.activitys.FloatingLayerActivity$$ViewBinder$InnerUnbinder:
+    29:36:public void unbind()
 com.ksfc.newfarmer.activitys.GoodsDetailActivity$AdditionsAdapter:
-    620:620:public java.lang.Object getItem(int)
-    625:625:public long getItemId(int)
+    611:611:public java.lang.Object getItem(int)
+    616:616:public long getItemId(int)
 com.ksfc.newfarmer.activitys.GoodsDetailActivity$AttributesAdapter:
-    523:523:public java.lang.Object getItem(int)
-    528:528:public long getItemId(int)
+    514:514:public java.lang.Object getItem(int)
+    519:519:public long getItemId(int)
+com.ksfc.newfarmer.activitys.HomepageActivity$$ViewBinder$InnerUnbinder:
+    32:40:public void unbind()
+com.ksfc.newfarmer.activitys.IntegralGiftDetailActivity$$ViewBinder$InnerUnbinder:
+    40:54:public void unbind()
+com.ksfc.newfarmer.activitys.IntegralGiftSubmitActivity:
+    private static final int requestState
+    private static final int requestPerson
+com.ksfc.newfarmer.activitys.IntegralGiftSubmitActivity$$ViewBinder$InnerUnbinder:
+    41:57:public void unbind()
+com.ksfc.newfarmer.activitys.IntegralRulesActivity$$ViewBinder$InnerUnbinder:
+    29:35:public void unbind()
+com.ksfc.newfarmer.activitys.IntegralTallActivity$$ViewBinder$InnerUnbinder:
+    40:53:public void unbind()
 com.ksfc.newfarmer.activitys.InviterSearchActivity$PotentialCustomerAdapter:
     private java.util.List list
-com.ksfc.newfarmer.activitys.MainActivity:
-    32:35:public static com.ksfc.newfarmer.activitys.MainActivity getInstance()
+com.ksfc.newfarmer.activitys.MyIntegralActivity$$ViewBinder$InnerUnbinder:
+    31:38:public void unbind()
+com.ksfc.newfarmer.activitys.MyIntegralActivity$ViewHolder$$ViewBinder$InnerUnbinder:
+    35:45:public void unbind()
 com.ksfc.newfarmer.activitys.SelectDeliveriesPersonActivity:
     private static final int ResultPerson
 com.ksfc.newfarmer.activitys.SelectDeliveriesStateActivity:
@@ -6233,7 +6353,15 @@ com.ksfc.newfarmer.activitys.SelectDeliveriesStateActivity:
 com.ksfc.newfarmer.activitys.ShoppingCartActivity:
     private static com.ksfc.newfarmer.activitys.ShoppingCartActivity instance
     public static java.util.List list
-    129:132:public static com.ksfc.newfarmer.activitys.ShoppingCartActivity getInstance()
+    127:130:public static com.ksfc.newfarmer.activitys.ShoppingCartActivity getInstance()
+com.ksfc.newfarmer.common.CommonFunction:
+    15:15:public CommonFunction()
+com.ksfc.newfarmer.common.FilterClassUtils:
+    11:11:public FilterClassUtils()
+com.ksfc.newfarmer.common.HttpsConfig:
+    12:12:public HttpsConfig()
+com.ksfc.newfarmer.common.OrderUtils:
+    27:27:public OrderUtils()
 com.ksfc.newfarmer.db.BaseDao:
     protected abstract void initTableName(java.lang.String)
 com.ksfc.newfarmer.db.DBConstact:
@@ -6287,34 +6415,447 @@ com.ksfc.newfarmer.db.dao.ShoppingDao:
     public static final java.lang.String COLUMN_USESCORE
     public static final java.lang.String COLUMN_PRAISES
     44:44:protected void initTableName(java.lang.String)
+com.ksfc.newfarmer.fragment.GiftOrderListFragment$$ViewBinder$InnerUnbinder:
+    33:41:public void unbind()
+com.ksfc.newfarmer.fragment.GiftOrderListFragment$ChildViewHolder$$ViewBinder$InnerUnbinder:
+    36:48:public void unbind()
+com.ksfc.newfarmer.fragment.GiftOrderListFragment$GroupViewHolder$$ViewBinder$InnerUnbinder:
+    36:48:public void unbind()
 com.ksfc.newfarmer.fragment.GoodsDetailFragment:
     private com.ksfc.newfarmer.widget.VerticalScrollView scrollView
+com.ksfc.newfarmer.fragment.IntegralTallGuideFragment$Guide2ViewHolder$$ViewBinder$InnerUnbinder:
+    40:54:public void unbind()
 com.ksfc.newfarmer.fragment.PayWayFragment:
     private static final java.lang.String mMode
-com.ksfc.newfarmer.fragment.RscOrderDetailFragment:
-    1165:1197:public void getOrderDetail(java.lang.String,int)
-com.ksfc.newfarmer.fragment.RscOrderDetailFragment$7
-com.ksfc.newfarmer.common.OrderUtils:
-    28:28:public OrderUtils()
-com.ksfc.newfarmer.protocol.ApiType:
-    476:497:private ApiType(java.lang.String,int,java.lang.String,com.ksfc.newfarmer.protocol.ApiType$RequestMethod)
-    476:503:private ApiType(java.lang.String,int,java.lang.String,com.ksfc.newfarmer.protocol.ApiType$RequestMethod,int)
-com.ksfc.newfarmer.protocol.NetworkDataService:
+com.ksfc.newfarmer.fragment.SignSuccessFragment:
+    private butterknife.Unbinder unbinder
+com.ksfc.newfarmer.fragment.SignSuccessFragment$$ViewBinder$InnerUnbinder:
+    32:40:public void unbind()
+com.ksfc.newfarmer.http.ApiType:
+    517:538:private ApiType(java.lang.String,int,java.lang.String,com.ksfc.newfarmer.http.ApiType$RequestMethod)
+    517:544:private ApiType(java.lang.String,int,java.lang.String,com.ksfc.newfarmer.http.ApiType$RequestMethod,int)
+com.ksfc.newfarmer.http.NetworkDataService:
     private static final java.lang.String TAG
-com.ksfc.newfarmer.protocol.NetworkHelper:
+com.ksfc.newfarmer.http.NetworkHelper:
     private static final java.lang.String TAG
     private static final int CONNECTION_TIMEOUT
-com.ksfc.newfarmer.protocol.Request:
+com.ksfc.newfarmer.http.RemoteApi:
+    20:20:public RemoteApi()
+com.ksfc.newfarmer.http.Request:
     public static final java.lang.String HTTP_ERROR
     public static final java.lang.String NO_NETWORK_ERROR
     public static final java.lang.String PARSE_DATA_FAILED
     public static final java.lang.String TAG
     118:118:private java.lang.String getErrorMsg()
     122:123:public void setErrorMsg(java.lang.String)
-com.ksfc.newfarmer.protocol.ServerAsyncRequester:
+com.ksfc.newfarmer.http.ServerAsyncRequester:
     private static final java.lang.String TAG
-com.ksfc.newfarmer.protocol.ServerInterface:
+com.ksfc.newfarmer.http.ServerInterface:
     private static final java.lang.String TAG
+com.ksfc.newfarmer.http.beans.AboutUsResult$Datas:
+    public java.lang.String total
+    public java.util.List rows
+    12:12:public AboutUsResult$Datas()
+com.ksfc.newfarmer.http.beans.AboutUsResult$RowsInfos
+com.ksfc.newfarmer.http.beans.AddressList$Data:
+    public int total
+    public java.lang.String locationUserId
+    17:17:public AddressList$Data()
+com.ksfc.newfarmer.http.beans.AttrSelectResult$AttributesEntity$IdEntity:
+    public java.lang.Object brand
+    26:26:public AttrSelectResult$AttributesEntity$IdEntity()
+com.ksfc.newfarmer.http.beans.BannerResult$Banner
+com.ksfc.newfarmer.http.beans.BuildingList$BuildData:
+    public java.lang.String businessId
+    public java.lang.String areaId
+com.ksfc.newfarmer.http.beans.BuildingList$Data:
+    public int total
+    17:17:public BuildingList$Data()
+com.ksfc.newfarmer.http.beans.CityList$Data:
+    final synthetic com.ksfc.newfarmer.http.beans.CityList this$0
+    27:30:public CityList$Data(com.ksfc.newfarmer.http.beans.CityList)
+com.ksfc.newfarmer.http.beans.CityList$Data$Rows:
+    public java.lang.String shortName
+    final synthetic com.ksfc.newfarmer.http.beans.CityList$Data this$1
+    30:30:public CityList$Data$Rows(com.ksfc.newfarmer.http.beans.CityList$Data)
+com.ksfc.newfarmer.http.beans.CommentResult$Datas:
+    public java.lang.String total
+    public java.lang.String locationUserId
+    public java.util.List rows
+    11:11:public CommentResult$Datas()
+com.ksfc.newfarmer.http.beans.CommentResult$PjRows
+com.ksfc.newfarmer.http.beans.ConsigneeResult$DatasEntity:
+    public int total
+    public int page
+    public int pages
+    22:36:public ConsigneeResult$DatasEntity()
+com.ksfc.newfarmer.http.beans.ConsigneeResult$DatasEntity$RowsEntity:
+    public java.lang.String userId
+    public java.lang.String dateCreated
+com.ksfc.newfarmer.http.beans.ConsumerOrderResult$AddressEntity:
+    25:100:public ConsumerOrderResult$AddressEntity()
+com.ksfc.newfarmer.http.beans.ConsumerOrderResult$AddressEntity$CityEntity:
+    public java.lang.String provinceid
+    public java.lang.String uppername
+    public java.lang.String id
+    public java.lang.String tid
+    100:100:public ConsumerOrderResult$AddressEntity$CityEntity()
+com.ksfc.newfarmer.http.beans.ConsumerOrderResult$AddressEntity$CountyEntity:
+    public java.lang.String provinceid
+    public java.lang.String cityid
+    public java.lang.String uppername
+    public java.lang.String id
+    public java.lang.String tid
+    77:77:public ConsumerOrderResult$AddressEntity$CountyEntity()
+com.ksfc.newfarmer.http.beans.ConsumerOrderResult$AddressEntity$ProvinceEntity:
+    public java.lang.String shortname
+    public java.lang.String uppername
+    public java.lang.String id
+    public java.lang.String tid
+    67:67:public ConsumerOrderResult$AddressEntity$ProvinceEntity()
+com.ksfc.newfarmer.http.beans.ConsumerOrderResult$AddressEntity$TownEntity:
+    public java.lang.String id
+    public java.lang.String tid
+    public java.lang.String chinesepinyin
+    public java.lang.String countyid
+    public java.lang.String cityid
+    public java.lang.String provinceid
+    88:88:public ConsumerOrderResult$AddressEntity$TownEntity()
+com.ksfc.newfarmer.http.beans.ConsumerOrderResult$Datas:
+    public java.lang.String account
+    public java.lang.String nickname
+    public java.lang.String name
+    14:14:public ConsumerOrderResult$Datas()
+com.ksfc.newfarmer.http.beans.ConsumerOrderResult$Product:
+    public java.lang.String deposit
+    public java.lang.String price
+    public java.lang.String category
+    public java.lang.String id
+    public java.lang.String thumbnail
+    public java.lang.String deliverStatus
+com.ksfc.newfarmer.http.beans.ConsumerOrderResult$Rows:
+    public java.lang.String orderId
+    public java.lang.String goodsCount
+    public java.lang.String address
+    public java.lang.String recipientName
+    public java.lang.String recipientPhone
+    public java.lang.String deposit
+com.ksfc.newfarmer.http.beans.DeliveriesResult$DatasEntity:
+    public int count
+    18:26:public DeliveriesResult$DatasEntity()
+com.ksfc.newfarmer.http.beans.EvaluateList$Datas:
+    public java.lang.String locationUserId
+    public java.lang.String total
+    public java.util.List rows
+    13:13:public EvaluateList$Datas()
+com.ksfc.newfarmer.http.beans.EvaluateList$Rows
+com.ksfc.newfarmer.http.beans.GetGoodsData$GoodsDatas:
+    public int total
+    16:16:public GetGoodsData$GoodsDatas()
+com.ksfc.newfarmer.http.beans.GetGoodsData$SingleGood:
+    public java.lang.String thumbnail
+    public java.lang.String allowScore
+    public java.lang.String originalPrice
+    public java.lang.String goodsSellCount
+    public java.lang.String awardPoint
+    public java.lang.String goodsSort
+    public java.lang.String goodsGreatCount
+    public java.lang.String brandName
+    public java.lang.String brandId
+    public int orderNum
+    public java.lang.String model
+com.ksfc.newfarmer.http.beans.GetGoodsDetail$GoodsDetail$Attributes
+com.ksfc.newfarmer.http.beans.GiftCategoriesResult$CategoriesBean:
+    public java.lang.String datecreated
+    public java.util.List deliveries
+com.ksfc.newfarmer.http.beans.GiftCategoriesResult$CategoriesBean$DeliveriesBean
+com.ksfc.newfarmer.http.beans.GiftDetailResult$GiftBean$PicturesBean
+com.ksfc.newfarmer.http.beans.GiftListResult$DatasBean:
+    public int total
+    public int pages
+    public int page
+    23:47:public GiftListResult$DatasBean()
+com.ksfc.newfarmer.http.beans.GiftListResult$DatasBean$GiftsBean$PicturesBean
+com.ksfc.newfarmer.http.beans.GiftOrderListResult$DatasBean:
+    public int total
+    public int pages
+    public int page
+    21:49:public GiftOrderListResult$DatasBean()
+com.ksfc.newfarmer.http.beans.GiftOrderListResult$DatasBean$GiftordersBean:
+    public java.lang.String id
+    public java.lang.String buyerName
+    public java.lang.String buyerPhone
+    public java.lang.String buyerId
+    public int deliverStatus
+    public int points
+    public java.lang.String backendUser
+    public java.lang.String backendUserAccount
+    public java.lang.String dateDelivered
+    public java.lang.String dateSet
+    public java.lang.String dateCompleted
+com.ksfc.newfarmer.http.beans.GiftOrderListResult$DatasBean$GiftordersBean$GiftBean:
+    public java.lang.String ref
+    public java.lang.String id
+    public java.lang.String category
+    public float marketPrice
+    public int online
+    public int soldout
+    94:94:public GiftOrderListResult$DatasBean$GiftordersBean$GiftBean()
+com.ksfc.newfarmer.http.beans.GiftOrderListResult$DatasBean$GiftordersBean$OrderStatusBean:
+    public int type
+    113:113:public GiftOrderListResult$DatasBean$GiftordersBean$OrderStatusBean()
+com.ksfc.newfarmer.http.beans.GiftOrderListResult$DatasBean$GiftordersBean$RSCInfoBean:
+    public java.lang.String RSC
+    106:106:public GiftOrderListResult$DatasBean$GiftordersBean$RSCInfoBean()
+com.ksfc.newfarmer.http.beans.GoodsSum
+com.ksfc.newfarmer.http.beans.HomeImageResult$Rows:
+    public java.lang.String id
+    public java.lang.String url
+com.ksfc.newfarmer.http.beans.HomeImageResult$UserRollImage:
+    public int total
+    public java.lang.String locationUserId
+    11:11:public HomeImageResult$UserRollImage()
+com.ksfc.newfarmer.http.beans.HotLineResult$Datas:
+    public java.lang.String id
+    public java.lang.String value
+    public java.lang.String lable
+    public java.lang.String key
+    14:14:public HotLineResult$Datas()
+com.ksfc.newfarmer.http.beans.InformationResult$DatasEntity:
+    public int count
+    public int pages
+    public int page
+    21:38:public InformationResult$DatasEntity()
+com.ksfc.newfarmer.http.beans.InformationResult$DatasEntity$ItemsEntity:
+    public java.lang.String category
+    public java.lang.String id
+com.ksfc.newfarmer.http.beans.IntegralGetResult$DatasBean:
+    17:26:public IntegralGetResult$DatasBean()
+com.ksfc.newfarmer.http.beans.IntegralGetResult$DatasBean$SignBean:
+    public java.lang.String date
+    26:26:public IntegralGetResult$DatasBean$SignBean()
+com.ksfc.newfarmer.http.beans.IntentionProductsResult$IntentionProductsEntity:
+    28:28:public static com.ksfc.newfarmer.http.beans.IntentionProductsResult$IntentionProductsEntity objectFromData(java.lang.String)
+com.ksfc.newfarmer.http.beans.LoginResult$UserAddress:
+    44:71:public LoginResult$UserAddress()
+com.ksfc.newfarmer.http.beans.LoginResult$UserInfo:
+    public java.lang.String loginName
+    public java.lang.String address
+    public java.lang.String shopCarCount
+com.ksfc.newfarmer.http.beans.MyInviterResult$DatasEntity:
+    public java.lang.String inviterId
+    public java.lang.String inviterPhoto
+    public java.lang.String inviterNickname
+    public java.lang.String inviterUserType
+    public java.util.List inviterVerifiedTypes
+    public java.util.List inviterVerifiedTypesInJson
+    30:152:public MyInviterResult$DatasEntity()
+com.ksfc.newfarmer.http.beans.MyInviterResult$DatasEntity$InviterAddressEntity:
+    58:138:public MyInviterResult$DatasEntity$InviterAddressEntity()
+com.ksfc.newfarmer.http.beans.MyInviterResult$DatasEntity$InviterAddressEntity$CityEntity:
+    public java.lang.String _id
+    public java.lang.String provinceid
+    public java.lang.String uppername
+    public java.lang.String id
+    public java.lang.String tid
+    115:115:public MyInviterResult$DatasEntity$InviterAddressEntity$CityEntity()
+com.ksfc.newfarmer.http.beans.MyInviterResult$DatasEntity$InviterAddressEntity$CountyEntity:
+    public java.lang.String _id
+    public java.lang.String provinceid
+    public java.lang.String cityid
+    public java.lang.String uppername
+    public java.lang.String id
+    public java.lang.String tid
+    126:126:public MyInviterResult$DatasEntity$InviterAddressEntity$CountyEntity()
+com.ksfc.newfarmer.http.beans.MyInviterResult$DatasEntity$InviterAddressEntity$ProvinceEntity:
+    public java.lang.String _id
+    public java.lang.String shortname
+    public java.lang.String uppername
+    public java.lang.String id
+    public java.lang.String tid
+    104:104:public MyInviterResult$DatasEntity$InviterAddressEntity$ProvinceEntity()
+com.ksfc.newfarmer.http.beans.MyInviterResult$DatasEntity$InviterAddressEntity$TownEntity:
+    public java.lang.String _id
+    public java.lang.String id
+    public java.lang.String tid
+    public java.lang.String chinesepinyin
+    public java.lang.String countyid
+    public java.lang.String cityid
+    public java.lang.String provinceid
+    138:138:public MyInviterResult$DatasEntity$InviterAddressEntity$TownEntity()
+com.ksfc.newfarmer.http.beans.MyInviterResult$DatasEntity$InviterVerifiedTypesInJsonEntity
+com.ksfc.newfarmer.http.beans.NominatedInviterResult$Datas:
+    12:12:public NominatedInviterResult$Datas()
+com.ksfc.newfarmer.http.beans.PointLogsResult$DatasBean:
+    public int total
+    public int pages
+    public int page
+    22:35:public PointLogsResult$DatasBean()
+com.ksfc.newfarmer.http.beans.PointLogsResult$DatasBean$PointslogsBean$EventBean:
+    public int type
+    46:46:public PointLogsResult$DatasBean$PointslogsBean$EventBean()
+com.ksfc.newfarmer.http.beans.PotentialCustomerDetailResult$PotentialCustomerEntity:
+    public java.lang.String _id
+    public com.ksfc.newfarmer.http.beans.PotentialCustomerDetailResult$PotentialCustomerEntity$UserEntity user
+    26:150:public PotentialCustomerDetailResult$PotentialCustomerEntity()
+com.ksfc.newfarmer.http.beans.PotentialCustomerDetailResult$PotentialCustomerEntity$AddressEntity:
+    63:139:public PotentialCustomerDetailResult$PotentialCustomerEntity$AddressEntity()
+com.ksfc.newfarmer.http.beans.PotentialCustomerDetailResult$PotentialCustomerEntity$AddressEntity$CityEntity:
+    public java.lang.String provinceid
+    public java.lang.String uppername
+    public java.lang.String id
+    public java.lang.String tid
+    139:139:public PotentialCustomerDetailResult$PotentialCustomerEntity$AddressEntity$CityEntity()
+com.ksfc.newfarmer.http.beans.PotentialCustomerDetailResult$PotentialCustomerEntity$AddressEntity$CountyEntity:
+    public java.lang.String provinceid
+    public java.lang.String cityid
+    public java.lang.String uppername
+    public java.lang.String id
+    public java.lang.String tid
+    116:116:public PotentialCustomerDetailResult$PotentialCustomerEntity$AddressEntity$CountyEntity()
+com.ksfc.newfarmer.http.beans.PotentialCustomerDetailResult$PotentialCustomerEntity$AddressEntity$ProvinceEntity:
+    public java.lang.String shortname
+    public java.lang.String uppername
+    public java.lang.String id
+    public java.lang.String tid
+    106:106:public PotentialCustomerDetailResult$PotentialCustomerEntity$AddressEntity$ProvinceEntity()
+com.ksfc.newfarmer.http.beans.PotentialCustomerDetailResult$PotentialCustomerEntity$AddressEntity$TownEntity:
+    public java.lang.String id
+    public java.lang.String tid
+    public java.lang.String chinesepinyin
+    public java.lang.String countyid
+    public java.lang.String cityid
+    public java.lang.String provinceid
+    127:127:public PotentialCustomerDetailResult$PotentialCustomerEntity$AddressEntity$TownEntity()
+com.ksfc.newfarmer.http.beans.PotentialCustomerDetailResult$PotentialCustomerEntity$BuyIntentionsEntity:
+    public java.lang.String _id
+com.ksfc.newfarmer.http.beans.PotentialCustomerDetailResult$PotentialCustomerEntity$UserEntity
+com.ksfc.newfarmer.http.beans.ProFileResult$BandInfo
+com.ksfc.newfarmer.http.beans.ProFileResult$Datas:
+    public int total
+    public java.util.List rows
+    11:11:public ProFileResult$Datas()
+com.ksfc.newfarmer.http.beans.QueueList$Data:
+    final synthetic com.ksfc.newfarmer.http.beans.QueueList this$0
+    16:19:public QueueList$Data(com.ksfc.newfarmer.http.beans.QueueList)
+com.ksfc.newfarmer.http.beans.QueueList$Data$Rows:
+    public java.lang.String areaId
+    final synthetic com.ksfc.newfarmer.http.beans.QueueList$Data this$1
+    19:19:public QueueList$Data$Rows(com.ksfc.newfarmer.http.beans.QueueList$Data)
+com.ksfc.newfarmer.http.beans.RSCInfoResult$RSCInfoEntity:
+    24:42:public RSCInfoResult$RSCInfoEntity()
+com.ksfc.newfarmer.http.beans.RSCInfoResult$RSCInfoEntity$CompanyAddressEntity:
+    42:126:public RSCInfoResult$RSCInfoEntity$CompanyAddressEntity()
+com.ksfc.newfarmer.http.beans.RSCInfoResult$RSCInfoEntity$CompanyAddressEntity$CityEntity:
+    public java.lang.String _id
+    public java.lang.String provinceid
+    public java.lang.String uppername
+    public java.lang.String id
+    public java.lang.String tid
+    90:90:public RSCInfoResult$RSCInfoEntity$CompanyAddressEntity$CityEntity()
+com.ksfc.newfarmer.http.beans.RSCInfoResult$RSCInfoEntity$CompanyAddressEntity$CountyEntity:
+    public java.lang.String _id
+    public java.lang.String provinceid
+    public java.lang.String cityid
+    public java.lang.String uppername
+    public java.lang.String id
+    public java.lang.String tid
+    101:101:public RSCInfoResult$RSCInfoEntity$CompanyAddressEntity$CountyEntity()
+com.ksfc.newfarmer.http.beans.RSCInfoResult$RSCInfoEntity$CompanyAddressEntity$ProvinceEntity:
+    public java.lang.String _id
+    public java.lang.String shortname
+    public java.lang.String uppername
+    public java.lang.String id
+    public java.lang.String tid
+    126:126:public RSCInfoResult$RSCInfoEntity$CompanyAddressEntity$ProvinceEntity()
+com.ksfc.newfarmer.http.beans.RSCInfoResult$RSCInfoEntity$CompanyAddressEntity$TownEntity:
+    public java.lang.String _id
+    public java.lang.String id
+    public java.lang.String tid
+    public java.lang.String chinesepinyin
+    public java.lang.String countyid
+    public java.lang.String cityid
+    public java.lang.String provinceid
+    113:113:public RSCInfoResult$RSCInfoEntity$CompanyAddressEntity$TownEntity()
+com.ksfc.newfarmer.http.beans.RegistResult
+com.ksfc.newfarmer.http.beans.RegistResult$Datas
+com.ksfc.newfarmer.http.beans.RscOrderDetailResult$OrderEntity:
+    public java.lang.String deposit
+    31:129:public RscOrderDetailResult$OrderEntity()
+com.ksfc.newfarmer.http.beans.RscOrderDetailResult$OrderEntity$DeliveryTypeEntity:
+    91:91:public RscOrderDetailResult$OrderEntity$DeliveryTypeEntity()
+com.ksfc.newfarmer.http.beans.RscOrderDetailResult$OrderEntity$OrderStatusEntity:
+    98:98:public RscOrderDetailResult$OrderEntity$OrderStatusEntity()
+com.ksfc.newfarmer.http.beans.RscOrderDetailResult$OrderEntity$PaymentEntity:
+    public int slice
+    public java.lang.String suborderId
+    public int payType
+    public java.lang.String _id
+    public boolean thirdPartyRecorded
+    public boolean isClosed
+    public int payStatus
+    public java.lang.String dateCreated
+    105:105:public RscOrderDetailResult$OrderEntity$PaymentEntity()
+com.ksfc.newfarmer.http.beans.RscOrderDetailResult$OrderEntity$SKUListEntity:
+    public java.lang.String productId
+    public java.lang.String price
+    public java.lang.String deposit
+    public java.lang.String name
+    public java.lang.String category
+com.ksfc.newfarmer.http.beans.RscOrderDetailResult$OrderEntity$SKUListEntity$AttributesEntity:
+    public java.lang.String ref
+    public java.lang.String _id
+com.ksfc.newfarmer.http.beans.RscOrderDetailResult$OrderEntity$SubOrdersEntity:
+    public java.lang.String id
+com.ksfc.newfarmer.http.beans.RscOrderResult$OrdersEntity:
+    public java.lang.String _id
+    public java.lang.String consigneePhone
+    public boolean pendingApprove
+com.ksfc.newfarmer.http.beans.RscOrderResult$OrdersEntity$DeliveryType:
+    public int type
+    55:55:public RscOrderResult$OrdersEntity$DeliveryType()
+com.ksfc.newfarmer.http.beans.RscOrderResult$OrdersEntity$SKUsEntity:
+    public double price
+    public double deposit
+    public java.lang.String name
+    public java.lang.String category
+    public java.lang.String _id
+com.ksfc.newfarmer.http.beans.RscOrderResult$OrdersEntity$SKUsEntity$AttributesEntity:
+    public java.lang.String ref
+    public java.lang.String _id
+com.ksfc.newfarmer.http.beans.RscOrderResult$OrdersEntity$TypeEntity:
+    62:62:public RscOrderResult$OrdersEntity$TypeEntity()
+com.ksfc.newfarmer.http.beans.SureOrder
+com.ksfc.newfarmer.http.beans.SureOrder$Datas
+com.ksfc.newfarmer.http.beans.SureOrder$Order
+com.ksfc.newfarmer.http.beans.SureOrder$OrderSubList
+com.ksfc.newfarmer.http.beans.SureOrderResult$Datas:
+    public java.lang.String total
+    public com.ksfc.newfarmer.http.beans.SureOrderResult$Rows rows
+    12:12:public SureOrderResult$Datas()
+com.ksfc.newfarmer.http.beans.SureOrderResult$OrderSub
+com.ksfc.newfarmer.http.beans.SureOrderResult$Rows
+com.ksfc.newfarmer.http.beans.TownList$Data:
+    public int total
+    17:17:public TownList$Data()
+com.ksfc.newfarmer.http.beans.TownList$TownData:
+    public java.lang.String provinceId
+    public java.lang.String cityId
+    public java.lang.String countyId
+com.ksfc.newfarmer.http.beans.VersionResult
+com.ksfc.newfarmer.http.beans.VersionResult$Data
+com.ksfc.newfarmer.http.beans.VersionResult$VersionRows
+com.ksfc.newfarmer.http.beans.WaitingPay$Datas:
+    public java.lang.String total
+    19:19:public WaitingPay$Datas()
+com.ksfc.newfarmer.http.beans.WaitingPay$SubOrders
+com.ksfc.newfarmer.http.beans.saveAddress$Save:
+    public int total
+    public java.lang.String rows
+    public java.lang.String locationUserId
+    14:14:public saveAddress$Save()
+com.ksfc.newfarmer.utils.ActivityAnimationUtils:
+    8:8:public ActivityAnimationUtils()
 com.ksfc.newfarmer.utils.Base64:
     14:14:public Base64()
     66:81:private static int decode(char)
@@ -6336,14 +6877,17 @@ com.ksfc.newfarmer.utils.DataCleanManager:
     58:59:public static void cleanCustomCache(java.lang.String)
     63:71:public static varargs void cleanApplicationData(android.content.Context,java.lang.String[])
 com.ksfc.newfarmer.utils.DateFormatUtils:
+    public static final long mHourInMillis
     15:15:public DateFormatUtils()
+    47:53:public static java.util.Date convertDate(java.lang.String)
 com.ksfc.newfarmer.utils.ExpandViewTouch:
     14:14:public ExpandViewTouch()
+com.ksfc.newfarmer.utils.FastBlur:
+    8:8:public FastBlur()
 com.ksfc.newfarmer.utils.ImageLoaderUtils:
     12:12:public ImageLoaderUtils()
 com.ksfc.newfarmer.utils.IntentUtil:
     12:12:public IntentUtil()
-    51:58:public static void serviceForward(android.content.Context,java.lang.Class,android.os.Bundle,boolean)
 com.ksfc.newfarmer.utils.IoUtils:
     17:17:public IoUtils()
     150:150:public static android.graphics.Bitmap compressImageFifty(android.graphics.Bitmap)
@@ -6363,7 +6907,6 @@ com.ksfc.newfarmer.utils.RndLog:
     9:9:public RndLog()
     28:30:public static void e(java.lang.String,java.lang.String,java.lang.Exception)
     33:35:public static void w(java.lang.String,java.lang.String)
-com.ksfc.newfarmer.utils.RotateDownPageTransformer
 com.ksfc.newfarmer.utils.SPUtils:
     public static final java.lang.String FILE_NAME
     private static android.content.SharedPreferences sharedPreferences
@@ -6376,29 +6919,31 @@ com.ksfc.newfarmer.utils.SPUtils:
 com.ksfc.newfarmer.utils.SPUtils$SharedPreferencesCompat:
     169:169:private SPUtils$SharedPreferencesCompat()
 com.ksfc.newfarmer.utils.ScreenUtil:
-    14:14:public ScreenUtil()
-    23:26:public static int getScreenWidth(android.content.Context)
-    49:49:public static int getScreenViewTopHeight(android.view.View)
-    58:58:public static int getScreenViewBottomHeight(android.view.View)
-    67:67:public static int getScreenViewLeftHeight(android.view.View)
-    76:76:public static int getScreenViewRightHeight(android.view.View)
+    16:16:public ScreenUtil()
+    63:66:public static int getScreenWidth(android.content.Context)
+    89:89:public static int getScreenViewTopHeight(android.view.View)
+    98:98:public static int getScreenViewBottomHeight(android.view.View)
+    107:107:public static int getScreenViewLeftHeight(android.view.View)
+    116:116:public static int getScreenViewRightHeight(android.view.View)
 com.ksfc.newfarmer.utils.ShowHideUtils:
     11:11:public ShowHideUtils()
+    54:65:public static void showBottomFadeOut(android.view.View)
+    70:80:public static void hideTopFadeIn(android.view.View)
 com.ksfc.newfarmer.utils.StringUtil:
     11:11:public StringUtil()
     96:100:public static boolean isNumeric(java.lang.String)
     106:106:public static boolean isPassword(java.lang.String)
 com.ksfc.newfarmer.utils.Utils:
-    27:27:public Utils()
-    68:69:public static int px2dip(android.content.Context,float)
-    167:169:public static java.lang.String getDateToString(long)
-    174:179:public static void hideInputMethod(android.app.Activity)
+    30:30:public Utils()
+    107:108:public static int px2dip(android.content.Context,float)
 com.ksfc.newfarmer.utils.thrid.EposServiceManager:
     private java.lang.String orderID
     41:42:public void setOrderID(java.lang.String)
     45:45:public java.lang.String getOrderId()
 com.ksfc.newfarmer.utils.thrid.UmengPush:
     18:18:public UmengPush()
+com.ksfc.newfarmer.widget.AnimatedExpandableListView:
+    private static final int ANIMATION_DURATION
 com.ksfc.newfarmer.widget.BaseViewUtils
 com.ksfc.newfarmer.widget.CarouselDiagramViewPager:
     57:85:public CarouselDiagramViewPager(android.content.Context,java.util.List,com.ksfc.newfarmer.widget.CarouselDiagramViewPager$OnRollViewPagerItemClickListener)
@@ -6408,10 +6953,6 @@ com.ksfc.newfarmer.widget.CirclePageIndicator:
     146:146:public boolean isCentered()
     218:218:public boolean isSnap()
     431:432:public void notifyDataSetChanged()
-com.ksfc.newfarmer.widget.DragImageView:
-    private android.view.animation.ScaleAnimation scaleAnimation
-com.ksfc.newfarmer.widget.ExtendedWebView:
-    22:28:public boolean canScrollVertical(int)
 com.ksfc.newfarmer.widget.HackyViewPager:
     64:65:public void toggleLock()
     72:72:public boolean isLocked()
@@ -6419,6 +6960,9 @@ com.ksfc.newfarmer.widget.KeyboardListenRelativeLayout:
     public static final byte KEYBOARD_STATE_SHOW
     public static final byte KEYBOARD_STATE_HIDE
     public static final byte KEYBOARD_STATE_INIT
+com.ksfc.newfarmer.widget.LoadingFooter:
+    45:45:public android.view.View getView()
+    53:55:public void setText(java.lang.String)
 com.ksfc.newfarmer.widget.PageIndicator:
     public abstract void setViewPager(android.support.v4.view.ViewPager)
     public abstract void setViewPager(android.support.v4.view.ViewPager,int)
@@ -6426,10 +6970,6 @@ com.ksfc.newfarmer.widget.PageIndicator:
     public abstract void setOnPageChangeListener(android.support.v4.view.ViewPager$OnPageChangeListener)
     public abstract void notifyDataSetChanged()
 com.ksfc.newfarmer.widget.PagerAdapter
-com.ksfc.newfarmer.widget.PinnedHeaderExpandableListView:
-    private static final java.lang.String TAG
-    private static final boolean DEBUG
-    202:204:public void requestRefreshHeader()
 com.ksfc.newfarmer.widget.SettingItemView:
     131:133:public void showLeftImage()
     139:141:public void hideImage()
@@ -6438,13 +6978,6 @@ com.ksfc.newfarmer.widget.SettingItemView:
     163:165:public void showValue()
     171:173:public void hideValue()
     182:183:private void setViewVisible(android.view.View,int)
-com.ksfc.newfarmer.widget.StickyLayout:
-    private static final java.lang.String TAG
-    private static final boolean DEBUG
-    public static final int STATUS_EXPANDED
-    public static final int STATUS_COLLAPSED
-    private static final int TAN
-    311:312:public void requestDisallowInterceptTouchEventOnHeader(boolean)
 com.ksfc.newfarmer.widget.VerticalViewPager:
     private static final java.lang.String TAG
     private static final boolean DEBUG
@@ -6520,6 +7053,13 @@ com.ksfc.newfarmer.widget.dialog.CustomDialogForShopCarCount$Builder:
     63:64:public com.ksfc.newfarmer.widget.dialog.CustomDialogForShopCarCount$Builder setContentView(android.view.View)
     76:79:public com.ksfc.newfarmer.widget.dialog.CustomDialogForShopCarCount$Builder setPositiveButton(int,android.content.DialogInterface$OnClickListener)
     91:94:public com.ksfc.newfarmer.widget.dialog.CustomDialogForShopCarCount$Builder setNegativeButton(int,android.content.DialogInterface$OnClickListener)
+com.ksfc.newfarmer.widget.dialog.CustomDialogUpdate:
+    24:25:public CustomDialogUpdate(android.content.Context)
+    28:29:public CustomDialogUpdate(android.content.Context,int)
+com.ksfc.newfarmer.widget.dialog.CustomDialogUpdate$Builder:
+    56:57:public com.ksfc.newfarmer.widget.dialog.CustomDialogUpdate$Builder setMessage(int)
+    68:71:public com.ksfc.newfarmer.widget.dialog.CustomDialogUpdate$Builder setPositiveButton(int,android.content.DialogInterface$OnClickListener)
+    83:86:public com.ksfc.newfarmer.widget.dialog.CustomDialogUpdate$Builder setNegativeButton(int,android.content.DialogInterface$OnClickListener)
 com.ksfc.newfarmer.widget.dialog.CustomProgressDialog:
     15:15:public CustomProgressDialog()
 com.ksfc.newfarmer.widget.dialog.CustomProgressDialogForCache:
@@ -6877,7 +7417,6 @@ com.nostra13.universalimageloader.core.DisplayImageOptions$Builder:
     426:427:public com.nostra13.universalimageloader.core.DisplayImageOptions$Builder preProcessor(com.nostra13.universalimageloader.core.process.BitmapProcessor)
     436:437:public com.nostra13.universalimageloader.core.DisplayImageOptions$Builder postProcessor(com.nostra13.universalimageloader.core.process.BitmapProcessor)
     445:447:public com.nostra13.universalimageloader.core.DisplayImageOptions$Builder displayer(com.nostra13.universalimageloader.core.display.BitmapDisplayer)
-    451:452:com.nostra13.universalimageloader.core.DisplayImageOptions$Builder syncLoading(boolean)
     460:461:public com.nostra13.universalimageloader.core.DisplayImageOptions$Builder handler(android.os.Handler)
 com.nostra13.universalimageloader.core.ImageLoader:
     static final java.lang.String LOG_INIT_CONFIG
@@ -6898,12 +7437,8 @@ com.nostra13.universalimageloader.core.ImageLoader:
     372:373:public void loadImage(java.lang.String,com.nostra13.universalimageloader.core.assist.ImageLoadingListener)
     392:393:public void loadImage(java.lang.String,com.nostra13.universalimageloader.core.assist.ImageSize,com.nostra13.universalimageloader.core.assist.ImageLoadingListener)
     411:412:public void loadImage(java.lang.String,com.nostra13.universalimageloader.core.DisplayImageOptions,com.nostra13.universalimageloader.core.assist.ImageLoadingListener)
-    436:437:public void loadImage(java.lang.String,com.nostra13.universalimageloader.core.assist.ImageSize,com.nostra13.universalimageloader.core.DisplayImageOptions,com.nostra13.universalimageloader.core.assist.ImageLoadingListener)
-    463:473:public void loadImage(java.lang.String,com.nostra13.universalimageloader.core.assist.ImageSize,com.nostra13.universalimageloader.core.DisplayImageOptions,com.nostra13.universalimageloader.core.assist.ImageLoadingListener,com.nostra13.universalimageloader.core.assist.ImageLoadingProgressListener)
-    487:487:public android.graphics.Bitmap loadImageSync(java.lang.String)
     503:503:public android.graphics.Bitmap loadImageSync(java.lang.String,com.nostra13.universalimageloader.core.DisplayImageOptions)
     521:521:public android.graphics.Bitmap loadImageSync(java.lang.String,com.nostra13.universalimageloader.core.assist.ImageSize)
-    540:547:public android.graphics.Bitmap loadImageSync(java.lang.String,com.nostra13.universalimageloader.core.assist.ImageSize,com.nostra13.universalimageloader.core.DisplayImageOptions)
     567:568:public com.nostra13.universalimageloader.cache.memory.MemoryCacheAware getMemoryCache()
     577:579:public void clearMemoryCache()
     587:588:public com.nostra13.universalimageloader.cache.disc.DiscCacheAware getDiscCache()
@@ -6982,7 +7517,6 @@ com.nostra13.universalimageloader.core.assist.MemoryCacheUtil:
     82:88:public static java.util.List findCacheKeysForImageUri(java.lang.String,com.nostra13.universalimageloader.cache.memory.MemoryCacheAware)
     98:107:public static void removeFromCache(java.lang.String,com.nostra13.universalimageloader.cache.memory.MemoryCacheAware)
 com.nostra13.universalimageloader.core.assist.PauseOnScrollListener
-com.nostra13.universalimageloader.core.assist.SyncImageLoadingListener
 com.nostra13.universalimageloader.core.assist.deque.BlockingDeque:
     public abstract void addFirst(java.lang.Object)
     public abstract void addLast(java.lang.Object)
@@ -7061,7 +7595,8 @@ com.nostra13.universalimageloader.core.download.BaseImageDownloader:
     private static final java.lang.String ERROR_UNSUPPORTED_SCHEME
     66:70:public BaseImageDownloader(android.content.Context,int,int)
 com.nostra13.universalimageloader.core.download.HttpClientImageDownloader
-com.nostra13.universalimageloader.core.imageaware.ImageNonViewAware
+com.nostra13.universalimageloader.core.imageaware.ImageNonViewAware:
+    41:42:public ImageNonViewAware(com.nostra13.universalimageloader.core.assist.ImageSize,com.nostra13.universalimageloader.core.assist.ViewScaleType)
 com.nostra13.universalimageloader.utils.ImageSizeUtils:
     31:32:private ImageSizeUtils()
 com.nostra13.universalimageloader.utils.IoUtils:
@@ -7079,6 +7614,33 @@ com.nostra13.universalimageloader.utils.StorageUtils:
     private static final java.lang.String INDIVIDUAL_DIR_NAME
     38:39:private StorageUtils()
     111:118:public static java.io.File getOwnCacheDirectory(android.content.Context,java.lang.String)
+com.readystatesoftware.systembartint.BuildConfig
+com.readystatesoftware.systembartint.SystemBarTintManager:
+    public static final int DEFAULT_TINT_COLOR
+    private boolean mNavBarTintEnabled
+    157:161:public void setNavigationBarTintEnabled(boolean)
+    179:181:public void setTintResource(int)
+    189:191:public void setTintDrawable(android.graphics.drawable.Drawable)
+    199:201:public void setTintAlpha(float)
+    220:223:public void setStatusBarTintResource(int)
+    232:235:public void setStatusBarTintDrawable(android.graphics.drawable.Drawable)
+    244:247:public void setStatusBarAlpha(float)
+    266:269:public void setNavigationBarTintResource(int)
+    278:281:public void setNavigationBarTintDrawable(android.graphics.drawable.Drawable)
+    290:293:public void setNavigationBarAlpha(float)
+    301:301:public com.readystatesoftware.systembartint.SystemBarTintManager$SystemBarConfig getConfig()
+    310:310:public boolean isStatusBarTintEnabled()
+    319:319:public boolean isNavBarTintEnabled()
+com.readystatesoftware.systembartint.SystemBarTintManager$SystemBarConfig:
+    private static final java.lang.String STATUS_BAR_HEIGHT_RES_NAME
+    private static final java.lang.String NAV_BAR_HEIGHT_RES_NAME
+    private static final java.lang.String NAV_BAR_HEIGHT_LANDSCAPE_RES_NAME
+    private static final java.lang.String NAV_BAR_WIDTH_RES_NAME
+    private static final java.lang.String SHOW_NAV_BAR_RES_NAME
+    495:495:public int getActionBarHeight()
+    534:534:public int getPixelInsetTop(boolean)
+    543:546:public int getPixelInsetBottom()
+    556:559:public int getPixelInsetRight()
 com.renn.rennsdk.RennClient:
     private java.lang.String tokenType
     public static final java.lang.String ACCESSTOKEN
@@ -7958,6 +8520,115 @@ im.yixin.sdk.util.SDKLogger:
 im.yixin.sdk.util.StringUtil:
     public StringUtil()
 im.yixin.sdk.util.YixinConstants
+in.srain.cube.views.ptr.BuildConfig
+in.srain.cube.views.ptr.PtrClassicDefaultHeader:
+    private static final java.lang.String KEY_SharedPreferences
+in.srain.cube.views.ptr.PtrDefaultHandler:
+    6:6:public PtrDefaultHandler()
+    37:37:public boolean checkCanDoRefresh(in.srain.cube.views.ptr.PtrFrameLayout,android.view.View,android.view.View)
+in.srain.cube.views.ptr.PtrFrameLayout:
+    public static final byte PTR_STATUS_INIT
+    public static final byte PTR_STATUS_PREPARE
+    public static final byte PTR_STATUS_LOADING
+    public static final byte PTR_STATUS_COMPLETE
+    private static final boolean DEBUG_LAYOUT
+    585:585:public boolean isRefreshing()
+    663:664:public void autoRefresh()
+    667:668:public void autoRefresh(boolean)
+    677:695:public void autoRefresh(boolean,int)
+    745:746:public void disableWhenHorizontalMove(boolean)
+    781:782:public void removePtrUIHandler(in.srain.cube.views.ptr.PtrUIHandler)
+    858:858:public boolean isKeepHeaderWhenRefresh()
+in.srain.cube.views.ptr.PtrFrameLayout$LayoutParams:
+    946:947:public PtrFrameLayout$LayoutParams(android.view.ViewGroup$MarginLayoutParams)
+in.srain.cube.views.ptr.PtrUIHandlerHolder:
+    64:99:public static in.srain.cube.views.ptr.PtrUIHandlerHolder removeHandler(in.srain.cube.views.ptr.PtrUIHandlerHolder,in.srain.cube.views.ptr.PtrUIHandler)
+in.srain.cube.views.ptr.PtrUIHandlerHook:
+    private static final byte STATUS_PREPARE
+    private static final byte STATUS_IN_HOOK
+    private static final byte STATUS_RESUMED
+in.srain.cube.views.ptr.R:
+    9:46:public R()
+in.srain.cube.views.ptr.R$attr
+in.srain.cube.views.ptr.R$drawable
+in.srain.cube.views.ptr.R$id:
+    24:24:public R$id()
+in.srain.cube.views.ptr.R$layout:
+    31:31:public R$layout()
+in.srain.cube.views.ptr.R$string:
+    35:35:public R$string()
+in.srain.cube.views.ptr.R$styleable:
+    46:46:public R$styleable()
+in.srain.cube.views.ptr.header.MaterialProgressDrawable:
+    public static final int LARGE
+    public static final int DEFAULT
+    private static final int CIRCLE_DIAMETER
+    private static final float CENTER_RADIUS
+    private static final float STROKE_WIDTH
+    private static final int CIRCLE_DIAMETER_LARGE
+    private static final float CENTER_RADIUS_LARGE
+    private static final float STROKE_WIDTH_LARGE
+    private static final int ANIMATION_DURATION
+    private static final float NUM_POINTS
+    private static final int ARROW_WIDTH
+    private static final int ARROW_HEIGHT
+    private static final float ARROW_OFFSET_ANGLE
+    private static final int ARROW_WIDTH_LARGE
+    private static final int ARROW_HEIGHT_LARGE
+    private static final float MAX_PROGRESS_ARC
+    private static final int KEY_SHADOW_COLOR
+    private static final int FILL_SHADOW_COLOR
+    private static final float SHADOW_RADIUS
+    private static final float X_OFFSET
+    private static final float Y_OFFSET
+    277:277:private float getRotation()
+in.srain.cube.views.ptr.header.MaterialProgressDrawable$Ring:
+    617:617:public float getRotation()
+    639:639:public float getInsets()
+in.srain.cube.views.ptr.header.StoreHouseBarItem:
+    public int index
+    20:38:public StoreHouseBarItem(int,android.graphics.PointF,android.graphics.PointF,int,int)
+    41:42:public void setLineWidth(int)
+    45:46:public void setColor(int)
+in.srain.cube.views.ptr.header.StoreHouseHeader:
+    83:87:public in.srain.cube.views.ptr.header.StoreHouseHeader setLineWidth(int)
+    91:95:public in.srain.cube.views.ptr.header.StoreHouseHeader setTextColor(int)
+    99:100:public in.srain.cube.views.ptr.header.StoreHouseHeader setDropHeight(int)
+    123:124:public void initWithString(java.lang.String)
+    127:129:public void initWithString(java.lang.String,int)
+    132:143:public void initWithStringArray(int)
+    155:179:public void initWithPointList(java.util.ArrayList)
+in.srain.cube.views.ptr.header.StoreHousePath
+in.srain.cube.views.ptr.indicator.PtrIndicator:
+    public static final int POS_START
+    118:118:public int getHeaderHeight()
+    185:186:public float getLastPercent()
+in.srain.cube.views.ptr.indicator.PtrTensionIndicator
+in.srain.cube.views.ptr.util.PtrCLog:
+    public static final int LEVEL_VERBOSE
+    public static final int LEVEL_DEBUG
+    public static final int LEVEL_INFO
+    public static final int LEVEL_WARNING
+    public static final int LEVEL_ERROR
+    public static final int LEVEL_FATAL
+    10:10:public PtrCLog()
+    27:28:public static void setLogLevel(int)
+    37:41:public static void v(java.lang.String,java.lang.String)
+    51:55:public static void v(java.lang.String,java.lang.String,java.lang.Throwable)
+    112:116:public static void d(java.lang.String,java.lang.String,java.lang.Throwable)
+    155:159:public static void i(java.lang.String,java.lang.String,java.lang.Throwable)
+    168:172:public static void w(java.lang.String,java.lang.String)
+    182:189:public static varargs void w(java.lang.String,java.lang.String,java.lang.Object[])
+    199:203:public static void w(java.lang.String,java.lang.String,java.lang.Throwable)
+    226:233:public static varargs void e(java.lang.String,java.lang.String,java.lang.Object[])
+    243:247:public static void e(java.lang.String,java.lang.String,java.lang.Throwable)
+    256:260:public static void f(java.lang.String,java.lang.String)
+    270:277:public static varargs void f(java.lang.String,java.lang.String,java.lang.Object[])
+    287:291:public static void f(java.lang.String,java.lang.String,java.lang.Throwable)
+in.srain.cube.views.ptr.util.PtrLocalDisplay:
+    8:8:public PtrLocalDisplay()
+    36:39:public static int designedDP2px(float)
+    43:44:public static void setPadding(android.view.View,float,float,float,float)
 net.sourceforge.pinyin4j.ChineseToPinyinResource
 net.sourceforge.pinyin4j.ChineseToPinyinResource$1
 net.sourceforge.pinyin4j.ChineseToPinyinResource$ChineseToPinyinResourceHolder
@@ -8129,10 +8800,6 @@ net.yangentao.util.XLog$Level
 net.yangentao.util.XLog$StreamPrinter
 net.yangentao.util.XLog$TreePrinter
 net.yangentao.util.app.AlarmUtil
-com.ksfc.newfarmer.App:
-    private static java.lang.String imei
-    8:8:public App()
-    22:27:public static java.lang.String imei()
 net.yangentao.util.app.Persist
 net.yangentao.util.json.Json
 net.yangentao.util.json.Json$Arr

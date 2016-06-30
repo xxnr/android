@@ -59,6 +59,7 @@ import com.ksfc.newfarmer.http.beans.RscOrderResult;
 import com.ksfc.newfarmer.http.beans.SaveAdressList;
 import com.ksfc.newfarmer.http.beans.SureOrderResult;
 import com.ksfc.newfarmer.http.beans.TownList;
+import com.ksfc.newfarmer.http.beans.UnionPayResponse;
 import com.ksfc.newfarmer.http.beans.UnipayResult;
 import com.ksfc.newfarmer.http.beans.WaitingPay;
 import com.ksfc.newfarmer.http.beans.saveAddress;
@@ -78,7 +79,7 @@ public enum ApiType {
     /**
      * 银联
      */
-    GET_UNI("/unionpay", UnipayResult.class),
+    GET_UNI("/unionpay", UnionPayResponse.class),
     /**
      * 支付宝
      */
@@ -91,55 +92,12 @@ public enum ApiType {
      * 化肥
      */
     GET_HUAFEI("/api/v2.1/product/getProductsListPage", GetGoodsData.class),
-    /**
-     * 订单评价详情
-     */
-    COMMENT_DETAIL("/app/comment/commentDetails", CommentResult.class),
-    /**
-     * 订单评价
-     */
-    PINGJIA("/app/comment/addGoodsComment", ResponseResult.class),
-    /**
-     * 获取400热线电话
-     */
-    GET_PROFILE_LIST("/app/profile/getProfileList", HotLineResult.class),
-    /**
-     * 银行账户等信息接口
-     */
-    GET_PROFILE_BANKLIST("/app/profile/getProfileBankList", ProFileResult.class),
-    /**
-     * 确认订单
-     */
-    SURE_ORDER("/app/order/affirmOrder", SureOrderResult.class),
-    /**
-     * 选择期望送货日期接口
-     */
-    HOPE_TIME("/app/order/addDeliveryTime", ResponseResult.class),
-    /**
-     * 填写订单备注接口
-     */
-    ADD_REMARKS_BY_ORDERID("/app/order/addRemarksByOrderId",
-            ResponseResult.class),
-    /**
-     * 取消订单
-     */
-    ABOUT_US("/app/profile/findAboutUs", AboutUsResult.class),
-    /**
-     * 取消订单
-     */
-    CANCEL_ORDER("/app/order/cancelOrder", ResponseResult.class),
+
     /**
      * 头像上传
      */
     UP_HEAD_IMG("/api/v2.0/user/uploadPortrait", CameraResult.class),
-    /**
-     * 获取首页广告
-     */
-    GETINDEXPIC("/home/index/getIndexPic", BannerResult.class),
-    /**
-     * 批量上传购物车数据
-     */
-    SHOPPING_UPLOADING("/app/shopCart/addToCartBatch", BannerResult.class),
+
     /**
      * 首页轮播图
      */

@@ -48,6 +48,10 @@ public class NewFarmerInfomationActivity extends BaseActivity implements PullToR
 
     @Override
     public void OnActCreate(Bundle savedInstanceState) {
+
+        setTitle("新农资讯");
+        hideLeft();
+
         listView = (PullToRefreshListView) findViewById(R.id.information_listView);
         listView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
         listView.setOnRefreshListener(this);
@@ -81,8 +85,7 @@ public class NewFarmerInfomationActivity extends BaseActivity implements PullToR
 
             }
         });
-        setTitle("新农资讯");
-        hideLeft();
+
     }
 
     private void getData() {

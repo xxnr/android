@@ -17,7 +17,6 @@ public interface MsgID {
     String rsc_swipe_reFlash = "rsc_swipe_reFlash";//rsc订单列表刷新
     String swipe_reFlash = "swipe_reFlash";//rsc订单列表刷新
     String MainActivity_select_tab = "MainActivity_select_tab";//MainActivity应选中的tab
-    String MSG_ADD_ADDRESS = "MSG_ADD_ADDRESS";//用户的收货地址更新
     String MSG_Change_ADDRESS = "MSG.ADDRESS.CALL.BACK";//用户的收货地址更改
     String add_potential_success = "add_potential_success";//添加潜在客户成功
     String change_potential_success = "change_potential_success";//更新了潜在客户成功
@@ -28,7 +27,6 @@ public interface MsgID {
     String PAY_PRICE = "PAY_PRICE";//银联的回调通知支付页Activity
     String Integral_Guide_Change = "Integral_Guide_change";//浮层引导页切换通知
     String IS_Signed = "IS_Signed";//用户签到通知
-
     String gift_swipe_reFlash = "gift_swipe_reFlash";//gift订单列表刷新
 
 

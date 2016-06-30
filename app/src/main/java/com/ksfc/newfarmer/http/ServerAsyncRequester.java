@@ -19,7 +19,6 @@ final class ServerAsyncRequester {
 	 */
 	ServerAsyncRequester(ServerInterface serverInterface) {
 		mServerInterface = serverInterface;
-		// make sure InteralHandler in AsyncTask is new on ui thread.
 
 	}
 

@@ -4,14 +4,17 @@ apply plugin: 'android-apt'
 
 android {
     compileSdkVersion 22
-    buildToolsVersion "20"
+    buildToolsVersion "21.1.2"
 
     defaultConfig {
         applicationId "com.ksfc.newfarmer"
         minSdkVersion 14
         targetSdkVersion 22
-
-
+        multiDexEnabled true
+    }
+    dexOptions {
+        javaMaxHeapSize "4g"
+        preDexLibraries = false
     }
 
     buildTypes {
@@ -27,6 +30,7 @@ android {
         exclude 'META-INF/NOTICE'
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/DEPENDENCIES'
     }
     //这个是解决lint报错的代码
     lintOptions {
@@ -75,7 +79,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     //noinspection GradleDependency
     compile 'com.android.support:design:22.2.0'
-    compile 'com.google.code.gson:gson:2.5'
+    compile 'com.google.code.gson:gson:2.7'
     compile 'com.daimajia.swipelayout:library:1.2.0'
     compile 'com.squareup.okhttp3:okhttp:3.2.0'
     compile 'com.squareup.okio:okio:1.8.0'
@@ -88,5 +92,13 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.1.0'
     apt 'com.jakewharton:butterknife-compiler:8.1.0'
     compile 'in.srain.cube:ultra-ptr:1.0.11'
+
+    compile 'io.reactivex:rxandroid:1.2.1'
+    compile 'io.reactivex:rxjava:1.1.6'
+    compile 'com.android.support:multidex:1.0.1'
+
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
 
 }

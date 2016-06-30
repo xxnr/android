@@ -1,16 +1,10 @@
 package com.ksfc.newfarmer.http;
 
-
-
 import com.google.gson.Gson;
 import com.ksfc.newfarmer.common.HttpsConfig;
 import com.ksfc.newfarmer.utils.RndLog;
-
 import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.IOException;
-
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
@@ -76,8 +70,6 @@ public final class ServerInterface {
 
         ResponseResult res;
         try {
-            JSONObject obj = new JSONObject(json);
-            json = obj.toString();
             res = mGson.fromJson(json, clazz);
         } catch (Exception e) {
             e.printStackTrace();
@@ -95,7 +87,7 @@ public final class ServerInterface {
      */
     private Response getResponseByApi(ApiType api, RequestParams params) {
 
-        params.put("user-agent", "Android-v2.0");
+        params.put("user-agent", "Android-v2.3");
         //判断是否加https
         String url;
         if (HttpsConfig.httpsConfig().contains(api)) {

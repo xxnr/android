@@ -107,10 +107,8 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
         //在主页判断版本是否需要升级 并注册监听下载完成之后的广播
         completeReceiver = new CompleteReceiver();
         registerReceiver(completeReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
-
         //app 是否需要升级
         RemoteApi.appIsNeedUpdate(this);
-
         initView();
 
         showProgressDialog();
@@ -159,10 +157,10 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
                 public void onSuccess(ResponseInfo<String> responseInfo) {
                     if (responseInfo != null && StringUtil.checkStr(responseInfo.result)) {
                         RndLog.i(TAG, responseInfo.result);
-                        GetGoodsData getGoodsData=null;
+                        GetGoodsData getGoodsData = null;
                         try {
                             getGoodsData = gson.fromJson(responseInfo.result, GetGoodsData.class);
-                        }catch (Exception e){
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
 
