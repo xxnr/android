@@ -10,7 +10,7 @@ import com.ksfc.newfarmer.http.ApiType;
 import com.ksfc.newfarmer.http.Request;
 import com.ksfc.newfarmer.http.RequestParams;
 import com.ksfc.newfarmer.http.beans.LoginResult.UserInfo;
-import com.ksfc.newfarmer.http.beans.saveAddress;
+import com.ksfc.newfarmer.utils.BundleUtils;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
 
@@ -37,10 +37,6 @@ public class AddAddressActivity extends BaseActivity {
     private final int cityRequestCode = 1;//省市区
     private final int townRequestCode = 2;//乡镇
 
-    private String city = "";
-    private String room = "";
-    private String town = "";
-
     private TextView choice_town_text;
     private TextView choice_city_text;
     private EditText room_edit, receipt_name, receipt_phone, zipCode_text;//详细地址 收货人 收货电话 邮编
@@ -48,7 +44,6 @@ public class AddAddressActivity extends BaseActivity {
     private String cityareaid = "";//省 id
     private String queueid = "";//市 id
     private String buildid = "";//县 id
-    private String zipCode = "";//邮编 id
     private String townid = "";//乡镇 id
 
     private CheckBox default_address;//是否是默认地址
@@ -115,27 +110,20 @@ public class AddAddressActivity extends BaseActivity {
     public void OnViewClick(View v) {
         switch (v.getId()) {
             case R.id.choice_city_layout:
-                Bundle bundle1 = new Bundle();
-                bundle1.putInt("tag", 0);
                 IntentUtil.startActivityForResult(this, SelectAddressActivity.class,
-                        cityRequestCode, bundle1);
+                        cityRequestCode, BundleUtils.Put("tag", 0));
                 break;
             case R.id.choice_town_layout:
                 if (TextUtils.isEmpty(choice_city_text.getText().toString())) {
                     showToast("请先选择省市县区地址");
                 } else {
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("tag", 1);
-                    bundle.putString("queueid", queueid);
-                    bundle.putString("buildid", buildid);
+                    Bundle bundle = BundleUtils.Put("tag", 1, "queueid", queueid, "buildid", buildid);
                     IntentUtil.startActivityForResult(this, SelectAddressActivity.class,
                             townRequestCode, bundle);
                 }
                 break;
 
-
             case R.id.choice_compelet:
-                room = room_edit.getEditableText().toString().trim();
 
                 if (StringUtil.empty(receipt_name.getEditableText().toString()
                         .trim())) {
@@ -154,7 +142,9 @@ public class AddAddressActivity extends BaseActivity {
                     showToast("请选择城市");
                     return;
                 }
-                if (StringUtil.empty(room_edit.getText().toString().trim())) {
+                String room = room_edit.getEditableText().toString().trim();
+
+                if (StringUtil.empty(room)) {
                     showToast("请输入您的详细地址");
                     return;
                 }
@@ -207,20 +197,21 @@ public class AddAddressActivity extends BaseActivity {
                 case cityRequestCode:
                     Bundle bundle = arg2.getExtras();
                     if (bundle != null) {
-                        city = bundle.getString("city");//省市县区
                         cityareaid = bundle.getString("cityareaid");
                         queueid = bundle.getString("queueid");
                         buildid = bundle.getString("buildid");
+
+                        String city = bundle.getString("city");//省市县区
                         choice_city_text.setText(city);
                         choice_town_text.setText("");
                         room_edit.setText("");
-                        town = "";
                         townid = "";
                     }
                     break;
                 case townRequestCode:
-                    town = arg2.getExtras().getString("town");
                     townid = arg2.getExtras().getString("townid");
+
+                    String town = arg2.getExtras().getString("town");
                     choice_town_text.setText(town);
                     room_edit.setText("");
                     break;

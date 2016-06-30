@@ -52,6 +52,7 @@ public class GuideActivity extends FragmentActivity implements ViewPager.OnPageC
             imgList.get(i).setImageResource(R.drawable.dot_focus_write);
         }
         imgList.get(0).setImageResource(R.drawable.green_leaves);
+
         for (int i = 0; i < 3; i++) {
             Fragment fragment = new GuideFragment();
             Bundle bundle = new Bundle();
@@ -61,6 +62,7 @@ public class GuideActivity extends FragmentActivity implements ViewPager.OnPageC
         }
         viewPager_guide.setAdapter(new GuideAdapter(
                 getSupportFragmentManager(), fragmentsList));
+
         viewPager_guide.setCurrentItem(0);
         viewPager_guide.addOnPageChangeListener(this);
 
@@ -88,7 +90,6 @@ public class GuideActivity extends FragmentActivity implements ViewPager.OnPageC
     class GuideAdapter extends FragmentPagerAdapter {
 
         private List<Fragment> fragmentsList = null;
-
 
         public GuideAdapter(FragmentManager fm, List<Fragment> fragmentsList) {
             super(fm);

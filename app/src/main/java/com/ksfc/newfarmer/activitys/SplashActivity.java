@@ -37,6 +37,7 @@ public class SplashActivity extends Activity {
         // 屏幕竖屏
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_welcome);
+
         PreferenceUtil pu = new PreferenceUtil(this, "config");
         boolean isFirst = pu.getBool("first", true); //判断用户是否是第一次打开app
         // 判断是否第一次启动
