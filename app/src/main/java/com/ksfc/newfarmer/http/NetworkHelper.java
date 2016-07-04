@@ -35,7 +35,7 @@ public class NetworkHelper {
 
     private static final String TAG = "NetworkHelper";
 
-    private static final int CONNECTION_TIMEOUT = 10 * 1000;
+    private static final int CONNECTION_TIMEOUT = 20 * 1000;
 
     private static OkHttpClient mOkHttpClient;
 

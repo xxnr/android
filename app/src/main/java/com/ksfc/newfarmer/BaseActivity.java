@@ -185,10 +185,12 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
                         } else if (req.getData().getStatus().equals("1403")) {
                             RndLog.d(TAG, req.getData().getMessage());
                         } else if (req.getApi() == ApiType.APP_UP_GRADE) {
-                            if (!getClass().getSimpleName().equals("HomepageActivity")){
+                            if (!getClass().getSimpleName().equals("HomepageActivity")) {
                                 req.showErrorMsg();
                             }
-                        } else {
+                        }else if (req.getApi() == ApiType.SEND_SMS){
+                            onResponsed(req);
+                        }else {
                             req.showErrorMsg();
                         }
                     }

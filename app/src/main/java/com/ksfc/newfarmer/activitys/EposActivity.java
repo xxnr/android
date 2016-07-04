@@ -274,7 +274,7 @@ public class EposActivity extends BaseActivity {
         args.putString("salesSlipType", "1");
         try {
             EposServiceManager.getInstance().mUmsMposService.showTransactionInfoAndSign(args, new SignOrderResultListener());
-        } catch (RemoteException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

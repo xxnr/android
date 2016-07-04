@@ -4,16 +4,18 @@
 package com.ksfc.newfarmer.activitys;
 
 
+import com.ksfc.newfarmer.App;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
-import com.ksfc.newfarmer.utils.thrid.UmengPush;
-import com.ksfc.newfarmer.R;
-import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.http.ApiType;
 import com.ksfc.newfarmer.http.Request;
 import com.ksfc.newfarmer.http.RequestParams;
 import com.ksfc.newfarmer.http.beans.LoginResult;
 import com.ksfc.newfarmer.http.beans.PublicKeyResult;
+import com.ksfc.newfarmer.utils.thrid.UmengPush;
+import com.ksfc.newfarmer.R;
+import com.ksfc.newfarmer.db.Store;
+
 import com.ksfc.newfarmer.utils.RSAUtil;
 import com.ksfc.newfarmer.utils.SPUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
@@ -27,7 +29,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 
 import net.yangentao.util.PreferenceUtil;
-import com.ksfc.newfarmer.App;
 import net.yangentao.util.msg.MsgCenter;
 
 /**
@@ -125,11 +126,11 @@ public class LoginActivity extends BaseActivity {
                 phoneNumber = login_layout_phone.getText().toString();
                 phonePassword = login_layout_password.getText().toString();
                 if (TextUtils.isEmpty(phoneNumber)) {
-                    showToast("请输入您的手机号码");
+                    showToast("请输入手机号");
                     return;
                 }
                 if (!isMobileNum(phoneNumber)) {
-                    showToast("您输入的手机号码格式不正确");
+                    showToast("请输入正确的手机号");
                     return;
                 }
                 if (TextUtils.isEmpty(phonePassword)) {

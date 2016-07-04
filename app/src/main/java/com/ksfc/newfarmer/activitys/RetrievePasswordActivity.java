@@ -1,6 +1,7 @@
 package com.ksfc.newfarmer.activitys;
 
 import android.annotation.TargetApi;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -10,15 +11,20 @@ import android.widget.TextView;
 
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
+
+import com.ksfc.newfarmer.activitys.LoginActivity;
 import com.ksfc.newfarmer.http.ApiType;
-import com.ksfc.newfarmer.http.ApiType.RequestMethod;
 import com.ksfc.newfarmer.http.Request;
 import com.ksfc.newfarmer.http.RequestParams;
 import com.ksfc.newfarmer.http.beans.PublicKeyResult;
+import com.ksfc.newfarmer.http.beans.SmsResult;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.RSAUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.ClearEditText;
+import com.ksfc.newfarmer.widget.dialog.CustomDialogForSms;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 
 @TargetApi(Build.VERSION_CODES.GINGERBREAD)
@@ -28,6 +34,7 @@ public class RetrievePasswordActivity extends BaseActivity {
     private TextView backgetVerificationCode;
     private String mobile;
     private String password, smsCode;
+    private CustomDialogForSms dialog;
 
     @Override
     public int getLayout() {
@@ -57,7 +64,7 @@ public class RetrievePasswordActivity extends BaseActivity {
                     showToast("请输入手机号");
                     return;
                 } else if (!isMobileNum(backedit1.getText().toString())) {
-                    showToast("手机号格式错误");
+                    showToast("请输入正确的手机号");
                     return;
                 } else if (!StringUtil.checkStr(backyanzhengma.getText().toString())) {
                     showToast("请输入验证码");
@@ -69,7 +76,10 @@ public class RetrievePasswordActivity extends BaseActivity {
                     showToast("请输入确认密码");
                     return;
                 } else if (!password.equals(backnewpassword.getText().toString())) {
-                    showToast("密码不一致");
+                    showToast("两次密码输入不一致，请重新输入");
+                    return;
+                } else if (backnewpassword.getText().toString().length()<6) {
+                    showToast("密码长度不小于6位");
                     return;
                 } else if (backnewpassword.getText().toString().length() > 20) {
                     showToast("密码长度不能大于20位");
@@ -81,6 +91,17 @@ public class RetrievePasswordActivity extends BaseActivity {
             case R.id.backgetVerificationCode:
                 // 获取验证码
                 getCode();
+                break;
+            case R.id.sms_auth_code_iv:
+            case R.id.sms_auth_code_refresh_iv:
+                try {
+                    CustomDialogForSms.sms_auth_code_iv.setEnabled(false);
+                    CustomDialogForSms.sms_auth_code_refresh_iv.setEnabled(false);
+                    CustomDialogForSms.sms_auth_code_iv.setImageResource(0);
+                    reFreshCode();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
             default:
                 break;
@@ -113,14 +134,87 @@ public class RetrievePasswordActivity extends BaseActivity {
                 showToast("找回密码成功");
                 IntentUtil.activityForward(RetrievePasswordActivity.this,
                         LoginActivity.class, null, true);
-            } else {
-                showToast("找回密码失败");
             }
         } else if (req.getApi() == ApiType.SEND_SMS) {
-            if ("1000".equals(req.getData().getStatus())) {
-                showToast("成功获取短信，请注意查收");
-                final MyCount mc = new MyCount(60000, 1000);
-                mc.start();
+            if (req.getData().getStatus().equals("1000")) {
+                SmsResult smsResult = (SmsResult) req.getData();
+                if (StringUtil.checkStr(smsResult.captcha)) {
+                    if (dialog == null) {
+                        CustomDialogForSms.Builder builder = new CustomDialogForSms.Builder(
+                                RetrievePasswordActivity.this);
+                        builder.setMessage("安全验证")
+                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        String trim = CustomDialogForSms.editText.getText().toString().trim();
+                                        if (StringUtil.checkStr(trim)) {
+                                            CustomDialogForSms.code_error.setVisibility(View.INVISIBLE);
+                                            sendSMS(trim);
+                                        } else {
+                                            CustomDialogForSms.code_error.setText("请输入图形验证码");
+                                            CustomDialogForSms.code_error.setVisibility(View.VISIBLE);
+                                        }
+                                    }
+                                })
+                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                        dialog = builder.create();
+                        dialog.setCanceledOnTouchOutside(false);
+                        CustomDialogForSms.sms_auth_code_iv.setOnClickListener(this);
+                        CustomDialogForSms.sms_auth_code_refresh_iv.setOnClickListener(this);
+
+                    }
+                    CustomDialogForSms.code_error.setVisibility(View.INVISIBLE);
+                    CustomDialogForSms.editText.setText("");
+
+                    if (StringUtil.checkStr(smsResult.getMessage())) {
+                        CustomDialogForSms.code_error.setVisibility(View.VISIBLE);
+                        CustomDialogForSms.code_error.setText(smsResult.getMessage());
+                    }
+
+                    try {
+                        if (!dialog.isShowing()) {
+                            dialog.show();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    Picasso.with(RetrievePasswordActivity.this)
+                            .load(smsResult.captcha)
+                            .skipMemoryCache()
+                            .error(R.drawable.code_load_failed)
+                            .into(CustomDialogForSms.sms_auth_code_iv);
+                } else {
+                    try {
+                        if (dialog != null) {
+                            dialog.dismiss();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    showToast("验证码发送成功，请注意查收");
+                    MyCount mc = new MyCount(60000, 1000);
+                    mc.start();
+                }
+            } else {
+                if (StringUtil.checkStr(req.getData().getMessage())) {
+                    try {
+                        if (dialog != null && dialog.isShowing()) {
+                            CustomDialogForSms.code_error.setVisibility(View.VISIBLE);
+                            CustomDialogForSms.code_error.setText(req.getData().getMessage());
+                        } else {
+                            showToast(req.getData().getMessage());
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         }
     }
@@ -133,10 +227,10 @@ public class RetrievePasswordActivity extends BaseActivity {
         mobile = backedit1.getText().toString();
         if (!StringUtil.checkStr(mobile)) {
             showToast("请输入手机号");
-            return ;
+            return;
         }
-        if (!isMobileNum(mobile)){
-            showToast("手机号格式错误");
+        if (!isMobileNum(mobile)) {
+            showToast("请输入正确的手机号");
             return;
         }
         sendSMS();
@@ -146,11 +240,45 @@ public class RetrievePasswordActivity extends BaseActivity {
      * 发送验证码
      */
     private void sendSMS() {
-        showProgressDialog("正在获取验证码");
+        sendSMS(null);
+    }
+
+    /**
+     * 发送验证码
+     */
+    private void sendSMS(String authCode) {
+        showProgressDialog();
         RequestParams params = new RequestParams();
         params.put("tel", mobile);
         params.put("bizcode", "resetpwd");
-        execApi(ApiType.SEND_SMS.setMethod(RequestMethod.GET), params);
+        if (StringUtil.checkStr(authCode)) {
+            params.put("authCode", authCode);
+        }
+        execApi(ApiType.SEND_SMS, params);
+    }
+
+    /**
+     * 刷新图形验证码
+     */
+    private void reFreshCode() {
+
+        Picasso.with(RetrievePasswordActivity.this)
+                .load(ApiType.REFRESH_SMS_CODE.getOpt() + "?tel=" + mobile + "&bizcode=resetpwd")
+                .skipMemoryCache()
+                .error(R.drawable.code_load_failed)
+                .into(CustomDialogForSms.sms_auth_code_iv, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        CustomDialogForSms.sms_auth_code_iv.setEnabled(true);
+                        CustomDialogForSms.sms_auth_code_refresh_iv.setEnabled(true);
+                    }
+
+                    @Override
+                    public void onError() {
+                        CustomDialogForSms.sms_auth_code_iv.setEnabled(true);
+                        CustomDialogForSms.sms_auth_code_refresh_iv.setEnabled(true);
+                    }
+                });
     }
 
 
@@ -171,8 +299,7 @@ public class RetrievePasswordActivity extends BaseActivity {
         @Override
         public void onTick(long millisUntilFinished) {
             backgetVerificationCode.setClickable(false);
-            backgetVerificationCode.setText("(" + millisUntilFinished / 1000
-                    + ")秒后重试");
+            backgetVerificationCode.setText("(" + millisUntilFinished / 1000 + ")秒后重试");
         }
     }
 

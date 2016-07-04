@@ -57,6 +57,7 @@ import com.ksfc.newfarmer.http.beans.RemainGoodsAttr;
 import com.ksfc.newfarmer.http.beans.RscOrderDetailResult;
 import com.ksfc.newfarmer.http.beans.RscOrderResult;
 import com.ksfc.newfarmer.http.beans.SaveAdressList;
+import com.ksfc.newfarmer.http.beans.SmsResult;
 import com.ksfc.newfarmer.http.beans.SureOrderResult;
 import com.ksfc.newfarmer.http.beans.TownList;
 import com.ksfc.newfarmer.http.beans.UnionPayResponse;
@@ -117,7 +118,12 @@ public enum ApiType {
     /**
      * 短信验证
      */
-    SEND_SMS("/api/v2.0/sms", ResponseResult.class),
+    SEND_SMS("/api/v2.3/sms", SmsResult.class),
+    /**
+     * 刷新图形验证码
+     */
+    REFRESH_SMS_CODE("/api/v2.3/captcha", SmsResult.class),
+
     /**
      * 注册
      */

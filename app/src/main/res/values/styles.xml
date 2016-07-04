@@ -270,4 +270,10 @@
         <item name="android:maxHeight">60dp</item>
     </style>
 
+    <style name="Progress_circle_gray">
+        <item name="android:indeterminateDrawable">@drawable/progress_circle_gray</item>
+        <item name="android:minWidth">18dp</item>
+        <item name="android:minHeight">18dp</item>
+    </style>
+
 </resources>
