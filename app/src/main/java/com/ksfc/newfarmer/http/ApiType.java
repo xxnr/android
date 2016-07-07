@@ -54,6 +54,7 @@ import com.ksfc.newfarmer.http.beans.RSCInfoResult;
 import com.ksfc.newfarmer.http.beans.RSCAddressListResult;
 import com.ksfc.newfarmer.http.beans.RSCStateInfoResult;
 import com.ksfc.newfarmer.http.beans.RemainGoodsAttr;
+import com.ksfc.newfarmer.http.beans.RscGiftOrderListResult;
 import com.ksfc.newfarmer.http.beans.RscOrderDetailResult;
 import com.ksfc.newfarmer.http.beans.RscOrderResult;
 import com.ksfc.newfarmer.http.beans.SaveAdressList;
@@ -467,10 +468,18 @@ public enum ApiType {
      * 积分商城：礼品订单列表:
      */
     GET_GIFT_ORDER_LIST("/api/v2.3/rewardshop/getGiftOrderList", GiftOrderListResult.class),
+    /**
+     * Rsc订单：兑换订单列表:
+     */
+    GET_RSC_GIFT_ORDER_LIST("/api/v2.3/RSC/rewardshop/getGiftOrderList", RscGiftOrderListResult.class),
+    /**
+     * Rsc订单：兑换自提:
+     */
+    GET_RSC_GIFT_ORDER_SELF_DELIVERY("/api/v2.3/RSC/rewardshop/order/selfDelivery", ResponseResult.class),
 
 
     TEST("", ResponseResult.class);
-//                             private static String server_url = "http://api.xinxinnongren.com";
+//    private static String server_url = "http://api.xinxinnongren.com";
     private static String server_url = "http://101.200.194.203";
 //    private static String server_url = "http://192.168.1.4";
 

@@ -1,4 +1,4 @@
-package com.ksfc.newfarmer.http.remoteApi;
+package com.ksfc.newfarmer.http.RxApi;
 
 import com.ksfc.newfarmer.MsgID;
 
@@ -7,7 +7,7 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * Created by SkyEyesStion on 2016/2/26.
+ * Created by CAI on 2016/6/30.
  */
 public class RxService {
 
@@ -24,8 +24,8 @@ public class RxService {
         //construct
     }
 
-    public static <T> T createApi(Class<T> clazz) {
-        return retrofit.create(clazz);
+    public static ApiService createApi() {
+        return retrofit.create(ApiService.class);
     }
 
 }

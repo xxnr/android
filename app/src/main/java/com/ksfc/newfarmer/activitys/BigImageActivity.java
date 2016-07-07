@@ -69,11 +69,7 @@ public class BigImageActivity extends BaseActivity {
 
         @Override
         public Fragment getItem(int pos) {
-            BigImageFragment fragment = new BigImageFragment();
-            Bundle bundle = new Bundle();
-            bundle.putString("originalUrl", pictures.get(pos).originalUrl);
-            fragment.setArguments(bundle);
-            return fragment;
+            return BigImageFragment.newInstance(pictures.get(pos).originalUrl);
         }
 
         @Override

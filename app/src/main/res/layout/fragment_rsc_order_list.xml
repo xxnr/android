@@ -46,6 +46,7 @@
             android:layout_below="@id/myself_userImg_1"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp"
+            android:textColor="@color/deep_gray"
             android:text="您还没有订单" />
 
 

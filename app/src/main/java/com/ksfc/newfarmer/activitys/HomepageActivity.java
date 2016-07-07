@@ -20,7 +20,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.ILoadingLayout;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
@@ -43,8 +42,8 @@ import com.ksfc.newfarmer.http.beans.HomeImageResult.Rows;
 import com.ksfc.newfarmer.http.beans.HomeImageResult.UserRollImage;
 import com.ksfc.newfarmer.http.beans.IntegralGetResult;
 import com.ksfc.newfarmer.http.beans.PointResult;
+import com.ksfc.newfarmer.http.RxApi.RxService;
 import com.ksfc.newfarmer.utils.PullToRefreshUtils;
-import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.ScreenUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.utils.Utils;
@@ -52,20 +51,12 @@ import com.ksfc.newfarmer.widget.CarouselDiagramViewPager;
 import com.ksfc.newfarmer.widget.UnSwipeGridView;
 import com.ksfc.newfarmer.widget.dialog.CustomDialog;
 import com.ksfc.newfarmer.widget.dialog.CustomDialogUpdate;
-import com.lidroid.xutils.HttpUtils;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import net.yangentao.util.PreferenceUtil;
 import net.yangentao.util.msg.MsgCenter;
 import net.yangentao.util.msg.MsgListener;
 
-import org.apache.http.entity.StringEntity;
-
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -73,6 +64,9 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 
 public class HomepageActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener {
@@ -141,61 +135,39 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
             map.put("page", 1);
             map.put("rowCount", 6);
             map.put("classId", homepageViewBean.classId);
-            final Gson gson = new Gson();
-            String json = gson.toJson(map);
-
-            com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
-            try {
-                params.setBodyEntity(new StringEntity(json, "UTF-8"));
-                params.setContentType("application/json");
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-            HttpUtils http = new HttpUtils();
-            http.send(HttpRequest.HttpMethod.POST, ApiType.GET_HUAFEI.getOpt(), params, new RequestCallBack<String>() {
-                @Override
-                public void onSuccess(ResponseInfo<String> responseInfo) {
-                    if (responseInfo != null && StringUtil.checkStr(responseInfo.result)) {
-                        RndLog.i(TAG, responseInfo.result);
-                        GetGoodsData getGoodsData = null;
-                        try {
-                            getGoodsData = gson.fromJson(responseInfo.result, GetGoodsData.class);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
-                        if (getGoodsData != null && getGoodsData.getStatus().equals("1000")) {
-                            if (getGoodsData.datas.rows != null && !getGoodsData.datas.rows.isEmpty()) {
-                                HuafeiAdapter adapter = new HuafeiAdapter(HomepageActivity.this, getGoodsData.datas.rows);
-                                if (homepageViewBean.unSwipeGridView != null) {
-                                    homepageViewBean.unSwipeGridView.setAdapter(adapter);
+            RxService.createApi()
+                    .GET_GOODS(map)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Action1<GetGoodsData>() {
+                        @Override
+                        public void call(GetGoodsData getGoodsData) {
+                            if (getGoodsData != null && getGoodsData.getStatus().equals("1000")) {
+                                if (getGoodsData.datas.rows != null && !getGoodsData.datas.rows.isEmpty()) {
+                                    HuafeiAdapter adapter = new HuafeiAdapter(HomepageActivity.this, getGoodsData.datas.rows);
+                                    if (homepageViewBean.unSwipeGridView != null) {
+                                        homepageViewBean.unSwipeGridView.setAdapter(adapter);
+                                    }
+                                    if (homepageViewBean.viewGroup != null) {
+                                        homepageViewBean.viewGroup.setVisibility(View.VISIBLE);
+                                    }
+                                } else {
+                                    if (homepageViewBean.unSwipeGridView != null) {
+                                        homepageViewBean.unSwipeGridView.setAdapter(null);
+                                    }
+                                    if (homepageViewBean.viewGroup != null) {
+                                        homepageViewBean.viewGroup.setVisibility(View.GONE);
+                                    }
                                 }
-                                if (homepageViewBean.viewGroup != null) {
-                                    homepageViewBean.viewGroup.setVisibility(View.VISIBLE);
-                                }
-                            } else {
-                                if (homepageViewBean.unSwipeGridView != null) {
-                                    homepageViewBean.unSwipeGridView.setAdapter(null);
-                                }
-                                if (homepageViewBean.viewGroup != null) {
-                                    homepageViewBean.viewGroup.setVisibility(View.GONE);
-                                }
-
                             }
                         }
-                    }
-                }
-
-                @Override
-                public void onFailure(HttpException e, String s) {
-                    e.printStackTrace();
-                }
-            });
-
-
+                    }, new Action1<Throwable>() {
+                        @Override
+                        public void call(Throwable throwable) {
+                            throwable.printStackTrace();
+                        }
+                    });
         }
-
-
     }
 
 

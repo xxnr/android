@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_view"
+    style="@style/base_activity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical"
+        tools:ignore="UselessParent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@color/green">
+
+            <RelativeLayout
+                android:id="@+id/title_left_view"
+                android:layout_width="45dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:background="@drawable/selector_back_bg">
+
+                <ImageView
+                    android:id="@+id/title_back_img"
+                    android:layout_width="12dp"
+                    android:layout_height="22dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/common_icon_back" />
+            </RelativeLayout>
+
+            <RadioGroup
+                android:id="@+id/rsc_order_list_radioGroup"
+                android:layout_width="150dp"
+                android:layout_height="29dp"
+                android:layout_centerInParent="true"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rsc_order_list_radioButton1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/btn_rsc_order_title_tab_left"
+                    android:button="@null"
+                    android:checked="true"
+                    android:gravity="center"
+                    android:text="订单"
+                    android:textColor="@color/rsc_order_titile_tab_text" />
+
+                <RadioButton
+                    android:id="@+id/rsc_order_list_radioButton2"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/btn_rsc_order_title_tab_right"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:textColor="@color/rsc_order_titile_tab_text"
+                    android:text="兑换" />
+
+            </RadioGroup>
+
+            <RelativeLayout
+                android:id="@+id/title_right_view"
+                android:layout_width="45dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/selector_back_bg">
+
+                <ImageView
+                    android:id="@+id/title_right_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/search_icon"
+                    android:scaleType="centerCrop" />
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+        <FrameLayout
+            android:id="@+id/rsc_order_list_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/pop_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/eight_transparent"
+        android:visibility="gone" />
+
+</FrameLayout>

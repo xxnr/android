@@ -54,7 +54,7 @@ public class BaseViewUtils {
 	 */
 	public static void hideSoftInput(Activity activity, View editText) {
 		InputMethodManager imm = ((InputMethodManager) activity
-				.getSystemService(activity.INPUT_METHOD_SERVICE));
+				.getSystemService(Context.INPUT_METHOD_SERVICE));
 		if (imm.isActive())
 			imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);// InputMethodManager.HIDE_NOT_ALWAYS
 	}
@@ -65,8 +65,9 @@ public class BaseViewUtils {
 	public static void showSoftInput(Activity activity, View editText) {
 		editText.requestFocus();
 		InputMethodManager imm = ((InputMethodManager) activity
-				.getSystemService(activity.INPUT_METHOD_SERVICE));
+				.getSystemService(Context.INPUT_METHOD_SERVICE));
 		imm.showSoftInput(editText, InputMethodManager.SHOW_FORCED);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
 	}
 
 	/**
@@ -85,23 +86,7 @@ public class BaseViewUtils {
 		return (int) (pxValue / scale + 0.5f);
 	}
 
-	/** 保存Bitmap到本地的方法 */
-	// public static File saveBitmap(Bitmap bm ,String fileName) {
-	// File headFile = new File(RndConstants.IMG_PATH,fileName);
-	// if (headFile.exists()) {
-	// headFile.delete();
-	// }
-	// try {
-	// FileOutputStream out = new FileOutputStream(headFile);
-	// bm.compress(Bitmap.CompressFormat.PNG, 90, out);
-	// out.flush();
-	// out.close();
-	// return headFile;
-	// }catch (Exception e) {
-	// e.printStackTrace();
-	// }
-	// return null;
-	// }
+
 
 	/**
 	 * 重新设置listView的高度 ScrollView中嵌套ListView 需要重新设置ListView高度,否则显示不全

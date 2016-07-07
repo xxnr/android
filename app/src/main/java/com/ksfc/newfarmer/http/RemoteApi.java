@@ -192,4 +192,63 @@ public class RemoteApi {
     }
 
 
+    /**
+     * 请求Rsc gift订单列表
+     *
+     * @param search 请求订单列表类型 1 未完成 2 已完成
+     * @param page 请求第几页
+     */
+    public static void getRscGiftOrderList(BaseActivity activity, String search, int page) {
+        RequestParams params = new RequestParams();
+        LoginResult.UserInfo userInfo = Store.User.queryMe();
+        if (userInfo != null) {
+            params.put("userId", userInfo.userid);
+        }
+        params.put("search", search);
+        params.put("page", page);
+        activity.execApi(ApiType.GET_RSC_GIFT_ORDER_LIST.setMethod(ApiType.RequestMethod.GET), params);
+    }
+
+    public static void getRscGiftOrderList(BaseFragment fragment, int type, int page) {
+        RequestParams params = new RequestParams();
+        LoginResult.UserInfo userInfo = Store.User.queryMe();
+        if (userInfo != null) {
+            params.put("userId", userInfo.userid);
+        }
+        params.put("type", type);
+        params.put("page", page);
+        fragment.execApi(ApiType.GET_RSC_GIFT_ORDER_LIST.setMethod(ApiType.RequestMethod.GET), params);
+    }
+
+    /**
+     * 请求Rsc 用户自提
+     *
+     * @param orderId  订单号
+     * @param code  自提码
+     */
+    public static void rscSelfDelivery(BaseFragment fragment, String orderId, String code) {
+        RequestParams params = new RequestParams();
+        LoginResult.UserInfo userInfo = Store.User.queryMe();
+        if (userInfo != null) {
+            params.put("userId", userInfo.userid);
+        }
+        params.put("orderId", orderId);
+        params.put("code", code);
+        fragment.execApi(ApiType.GET_RSC_GIFT_ORDER_SELF_DELIVERY, params);
+    }
+
+    public static void rscSelfDelivery(BaseActivity activity, String orderId, String code) {
+        RequestParams params = new RequestParams();
+        LoginResult.UserInfo userInfo = Store.User.queryMe();
+        if (userInfo != null) {
+            params.put("userId", userInfo.userid);
+        }
+        params.put("orderId", orderId);
+        params.put("code", code);
+        activity.execApi(ApiType.GET_RSC_GIFT_ORDER_SELF_DELIVERY, params);
+    }
+
+
+
+
 }

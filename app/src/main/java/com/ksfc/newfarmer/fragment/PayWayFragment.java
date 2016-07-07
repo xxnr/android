@@ -18,7 +18,7 @@ import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.activitys.EposActivity;
 import com.ksfc.newfarmer.activitys.OfflinePayActivity;
-import com.ksfc.newfarmer.common.HttpsConfig;
+import com.ksfc.newfarmer.http.HttpsConfig;
 import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.http.ApiType;
 import com.ksfc.newfarmer.http.NetworkHelper;

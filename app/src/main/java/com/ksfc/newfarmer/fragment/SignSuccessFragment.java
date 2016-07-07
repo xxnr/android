@@ -27,7 +27,6 @@ public class SignSuccessFragment extends BaseFragment {
     TextView signSuccessCountTv;
     @BindView(R.id.sign_success_gif_img)
     ImageView signSuccessGifImg;
-    private Unbinder unbinder;
 
     @Override
     public void OnViewClick(View v) {

@@ -75,7 +75,8 @@ public class MineActivity extends BaseActivity {
                                 Bitmap aeroBitmap = FastBlur.doBlur(bitmap, 50, false, 0);
                                 subscriber.onNext(aeroBitmap);
                             }
-                        }).subscribeOn(Schedulers.computation())
+                        })
+                                .subscribeOn(Schedulers.computation())
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe(new Action1<Bitmap>() {
                                     @Override
@@ -362,7 +363,7 @@ public class MineActivity extends BaseActivity {
             PersonalData data = (PersonalData) req.getData();
             Data user = data.datas;
             //下载并存储头像
-            if (user!=null){
+            if (user != null) {
                 final String imgUrl = user.getImageUrl();
                 if (!StringUtil.empty(imgUrl)) {
                     new Thread(new Runnable() {

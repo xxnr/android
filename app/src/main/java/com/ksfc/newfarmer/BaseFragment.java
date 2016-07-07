@@ -47,13 +47,6 @@ public abstract class BaseFragment extends Fragment implements
     private CustomToast customToast;
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onActivityCreated(savedInstanceState);
-
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         activity = (BaseActivity) getActivity();

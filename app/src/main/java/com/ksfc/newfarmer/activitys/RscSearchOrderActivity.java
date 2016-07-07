@@ -49,6 +49,8 @@ import com.ksfc.newfarmer.utils.PopWindowUtils;
 import com.ksfc.newfarmer.utils.PullToRefreshUtils;
 import com.ksfc.newfarmer.utils.ShowHideUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
+import com.ksfc.newfarmer.utils.Utils;
+import com.ksfc.newfarmer.widget.BaseViewUtils;
 import com.ksfc.newfarmer.widget.ClearEditText;
 import com.ksfc.newfarmer.widget.KeyboardListenRelativeLayout;
 import com.ksfc.newfarmer.widget.LoadingFooter;
@@ -140,13 +142,7 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
                 /*判断是否是“搜索”键*/
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     /*隐藏软键盘*/
-                    InputMethodManager imm = (InputMethodManager) v
-                            .getContext().getSystemService(
-                                    Context.INPUT_METHOD_SERVICE);
-                    if (imm.isActive()) {
-                        imm.hideSoftInputFromWindow(
-                                v.getApplicationWindowToken(), 0);
-                    }
+                    BaseViewUtils.hideSoftInput(RscSearchOrderActivity.this, rsc_search_edit);
                     if (StringUtil.checkStr(rsc_search_edit.getText().toString())) {
                         showProgressDialog();
                         getData(page);
@@ -162,9 +158,7 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
         timer.schedule(new TimerTask() {
             @Override
             public void run() { //弹出软键盘的代码
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.showSoftInput(rsc_search_edit, InputMethodManager.RESULT_SHOWN);
-                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+                BaseViewUtils.showSoftInput(RscSearchOrderActivity.this, rsc_search_edit);
             }
         }, 300); //设置300毫秒的时长
 
@@ -174,7 +168,7 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
         waitingpay_lv.setOnRefreshListener(this);
 
         waitingpay_lv.setOnScrollListener(moreOnsrcollListener);
-        loadingFooter = new LoadingFooter(this,waitingpay_lv.getRefreshableView());
+        loadingFooter = new LoadingFooter(this, waitingpay_lv.getRefreshableView());
         //设置刷新的文字
         PullToRefreshUtils.setFreshText(waitingpay_lv);
         //无订单下的状态
@@ -198,8 +192,7 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
     public void OnViewClick(View v) {
         switch (v.getId()) {
             case R.id.rsc_search_text:
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(v.getWindowToken(), 0); //强制隐藏键盘
+                BaseViewUtils.hideSoftInput(RscSearchOrderActivity.this, v);
                 finish();
                 break;
             case R.id.pop_close:
@@ -274,9 +267,7 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
 
             //开始自提
             case R.id.pop_save_self_delivery:
-
                 if (self_delivery_tag) {
-
                     if (checkedMap != null && !checkedMap.isEmpty()) {
                         List<String> list = new ArrayList<>();
                         for (String key : checkedMap.keySet()) {
@@ -304,7 +295,6 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
                         }
                     }
 
-
                 } else {
                     ShowHideUtils.hideLeftFadeIn(pop_self_delivery_listView);
                     ShowHideUtils.showRightFadeOut(pop_self_delivery_code_Rel);
@@ -327,10 +317,10 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
             waitingpay_lv.onRefreshComplete();
             if (data.getStatus().equals("1000")) {
                 List<RscOrderResult.OrdersEntity> orders = data.orders;
-                if (orders!=null&&!orders.isEmpty()) {
+                if (orders != null && !orders.isEmpty()) {
                     null_layout.setVisibility(View.GONE);
                     if (page == 1) {
-                        loadingFooter.setSize(page,orders.size());
+                        loadingFooter.setSize(page, orders.size());
                         if (adapter == null) {
                             adapter = new OrderAdapter(this, orders);
                             WidgetUtil.setListViewHeightBasedOnChildren(waitingpay_lv);
@@ -346,7 +336,7 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
                         }
                     }
                 } else {
-                    loadingFooter.setSize(page,0);
+                    loadingFooter.setSize(page, 0);
                     if (page == 1) {
                         if (adapter != null) {
                             adapter.clear();

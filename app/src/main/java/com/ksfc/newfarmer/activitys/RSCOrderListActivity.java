@@ -1,95 +1,90 @@
 package com.ksfc.newfarmer.activitys;
 
+import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.view.ViewPager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 
 import com.ksfc.newfarmer.BaseActivity;
-import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
-import com.ksfc.newfarmer.adapter.RSCOrderListFragmentPagerAdapter;
-import com.ksfc.newfarmer.fragment.RscOrderDetailFragment;
+import com.ksfc.newfarmer.fragment.RscExchangeFragment;
+import com.ksfc.newfarmer.fragment.RscGiftOrderListFragment;
+import com.ksfc.newfarmer.fragment.RscOrderListFragment;
+import com.ksfc.newfarmer.fragment.RscOrderFragment;
 import com.ksfc.newfarmer.http.Request;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.PopWindowUtils;
-import com.ksfc.newfarmer.widget.UnSwipeViewPager;
+import com.ksfc.newfarmer.utils.Utils;
 
-import net.yangentao.util.msg.MsgCenter;
-
-import java.util.ArrayList;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by HePeng on 2016/3/23.
  */
-public class RSCOrderListActivity extends BaseActivity implements RscOrderDetailFragment.BgSwitch {
-    private UnSwipeViewPager viewPager;
+public class RSCOrderListActivity extends BaseActivity implements RscOrderListFragment.BgSwitch, RadioGroup.OnCheckedChangeListener, RscGiftOrderListFragment.BgSwitch {
+
+    @BindView(R.id.pop_bg)
+    RelativeLayout popBg;
+    @BindView(R.id.rsc_order_list_radioGroup)
+    RadioGroup rscOrderListRadioGroup;
     private FragmentManager fragmentManager;
-    private TabLayout mTabLayout;
-    private ArrayList<String> titleList = new ArrayList<>();
-    private RelativeLayout pop_bg;
+    private RscExchangeFragment exchangeFragment;
+    private RscOrderFragment orderFragment;
 
 
     @Override
     public int getLayout() {
-        return R.layout.fragment_order_list;
+        return R.layout.activity_rsc_order_list;
     }
 
     @Override
     public void OnActCreate(Bundle savedInstanceState) {
-        setTitle("服务站订单");
-        initView();
-        showRightImage();
-        setRightImage(R.drawable.search_icon);
-        setRightViewListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                IntentUtil.activityForward(RSCOrderListActivity.this, RscSearchOrderActivity.class, null, false);
-                int version = Integer.valueOf(android.os.Build.VERSION.SDK);
-                if (version > 5) {
-                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                }
-            }
-        });
+        ButterKnife.bind(this);
 
 
-    }
+        //设置状态栏颜色状态栏
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            //过滤掉四个tab的Activity
+            Utils.setBarTint(this, R.color.green);
+        }
 
-    private void initView() {
-        viewPager = (UnSwipeViewPager) findViewById(R.id.waitingpay_ViewPager);
-        viewPager.setScanScroll(false);
-        mTabLayout = (TabLayout) findViewById(R.id.tabs);
-        pop_bg = (RelativeLayout) findViewById(R.id.pop_bg);
-        initTabs();
+        setViewClick(R.id.title_left_view);
+        setViewClick(R.id.title_right_view);
+        exchangeFragment = new RscExchangeFragment();
+        orderFragment = new RscOrderFragment();
         fragmentManager = getSupportFragmentManager();
-        viewPager.setAdapter(new RSCOrderListFragmentPagerAdapter(fragmentManager, titleList));
-        mTabLayout.setupWithViewPager(viewPager);//设置联动
-        viewPager.setOffscreenPageLimit(1);//每次加载的item数量
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-            }
+        fragmentManager.beginTransaction()
+                .add(R.id.rsc_order_list_fragment, exchangeFragment, "exChange")
+                .add(R.id.rsc_order_list_fragment, orderFragment, "order")
+                .commitAllowingStateLoss();
 
-            @Override
-            public void onPageSelected(int position) {
-                //通知 订单列表刷新
-                MsgCenter.fireNull(MsgID.rsc_swipe_reFlash, position);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
+        rscOrderListRadioGroup.setOnCheckedChangeListener(this);
+        rscOrderListRadioGroup.check(R.id.rsc_order_list_radioButton1);//默认选中叮单
     }
-
 
     @Override
     public void OnViewClick(View v) {
-
+        switch (v.getId()) {
+            case R.id.title_right_view:
+                if (rscOrderListRadioGroup.getCheckedRadioButtonId()==R.id.rsc_order_list_radioButton1){
+                    IntentUtil.activityForward(RSCOrderListActivity.this, RscSearchOrderActivity.class, null, false);
+                }else {
+                    IntentUtil.activityForward(RSCOrderListActivity.this, RscSearchGiftOrderActivity.class, null, false);
+                }
+                int version = Integer.valueOf(Build.VERSION.SDK);
+                if (version > 5) {
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                }
+                break;
+            case R.id.title_left_view:
+                finish();
+                break;
+        }
     }
 
     @Override
@@ -97,22 +92,29 @@ public class RSCOrderListActivity extends BaseActivity implements RscOrderDetail
 
     }
 
-    /**
-     * 添加title
-     */
-    private void initTabs() {
-        titleList.add("全部");
-        titleList.add("待付款");
-        titleList.add("待审核");
-        titleList.add("待配送");
-        titleList.add("待自提");
-    }
 
     @Override
     public void backgroundSwitch(int bg) {
-
-        PopWindowUtils.setBackgroundBlack(pop_bg, bg);
+        PopWindowUtils.setBackgroundBlack(popBg, bg);
     }
 
 
+    @Override
+    public void onCheckedChanged(RadioGroup group, int checkedId) {
+        if (fragmentManager == null) {
+            fragmentManager = getSupportFragmentManager();
+        }
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        switch (checkedId) {
+            case R.id.rsc_order_list_radioButton1:
+                transaction.show(orderFragment);
+                transaction.hide(exchangeFragment);
+                break;
+            case R.id.rsc_order_list_radioButton2:
+                transaction.show(exchangeFragment);
+                transaction.hide(orderFragment);
+                break;
+        }
+        transaction.commitAllowingStateLoss();
+    }
 }

@@ -173,10 +173,8 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(GoodsDetailActivity.this, MainActivity.class);
-                intent.putExtra("id", 3);
                 startActivity(intent);
-                //通知 首页选中的位置
-                MsgCenter.fireNull(MsgID.MainActivity_select_tab, 3);
+                MsgCenter.fireNull(MsgID.MainActivity_select_tab, MainActivity.Tab.SHOPPING_CART);
                 finish();
             }
         });

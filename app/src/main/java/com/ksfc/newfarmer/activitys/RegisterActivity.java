@@ -5,6 +5,7 @@ package com.ksfc.newfarmer.activitys;
 
 
 import com.ksfc.newfarmer.BaseActivity;
+import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 
 import com.ksfc.newfarmer.http.ApiType;
@@ -31,6 +32,8 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import net.yangentao.util.msg.MsgCenter;
+
 
 /**
  * 项目名称：newFarmer 类名称：RegisterActivity 类描述： 创建人：王蕾 创建时间：2015-5-28 上午11:43:11
@@ -49,7 +52,6 @@ public class RegisterActivity extends BaseActivity {
     public int getLayout() {
         // TODO Auto-generated method stub
         return R.layout.activity_register;
-
     }
 
     @Override
@@ -75,8 +77,8 @@ public class RegisterActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
-                intent.putExtra("id", 4);
                 startActivity(intent);
+                MsgCenter.fireNull(MsgID.MainActivity_select_tab, MainActivity.Tab.MINE);
                 finish();
             }
         });
@@ -118,11 +120,10 @@ public class RegisterActivity extends BaseActivity {
                 } else if (!password.equals(backnewpassword.getText().toString())) {
                     showToast("两次密码不一致，请重新输入");
                     return;
-                } else if (backnewpassword.getText().toString().length()<6){
+                } else if (backnewpassword.getText().toString().length() < 6) {
                     showToast("密码长度不小于6位");
                     return;
-                }
-                else if (backnewpassword.getText().toString().length() > 20) {
+                } else if (backnewpassword.getText().toString().length() > 20) {
                     showToast("密码长度不能大于20位");
                     return;
                 }
@@ -208,6 +209,7 @@ public class RegisterActivity extends BaseActivity {
                 .load(ApiType.REFRESH_SMS_CODE.getOpt() + "?tel=" + mobile + "&bizcode=register")
                 .skipMemoryCache()
                 .error(R.drawable.code_load_failed)
+                .noFade()
                 .into(CustomDialogForSms.sms_auth_code_iv, new Callback() {
                     @Override
                     public void onSuccess() {
@@ -317,6 +319,7 @@ public class RegisterActivity extends BaseActivity {
                     Picasso.with(RegisterActivity.this)
                             .load(smsResult.captcha)
                             .skipMemoryCache()
+                            .noFade()
                             .error(R.drawable.code_load_failed)
                             .into(CustomDialogForSms.sms_auth_code_iv);
                 } else {
@@ -332,13 +335,13 @@ public class RegisterActivity extends BaseActivity {
                     mc.start();
                 }
 
-            }else {
+            } else {
                 if (StringUtil.checkStr(req.getData().getMessage())) {
                     try {
-                        if (dialog!=null&&dialog.isShowing()) {
+                        if (dialog != null && dialog.isShowing()) {
                             CustomDialogForSms.code_error.setVisibility(View.VISIBLE);
                             CustomDialogForSms.code_error.setText(req.getData().getMessage());
-                        }else {
+                        } else {
                             showToast(req.getData().getMessage());
                         }
                     } catch (Exception e) {

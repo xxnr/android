@@ -6358,7 +6358,7 @@ com.ksfc.newfarmer.common.CommonFunction:
     15:15:public CommonFunction()
 com.ksfc.newfarmer.common.FilterClassUtils:
     11:11:public FilterClassUtils()
-com.ksfc.newfarmer.common.HttpsConfig:
+com.ksfc.newfarmer.http.HttpsConfig:
     12:12:public HttpsConfig()
 com.ksfc.newfarmer.common.OrderUtils:
     27:27:public OrderUtils()

@@ -81,8 +81,8 @@ public class ImprovePersonActivity extends BaseActivity {
             public void onClick(View v) {
                 MsgCenter.fireNull(MsgID.UPDATE_USER, "update");
                 Intent intent = new Intent(ImprovePersonActivity.this, MainActivity.class);
-                intent.putExtra("id", 4);
                 startActivity(intent);
+                MsgCenter.fireNull(MsgID.MainActivity_select_tab, MainActivity.Tab.MINE);
                 finish();
             }
         });
@@ -94,10 +94,9 @@ public class ImprovePersonActivity extends BaseActivity {
 
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
             MsgCenter.fireNull(MsgID.UPDATE_USER, "update");
-
             Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra("id", 4);
             startActivity(intent);
+            MsgCenter.fireNull(MsgID.MainActivity_select_tab, MainActivity.Tab.MINE);
             finish();
             return true;
         }
@@ -269,8 +268,8 @@ public class ImprovePersonActivity extends BaseActivity {
             case R.id.choice_cancel:
                 MsgCenter.fireNull(MsgID.UPDATE_USER, "update");
                 Intent intent = new Intent(ImprovePersonActivity.this, MainActivity.class);
-                intent.putExtra("id", 4);
                 startActivity(intent);
+                MsgCenter.fireNull(MsgID.MainActivity_select_tab, MainActivity.Tab.MINE);
                 finish();
                 break;
         }
@@ -310,8 +309,8 @@ public class ImprovePersonActivity extends BaseActivity {
                 showToast("保存成功");
                 MsgCenter.fireNull(MsgID.UPDATE_USER, "update");
                 Intent intent = new Intent(ImprovePersonActivity.this, MainActivity.class);
-                intent.putExtra("id", 4);
                 startActivity(intent);
+                MsgCenter.fireNull(MsgID.MainActivity_select_tab, MainActivity.Tab.MINE);
                 finish();
             }
         } else if (req.getApi() == ApiType.QUERYTOWNID) {

@@ -2,6 +2,7 @@ package com.ksfc.newfarmer.fragment;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.ksfc.newfarmer.BaseFragment;
@@ -18,33 +19,41 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 /**
  * Created by HePeng on 2016/1/8.
  */
-public class BigImageFragment extends BaseFragment {
+public class BigImageFragment extends BaseFragment implements PhotoViewAttacher.OnPhotoTapListener {
+
+    private static final String ARG_PARAM1 = "param1";
+
+    private String originalUrl;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            originalUrl = getArguments().getString(ARG_PARAM1);
+        }
+    }
+
+    public static BigImageFragment newInstance(String param1) {
+        BigImageFragment fragment = new BigImageFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, param1);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
 
     @Override
     public View InItView() {
         View view = inflater.inflate(R.layout.activity_big_pic, null);
         final PhotoView photoView = (PhotoView) view.findViewById(R.id.photoView);
-
-        Bundle bundle = getArguments();
-        final String originalUrl = bundle.getString("originalUrl");
         //先加载缓存里的图片
         if (StringUtil.checkStr(originalUrl)) {
-            Picasso.with(activity).load(MsgID.IP + originalUrl)
-                    .config(Bitmap.Config.RGB_565).into(photoView);
+            Picasso.with(activity)
+                    .load(MsgID.IP + originalUrl)
+                    .config(Bitmap.Config.RGB_565)
+                    .into(photoView);
         }
-        photoView.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
-            @Override
-            public void onPhotoTap(View view, float x, float y) {
-                activity.finish();
-            }
-
-            @Override
-            public void onOutsidePhotoTap() {
-
-            }
-        });
-
-
+        photoView.setOnPhotoTapListener(this);
         return view;
     }
 
@@ -55,6 +64,16 @@ public class BigImageFragment extends BaseFragment {
 
     @Override
     public void OnViewClick(View v) {
+
+    }
+
+    @Override
+    public void onPhotoTap(View view, float x, float y) {
+        activity.finish();
+    }
+
+    @Override
+    public void onOutsidePhotoTap() {
 
     }
 }

@@ -28,6 +28,6 @@ public interface MsgID {
     String Integral_Guide_Change = "Integral_Guide_change";//浮层引导页切换通知
     String IS_Signed = "IS_Signed";//用户签到通知
     String gift_swipe_reFlash = "gift_swipe_reFlash";//gift订单列表刷新
-
+    String rsc_gift_swipe_reFlash = "rsc_gift_swipe_reFlash";//gift订单列表刷新
 
 }

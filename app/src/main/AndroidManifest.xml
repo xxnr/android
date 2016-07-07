@@ -65,7 +65,33 @@
         <activity
             android:name=".activitys.MainActivity"
             android:launchMode="singleTask"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan">
+            <intent-filter>
+                <data android:scheme="xxnr" />
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+
+        </activity>
+
+        <!-- h5活动页 -->
+        <activity android:name=".test.WebActivity">
+            <intent-filter>
+                <data
+                    android:host="www.xinxinnongren.com"
+                    android:pathPrefix="/newsDetail.html"
+                    android:scheme="xxnr" />
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+        </activity>
+        <!-- h5活动页 -->
+        <activity android:name=".test.WebToLoginActivity"/>
+
         <!-- 首界面 -->
         <activity android:name=".activitys.HomepageActivity" />
         <!-- 引导页 -->
@@ -80,9 +106,8 @@
         <!-- 商品详情 -->
         <activity
             android:name=".activitys.GoodsDetailActivity"
-            android:windowSoftInputMode="adjustResize"
             android:configChanges="orientation|keyboardHidden"
-            />
+            android:windowSoftInputMode="adjustResize" />
         <!-- 商品详情的大图 -->
         <activity
             android:name=".activitys.BigImageActivity"
@@ -181,8 +206,7 @@
         <!-- 服务站订单 -->
         <activity
             android:name=".activitys.RSCOrderListActivity"
-            android:windowSoftInputMode="adjustResize"
-            />
+            android:windowSoftInputMode="adjustResize" />
         <!-- 服务站订单详情 -->
         <activity
             android:name=".activitys.RscOrderDetailActivity"
@@ -213,8 +237,7 @@
         <!-- 积分商城 -->
         <activity
             android:name=".activitys.IntegralTallActivity"
-            android:launchMode="singleTask">
-        </activity>
+            android:launchMode="singleTask"/>
         <!--积分商城 礼品详情 -->
         <activity android:name=".activitys.IntegralGiftDetailActivity" />
         <!--积分商城 提交兑换 -->
@@ -227,6 +250,8 @@
         <activity android:name=".activitys.ExchangeRecordActivity" />
         <!--积分商城 积分规则 -->
         <activity android:name=".activitys.IntegralRulesActivity" />
+        <!--订单搜索 Rsc兑换订单 -->
+        <activity android:name=".activitys.RscSearchGiftOrderActivity" />
         <!-- 支付宝-->
         <activity
             android:name="com.alipay.sdk.app.H5PayActivity"
@@ -410,8 +435,10 @@
             android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="tencent1104752635" />
             </intent-filter>
         </activity>

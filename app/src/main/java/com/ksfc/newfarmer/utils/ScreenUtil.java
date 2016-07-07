@@ -3,6 +3,7 @@ package com.ksfc.newfarmer.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
+import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,18 +43,6 @@ public class ScreenUtil {
     }
 
     /**
-     * 设置外边距
-     */
-    public static void setMargins (View v, int l, int t, int r, int b) {
-        if (v.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
-            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
-            p.setMargins(l, t, r, b);
-            v.requestLayout();
-        }
-    }
-
-
-    /**
      * 获取屏幕的宽度
      *
      * @param context
@@ -64,6 +53,17 @@ public class ScreenUtil {
                 .getSystemService(Context.WINDOW_SERVICE);
         Display display = manager.getDefaultDisplay();
         return display.getWidth();
+    }
+    /**
+     * 获取屏幕的高度含状态栏
+     * @param activity
+     * @return
+     */
+
+    public final static int getWindowsHeight(Activity activity) {
+        DisplayMetrics dm = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(dm);
+        return dm.heightPixels;
     }
 
     /**
@@ -79,6 +79,25 @@ public class ScreenUtil {
         return display.getHeight();
     }
 
+    /**
+     * 设置外边距
+     */
+    public static void setMargins (View v, int l, int t, int r, int b) {
+        if (v.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
+            p.setMargins(l, t, r, b);
+            v.requestLayout();
+        }
+    }
+
+    /**
+     * 不同分辨率适配
+     */
+    public static void setHeight(Context context, View view, int dp) {
+        ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+        layoutParams.height = (int) (getScreenHeight(context) * (dp / 640.00));
+        view.setLayoutParams(layoutParams);
+    }
 
     /**
      * 获取屏幕中控件顶部位置的高度--即控件顶部的Y点
@@ -116,14 +135,7 @@ public class ScreenUtil {
         return view.getRight();
     }
 
-    /**
-     * 不同分辨率适配
-     */
-    public static void setHeight(Context context, View view, int dp) {
-        ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-        layoutParams.height = (int) (getScreenHeight(context) * (dp / 640.00));
-        view.setLayoutParams(layoutParams);
-    }
+
 
 
 }

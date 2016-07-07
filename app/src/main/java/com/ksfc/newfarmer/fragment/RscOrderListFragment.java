@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -66,7 +67,10 @@ import java.util.Map;
 /**
  * Created by HePeng on 2015/12/3.
  */
-public class RscOrderDetailFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener, KeyboardListenRelativeLayout.IOnKeyboardStateChangedListener {
+public class RscOrderListFragment extends BaseFragment implements
+        PullToRefreshBase.OnRefreshListener,
+        KeyboardListenRelativeLayout.IOnKeyboardStateChangedListener {
+    private static final String ARG_PARAM1 = "param1";
 
     private PullToRefreshListView waitingpay_lv;
     private int page = 1;
@@ -107,6 +111,24 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
     };
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            TYPE = getArguments().getInt(ARG_PARAM1);
+        }
+    }
+
+    public static RscOrderListFragment newInstance(int type) {
+        RscOrderListFragment fragment = new RscOrderListFragment();
+        Bundle args = new Bundle();
+        args.putInt(ARG_PARAM1, type);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+
+
+    @Override
     public View InItView() {
         View view = inflater.inflate(R.layout.fragment_rsc_order_list, null);
         waitingpay_lv = (PullToRefreshListView) view.findViewById(R.id.waitingpay_lv);
@@ -124,8 +146,6 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
         //无订单下的状态
         null_layout = ((RelativeLayout) view.findViewById(R.id.null_shop_cart_layout));
 
-        Bundle bundle = getArguments();
-        TYPE = bundle.getInt("TYPE", 0);
         //刷新时候的只出现一个
         if (TYPE == 0) {
             showProgressDialog();
@@ -443,7 +463,7 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
                                                     showCheckOfflinePayPopUp(v, ordersEntity);
                                                 } else {
                                                     page = 1;
-                                                    RscOrderDetailFragment.this.getData(page);
+                                                    RscOrderListFragment.this.getData(page);
                                                 }
                                             }
                                         };
@@ -1159,7 +1179,6 @@ public class RscOrderDetailFragment extends BaseFragment implements PullToRefres
         if (state == KeyboardListenRelativeLayout.KEYBOARD_STATE_HIDE) {
             if (self_delivery_code_et != null) {
                 self_delivery_code_et.clearFocus();
-
             }
         }
     }

@@ -40,7 +40,7 @@ import in.srain.cube.views.ptr.PtrHandler;
 /**
  * Created by CAI on 2016/6/22.
  */
-public class GiftOrderListFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
+public class GiftOrderListFragment extends BaseFragment  {
     @BindView(R.id.gift_order_listView)
     AnimatedExpandableListView listView;
     @BindView(R.id.rotate_header_list_view_frame)
@@ -181,7 +181,9 @@ public class GiftOrderListFragment extends BaseFragment implements SwipeRefreshL
     @Override
     public void onResponsed(Request req) {
         if (req.getApi() == ApiType.GET_GIFT_ORDER_LIST) {
-
+            if (frameLayout != null) {
+                frameLayout.refreshComplete();
+            }
             GiftOrderListResult reqData = (GiftOrderListResult) req.getData();
             if (reqData.datas != null) {
                 List<GiftOrderListResult.DatasBean.GiftordersBean> list = reqData.datas.giftorders;
@@ -196,6 +198,7 @@ public class GiftOrderListFragment extends BaseFragment implements SwipeRefreshL
                             adapter.clear();
                             adapter.addAll(list);
                         }
+                        listView.setSelection(0);
                     } else {
                         if (adapter != null) {
                             adapter.addAll(list);
@@ -214,12 +217,6 @@ public class GiftOrderListFragment extends BaseFragment implements SwipeRefreshL
                 }
             }
         }
-    }
-
-    @Override
-    public void onRefresh() {
-        page = 1;
-        RemoteApi.getGiftOrderList(this, type, page);
     }
 
 

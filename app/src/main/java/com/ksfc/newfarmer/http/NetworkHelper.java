@@ -1,7 +1,6 @@
 package com.ksfc.newfarmer.http;
 
 
-
 import com.google.gson.Gson;
 import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.StringUtil;
@@ -166,6 +165,7 @@ public class NetworkHelper {
                     if (certificate != null)
                         certificate.close();
                 } catch (IOException e) {
+
                 }
             }
 

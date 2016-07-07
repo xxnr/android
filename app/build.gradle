@@ -77,26 +77,35 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    //noinspection GradleDependency
-    compile 'com.android.support:design:22.2.0'
-    compile 'com.google.code.gson:gson:2.7'
-    compile 'com.daimajia.swipelayout:library:1.2.0'
-    compile 'com.squareup.okhttp3:okhttp:3.2.0'
-    compile 'com.squareup.okio:okio:1.8.0'
-    compile 'com.alibaba:fastjson:1.2.11'
-    compile 'com.readystatesoftware.systembartint:systembartint:1.0.3'
-    //noinspection GradleCompatible
+    //project
     compile project(':PullToRefresh')
     compile project(':social_sdk_library_project')
     compile project(':photo_view')
+    //android
+    compile 'com.android.support:design:22.2.1'
+    compile 'com.android.support:support-v4:22.2.1'
+    compile 'com.android.support:multidex:1.0.1'
+    //gson
+    compile 'com.google.code.gson:gson:2.7'
+    //swipelayout
+    compile 'com.daimajia.swipelayout:library:1.2.0'
+    //okhttp3
+    compile 'com.squareup.okhttp3:okhttp:3.2.0'
+    compile 'com.squareup.okio:okio:1.8.0'
+    //fastjson
+    compile 'com.alibaba:fastjson:1.2.11'
+    //systembartint
+    compile 'com.readystatesoftware.systembartint:systembartint:1.0.3'
+    //butterknife
     compile 'com.jakewharton:butterknife:8.1.0'
     apt 'com.jakewharton:butterknife-compiler:8.1.0'
+    //ultra-ptr
     compile 'in.srain.cube:ultra-ptr:1.0.11'
-
+    //rxjava
     compile 'io.reactivex:rxandroid:1.2.1'
     compile 'io.reactivex:rxjava:1.1.6'
-    compile 'com.android.support:multidex:1.0.1'
-
+    compile 'com.jakewharton.rxbinding:rxbinding:0.4.0'
+    //retrofit2
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'

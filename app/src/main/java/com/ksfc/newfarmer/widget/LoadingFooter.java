@@ -9,7 +9,9 @@ import android.widget.TextView;
 
 import com.ksfc.newfarmer.R;
 
-
+/**
+ * 底部加载更多   用法 1:调用构造初始化  2每次传入page 和size 3：到底部 判断 state =idle 刷新 改loading
+ */
 public class LoadingFooter {
 
     protected View mLoadingFooter;
@@ -35,7 +37,7 @@ public class LoadingFooter {
         line_right = (TextView) mLoadingFooter.findViewById(R.id.line_right);
         line_lift = (TextView) mLoadingFooter.findViewById(R.id.line_lift);
         this.listView = listView;
-        setState(State.Deal);
+        mState=State.Deal;
     }
 
 
@@ -54,31 +56,39 @@ public class LoadingFooter {
         mLoadingText.setText(msg);
     }
 
-    public void hideProgress() {
+    private void hideProgress() {
         addFooter();
+        mLoadingText.setText("已到最后");
         mProgress.setVisibility(View.GONE);
         line_right.setVisibility(View.VISIBLE);
         line_lift.setVisibility(View.VISIBLE);
     }
 
-    public void showLoading() {
+    private void showLoading() {
         addFooter();
+        mLoadingText.setText("正在载入");
         line_right.setVisibility(View.INVISIBLE);
         line_lift.setVisibility(View.INVISIBLE);
         mProgress.setVisibility(View.VISIBLE);
-
         listView.postDelayed(new Runnable() {
             @Override
             public void run() {
                 if (getState()==State.Loading){
-                    removeFooter();
                     setState(State.Idle);
                 }
             }
-        },5000);
+        },300);
     }
 
-    public void removeFooter() {
+    private void showIdle(){
+        addFooter();
+        mLoadingText.setText("正在载入");
+        line_right.setVisibility(View.INVISIBLE);
+        line_lift.setVisibility(View.INVISIBLE);
+        mProgress.setVisibility(View.VISIBLE);
+    }
+
+    private void removeFooter() {
         try {
             if (listView != null) {
                 listView.removeFooterView(mLoadingFooter);
@@ -88,7 +98,7 @@ public class LoadingFooter {
         }
     }
 
-    public void addFooter() {
+    private void addFooter() {
         try {
             if (listView != null && listView.getFooterViewsCount() == 0) {
                 listView.addFooterView(mLoadingFooter);
@@ -117,15 +127,13 @@ public class LoadingFooter {
         mState = status;
         switch (status) {
             case Loading:
-                mLoadingText.setText("正在载入");
                 showLoading();
                 break;
             case TheEnd:
-                mLoadingText.setText("已到最后");
                 hideProgress();
                 break;
             case Idle:
-                mLoadingText.setText("");
+                showIdle();
                 break;
             case Deal:
                 removeFooter();

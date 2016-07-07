@@ -554,15 +554,12 @@ public class ShoppingCartActivity extends BaseActivity {
                                                     }
                                                     getData();
                                                     showToast("商品删除成功");
-
-
                                                 }
                                                 //重置 map 防止出问题
                                                 if (inShopMap != null && inCartMap != null) {
                                                     inCartMap.clear();
                                                     inShopMap.clear();
                                                 }
-
                                                 dialog.dismiss();
                                             }
                                         })
@@ -1060,6 +1057,11 @@ public class ShoppingCartActivity extends BaseActivity {
                                                                 getData();
                                                                 showToast("商品删除成功");
                                                             }
+                                                            //重置 map 防止出问题
+                                                            if (inShopMap != null && inCartMap != null) {
+                                                                inCartMap.clear();
+                                                                inShopMap.clear();
+                                                            }
                                                             dialog.dismiss();
                                                         }
                                                     })
@@ -1103,6 +1105,11 @@ public class ShoppingCartActivity extends BaseActivity {
                                                                 dao.deleteShopping(goodsList.get(childPosition).SKUId);
                                                                 getData();
                                                                 showToast("商品删除成功");
+                                                            }
+                                                            //重置 map 防止出问题
+                                                            if (inShopMap != null && inCartMap != null) {
+                                                                inCartMap.clear();
+                                                                inShopMap.clear();
                                                             }
                                                             dialog.dismiss();
                                                         }
@@ -1288,7 +1295,7 @@ public class ShoppingCartActivity extends BaseActivity {
                                                             } catch (NumberFormatException e) {
                                                                 i = 1;
                                                             }
-                                                            if (i != 0) {
+                                                            if (i>0) {
                                                                 holder.ordering_item_geshu.setText(str);
                                                                 if (isLogin()) {
                                                                     RequestParams params = new RequestParams();

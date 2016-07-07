@@ -13,6 +13,8 @@ import com.ksfc.newfarmer.http.beans.LoginResult.UserInfo;
 import com.ksfc.newfarmer.utils.BundleUtils;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
+import com.ksfc.newfarmer.utils.Utils;
+import com.ksfc.newfarmer.widget.BaseViewUtils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -21,7 +23,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -87,8 +88,8 @@ public class AddAddressActivity extends BaseActivity {
         room_edit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                //关闭软键盘
+                BaseViewUtils.hideSoftInput(AddAddressActivity.this,room_edit);
                 return (event.getKeyCode() == KeyEvent.KEYCODE_ENTER);
             }
         });
@@ -156,7 +157,6 @@ public class AddAddressActivity extends BaseActivity {
                 // type:（1.默认地址2.非默认地址）
                 // receiptPhone:收货人手机号
                 // receiptPeople：收货人名称
-
 
                 showProgressDialog();
                 RequestParams params = new RequestParams();

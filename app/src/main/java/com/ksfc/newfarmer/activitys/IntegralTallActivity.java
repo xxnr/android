@@ -8,6 +8,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
@@ -37,8 +38,11 @@ import com.ksfc.newfarmer.http.beans.IntegralGetResult;
 import com.ksfc.newfarmer.utils.ActivityAnimationUtils;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.PullToRefreshUtils;
+import com.ksfc.newfarmer.utils.ScreenUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.utils.Utils;
+import com.ksfc.newfarmer.widget.ObservableScrollView;
+import com.ksfc.newfarmer.widget.PtrHeaderView;
 import com.ksfc.newfarmer.widget.UnSwipeGridView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -51,11 +55,15 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import in.srain.cube.views.ptr.PtrClassicFrameLayout;
+import in.srain.cube.views.ptr.PtrDefaultHandler;
+import in.srain.cube.views.ptr.PtrFrameLayout;
+import in.srain.cube.views.ptr.PtrHandler;
 
 /**
  * Created by CAI on 2016/6/16.
  */
-public class IntegralTallActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener {
+public class IntegralTallActivity extends BaseActivity {
 
     @BindView(R.id.titleview)
     RelativeLayout titleview;
@@ -69,8 +77,10 @@ public class IntegralTallActivity extends BaseActivity implements PullToRefreshB
     View headUnLoginTallLayout;
     @BindView(R.id.head_unLogin_tall_layout_float)
     LinearLayout headUnLoginTallLayoutFloat;
+    @BindView(R.id.rotate_header_list_view_frame)
+    PtrClassicFrameLayout frameLayout;
     @BindView(R.id.tall_srcollView)
-    PullToRefreshScrollView scrollView;
+    ObservableScrollView scrollView;
     @BindView(R.id.return_top)
     ImageView return_top;
 
@@ -81,7 +91,7 @@ public class IntegralTallActivity extends BaseActivity implements PullToRefreshB
     private List<IntegralBean> ViewBeanList = new ArrayList<>();
     //用户积分
     private int score = 0;
-    private static int count;
+    private int count;
     private boolean isShow = false;
     private Handler handler = new Handler();
 
@@ -139,15 +149,55 @@ public class IntegralTallActivity extends BaseActivity implements PullToRefreshB
         setViewClick(R.id.head_unLogin_tall_layout_float);
         setViewClick(R.id.return_top);
 
-        //设置下拉刷新
-        scrollView.setOnRefreshListener(this);
+        final int screenHeight = ScreenUtil.getScreenHeight(IntegralTallActivity.this);
 
-        //设置刷新的文字
-        ILoadingLayout startLabels = scrollView
-                .getLoadingLayoutProxy(true, false);
-        startLabels.setPullLabel("下拉刷新...");// 刚下拉时，显示的提示
-        startLabels.setRefreshingLabel("正在载入...");// 刷新时
-        startLabels.setReleaseLabel("放开刷新...");// 下来达到一定距离时，显示的提示
+        scrollView.setScrollViewListener(new ObservableScrollView.ScrollViewListener() {
+            @Override
+            public void onScrollChanged(ObservableScrollView scrollView, int x, int y, int oldx, int oldy) {
+                if (y != 0) {
+                    if (y > screenHeight) {
+                        return_top.setVisibility(View.VISIBLE);
+                    } else {
+                        if (y > oldy) {
+                            return_top.setVisibility(View.GONE);
+                        } else {
+                            return_top.setVisibility(View.VISIBLE);
+                        }
+                    }
+                } else {
+                    return_top.setVisibility(View.GONE);
+                }
+            }
+        });
+
+
+
+            /* 设置刷新头部view */
+        PtrHeaderView header = new PtrHeaderView(IntegralTallActivity.this);
+        frameLayout.setHeaderView(header);
+        /* 设置回调 */
+        frameLayout.addPtrUIHandler(header);
+        frameLayout.setLastUpdateTimeRelateObject(this);
+        frameLayout.setPtrHandler(new PtrHandler() {
+            @Override
+            public void onRefreshBegin(PtrFrameLayout frame) {
+                frameLayout.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (frameLayout != null) {
+                            frameLayout.refreshComplete();
+                        }
+                    }
+                }, 2000);
+                count = 0;
+                RemoteApi.getGiftCategories(IntegralTallActivity.this);
+            }
+
+            @Override
+            public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
+                return PtrDefaultHandler.checkContentCanBePulledDown(frame, content, header);
+            }
+        });
 
 
     }
@@ -182,17 +232,10 @@ public class IntegralTallActivity extends BaseActivity implements PullToRefreshB
                 break;
             case R.id.return_top:
                 if (scrollView != null) {
-                    scrollView.getRefreshableView().fullScroll(ScrollView.FOCUS_UP);
+                    scrollView.fullScroll(ScrollView.FOCUS_UP);
                 }
                 break;
         }
-    }
-
-    @Override
-    public void onRefresh(PullToRefreshBase refreshView) {
-        PullToRefreshUtils.setFreshClose(refreshView);
-        count = 0;
-        RemoteApi.getGiftCategories(this);
     }
 
 
@@ -205,7 +248,9 @@ public class IntegralTallActivity extends BaseActivity implements PullToRefreshB
     @SuppressLint("SetTextI18n")
     @Override
     public void onResponsed(Request req) {
-        scrollView.onRefreshComplete();
+        if (frameLayout != null) {
+            frameLayout.refreshComplete();
+        }
         if (req.getApi() == ApiType.GET_INTEGRAL) {
             IntegralGetResult data = (IntegralGetResult) req.getData();
             if (data.datas != null) {

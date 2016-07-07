@@ -41,6 +41,7 @@ import com.ksfc.newfarmer.http.beans.AttrSelectResult;
 import com.ksfc.newfarmer.http.beans.BrandsResult;
 import com.ksfc.newfarmer.http.beans.GetGoodsData;
 import com.ksfc.newfarmer.http.beans.GetGoodsData.SingleGood;
+import com.ksfc.newfarmer.http.RxApi.RxService;
 import com.ksfc.newfarmer.utils.ExpandViewTouch;
 import com.ksfc.newfarmer.utils.ImageLoaderUtils;
 import com.ksfc.newfarmer.utils.PullToRefreshUtils;
@@ -49,12 +50,11 @@ import com.ksfc.newfarmer.utils.ScreenUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.LoadingFooter;
 import com.ksfc.newfarmer.widget.UnSwipeGridView;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.HttpUtils;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 public class GoodsListActivity extends BaseActivity implements OnItemClickListener, PullToRefreshBase.OnRefreshListener, AbsListView.OnScrollListener {
 
@@ -533,20 +533,14 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
 
     //获取公共属性的title  如车型级别 品类
     private void getCommonAttr() {
-        com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
-        HttpUtils http = new HttpUtils();
-        http.send(HttpRequest.HttpMethod.POST, ApiType.GET_GOODS_ATTR.getOpt() + "?brand=" + "0" + "&category=" + classId, params,
-                new RequestCallBack<String>() {
-                    @Override
-                    public void onFailure(HttpException arg0, String arg1) {
-                        commonAttr.add("车型级别");
-                        commonAttr.add("品类");
-                    }
 
+        RxService.createApi()
+                .GET_GOODS_ATTR("0",classId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Action1<AttrSelectResult>() {
                     @Override
-                    public void onSuccess(ResponseInfo<String> arg0) {
-                        Gson gson = new Gson();
-                        AttrSelectResult attrSelectResult = gson.fromJson(arg0.result, AttrSelectResult.class);
+                    public void call(AttrSelectResult attrSelectResult) {
                         if (attrSelectResult.getStatus().equals("1000")) {
                             if (!attrSelectResult.attributes.isEmpty()) {
                                 for (int i = 0; i < attrSelectResult.attributes.size(); i++) {
@@ -558,11 +552,14 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
                                 }
                             }
                         }
-
                     }
-
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        commonAttr.add("车型级别");
+                        commonAttr.add("品类");
+                    }
                 });
-
     }
 
 

@@ -1,4 +1,4 @@
-package com.ksfc.newfarmer.common;
+package com.ksfc.newfarmer.http;
 
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.http.ApiType;

@@ -22,6 +22,8 @@ import com.ksfc.newfarmer.http.Request;
 import com.ksfc.newfarmer.http.beans.InviteeResult;
 import com.ksfc.newfarmer.http.beans.PotentialListResult;
 import com.ksfc.newfarmer.utils.StringUtil;
+import com.ksfc.newfarmer.utils.Utils;
+import com.ksfc.newfarmer.widget.BaseViewUtils;
 import com.ksfc.newfarmer.widget.ClearEditText;
 import com.ksfc.newfarmer.widget.UnSwipeListView;
 import com.lidroid.xutils.DbUtils;
@@ -58,7 +60,7 @@ public class InviterSearchActivity extends BaseActivity {
 
     private void initView() {
         inviter_search_edit = (ClearEditText) findViewById(R.id.inviter_search_edit);
-        TextView inviter_search_text = (TextView) findViewById(R.id.inviter_search_text);
+        final TextView inviter_search_text = (TextView) findViewById(R.id.inviter_search_text);
         invitee_search_customer_listView = (UnSwipeListView) findViewById(R.id.invitee_search_customer_listView);
         invitee_search_potential_listView = (UnSwipeListView) findViewById(R.id.invitee_search_potential_listView);
         final LinearLayout invitee_search_customer_separatrix = (LinearLayout) findViewById(R.id.invitee_search_customer_separatrix);
@@ -75,13 +77,7 @@ public class InviterSearchActivity extends BaseActivity {
                 /*判断是否是“搜索”键*/
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     /*隐藏软键盘*/
-                    InputMethodManager imm = (InputMethodManager) v
-                            .getContext().getSystemService(
-                                    Context.INPUT_METHOD_SERVICE);
-                    if (imm.isActive()) {
-                        imm.hideSoftInputFromWindow(
-                                v.getApplicationWindowToken(), 0);
-                    }
+                    BaseViewUtils.hideSoftInput(InviterSearchActivity.this,inviter_search_edit);
                     String searchText = inviter_search_edit.getText().toString().trim();
                     if (StringUtil.checkStr(searchText)) {
                         //请求数据库数据
@@ -154,9 +150,7 @@ public class InviterSearchActivity extends BaseActivity {
         timer.schedule(new TimerTask() {
             @Override
             public void run() { //弹出软键盘的代码
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.showSoftInput(inviter_search_edit, InputMethodManager.RESULT_SHOWN);
-                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+               BaseViewUtils.showSoftInput(InviterSearchActivity.this,inviter_search_edit);
             }
         }, 300); //设置300毫秒的时
     }
@@ -167,8 +161,7 @@ public class InviterSearchActivity extends BaseActivity {
 
         switch (v.getId()) {
             case R.id.inviter_search_text:
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(v.getWindowToken(), 0); //强制隐藏键盘
+                BaseViewUtils.hideSoftInput(InviterSearchActivity.this,v);
                 finish();
                 break;
         }

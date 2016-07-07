@@ -1,7 +1,6 @@
 package com.ksfc.newfarmer.http;
 
 import com.google.gson.Gson;
-import com.ksfc.newfarmer.common.HttpsConfig;
 import com.ksfc.newfarmer.utils.RndLog;
 import org.json.JSONException;
 import java.io.IOException;

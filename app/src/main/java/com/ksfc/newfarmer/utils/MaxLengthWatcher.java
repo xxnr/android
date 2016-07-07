@@ -69,7 +69,6 @@ public class MaxLengthWatcher implements TextWatcher {
             }
             if (resultLen > maxLen) {
                 Toast toast = Toast.makeText(mContext, "您的输入超过限制", Toast.LENGTH_SHORT);
-                toast.setText("您的输入超过限制");
                 toast.show();
                 return inputStr.substring(0, i);
             }

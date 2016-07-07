@@ -6,8 +6,8 @@ import java.util.List;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.http.beans.HomeImageResult.Rows;
-import com.ksfc.newfarmer.utils.BaseTools;
 import com.ksfc.newfarmer.utils.ImageLoaderUtils;
+import com.ksfc.newfarmer.utils.ScreenUtil;
 import com.ksfc.newfarmer.utils.Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -357,7 +357,7 @@ public class CarouselDiagramViewPager extends ViewPager {
 				.findViewById(R.id.ll_viewpager_container);
 
 		// 根据权重设置轮播图的高度
-		int screenHeight = BaseTools.getWindowsHeight((Activity) context);
+		int screenHeight = ScreenUtil.getWindowsHeight((Activity) context);
 		android.widget.RelativeLayout.LayoutParams layoutParams = (android.widget.RelativeLayout.LayoutParams) ll_viewpager_container
 				.getLayoutParams();
 		layoutParams.height = screenHeight * weight / totalWeight;

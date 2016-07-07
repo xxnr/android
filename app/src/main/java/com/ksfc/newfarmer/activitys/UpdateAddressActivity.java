@@ -12,6 +12,8 @@ import com.ksfc.newfarmer.http.RequestParams;
 import com.ksfc.newfarmer.http.ResponseResult;
 import com.ksfc.newfarmer.http.beans.AddressList;
 import com.ksfc.newfarmer.http.beans.LoginResult.UserInfo;
+import com.ksfc.newfarmer.utils.Utils;
+import com.ksfc.newfarmer.widget.BaseViewUtils;
 import com.ksfc.newfarmer.widget.dialog.CustomDialog;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
@@ -83,8 +85,7 @@ public class UpdateAddressActivity extends BaseActivity {
         room_edit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                BaseViewUtils.hideSoftInput(UpdateAddressActivity.this,room_edit);
                 return (event.getKeyCode() == KeyEvent.KEYCODE_ENTER);
             }
         });

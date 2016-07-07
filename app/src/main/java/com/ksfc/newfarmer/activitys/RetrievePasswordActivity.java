@@ -188,6 +188,7 @@ public class RetrievePasswordActivity extends BaseActivity {
                     Picasso.with(RetrievePasswordActivity.this)
                             .load(smsResult.captcha)
                             .skipMemoryCache()
+                            .noFade()
                             .error(R.drawable.code_load_failed)
                             .into(CustomDialogForSms.sms_auth_code_iv);
                 } else {
@@ -265,6 +266,7 @@ public class RetrievePasswordActivity extends BaseActivity {
         Picasso.with(RetrievePasswordActivity.this)
                 .load(ApiType.REFRESH_SMS_CODE.getOpt() + "?tel=" + mobile + "&bizcode=resetpwd")
                 .skipMemoryCache()
+                .noFade()
                 .error(R.drawable.code_load_failed)
                 .into(CustomDialogForSms.sms_auth_code_iv, new Callback() {
                     @Override

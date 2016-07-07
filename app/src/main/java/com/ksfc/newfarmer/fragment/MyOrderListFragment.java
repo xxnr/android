@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.Nullable;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,7 +66,9 @@ import java.util.Map;
 /**
  * Created by HePeng on 2015/12/3.
  */
-public class MyOrderDetailFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener {
+public class MyOrderListFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener {
+
+    private static final String ARG_PARAM1 = "param1";
 
     private PullToRefreshListView waitingpay_lv;
     private int page = 1;
@@ -98,6 +101,23 @@ public class MyOrderDetailFragment extends BaseFragment implements PullToRefresh
 
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            TYPE = getArguments().getInt(ARG_PARAM1);
+        }
+    }
+
+    public static MyOrderListFragment newInstance(int type) {
+        MyOrderListFragment fragment = new MyOrderListFragment();
+        Bundle args = new Bundle();
+        args.putInt(ARG_PARAM1, type);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+
+    @Override
     public View InItView() {
         View view = inflater.inflate(R.layout.waitingpaylistview_layout, null);
         waitingpay_lv = (PullToRefreshListView) view.findViewById(R.id.waitingpay_lv);
@@ -117,8 +137,6 @@ public class MyOrderDetailFragment extends BaseFragment implements PullToRefresh
         view.findViewById(R.id.my_login_sure).setOnClickListener(this);
         view.findViewById(R.id.my_login_cancel).setOnClickListener(this);
 
-        Bundle bundle = getArguments();
-        TYPE = bundle.getInt("TYPE", 0);
         //刷新时候的只出现一个
         if (TYPE == 0) {
             showProgressDialog();

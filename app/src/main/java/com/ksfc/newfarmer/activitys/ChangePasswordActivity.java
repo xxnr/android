@@ -4,6 +4,7 @@ import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.db.Store;
+
 import com.ksfc.newfarmer.http.ApiType;
 import com.ksfc.newfarmer.http.Request;
 import com.ksfc.newfarmer.http.RequestParams;
@@ -49,16 +50,19 @@ public class ChangePasswordActivity extends BaseActivity {
             password = new_pass.getText().toString();
             confirm = confirm_pass.getText().toString();
             if (StringUtil.empty(old_pwd)) {
-                showToast("请填写原密码");
+                showToast("请输入旧密码");
                 return;
             } else if (StringUtil.empty(password)) {
-                showToast("请填写新密码");
+                showToast("请输入新密码");
                 return;
             } else if (StringUtil.empty(confirm)) {
-                showToast("请填写确认密码");
+                showToast("请输入确认密码");
                 return;
             } else if (!password.equals(confirm)) {
-                showToast("密码不一致");
+                showToast("两次密码不一致，请重新输入");
+                return;
+            } else if (password.length()<6){
+                showToast("密码需不小于6位");
                 return;
             } else if (password.length() > 20) {
                 showToast("密码长度不能大于20位");
@@ -102,8 +106,6 @@ public class ChangePasswordActivity extends BaseActivity {
                 MsgCenter.fireNull(MsgID.MyaccountActivityFinish, "finish");
                 IntentUtil.activityForward(ChangePasswordActivity.this,
                         LoginActivity.class, null, true);
-            } else {
-                showToast("修改密码失败");
             }
         }
     }

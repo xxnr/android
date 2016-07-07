@@ -385,6 +385,36 @@ public class MyaccountActivity extends BaseActivity {
     }
 
     private void uploadhead(final String path, String value, String name) {
+//        if (isLogin()){
+//            Map<String,RequestBody> map =new HashMap<>();
+//            map.put(path.replace("/", ""),RequestBody.create(MediaType.parse("image/jpeg"),new File(path)));
+//            map.put("token",RequestBody.create(MediaType.parse("text/plain"), Store.User.queryMe().token));
+//            map.put("userId",RequestBody.create(MediaType.parse("text/plain"), Store.User.queryMe().userid));
+//            RxService.createApi(ApiService.class)
+//                    .UP_HEAD_IMG(map)
+//                    .subscribeOn(Schedulers.io())
+//                    .observeOn(AndroidSchedulers.mainThread())
+//                    .subscribe(new Action1<CameraResult>() {
+//                        @Override
+//                        public void call(CameraResult cameraResult) {
+//
+//                            if (cameraResult.getStatus().equals("1000")){
+//                                showToast("头像上传成功！");
+//                                Bitmap decodeFile = BitmapFactory.decodeFile(path);
+//                                myself_userImg.setImageBitmap(decodeFile);
+//                            }
+//                        }
+//                    }, new Action1<Throwable>() {
+//                        @Override
+//                        public void call(Throwable throwable) {
+//                                    throwable.printStackTrace();
+//                        }
+//                    });
+
+//        }
+
+
+
         com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
         params.addQueryStringParameter(name, value);
         params.addBodyParameter(path.replace("/", ""), new File(path),
@@ -403,8 +433,8 @@ public class MyaccountActivity extends BaseActivity {
                     @Override
                     public void onSuccess(ResponseInfo<String> arg0) {
                         showToast("头像上传成功！");
-                        Bitmap decodeFile = BitmapFactory.decodeFile(path);
-                        myself_userImg.setImageBitmap(decodeFile);
+                                Bitmap decodeFile = BitmapFactory.decodeFile(path);
+                                myself_userImg.setImageBitmap(decodeFile);
                     }
 
                 });
