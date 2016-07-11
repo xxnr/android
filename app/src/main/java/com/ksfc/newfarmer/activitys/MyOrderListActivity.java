@@ -21,6 +21,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -31,8 +32,6 @@ import net.yangentao.util.msg.MsgCenter;
  * 修改备注：
  */
 public class MyOrderListActivity extends BaseActivity implements MyOrderListFragment.BgSwitch, ViewPager.OnPageChangeListener {
-    private UnSwipeViewPager viewPager;
-    private TabLayout mTabLayout;
     private ArrayList<String> titleList = new ArrayList<>();
     private ArrayList<Fragment> fragments = new ArrayList<>();
     private int select; //我的新农人中选中的入口
@@ -51,25 +50,37 @@ public class MyOrderListActivity extends BaseActivity implements MyOrderListFrag
         setLeftClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (getIntent().getBooleanExtra("callByDetailActivity", false)) {
-                    Intent intent = new Intent(MyOrderListActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    MsgCenter.fireNull(MsgID.MainActivity_select_tab,  MainActivity.Tab.MINE);
-                }
+                Intent intent = new Intent(MyOrderListActivity.this, MainActivity.class);
+                intent.putExtra("id", MainActivity.Tab.MINE);
+                startActivity(intent);
+                MsgCenter.fireNull(MsgID.MainActivity_select_tab, MainActivity.Tab.MINE);
                 finish();
             }
         });
     }
+    //设置返回监听的，回传数据
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+            Intent intent = new Intent(MyOrderListActivity.this, MainActivity.class);
+            intent.putExtra("id", MainActivity.Tab.MINE);
+            startActivity(intent);
+            MsgCenter.fireNull(MsgID.MainActivity_select_tab, MainActivity.Tab.MINE);
+            finish();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 
     private void initView() {
-        viewPager = (UnSwipeViewPager) findViewById(R.id.waitingpay_ViewPager);
+        UnSwipeViewPager viewPager = (UnSwipeViewPager) findViewById(R.id.waitingpay_ViewPager);
         viewPager.setScanScroll(false);
-        mTabLayout = (TabLayout) findViewById(R.id.tabs);
+        TabLayout mTabLayout = (TabLayout) findViewById(R.id.tabs);
         pop_bg = (RelativeLayout) findViewById(R.id.pop_bg);
-        if (fragments.isEmpty()){
+        if (fragments.isEmpty()) {
             initTabsAndFragments();
         }
-        viewPager.setAdapter(new CommonFragmentPagerAdapter(getSupportFragmentManager(), titleList,fragments));
+        viewPager.setAdapter(new CommonFragmentPagerAdapter(getSupportFragmentManager(), titleList, fragments));
         mTabLayout.setupWithViewPager(viewPager);//设置联动
         viewPager.setCurrentItem(select);//设置当前viewpager选中的item
         viewPager.setOffscreenPageLimit(1);//每次加载的item数量

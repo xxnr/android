@@ -25,7 +25,7 @@ import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.activitys.RSCOrderListActivity;
 import com.ksfc.newfarmer.common.CommonAdapter;
 import com.ksfc.newfarmer.common.CommonViewHolder;
-import com.ksfc.newfarmer.common.LoadMoreOnsrcollListener;
+import com.ksfc.newfarmer.common.LoadMoreOnScrollListener;
 import com.ksfc.newfarmer.http.ApiType;
 import com.ksfc.newfarmer.http.RemoteApi;
 import com.ksfc.newfarmer.http.Request;
@@ -71,7 +71,7 @@ public class RscGiftOrderListFragment extends BaseFragment  {
 
     private LoadingFooter loadingFooter;
 
-    private LoadMoreOnsrcollListener moreOnsrcollListener = new LoadMoreOnsrcollListener() {
+    private LoadMoreOnScrollListener moreOnsrcollListener = new LoadMoreOnScrollListener() {
         @Override
         public void loadMore() {
             //加载更多

@@ -54,11 +54,7 @@ public class GuideActivity extends FragmentActivity implements ViewPager.OnPageC
         imgList.get(0).setImageResource(R.drawable.green_leaves);
 
         for (int i = 0; i < 3; i++) {
-            Fragment fragment = new GuideFragment();
-            Bundle bundle = new Bundle();
-            bundle.putInt("index", i);
-            fragment.setArguments(bundle);
-            fragmentsList.add(fragment);
+            fragmentsList.add(GuideFragment.newInstance(i));
         }
         viewPager_guide.setAdapter(new GuideAdapter(
                 getSupportFragmentManager(), fragmentsList));

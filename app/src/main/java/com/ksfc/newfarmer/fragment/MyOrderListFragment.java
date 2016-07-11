@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,9 +26,10 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.jakewharton.rxbinding.view.RxView;
 import com.ksfc.newfarmer.BaseFragment;
 import com.ksfc.newfarmer.MsgID;
-import com.ksfc.newfarmer.common.LoadMoreOnsrcollListener;
+import com.ksfc.newfarmer.common.LoadMoreOnScrollListener;
 import com.ksfc.newfarmer.common.OrderUtils;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.activitys.MyOrderListActivity;
@@ -62,6 +64,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
+import rx.Subscriber;
+import rx.functions.Action1;
 
 /**
  * Created by HePeng on 2015/12/3.
@@ -87,7 +93,7 @@ public class MyOrderListFragment extends BaseFragment implements PullToRefreshBa
 
     private LoadingFooter loadingFooter;
 
-    private LoadMoreOnsrcollListener moreOnsrcollListener =new LoadMoreOnsrcollListener() {
+    private LoadMoreOnScrollListener moreOnsrcollListener = new LoadMoreOnScrollListener() {
         @Override
         public void loadMore() {
             //加载更多
@@ -98,7 +104,6 @@ public class MyOrderListFragment extends BaseFragment implements PullToRefreshBa
             }
         }
     };
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -128,7 +133,7 @@ public class MyOrderListFragment extends BaseFragment implements PullToRefreshBa
 
 
         waitingpay_lv.setOnScrollListener(moreOnsrcollListener);
-        loadingFooter = new LoadingFooter(activity,waitingpay_lv.getRefreshableView());
+        loadingFooter = new LoadingFooter(activity, waitingpay_lv.getRefreshableView());
         //设置刷新的文字
         PullToRefreshUtils.setFreshText(waitingpay_lv);
         //无订单下的状态
@@ -215,7 +220,7 @@ public class MyOrderListFragment extends BaseFragment implements PullToRefreshBa
                 List<WaitingPay.Orders> rows = data.datas.rows;
                 if (!rows.isEmpty()) {
                     null_layout.setVisibility(View.GONE);
-                        loadingFooter.setSize(page,rows.size());
+                    loadingFooter.setSize(page, rows.size());
 
                     if (page == 1) {
 
@@ -234,7 +239,7 @@ public class MyOrderListFragment extends BaseFragment implements PullToRefreshBa
                         }
                     }
                 } else {
-                    loadingFooter.setSize(page,0);
+                    loadingFooter.setSize(page, 0);
 
                     if (page == 1) {
                         if (adapter != null) {
@@ -413,33 +418,42 @@ public class MyOrderListFragment extends BaseFragment implements PullToRefreshBa
                             holder.go_to_pay_rel.setVisibility(View.VISIBLE);
                             holder.change_pay_type.setVisibility(View.VISIBLE);
                             holder.go_to_pay.setText("查看付款信息");
-                            holder.go_to_pay.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    if (StringUtil.checkStr(order.orderId)) {
-                                        Handler handler =new Handler(){
-                                            @Override
-                                            public void handleMessage(Message msg) {
-                                                super.handleMessage(msg);
-                                                if (msg.what==0){
-                                                    Bundle bundle = new Bundle();
-                                                    if (order.RSCInfo != null) {
-                                                        bundle.putString("companyName", order.RSCInfo.companyName);
-                                                        bundle.putString("RSCPhone", order.RSCInfo.RSCPhone);
-                                                        bundle.putString("RSCAddress", order.RSCInfo.RSCAddress);
-                                                    }
-                                                    bundle.putString("orderId", order.orderId);
-                                                    IntentUtil.activityForward(activity, OfflinePayActivity.class, bundle, false);
-                                                }else {
-                                                    page=1;
-                                                    getData(page);
+                            RxView.clicks(holder.go_to_pay)
+                                    .throttleFirst(1, TimeUnit.SECONDS)
+                                    .subscribe(new Action1<Void>() {
+                                        @Override
+                                        public void call(Void aVoid) {
+                                            Subscriber<Integer> subscriberOrderIsChecked = new Subscriber<Integer>() {
+                                                @Override
+                                                public void onCompleted() {
                                                 }
+                                                @Override
+                                                public void onError(Throwable e) {
+                                                    e.printStackTrace();
+                                                }
+
+                                                @Override
+                                                public void onNext(Integer orderStatusType) {
+                                                    if (orderStatusType == 7) {
+                                                        Bundle bundle = new Bundle();
+                                                        if (order.RSCInfo != null) {
+                                                            bundle.putString("companyName", order.RSCInfo.companyName);
+                                                            bundle.putString("RSCPhone", order.RSCInfo.RSCPhone);
+                                                            bundle.putString("RSCAddress", order.RSCInfo.RSCAddress);
+                                                        }
+                                                        bundle.putString("orderId", order.orderId);
+                                                        IntentUtil.activityForward(activity, OfflinePayActivity.class, bundle, false);
+                                                    } else {
+                                                        page = 1;
+                                                        getData(page);
+                                                    }
+                                                }
+                                            };
+                                            if (StringUtil.checkStr(order.orderId)) {
+                                                OrderUtils.isChecked(subscriberOrderIsChecked, order.orderId);
                                             }
-                                        };
-                                        OrderUtils.isChecked(handler,order.orderId);
-                                    }
-                                }
-                            });
+                                        }
+                                    });
                             //更改支付方式
                             holder.change_pay_type.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -486,7 +500,6 @@ public class MyOrderListFragment extends BaseFragment implements PullToRefreshBa
 
                             break;
                         //如果是待自提的订单，且有带自提的商品   用户可以去自提
-
                         case 5:
                             boolean flag = false;
                             if (order.SKUs != null) {

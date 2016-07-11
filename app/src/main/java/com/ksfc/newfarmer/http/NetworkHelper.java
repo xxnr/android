@@ -132,11 +132,11 @@ public class NetworkHelper {
      * put
      */
     public Response putBody(String url, HashMap<String, String> urlParams) throws IOException {
-        RndLog.d(TAG, "postBody. url=" + url);
+        RndLog.d(TAG, "put. url=" + url);
 
         if (urlParams != null && !urlParams.isEmpty()) {
             String value = urlParams.get("PUT");
-            RndLog.d(TAG, "postBody. parameter[" + value + "]");
+            RndLog.d(TAG, "put. parameter[" + value + "]");
             //如果value 为空 new StringEntity的时候会报错
             if (StringUtil.checkStr(value)) {
                 RequestBody requestBody = RequestBody.create(JSON, value);

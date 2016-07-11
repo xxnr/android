@@ -1,7 +1,6 @@
 package com.ksfc.newfarmer.fragment;
 
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,7 @@ import android.widget.TextView;
 import com.ksfc.newfarmer.BaseFragment;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
-import com.ksfc.newfarmer.common.LoadMoreOnsrcollListener;
+import com.ksfc.newfarmer.common.LoadMoreOnScrollListener;
 import com.ksfc.newfarmer.http.ApiType;
 import com.ksfc.newfarmer.http.RemoteApi;
 import com.ksfc.newfarmer.http.Request;
@@ -52,7 +51,7 @@ public class GiftOrderListFragment extends BaseFragment  {
 
     private LoadingFooter loadingFooter;
 
-    private LoadMoreOnsrcollListener moreOnsrcollListener = new LoadMoreOnsrcollListener() {
+    private LoadMoreOnScrollListener moreOnsrcollListener = new LoadMoreOnScrollListener() {
         @Override
         public void loadMore() {
             //加载更多

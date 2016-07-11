@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import com.google.gson.Gson;
+import com.jakewharton.rxbinding.view.RxView;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.common.OrderUtils;
 import com.ksfc.newfarmer.MsgID;
@@ -51,6 +53,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import net.yangentao.util.msg.MsgCenter;
+
+import rx.Subscriber;
+import rx.functions.Action1;
 
 
 public class MyOrderDetailActivity extends BaseActivity {
@@ -105,12 +110,10 @@ public class MyOrderDetailActivity extends BaseActivity {
         setLeftClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (!callByMyOrderListActivity) {
                     Intent intent = new Intent(MyOrderDetailActivity.this,
                             MyOrderListActivity.class);
                     intent.putExtra("orderSelect", 0);
-                    intent.putExtra("callByDetailActivity", true);
                     startActivity(intent);
                 }
                 finish();
@@ -326,34 +329,43 @@ public class MyOrderDetailActivity extends BaseActivity {
                                     go_to_pay_rel.setVisibility(View.VISIBLE);
                                     change_pay_type.setVisibility(View.VISIBLE);
                                     go_to_pay.setText("查看付款信息");
-                                    go_to_pay.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            Handler handler = new Handler() {
+                                    RxView.clicks(go_to_pay).throttleFirst(1, TimeUnit.SECONDS)
+                                            .subscribe(new Action1<Void>() {
                                                 @Override
-                                                public void handleMessage(Message msg) {
-                                                    super.handleMessage(msg);
-                                                    if (msg.what == 0) {
-                                                        Bundle bundle = new Bundle();
-                                                        if (rows.RSCInfo != null) {
-                                                            bundle.putString("companyName", rows.RSCInfo.companyName);
-                                                            bundle.putString("RSCPhone", rows.RSCInfo.RSCPhone);
-                                                            bundle.putString("RSCAddress", rows.RSCInfo.RSCAddress);
+                                                public void call(Void aVoid) {
+                                                    Subscriber<Integer> subscriberOrderIsChecked = new Subscriber<Integer>() {
+                                                        @Override
+                                                        public void onCompleted() {
                                                         }
-                                                        bundle.putString("orderId", orderId);
-                                                        if (rows.payment != null) {
-                                                            bundle.putString("payPrice", rows.payment.price);
+
+                                                        @Override
+                                                        public void onError(Throwable e) {
+                                                            e.printStackTrace();
                                                         }
-                                                        IntentUtil.activityForward(MyOrderDetailActivity.this, OfflinePayActivity.class, bundle, false);
-                                                    } else {
-                                                        requestData(orderId);
-                                                        MsgCenter.fireNull(MsgID.order_Change);
-                                                    }
+
+                                                        @Override
+                                                        public void onNext(Integer orderStatusType) {
+                                                            if (orderStatusType == 7) {
+                                                                Bundle bundle = new Bundle();
+                                                                if (rows.RSCInfo != null) {
+                                                                    bundle.putString("companyName", rows.RSCInfo.companyName);
+                                                                    bundle.putString("RSCPhone", rows.RSCInfo.RSCPhone);
+                                                                    bundle.putString("RSCAddress", rows.RSCInfo.RSCAddress);
+                                                                }
+                                                                bundle.putString("orderId", orderId);
+                                                                if (rows.payment != null) {
+                                                                    bundle.putString("payPrice", rows.payment.price);
+                                                                }
+                                                                IntentUtil.activityForward(MyOrderDetailActivity.this, OfflinePayActivity.class, bundle, false);
+                                                            } else {
+                                                                requestData(orderId);
+                                                                MsgCenter.fireNull(MsgID.order_Change);
+                                                            }
+                                                        }
+                                                    };
+                                                    OrderUtils.isChecked(subscriberOrderIsChecked, orderId);
                                                 }
-                                            };
-                                            OrderUtils.isChecked(handler, orderId);
-                                        }
-                                    });
+                                            });
                                     //更改支付方式
                                     change_pay_type.setOnClickListener(new View.OnClickListener() {
                                         @Override

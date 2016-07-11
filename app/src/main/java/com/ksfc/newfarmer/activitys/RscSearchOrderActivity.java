@@ -15,7 +15,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -29,9 +28,10 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.jakewharton.rxbinding.view.RxView;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
-import com.ksfc.newfarmer.common.LoadMoreOnsrcollListener;
+import com.ksfc.newfarmer.common.LoadMoreOnScrollListener;
 import com.ksfc.newfarmer.common.OrderUtils;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.common.CommonAdapter;
@@ -49,7 +49,6 @@ import com.ksfc.newfarmer.utils.PopWindowUtils;
 import com.ksfc.newfarmer.utils.PullToRefreshUtils;
 import com.ksfc.newfarmer.utils.ShowHideUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
-import com.ksfc.newfarmer.utils.Utils;
 import com.ksfc.newfarmer.widget.BaseViewUtils;
 import com.ksfc.newfarmer.widget.ClearEditText;
 import com.ksfc.newfarmer.widget.KeyboardListenRelativeLayout;
@@ -68,6 +67,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
+
+import rx.Subscriber;
+import rx.functions.Action1;
 
 /**
  * Created by HePeng on 2016/3/28.
@@ -104,7 +107,7 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
 
     private LoadingFooter loadingFooter;
 
-    private LoadMoreOnsrcollListener moreOnsrcollListener = new LoadMoreOnsrcollListener() {
+    private LoadMoreOnScrollListener moreOnsrcollListener = new LoadMoreOnScrollListener() {
         @Override
         public void loadMore() {
             //加载更多
@@ -437,7 +440,7 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
                 //订单状态 及不同订单状态下所对应的操作
 
                 RelativeLayout go_to_pay_rel = (RelativeLayout) holder.getView(R.id.go_to_pay_rel);
-                Button go_to_pay = (Button) holder.getView(R.id.go_to_pay);
+                final Button go_to_pay = (Button) holder.getView(R.id.go_to_pay);
                 Button change_pay_type = (Button) holder.getView(R.id.change_pay_type);
 
                 go_to_pay_rel.setVisibility(View.GONE);
@@ -454,27 +457,36 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
                         case 2:
                             go_to_pay_rel.setVisibility(View.VISIBLE);
                             go_to_pay.setText("审核付款");
-                            go_to_pay.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(final View v) {
+                            RxView.clicks(go_to_pay).throttleFirst(1, TimeUnit.SECONDS)
+                                    .subscribe(new Action1<Void>() {
+                                        @Override
+                                        public void call(Void aVoid) {
+                                            if (StringUtil.checkStr(ordersEntity.id)) {
+                                                Subscriber<Integer> subscriber = new Subscriber<Integer>() {
+                                                    @Override
+                                                    public void onCompleted() {
+                                                    }
 
-                                    if (StringUtil.checkStr(ordersEntity.id)) {
-                                        Handler handler = new Handler() {
-                                            @Override
-                                            public void handleMessage(Message msg) {
-                                                super.handleMessage(msg);
-                                                if (msg.what == 2) {
-                                                    showCheckOfflinePayPopUp(v, ordersEntity);
-                                                } else {
-                                                    page = 1;
-                                                    RscSearchOrderActivity.this.getData(page);
-                                                }
+                                                    @Override
+                                                    public void onError(Throwable e) {
+                                                        e.printStackTrace();
+                                                    }
+
+                                                    @Override
+                                                    public void onNext(Integer orderStatusType) {
+                                                        if (orderStatusType == 2) {
+                                                            showCheckOfflinePayPopUp(go_to_pay, ordersEntity);
+                                                        } else {
+                                                            page = 1;
+                                                            RscSearchOrderActivity.this.getData(page);
+                                                        }
+                                                    }
+                                                };
+                                                OrderUtils.CheckOffline(subscriber, ordersEntity.id);
                                             }
-                                        };
-                                        OrderUtils.CheckOffline(handler, ordersEntity.id);
-                                    }
-                                }
-                            });
+
+                                        }
+                                    });
                             break;
                         //待配送，点击去配送
                         case 4:

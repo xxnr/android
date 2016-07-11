@@ -60,7 +60,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <!-- 主界面 -->
         <activity
             android:name=".activitys.MainActivity"
@@ -69,13 +68,10 @@
             <intent-filter>
                 <data android:scheme="xxnr" />
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
-
         </activity>
-
         <!-- h5活动页 -->
         <activity android:name=".test.WebActivity">
             <intent-filter>
@@ -91,7 +87,6 @@
         </activity>
         <!-- h5活动页 -->
         <activity android:name=".test.WebToLoginActivity"/>
-
         <!-- 首界面 -->
         <activity android:name=".activitys.HomepageActivity" />
         <!-- 引导页 -->
@@ -153,11 +148,7 @@
         <!-- 新增地址 -->
         <activity android:name=".activitys.AddAddressActivity" />
         <!-- 购物车 -->
-        <activity android:name=".activitys.ShoppingCartActivity"
-
-
-            />
-        <!-- 省份-->
+        <activity android:name=".activitys.ShoppingCartActivity" />
         <!-- 修改地址 -->
         <activity android:name=".activitys.UpdateAddressActivity" />
         <!-- 新农资讯 -->

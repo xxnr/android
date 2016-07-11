@@ -2,6 +2,7 @@ package com.ksfc.newfarmer.activitys;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.jakewharton.rxbinding.view.RxView;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.common.OrderUtils;
@@ -54,6 +56,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
+import rx.Subscriber;
+import rx.functions.Action1;
 
 
 public class RscOrderDetailActivity extends BaseActivity implements KeyboardListenRelativeLayout.IOnKeyboardStateChangedListener {
@@ -110,8 +116,20 @@ public class RscOrderDetailActivity extends BaseActivity implements KeyboardList
         }
         setTitle("订单详情");
         initView();
+        final boolean callByRSCOrderListActivity = getIntent().getBooleanExtra("callByRSCOrderListActivity", false);
+        setLeftClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!callByRSCOrderListActivity) {
+                    startActivity(RSCOrderListActivity.class);
+                }
+                finish();
+            }
+        });
         requestData(orderId);
         getPayWay();
+
+
     }
 
     private void initView() {
@@ -348,27 +366,37 @@ public class RscOrderDetailActivity extends BaseActivity implements KeyboardList
                             case 2:
                                 go_to_pay_rel.setVisibility(View.VISIBLE);
                                 go_to_pay.setText("审核付款");
-                                go_to_pay.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(final View v) {
-                                        if (StringUtil.checkStr(orderId)) {
 
-                                            Handler handler = new Handler() {
-                                                @Override
-                                                public void handleMessage(Message msg) {
-                                                    super.handleMessage(msg);
-                                                    if (msg.what == 2) {
-                                                        showCheckOfflinePayPopUp(v, order);
-                                                    } else {
-                                                        requestData(orderId);
-                                                        MsgCenter.fireNull(MsgID.Rsc_order_Change, "CONFIRM");
-                                                    }
+                                RxView.clicks(go_to_pay).throttleFirst(1, TimeUnit.SECONDS)
+                                        .subscribe(new Action1<Void>() {
+                                            @Override
+                                            public void call(Void aVoid) {
+                                                if (StringUtil.checkStr(orderId)) {
+                                                    Subscriber<Integer> subscriber = new Subscriber<Integer>() {
+                                                        @Override
+                                                        public void onCompleted() {
+                                                        }
+
+                                                        @Override
+                                                        public void onError(Throwable e) {
+                                                            e.printStackTrace();
+                                                        }
+
+                                                        @Override
+                                                        public void onNext(Integer orderStatusType) {
+                                                            if (orderStatusType == 2) {
+                                                                showCheckOfflinePayPopUp(go_to_pay, order);
+                                                            } else {
+                                                                requestData(orderId);
+                                                                MsgCenter.fireNull(MsgID.Rsc_order_Change, "CONFIRM");
+                                                            }
+                                                        }
+                                                    };
+                                                    OrderUtils.CheckOffline(subscriber, orderId);
                                                 }
-                                            };
-                                            OrderUtils.CheckOffline(handler, orderId);
-                                        }
-                                    }
-                                });
+
+                                            }
+                                        });
                                 break;
                             //待配送，点击去配送
                             case 4:

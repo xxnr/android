@@ -173,6 +173,7 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(GoodsDetailActivity.this, MainActivity.class);
+                intent.putExtra("id",MainActivity.Tab.SHOPPING_CART);
                 startActivity(intent);
                 MsgCenter.fireNull(MsgID.MainActivity_select_tab, MainActivity.Tab.SHOPPING_CART);
                 finish();

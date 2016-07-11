@@ -77,6 +77,7 @@ public class RegisterActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                intent.putExtra("id",MainActivity.Tab.MINE);
                 startActivity(intent);
                 MsgCenter.fireNull(MsgID.MainActivity_select_tab, MainActivity.Tab.MINE);
                 finish();

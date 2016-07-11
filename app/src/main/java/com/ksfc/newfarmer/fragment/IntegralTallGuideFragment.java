@@ -31,7 +31,6 @@ import butterknife.Unbinder;
 public class IntegralTallGuideFragment extends BaseFragment {
     private Bundle arguments;
     private int page;
-    private Unbinder unbinder;
 
     @Override
     public void OnViewClick(View v) {
@@ -143,7 +142,7 @@ public class IntegralTallGuideFragment extends BaseFragment {
         LinearLayout gift_content_ll;
 
         Guide2ViewHolder(View view) {
-            unbinder = ButterKnife.bind(this, view);
+             ButterKnife.bind(this, view);
         }
     }
 }

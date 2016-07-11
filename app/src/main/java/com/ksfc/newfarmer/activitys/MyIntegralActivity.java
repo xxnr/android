@@ -18,7 +18,7 @@ import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.common.CommonAdapter;
 import com.ksfc.newfarmer.common.CommonViewHolder;
 import com.ksfc.newfarmer.common.CommonFunction;
-import com.ksfc.newfarmer.common.LoadMoreOnsrcollListener;
+import com.ksfc.newfarmer.common.LoadMoreOnScrollListener;
 import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.http.ApiType;
 import com.ksfc.newfarmer.http.RemoteApi;
@@ -55,7 +55,7 @@ public class MyIntegralActivity extends BaseActivity implements PullToRefreshBas
 
 
     private LoadingFooter loadingFooter;
-    private LoadMoreOnsrcollListener moreOnsrcollListener = new LoadMoreOnsrcollListener() {
+    private LoadMoreOnScrollListener moreOnsrcollListener = new LoadMoreOnScrollListener() {
         @Override
         public void loadMore() {
             //加载更多

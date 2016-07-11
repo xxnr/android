@@ -48,6 +48,7 @@ public class OrderPaidFragment extends BaseFragment {
                 break;
             case R.id.check_order_tv://去首页
                 Intent intent1 = new Intent(activity, MainActivity.class);
+                intent1.putExtra("id",MainActivity.Tab.INDEX);
                 startActivity(intent1);
                 //通知 首页选中的位置
                 MsgCenter.fireNull(MsgID.MainActivity_select_tab, MainActivity.Tab.INDEX);
@@ -56,11 +57,8 @@ public class OrderPaidFragment extends BaseFragment {
         }
     }
 
-
     @Override
     public void onResponsed(Request req) {
 
     }
-
-
 }

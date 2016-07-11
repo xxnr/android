@@ -2,6 +2,7 @@ package com.ksfc.newfarmer.fragment;
 
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,15 +21,24 @@ import com.ksfc.newfarmer.utils.IntentUtil;
  * @author Bruce.wang
  */
 public class GuideFragment extends Fragment {
-
+    private static final String ARG_PARAM1 = "param1";
     private int index;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
 
-        Bundle bundle = getArguments();
-        index = bundle.getInt("index");
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            index = getArguments().getInt(ARG_PARAM1);
+        }
+    }
+
+    public static GuideFragment newInstance(int param1) {
+        GuideFragment fragment = new GuideFragment();
+        Bundle args = new Bundle();
+        args.putInt(ARG_PARAM1, param1);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override

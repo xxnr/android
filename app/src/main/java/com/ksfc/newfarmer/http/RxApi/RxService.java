@@ -1,5 +1,7 @@
 package com.ksfc.newfarmer.http.RxApi;
 
+import android.util.Log;
+
 import com.ksfc.newfarmer.MsgID;
 
 import retrofit2.Retrofit;

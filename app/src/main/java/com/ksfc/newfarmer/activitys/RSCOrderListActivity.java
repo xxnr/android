@@ -1,14 +1,17 @@
 package com.ksfc.newfarmer.activitys;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 
 import com.ksfc.newfarmer.BaseActivity;
+import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.fragment.RscExchangeFragment;
 import com.ksfc.newfarmer.fragment.RscGiftOrderListFragment;
@@ -18,6 +21,8 @@ import com.ksfc.newfarmer.http.Request;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.PopWindowUtils;
 import com.ksfc.newfarmer.utils.Utils;
+
+import net.yangentao.util.msg.MsgCenter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -48,10 +53,8 @@ public class RSCOrderListActivity extends BaseActivity implements RscOrderListFr
 
         //设置状态栏颜色状态栏
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            //过滤掉四个tab的Activity
             Utils.setBarTint(this, R.color.green);
         }
-
         setViewClick(R.id.title_left_view);
         setViewClick(R.id.title_right_view);
         exchangeFragment = new RscExchangeFragment();
@@ -65,6 +68,20 @@ public class RSCOrderListActivity extends BaseActivity implements RscOrderListFr
 
         rscOrderListRadioGroup.setOnCheckedChangeListener(this);
         rscOrderListRadioGroup.check(R.id.rsc_order_list_radioButton1);//默认选中叮单
+    }
+
+    //设置返回监听的，回传数据
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+            Intent intent = new Intent(RSCOrderListActivity.this, MainActivity.class);
+            intent.putExtra("id",MainActivity.Tab.MINE);
+            startActivity(intent);
+            MsgCenter.fireNull(MsgID.MainActivity_select_tab,  MainActivity.Tab.MINE);
+            finish();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override
@@ -82,6 +99,10 @@ public class RSCOrderListActivity extends BaseActivity implements RscOrderListFr
                 }
                 break;
             case R.id.title_left_view:
+                Intent intent = new Intent(RSCOrderListActivity.this, MainActivity.class);
+                intent.putExtra("id",MainActivity.Tab.MINE);
+                startActivity(intent);
+                MsgCenter.fireNull(MsgID.MainActivity_select_tab,  MainActivity.Tab.MINE);
                 finish();
                 break;
         }

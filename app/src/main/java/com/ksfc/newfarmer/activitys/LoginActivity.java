@@ -92,6 +92,7 @@ public class LoginActivity extends BaseActivity {
             public void onClick(View v) {
                 if (isTokenError) {
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    intent.putExtra("id",MainActivity.Tab.MINE);
                     startActivity(intent);
                     MsgCenter.fireNull(MsgID.MainActivity_select_tab, MainActivity.Tab.MINE);
                 }
@@ -107,6 +108,7 @@ public class LoginActivity extends BaseActivity {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
             if (isTokenError) {
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                intent.putExtra("id",MainActivity.Tab.MINE);
                 startActivity(intent);
                 MsgCenter.fireNull(MsgID.MainActivity_select_tab,  MainActivity.Tab.MINE);
             }
@@ -194,6 +196,7 @@ public class LoginActivity extends BaseActivity {
                 //登录成功跳转
                 if (isTokenError) {
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    intent.putExtra("id",MainActivity.Tab.MINE);
                     startActivity(intent);
                     MsgCenter.fireNull(MsgID.MainActivity_select_tab,  MainActivity.Tab.MINE);
                 }
