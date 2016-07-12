@@ -4,12 +4,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
+import com.ksfc.newfarmer.fragment.ActivityListFragment;
 import com.ksfc.newfarmer.fragment.IntegralTallGuideFragment;
 import com.ksfc.newfarmer.fragment.SignSuccessFragment;
 import com.ksfc.newfarmer.http.Request;
@@ -43,6 +45,10 @@ public class FloatingLayerActivity extends BaseActivity {
         initView();
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
+            if (fragmentManager == null) {
+                fragmentManager = getSupportFragmentManager();
+            }
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             switch (extras.getString("activity", "IntegralTallActivity")) {
                 case "IntegralTallActivity":  //加载积分商城引导页
                     //空出积分商城未登录时候的提示未登录的布局
@@ -51,33 +57,35 @@ public class FloatingLayerActivity extends BaseActivity {
                     } else {
                         unLogin_bar.setVisibility(View.VISIBLE);
                     }
-                    changFragment(1);
+                    changFragment(1,fragmentTransaction);
                     //浮层引导页切换通知
                     MsgCenter.addListener(new MsgListener() {
-
                         @Override
                         public void onMsg(Object sender, String msg, Object... args) {
                             if (args != null) {
-                                changFragment((int) args[0]);
+                                if (fragmentManager == null) {
+                                    fragmentManager = getSupportFragmentManager();
+                                }
+                                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                                changFragment((int) args[0], transaction);
+                                transaction.commitAllowingStateLoss();
                             } else {
                                 finish();
                             }
                         }
                     }, MsgID.Integral_Guide_Change);
-
                     break;
                 case "MyIntegralActivity"://加载签到成功动画
                 case "MainActivity":  //加载积分商城引导页
-                    if (fragmentManager == null) {
-                        fragmentManager = getSupportFragmentManager();
-                    }
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     SignSuccessFragment fragment = new SignSuccessFragment();
                     fragment.setArguments(extras);
                     fragmentTransaction.replace(R.id.layer_content_view, fragment);
-                    fragmentTransaction.commitAllowingStateLoss();
+                    break;
+                case "HomepageActivity":
+                    fragmentTransaction.replace(R.id.layer_content_view, ActivityListFragment.newInstance());
                     break;
             }
+            fragmentTransaction.commitAllowingStateLoss();
         }
     }
 
@@ -103,11 +111,7 @@ public class FloatingLayerActivity extends BaseActivity {
     }
 
     //积分商城引导页浮层引导页切换
-    public void changFragment(int page) {
-        if (fragmentManager == null) {
-            fragmentManager = getSupportFragmentManager();
-        }
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+    public void changFragment(int page,FragmentTransaction fragmentTransaction) {
         IntegralTallGuideFragment guideFragment = new IntegralTallGuideFragment();
         Bundle bundle = new Bundle();
         if (page == 1) {
@@ -123,7 +127,6 @@ public class FloatingLayerActivity extends BaseActivity {
         bundle.putInt("page", page);
         guideFragment.setArguments(bundle);
         fragmentTransaction.replace(R.id.layer_content_view, guideFragment);
-        fragmentTransaction.commitAllowingStateLoss();
     }
 
     @Override

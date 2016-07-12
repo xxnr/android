@@ -3,6 +3,7 @@ package com.ksfc.newfarmer.test;
 import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -40,12 +41,15 @@ public class WebToLoginActivity extends BaseActivity {
                 view.loadUrl(url);
                 return true;
             }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                setTitle(view.getTitle());
+            }
         });
-        webView.addJavascriptInterface(new JavaScriptObject(WebToLoginActivity.this,webView),"mObj");
+        webView.addJavascriptInterface(new JavaScriptObject(WebToLoginActivity.this, new Handler()), "mObj");
         //载入js
         webView.loadUrl("file:///android_asset/testPass.html");
-
-
 
 
     }

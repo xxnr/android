@@ -43,6 +43,8 @@ import com.ksfc.newfarmer.http.beans.HomeImageResult.UserRollImage;
 import com.ksfc.newfarmer.http.beans.IntegralGetResult;
 import com.ksfc.newfarmer.http.beans.PointResult;
 import com.ksfc.newfarmer.http.RxApi.RxService;
+import com.ksfc.newfarmer.utils.ActivityAnimationUtils;
+import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.PullToRefreshUtils;
 import com.ksfc.newfarmer.utils.ScreenUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
@@ -76,6 +78,8 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
     LinearLayout view_container;
     @BindView(R.id.pull_ll_srcoll)
     PullToRefreshScrollView scrollView;
+    @BindView(R.id.title_back_img)
+    ImageView title_back_img;
     private CarouselDiagramViewPager carouselDiagramViewPager;
 
 
@@ -98,16 +102,16 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
     public void OnActCreate(Bundle savedInstanceState) {
         ButterKnife.bind(this);
         setTitle("新新农人");
+        initView();
         //在主页判断版本是否需要升级 并注册监听下载完成之后的广播
         completeReceiver = new CompleteReceiver();
         registerReceiver(completeReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
         //app 是否需要升级
         RemoteApi.appIsNeedUpdate(this);
-        initView();
-
+        //商品和banner列表
         showProgressDialog();
-        RemoteApi.getClassId(this);
         RemoteApi.getBanner(this);
+        RemoteApi.getClassId(this);
         if (isLogin()) {
             RemoteApi.getIntegral(this);
         }
@@ -172,10 +176,19 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
 
 
     private void initView() {
-        hideLeft();
         showRightImage();
         setRightImage(R.drawable.sign_icon);
         getRightImageView().setOnClickListener(this);
+        title_back_img.setBackgroundResource(R.drawable.acitity_icon);
+        setLeftClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString("activity", HomepageActivity.this.getClass().getSimpleName());
+                IntentUtil.activityForward(MainActivity.getInstance(), FloatingLayerActivity.class, bundle, false);
+                ActivityAnimationUtils.setActivityAnimation(MainActivity.getInstance(), R.anim.animation_none, R.anim.animation_none);
+            }
+        });
         //设置下拉刷新
         scrollView.setOnRefreshListener(this);
         //设置刷新的文字
@@ -190,6 +203,7 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
         setViewClick(R.id.car_zhuanchang);
         //初始化抖动动画
         shakeAnimation = AnimationUtils.loadAnimation(HomepageActivity.this, R.anim.shake_animation);
+
 
     }
 
