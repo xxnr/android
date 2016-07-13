@@ -21,6 +21,9 @@ import com.umeng.message.PushAgent;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.utils.Log;
+import com.zxinsight.MWConfiguration;
+import com.zxinsight.MagicWindowSDK;
+import com.zxinsight.Session;
 
 import android.app.Activity;
 import android.content.Context;
@@ -68,6 +71,13 @@ public class RndApplication extends MultiDexApplication {
         UmengPush.lunchActivity(this);
         //初始化社会化分享
         initSocialShare();
+        //魔窗
+        MWConfiguration config = new MWConfiguration(this);
+        config.setDebugModel(true) //开启Debug模式，显示Log，release时注意关闭
+                . setPageTrackWithFragment(true) //带有Fragment的页面。具体查看2.2.2
+                . setSharePlatform (MWConfiguration. ORIGINAL);
+        MagicWindowSDK.initSDK(config);
+        Session.setAutoSession(this);
         //初初始化全局的UID
         LoginResult.UserInfo userInfo = Store.User.queryMe();
         if (userInfo != null) {

@@ -59,13 +59,20 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <data
+                    android:host="com.ksfc.newfarmer"
+                    android:scheme="dsc8c3c0850ecb8d07" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
         </activity>
         <!-- 主界面 -->
         <activity
             android:name=".activitys.MainActivity"
             android:launchMode="singleTask"
-            android:windowSoftInputMode="adjustPan">
-        </activity>
+            android:windowSoftInputMode="adjustPan"></activity>
         <!-- 首界面 -->
         <activity android:name=".activitys.HomepageActivity" />
         <!-- 引导页 -->
@@ -207,7 +214,7 @@
         <!-- 积分商城 -->
         <activity
             android:name=".activitys.IntegralTallActivity"
-            android:launchMode="singleTask"/>
+            android:launchMode="singleTask" />
         <!--积分商城 礼品详情 -->
         <activity android:name=".activitys.IntegralGiftDetailActivity" />
         <!--积分商城 提交兑换 -->
@@ -416,6 +423,14 @@
             android:name="com.tencent.connect.common.AssistActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <!--魔窗-->
+        <activity
+            android:name="com.zxinsight.common.base.MWActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize|navigation"
+            android:exported="true" />
+        <meta-data
+            android:name="MW_APPID"
+            android:value="BBT6RNJPVCNY5T2ZNLI6X9SFPHLJKAKA" />
     </application>
 
 </manifest>
