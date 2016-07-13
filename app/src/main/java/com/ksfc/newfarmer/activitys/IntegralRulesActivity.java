@@ -9,6 +9,7 @@ import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.http.Request;
+import com.ksfc.newfarmer.test.JavaScriptObject;
 
 import net.yangentao.util.NetUtil;
 
@@ -35,22 +36,16 @@ public class IntegralRulesActivity extends BaseActivity {
         // 允许运行js脚本
         webView.getSettings().setJavaScriptEnabled(true);
         // 如果web内出现链接 依旧由当前webVIew加载
+        webView.addJavascriptInterface( new JavaScriptObject(this), "mObj");
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 view.loadUrl(url);
                 return true;
             }
-
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                super.onPageFinished(view, url);
-                disMissDialog();
-            }
         });
         if (NetUtil.isConnected(this)) {
-            showProgressDialog();
-            webView.loadUrl(MsgID.IP + "/rewardshop/rules");
+            webView.loadUrl("http://192.168.1.11:8070/campaigns/events/rewardShopLaunch");
         }else {
             showToast("网络未连接");
         }
