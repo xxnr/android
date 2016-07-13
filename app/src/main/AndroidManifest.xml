@@ -59,11 +59,13 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <!--deep share-->
             <intent-filter>
                 <data
                     android:host="com.ksfc.newfarmer"
                     android:scheme="dsc8c3c0850ecb8d07" />
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
@@ -72,7 +74,7 @@
         <activity
             android:name=".activitys.MainActivity"
             android:launchMode="singleTask"
-            android:windowSoftInputMode="adjustPan"></activity>
+            android:windowSoftInputMode="adjustPan" />
         <!-- 首界面 -->
         <activity android:name=".activitys.HomepageActivity" />
         <!-- 引导页 -->
@@ -423,14 +425,6 @@
             android:name="com.tencent.connect.common.AssistActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <!--魔窗-->
-        <activity
-            android:name="com.zxinsight.common.base.MWActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize|navigation"
-            android:exported="true" />
-        <meta-data
-            android:name="MW_APPID"
-            android:value="BBT6RNJPVCNY5T2ZNLI6X9SFPHLJKAKA" />
     </application>
 
 </manifest>

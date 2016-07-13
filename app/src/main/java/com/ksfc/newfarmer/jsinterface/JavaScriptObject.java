@@ -1,4 +1,4 @@
-package com.ksfc.newfarmer.test;
+package com.ksfc.newfarmer.jsinterface;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +13,7 @@ public class JavaScriptObject {
         this.mContxt = mContxt;
     }
 
+    //启动一个页面的function
     @JavascriptInterface
     public void startActivity(String activity) {
         Class<?> aClass;
