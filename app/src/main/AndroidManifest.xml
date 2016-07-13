@@ -65,28 +65,7 @@
             android:name=".activitys.MainActivity"
             android:launchMode="singleTask"
             android:windowSoftInputMode="adjustPan">
-            <intent-filter>
-                <data android:scheme="xxnr" />
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-            </intent-filter>
         </activity>
-        <!-- h5活动页 -->
-        <activity android:name=".test.WebActivity">
-            <intent-filter>
-                <data
-                    android:host="www.xinxinnongren.com"
-                    android:pathPrefix="/newsDetail.html"
-                    android:scheme="xxnr" />
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-            </intent-filter>
-        </activity>
-        <!-- h5活动页 -->
-        <activity android:name=".test.WebToLoginActivity"/>
         <!-- 首界面 -->
         <activity android:name=".activitys.HomepageActivity" />
         <!-- 引导页 -->
@@ -437,7 +416,6 @@
             android:name="com.tencent.connect.common.AssistActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-
     </application>
 
 </manifest>

@@ -483,7 +483,6 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
     @Override
     protected void onStart() {
         super.onStart();
-        MobclickAgent.onPause(this);
     }
 
     @Override

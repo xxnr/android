@@ -12,9 +12,6 @@ import android.widget.ImageView;
 import com.ksfc.newfarmer.BaseFragment;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.http.Request;
-import com.ksfc.newfarmer.test.WebActivity;
-import com.ksfc.newfarmer.test.WebToLoginActivity;
-import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.Utils;
 import com.ksfc.newfarmer.widget.transformer.ScaleInTransformer;
 
@@ -118,12 +115,6 @@ public class ActivityListFragment extends BaseFragment {
             View inflate = inflater.inflate(R.layout.item_activity_list, null);
             ImageView iv = (ImageView) inflate.findViewById(R.id.imageView);
             iv.setImageResource(res[position]);
-            iv.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    IntentUtil.activityForward(activity, WebToLoginActivity.class, null, true);
-                }
-            });
             container.addView(inflate);
             return inflate;
         }

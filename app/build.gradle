@@ -74,6 +74,12 @@ android {
 
 
 }
+repositories {
+    flatDir {
+        dirs'libs'
+    }
+}
+
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -109,5 +115,7 @@ dependencies {
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
+    //MagicWindowSDK
+    compile(name:'MagicWindowSDK', ext:'aar')
 
 }
