@@ -8,7 +8,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
@@ -21,9 +20,6 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.handmark.pulltorefresh.library.ILoadingLayout;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
@@ -37,7 +33,6 @@ import com.ksfc.newfarmer.http.beans.GiftListResult;
 import com.ksfc.newfarmer.http.beans.IntegralGetResult;
 import com.ksfc.newfarmer.utils.ActivityAnimationUtils;
 import com.ksfc.newfarmer.utils.IntentUtil;
-import com.ksfc.newfarmer.utils.PullToRefreshUtils;
 import com.ksfc.newfarmer.utils.ScreenUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.utils.Utils;
@@ -63,7 +58,7 @@ import in.srain.cube.views.ptr.PtrHandler;
 /**
  * Created by CAI on 2016/6/16.
  */
-public class IntegralTallActivity extends BaseActivity {
+public class RewardShopActivity extends BaseActivity {
 
     @BindView(R.id.titleview)
     RelativeLayout titleview;
@@ -118,7 +113,7 @@ public class IntegralTallActivity extends BaseActivity {
         MsgCenter.addListener(new MsgListener() {
             @Override
             public void onMsg(Object sender, String msg, Object... args) {
-                RemoteApi.getIntegral(IntegralTallActivity.this);
+                RemoteApi.getIntegral(RewardShopActivity.this);
                 headUnLoginTallLayout.setVisibility(View.GONE);
                 headUnLoginTallLayoutFloat.setVisibility(View.GONE);
             }
@@ -128,7 +123,7 @@ public class IntegralTallActivity extends BaseActivity {
         MsgCenter.addListener(new MsgListener() {
             @Override
             public void onMsg(Object sender, String msg, Object... args) {
-                RemoteApi.getIntegral(IntegralTallActivity.this);
+                RemoteApi.getIntegral(RewardShopActivity.this);
             }
         }, MsgID.IS_Signed);
     }
@@ -136,7 +131,7 @@ public class IntegralTallActivity extends BaseActivity {
 
     private void initView() {
         ViewGroup.LayoutParams layoutParams = titleview.getLayoutParams();
-        layoutParams.height = Utils.dip2px(IntegralTallActivity.this, 40);
+        layoutParams.height = Utils.dip2px(RewardShopActivity.this, 40);
         titleview.setLayoutParams(layoutParams);
         view_none_container.setVisibility(View.GONE);
 
@@ -149,7 +144,7 @@ public class IntegralTallActivity extends BaseActivity {
         setViewClick(R.id.head_unLogin_tall_layout_float);
         setViewClick(R.id.return_top);
 
-        final int screenHeight = ScreenUtil.getScreenHeight(IntegralTallActivity.this);
+        final int screenHeight = ScreenUtil.getScreenHeight(RewardShopActivity.this);
 
         scrollView.setScrollViewListener(new ObservableScrollView.ScrollViewListener() {
             @Override
@@ -173,7 +168,7 @@ public class IntegralTallActivity extends BaseActivity {
 
 
             /* 设置刷新头部view */
-        PtrHeaderView header = new PtrHeaderView(IntegralTallActivity.this);
+        PtrHeaderView header = new PtrHeaderView(RewardShopActivity.this);
         frameLayout.setHeaderView(header);
         /* 设置回调 */
         frameLayout.addPtrUIHandler(header);
@@ -190,7 +185,7 @@ public class IntegralTallActivity extends BaseActivity {
                     }
                 }, 2000);
                 count = 0;
-                RemoteApi.getGiftCategories(IntegralTallActivity.this);
+                RemoteApi.getGiftCategories(RewardShopActivity.this);
             }
 
             @Override
@@ -207,20 +202,20 @@ public class IntegralTallActivity extends BaseActivity {
         switch (v.getId()) {
             case R.id.integral_count_ll:
                 if (isLogin()) {
-                    IntentUtil.activityForward(IntegralTallActivity.this, MyIntegralActivity.class, null, false);
+                    IntentUtil.activityForward(RewardShopActivity.this, MyRewardActivity.class, null, false);
                 } else {
                     startActivity(LoginActivity.class);
                 }
                 break;
             case R.id.changing_record_ll:
                 if (isLogin()) {
-                    IntentUtil.activityForward(IntegralTallActivity.this, ExchangeRecordActivity.class, null, false);
+                    IntentUtil.activityForward(RewardShopActivity.this, ExchangeRecordActivity.class, null, false);
                 } else {
                     startActivity(LoginActivity.class);
                 }
                 break;
             case R.id.integral_rules_ll:
-                startActivity(IntegralRulesActivity.class);
+                startActivity(RewardRulesActivity.class);
                 break;
             case R.id.head_unLogin_tall_layout_float:
                 if (!isLogin()) {
@@ -344,7 +339,7 @@ public class IntegralTallActivity extends BaseActivity {
                     for (int i = 0; i < ViewBeanList.size(); i++) {
                         IntegralBean integralBean = ViewBeanList.get(i);
                         if (integralBean != null && giftsBean.category != null && integralBean._id.equals(giftsBean.category._id)) {
-                            GiftAdapter adapter = new GiftAdapter(IntegralTallActivity.this, gifts);
+                            GiftAdapter adapter = new GiftAdapter(RewardShopActivity.this, gifts);
                             integralBean.unSwipeGridView.setAdapter(adapter);
                             integralBean.viewGroup.setVisibility(View.VISIBLE);
                             count += integralBean.unSwipeGridView.getCount();
@@ -441,7 +436,7 @@ public class IntegralTallActivity extends BaseActivity {
                         Bundle bundle = new Bundle();
                         bundle.putString("id", gift.id);
                         bundle.putInt("score", score);
-                        IntentUtil.activityForward(IntegralTallActivity.this, IntegralGiftDetailActivity.class, bundle, false);
+                        IntentUtil.activityForward(RewardShopActivity.this, RewardDetailActivity.class, bundle, false);
                     }
                 });
             }
@@ -452,7 +447,7 @@ public class IntegralTallActivity extends BaseActivity {
     //展示浮层
     private void showGuide(int integral, GiftListResult.DatasBean.GiftsBean gift) {
         //第一次进入我的展示积分引导页
-        PreferenceUtil pu = new PreferenceUtil(IntegralTallActivity.this, "config");
+        PreferenceUtil pu = new PreferenceUtil(RewardShopActivity.this, "config");
         boolean firstInIntegral = pu.getBool("firstInIntegral", true);
         if (firstInIntegral) {
             Bundle integralData = new Bundle();

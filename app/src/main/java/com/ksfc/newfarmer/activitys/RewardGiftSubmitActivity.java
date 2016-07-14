@@ -32,7 +32,7 @@ import butterknife.ButterKnife;
 /**
  * Created by CAI on 2016/6/16.
  */
-public class IntegralGiftSubmitActivity extends BaseActivity {
+public class RewardGiftSubmitActivity extends BaseActivity {
     @BindView(R.id.select_state_address_info)
     TextView selectStateAddressInfo;
     @BindView(R.id.select_state_address_ll_state)
@@ -192,7 +192,7 @@ public class IntegralGiftSubmitActivity extends BaseActivity {
             AddGiftOrderResult reqData = (AddGiftOrderResult) req.getData();
             Bundle bundle = new Bundle();
             bundle.putSerializable("giftOrder", reqData.giftOrder);
-            IntentUtil.activityForward(IntegralGiftSubmitActivity.this, ExchangeSuccessActivity.class, bundle, true);
+            IntentUtil.activityForward(RewardGiftSubmitActivity.this, ExchangeSuccessActivity.class, bundle, true);
         }
     }
 

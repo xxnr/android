@@ -43,7 +43,7 @@ import butterknife.ButterKnife;
 /**
  * Created by CAI on 2016/6/17.
  */
-public class MyIntegralActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener {
+public class MyRewardActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener {
 
     @BindView(R.id.unSwipeListView)
     PullToRefreshListView unSwipeListView;
@@ -62,7 +62,7 @@ public class MyIntegralActivity extends BaseActivity implements PullToRefreshBas
             if (loadingFooter.getState() == LoadingFooter.State.Idle) {
                 loadingFooter.setState(LoadingFooter.State.Loading);
                 page++;
-                RemoteApi.getPointsLogs(MyIntegralActivity.this, page);
+                RemoteApi.getPointsLogs(MyRewardActivity.this, page);
             }
         }
     };
@@ -144,7 +144,7 @@ public class MyIntegralActivity extends BaseActivity implements PullToRefreshBas
                     setSignMsg(holder.signDescriptionTv, isSign, consecutiveTimes);
                     //加载图片
                     if (StringUtil.checkStr(data.datas.sign.large_imgUrl)) {
-                        Picasso.with(MyIntegralActivity.this).load(MsgID.IP + data.datas.sign.large_imgUrl).into(holder.signStateImgIv);
+                        Picasso.with(MyRewardActivity.this).load(MsgID.IP + data.datas.sign.large_imgUrl).into(holder.signStateImgIv);
                     }
                 } else {
                     setSignMsg(holder.signDescriptionTv, false, 0);
@@ -160,7 +160,7 @@ public class MyIntegralActivity extends BaseActivity implements PullToRefreshBas
                     holder.contentLl.setVisibility(View.VISIBLE);
                     if (page == 1) {
                         if (adapter == null) {
-                            adapter = new PointAdapter(MyIntegralActivity.this, list);
+                            adapter = new PointAdapter(MyRewardActivity.this, list);
                             unSwipeListView.setAdapter(adapter);
                         } else {
                             adapter.clear();

@@ -49,8 +49,8 @@ public class FloatingLayerActivity extends BaseActivity {
                 fragmentManager = getSupportFragmentManager();
             }
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            switch (extras.getString("activity", "IntegralTallActivity")) {
-                case "IntegralTallActivity":  //加载积分商城引导页
+            switch (extras.getString("activity", RewardShopActivity.class.getSimpleName())) {
+                case "RewardShopActivity":  //加载积分商城引导页
                     //空出积分商城未登录时候的提示未登录的布局
                     if (isLogin()) {
                         unLogin_bar.setVisibility(View.GONE);
@@ -75,7 +75,7 @@ public class FloatingLayerActivity extends BaseActivity {
                         }
                     }, MsgID.Integral_Guide_Change);
                     break;
-                case "MyIntegralActivity"://加载签到成功动画
+                case "MyRewardActivity"://加载签到成功动画
                 case "MainActivity":  //加载积分商城引导页
                     SignSuccessFragment fragment = new SignSuccessFragment();
                     fragment.setArguments(extras);

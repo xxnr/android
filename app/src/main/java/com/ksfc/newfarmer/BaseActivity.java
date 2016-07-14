@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.ksfc.newfarmer.activitys.HomepageActivity;
 import com.ksfc.newfarmer.activitys.LoginActivity;
 import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.http.ApiType;
@@ -185,7 +186,7 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
                         } else if (req.getData().getStatus().equals("1403")) {
                             RndLog.d(TAG, req.getData().getMessage());
                         } else if (req.getApi() == ApiType.APP_UP_GRADE) {
-                            if (!getClass().getSimpleName().equals("HomepageActivity")) {
+                            if (!getClass().getSimpleName().equals(HomepageActivity.class.getSimpleName())) {
                                 req.showErrorMsg();
                             }
                         }else if (req.getApi() == ApiType.SEND_SMS){

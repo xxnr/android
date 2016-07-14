@@ -33,7 +33,7 @@ public class ActivityDetailActivity extends BaseActivity {
     @Override
     public void OnActCreate(Bundle savedInstanceState) {
         ButterKnife.bind(this);
-        setTitle("积分规则");
+        setTitle("");
         // 允许运行js脚本
         webView.getSettings().setJavaScriptEnabled(true);
         // 如果web内出现链接 依旧由当前webVIew加载
@@ -43,6 +43,11 @@ public class ActivityDetailActivity extends BaseActivity {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 view.loadUrl(url);
                 return true;
+            }
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                ActivityDetailActivity.this.setTitle(view.getTitle());
             }
         });
         if (NetUtil.isConnected(this)) {

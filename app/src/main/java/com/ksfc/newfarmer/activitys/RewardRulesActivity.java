@@ -19,7 +19,7 @@ import butterknife.ButterKnife;
 /**
  * Created by CAI on 2016/6/24.
  */
-public class IntegralRulesActivity extends BaseActivity {
+public class RewardRulesActivity extends BaseActivity {
 
     @BindView(R.id.webView)
     WebView webView;

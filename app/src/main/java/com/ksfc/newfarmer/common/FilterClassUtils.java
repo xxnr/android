@@ -1,5 +1,11 @@
 package com.ksfc.newfarmer.common;
 
+import com.ksfc.newfarmer.activitys.FloatingLayerActivity;
+import com.ksfc.newfarmer.activitys.GoodsListActivity;
+import com.ksfc.newfarmer.activitys.HomepageActivity;
+import com.ksfc.newfarmer.activitys.MineActivity;
+import com.ksfc.newfarmer.activitys.NewFarmerInfomationActivity;
+import com.ksfc.newfarmer.activitys.ShoppingCartActivity;
 import com.ksfc.newfarmer.http.ApiType;
 
 import java.util.ArrayList;
@@ -17,12 +23,11 @@ public class FilterClassUtils {
     public static List<String> getunSetStatusBarClasses() {
 
         List<String> unSetStatusBar = new ArrayList<>();
-        unSetStatusBar.add("HomepageActivity");
-        unSetStatusBar.add("MineActivity");
-        unSetStatusBar.add("ShoppingCartActivity");
-        unSetStatusBar.add("NewFarmerInfomationActivity");
-        unSetStatusBar.add("QiandaoActivity");
-        unSetStatusBar.add("FloatingLayerActivity");
+        unSetStatusBar.add(HomepageActivity.class.getSimpleName());
+        unSetStatusBar.add(MineActivity.class.getSimpleName());
+        unSetStatusBar.add(ShoppingCartActivity.class.getSimpleName());
+        unSetStatusBar.add(NewFarmerInfomationActivity.class.getSimpleName());
+        unSetStatusBar.add(FloatingLayerActivity.class.getSimpleName());
 
         return unSetStatusBar;
     }
@@ -35,8 +40,8 @@ public class FilterClassUtils {
     public static List<String> getTimeOutUnToastClasses() {
 
         List<String> unApiToastList = new ArrayList<>();
-        unApiToastList.add("HomepageActivity");
-        unApiToastList.add("GoodsListActivity");
+        unApiToastList.add(HomepageActivity.class.getSimpleName());
+        unApiToastList.add(GoodsListActivity.class.getSimpleName());
         return unApiToastList;
     }
 

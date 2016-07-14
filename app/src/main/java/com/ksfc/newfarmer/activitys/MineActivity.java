@@ -34,7 +34,6 @@ import net.yangentao.util.msg.MsgCenter;
 import net.yangentao.util.msg.MsgListener;
 
 import rx.Observable;
-import rx.Scheduler;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -296,7 +295,7 @@ public class MineActivity extends BaseActivity {
                 break;
             case R.id.my_jifen_ll:
                 IntentUtil.activityForward(MineActivity.this,
-                        IntegralTallActivity.class, null, false);
+                        RewardShopActivity.class, null, false);
                 break;
             case R.id.my_kefudianhua:
                 Utils.dial(this, "400-056-0371");

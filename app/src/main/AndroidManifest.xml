@@ -215,20 +215,20 @@
             android:theme="@style/Theme.Transparent" />
         <!-- 积分商城 -->
         <activity
-            android:name=".activitys.IntegralTallActivity"
+            android:name=".activitys.RewardShopActivity"
             android:launchMode="singleTask" />
         <!--积分商城 礼品详情 -->
-        <activity android:name=".activitys.IntegralGiftDetailActivity" />
+        <activity android:name=".activitys.RewardDetailActivity" />
         <!--积分商城 提交兑换 -->
-        <activity android:name=".activitys.IntegralGiftSubmitActivity" />
+        <activity android:name=".activitys.RewardGiftSubmitActivity" />
         <!--积分商城 我的积分 -->
-        <activity android:name=".activitys.MyIntegralActivity" />
+        <activity android:name=".activitys.MyRewardActivity" />
         <!--积分商城 兑换成功 -->
         <activity android:name=".activitys.ExchangeSuccessActivity" />
         <!--积分商城 兑换记录 -->
         <activity android:name=".activitys.ExchangeRecordActivity" />
         <!--积分商城 积分规则 -->
-        <activity android:name=".activitys.IntegralRulesActivity" />
+        <activity android:name=".activitys.RewardRulesActivity" />
         <!--订单搜索 Rsc兑换订单 -->
         <activity android:name=".activitys.RscSearchGiftOrderActivity" />
         <!-- 支付宝-->

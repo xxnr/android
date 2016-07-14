@@ -52,7 +52,7 @@ public class ExchangeSuccessActivity extends BaseActivity {
                 IntentUtil.activityForward(ExchangeSuccessActivity.this, ExchangeRecordActivity.class, null, true);
                 break;
             case R.id.back_tall_tv:
-                IntentUtil.activityForward(ExchangeSuccessActivity.this, IntegralTallActivity.class, null, true);
+                IntentUtil.activityForward(ExchangeSuccessActivity.this, RewardShopActivity.class, null, true);
                 break;
         }
     }

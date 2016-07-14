@@ -2,6 +2,7 @@ package com.ksfc.newfarmer.activitys;
 
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.utils.IntentUtil;
+import com.ksfc.newfarmer.utils.StringUtil;
 import com.singulariti.deepshare.DeepShare;
 import com.singulariti.deepshare.listeners.DSInappDataListener;
 
@@ -11,7 +12,6 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 
 import net.yangentao.util.PreferenceUtil;
 
@@ -66,12 +66,21 @@ public class SplashActivity extends Activity implements DSInappDataListener {
     @Override
     public void onInappDataReturned(JSONObject jsonObject) {
         try {
-            if (jsonObject == null) return;
-            String cmdName = jsonObject.getString("activity");
-            if (cmdName.equals("积分商城")) {
-                IntentUtil.activityForward(SplashActivity.this, IntegralTallActivity.class, null, true);
+            if (jsonObject == null){
+                return;
             }
-        } catch (JSONException e) {
+            String activity = jsonObject.getString("activity");
+            String key = jsonObject.getString("key");
+            String value = jsonObject.getString("value");
+            Class aClass = Class.forName("com.ksfc.newfarmer.activitys." + activity);
+            Intent intent = new Intent(SplashActivity.this, aClass);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            if (StringUtil.checkStr(key)&&StringUtil.checkStr(value)){
+                intent.putExtra(key, value);
+            }
+            SplashActivity.this.startActivity(intent);
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

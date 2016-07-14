@@ -32,7 +32,7 @@ import butterknife.ButterKnife;
 /**
  * Created by CAI on 2016/6/15.
  */
-public class IntegralGiftDetailActivity extends BaseActivity {
+public class RewardDetailActivity extends BaseActivity {
 
     @BindView(R.id.gift_detail_img)
     ImageView giftDetailImg;
@@ -86,7 +86,7 @@ public class IntegralGiftDetailActivity extends BaseActivity {
         MsgCenter.addListener(new MsgListener() {
             @Override
             public void onMsg(Object sender, String msg, Object... args) {
-                RemoteApi.getIntegral(IntegralGiftDetailActivity.this);
+                RemoteApi.getIntegral(RewardDetailActivity.this);
             }
         }, MsgID.ISLOGIN);
     }
@@ -100,7 +100,7 @@ public class IntegralGiftDetailActivity extends BaseActivity {
                     if (gift != null) {
                         Bundle bundle = new Bundle();
                         bundle.putSerializable("gift", gift);
-                        IntentUtil.activityForward(this, IntegralGiftSubmitActivity.class, bundle, false);
+                        IntentUtil.activityForward(this, RewardGiftSubmitActivity.class, bundle, false);
                     }
                 } else {
                     startActivity(LoginActivity.class);
