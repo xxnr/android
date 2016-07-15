@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.ksfc.newfarmer.BaseActivity;
@@ -189,6 +190,7 @@ public class RetrievePasswordActivity extends BaseActivity {
                     Glide.with(RetrievePasswordActivity.this)
                             .load(smsResult.captcha)
                             .skipMemoryCache(true)
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
                             .crossFade()
                             .error(R.drawable.code_load_failed)
                             .into(CustomDialogForSms.sms_auth_code_iv);
@@ -268,6 +270,7 @@ public class RetrievePasswordActivity extends BaseActivity {
         Glide.with(RetrievePasswordActivity.this)
                 .load(ApiType.REFRESH_SMS_CODE.getOpt() + "?tel=" + mobile + "&bizcode=resetpwd")
                 .asBitmap()
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
                 .error(R.drawable.code_load_failed)
                 .listener(new RequestListener<String, Bitmap>() {

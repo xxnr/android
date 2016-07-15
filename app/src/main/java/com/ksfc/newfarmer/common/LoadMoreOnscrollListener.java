@@ -9,7 +9,6 @@ public abstract class LoadMoreOnScrollListener implements AbsListView.OnScrollLi
 
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
-
         switch (scrollState) {
             // 当不滚动时
             case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:// 是当屏幕停止滚动时

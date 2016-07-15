@@ -5,9 +5,8 @@ package com.ksfc.newfarmer.activitys;
 
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
@@ -214,6 +213,7 @@ public class RegisterActivity extends BaseActivity {
                 .load(ApiType.REFRESH_SMS_CODE.getOpt() + "?tel=" + mobile + "&bizcode=register")
                 .asBitmap()
                 .skipMemoryCache(true)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .error(R.drawable.code_load_failed)
                 .listener(new RequestListener<String, Bitmap>() {
                     @Override
@@ -328,6 +328,7 @@ public class RegisterActivity extends BaseActivity {
                             .load(smsResult.captcha)
                             .crossFade()
                             .skipMemoryCache(true)
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
                             .error(R.drawable.code_load_failed)
                             .into(CustomDialogForSms.sms_auth_code_iv);
                 } else {

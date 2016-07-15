@@ -3,6 +3,7 @@ package com.ksfc.newfarmer.activitys;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.ksfc.newfarmer.App;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
@@ -369,7 +370,7 @@ public class MineActivity extends BaseActivity {
             if (user != null) {
                 String imgUrl = user.getImageUrl();
                 if (!StringUtil.empty(imgUrl)) {
-                    Glide.with(MineActivity.this).load(MsgID.IP + imgUrl).asBitmap().into(new SimpleTarget<Bitmap>() {
+                    Glide.with(App.getApp()).load(MsgID.IP + imgUrl).asBitmap().into(new SimpleTarget<Bitmap>() {
                         @Override
                         public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                             Message msg = Message.obtain();
