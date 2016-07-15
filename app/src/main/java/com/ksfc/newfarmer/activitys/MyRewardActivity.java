@@ -18,6 +18,7 @@ import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.common.CommonAdapter;
 import com.ksfc.newfarmer.common.CommonViewHolder;
 import com.ksfc.newfarmer.common.CommonFunction;
+import com.ksfc.newfarmer.common.GlideUtils;
 import com.ksfc.newfarmer.common.LoadMoreOnScrollListener;
 import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.http.ApiType;
@@ -31,7 +32,6 @@ import com.ksfc.newfarmer.utils.DateFormatUtils;
 import com.ksfc.newfarmer.utils.PullToRefreshUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.LoadingFooter;
-import com.squareup.picasso.Picasso;
 
 import net.yangentao.util.msg.MsgCenter;
 
@@ -143,9 +143,7 @@ public class MyRewardActivity extends BaseActivity implements PullToRefreshBase.
                     holder.signButtonTv.setText(isSign ? "已签到" : "签到");
                     setSignMsg(holder.signDescriptionTv, isSign, consecutiveTimes);
                     //加载图片
-                    if (StringUtil.checkStr(data.datas.sign.large_imgUrl)) {
-                        Picasso.with(MyRewardActivity.this).load(MsgID.IP + data.datas.sign.large_imgUrl).into(holder.signStateImgIv);
-                    }
+                    GlideUtils.setImageRes(MyRewardActivity.this,data.datas.sign.large_imgUrl,holder.signStateImgIv);
                 } else {
                     setSignMsg(holder.signDescriptionTv, false, 0);
                 }

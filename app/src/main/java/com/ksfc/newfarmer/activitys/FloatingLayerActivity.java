@@ -34,6 +34,12 @@ public class FloatingLayerActivity extends BaseActivity {
     View unLogin_bar;
     private FragmentManager fragmentManager;
 
+    public static final String KEY = "PAGE_FRAGMENT"; //传值的KEY
+    public static final String REWARD_SHOP_GUIDE = "REWARD_SHOP_GUIDE"; //积分商城引导页
+    public static final String SIGN_SUCCESS = "SIGN_SUCCESS";  //签到成功
+    public static final String ACTIVITY_LIST = "ACTIVITY_LIST"; //活动列表
+
+
     @Override
     public int getLayout() {
         return R.layout.activity_floating_layer;
@@ -49,15 +55,15 @@ public class FloatingLayerActivity extends BaseActivity {
                 fragmentManager = getSupportFragmentManager();
             }
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            switch (extras.getString("activity", RewardShopActivity.class.getSimpleName())) {
-                case "RewardShopActivity":  //加载积分商城引导页
+            switch (extras.getString(KEY, REWARD_SHOP_GUIDE)) {
+                case REWARD_SHOP_GUIDE:  //加载积分商城引导页
                     //空出积分商城未登录时候的提示未登录的布局
                     if (isLogin()) {
                         unLogin_bar.setVisibility(View.GONE);
                     } else {
                         unLogin_bar.setVisibility(View.VISIBLE);
                     }
-                    changFragment(1,fragmentTransaction);
+                    changFragment(1, fragmentTransaction);
                     //浮层引导页切换通知
                     MsgCenter.addListener(new MsgListener() {
                         @Override
@@ -75,13 +81,12 @@ public class FloatingLayerActivity extends BaseActivity {
                         }
                     }, MsgID.Integral_Guide_Change);
                     break;
-                case "MyRewardActivity"://加载签到成功动画
-                case "MainActivity":  //加载积分商城引导页
+                case SIGN_SUCCESS://加载签到成功动画
                     SignSuccessFragment fragment = new SignSuccessFragment();
                     fragment.setArguments(extras);
                     fragmentTransaction.replace(R.id.layer_content_view, fragment);
                     break;
-                case "HomepageActivity":
+                case ACTIVITY_LIST:
                     fragmentTransaction.replace(R.id.layer_content_view, ActivityListFragment.newInstance());
                     break;
             }
@@ -111,7 +116,7 @@ public class FloatingLayerActivity extends BaseActivity {
     }
 
     //积分商城引导页浮层引导页切换
-    public void changFragment(int page,FragmentTransaction fragmentTransaction) {
+    public void changFragment(int page, FragmentTransaction fragmentTransaction) {
         IntegralTallGuideFragment guideFragment = new IntegralTallGuideFragment();
         Bundle bundle = new Bundle();
         if (page == 1) {

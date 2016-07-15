@@ -14,6 +14,7 @@ import com.ksfc.newfarmer.RndApplication;
 
 import com.ksfc.newfarmer.common.CommonAdapter;
 import com.ksfc.newfarmer.common.CommonViewHolder;
+import com.ksfc.newfarmer.common.GlideUtils;
 import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.http.ApiType;
 import com.ksfc.newfarmer.http.Request;
@@ -36,7 +37,6 @@ import com.ksfc.newfarmer.utils.StringUtil;
 
 import com.ksfc.newfarmer.widget.UnSwipeListView;
 import com.ksfc.newfarmer.widget.WidgetUtil;
-import com.squareup.picasso.Picasso;
 
 import android.content.Context;
 import android.content.Intent;
@@ -418,14 +418,7 @@ public class AddOrderActivity extends BaseActivity implements RadioGroup.OnCheck
 
                 try {
                     //图片
-                    if (StringUtil.checkStr(goods.pic)) {
-                        Picasso.with(AddOrderActivity.this)
-                                .load(MsgID.IP + goods.pic)
-                                .error(R.drawable.error)
-                                .placeholder(R.drawable.zhanweitu)
-                                .into(((ImageView) holder.getView(R.id.ordering_item_img)));
-
-                    }
+                    GlideUtils.setImageRes(AddOrderActivity.this, goods.pic, (ImageView) holder.getView(R.id.ordering_item_img));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

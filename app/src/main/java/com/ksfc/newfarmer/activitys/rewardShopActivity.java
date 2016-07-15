@@ -25,6 +25,7 @@ import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.common.CommonAdapter;
 import com.ksfc.newfarmer.common.CommonViewHolder;
+import com.ksfc.newfarmer.common.GlideUtils;
 import com.ksfc.newfarmer.http.ApiType;
 import com.ksfc.newfarmer.http.RemoteApi;
 import com.ksfc.newfarmer.http.Request;
@@ -39,7 +40,6 @@ import com.ksfc.newfarmer.utils.Utils;
 import com.ksfc.newfarmer.widget.ObservableScrollView;
 import com.ksfc.newfarmer.widget.PtrHeaderView;
 import com.ksfc.newfarmer.widget.UnSwipeGridView;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import net.yangentao.util.PreferenceUtil;
 import net.yangentao.util.msg.MsgCenter;
@@ -408,7 +408,7 @@ public class RewardShopActivity extends BaseActivity {
                 }
                 //商品图
                 ImageView imageView = holder.getView(R.id.gift_img);
-                ImageLoader.getInstance().displayImage(MsgID.IP + gift.largeUrl, imageView);
+                GlideUtils.setImageRes(RewardShopActivity.this,gift.largeUrl,imageView);
 
                 TextView gift_name_tv = holder.getView(R.id.gift_name_tv);
                 TextView gift_price_tv = holder.getView(R.id.gift_price_tv);
@@ -451,7 +451,7 @@ public class RewardShopActivity extends BaseActivity {
         boolean firstInIntegral = pu.getBool("firstInIntegral", true);
         if (firstInIntegral) {
             Bundle integralData = new Bundle();
-            integralData.putString("activity", getClass().getSimpleName());
+            integralData.putString(FloatingLayerActivity.KEY, FloatingLayerActivity.REWARD_SHOP_GUIDE);
             integralData.putString("integral", String.valueOf(integral));
             integralData.putSerializable("gift", gift);
             IntentUtil.activityForward(this, FloatingLayerActivity.class, integralData, false);

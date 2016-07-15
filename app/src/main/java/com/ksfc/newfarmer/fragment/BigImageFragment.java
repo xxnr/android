@@ -1,16 +1,15 @@
 package com.ksfc.newfarmer.fragment;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 
+import com.bumptech.glide.Glide;
 import com.ksfc.newfarmer.BaseFragment;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.http.Request;
 import com.ksfc.newfarmer.utils.StringUtil;
-import com.squareup.picasso.Picasso;
 
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
@@ -47,10 +46,12 @@ public class BigImageFragment extends BaseFragment implements PhotoViewAttacher.
         View view = inflater.inflate(R.layout.activity_big_pic, null);
         final PhotoView photoView = (PhotoView) view.findViewById(R.id.photoView);
         //先加载缓存里的图片
+
         if (StringUtil.checkStr(originalUrl)) {
-            Picasso.with(activity)
+            Glide.with(BigImageFragment.this)
                     .load(MsgID.IP + originalUrl)
-                    .config(Bitmap.Config.RGB_565)
+                    .placeholder(R.drawable.zhanweitu)
+                    .error(R.drawable.zhanweitu)
                     .into(photoView);
         }
         photoView.setOnPhotoTapListener(this);

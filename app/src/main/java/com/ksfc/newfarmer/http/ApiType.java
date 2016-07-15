@@ -1,19 +1,16 @@
 package com.ksfc.newfarmer.http;
 
-import com.ksfc.newfarmer.http.beans.AboutUsResult;
 import com.ksfc.newfarmer.http.beans.AddGiftOrderResult;
 import com.ksfc.newfarmer.http.beans.AddOrderResult;
 import com.ksfc.newfarmer.http.beans.AddressList;
 import com.ksfc.newfarmer.http.beans.AlipayResult;
 import com.ksfc.newfarmer.http.beans.AppUpgrade;
 import com.ksfc.newfarmer.http.beans.AttrSelectResult;
-import com.ksfc.newfarmer.http.beans.BannerResult;
 import com.ksfc.newfarmer.http.beans.BrandsResult;
 import com.ksfc.newfarmer.http.beans.BuildingList;
 import com.ksfc.newfarmer.http.beans.CameraResult;
 import com.ksfc.newfarmer.http.beans.CityList;
 import com.ksfc.newfarmer.http.beans.ClassIDResult;
-import com.ksfc.newfarmer.http.beans.CommentResult;
 import com.ksfc.newfarmer.http.beans.ConsigneeResult;
 import com.ksfc.newfarmer.http.beans.ConsumerOrderResult;
 import com.ksfc.newfarmer.http.beans.CustomerIsLatestResult;
@@ -29,7 +26,6 @@ import com.ksfc.newfarmer.http.beans.GiftDetailResult;
 import com.ksfc.newfarmer.http.beans.GiftListResult;
 import com.ksfc.newfarmer.http.beans.GiftOrderListResult;
 import com.ksfc.newfarmer.http.beans.HomeImageResult;
-import com.ksfc.newfarmer.http.beans.HotLineResult;
 import com.ksfc.newfarmer.http.beans.InformationResult;
 import com.ksfc.newfarmer.http.beans.IntegralGetResult;
 import com.ksfc.newfarmer.http.beans.IntentionProductsResult;
@@ -47,7 +43,6 @@ import com.ksfc.newfarmer.http.beans.PointLogsResult;
 import com.ksfc.newfarmer.http.beans.PointResult;
 import com.ksfc.newfarmer.http.beans.PotentialCustomerDetailResult;
 import com.ksfc.newfarmer.http.beans.PotentialListResult;
-import com.ksfc.newfarmer.http.beans.ProFileResult;
 import com.ksfc.newfarmer.http.beans.PublicKeyResult;
 import com.ksfc.newfarmer.http.beans.QueueList;
 import com.ksfc.newfarmer.http.beans.RSCInfoResult;
@@ -59,10 +54,8 @@ import com.ksfc.newfarmer.http.beans.RscOrderDetailResult;
 import com.ksfc.newfarmer.http.beans.RscOrderResult;
 import com.ksfc.newfarmer.http.beans.SaveAdressList;
 import com.ksfc.newfarmer.http.beans.SmsResult;
-import com.ksfc.newfarmer.http.beans.SureOrderResult;
 import com.ksfc.newfarmer.http.beans.TownList;
 import com.ksfc.newfarmer.http.beans.UnionPayResponse;
-import com.ksfc.newfarmer.http.beans.UnipayResult;
 import com.ksfc.newfarmer.http.beans.WaitingPay;
 import com.ksfc.newfarmer.http.beans.saveAddress;
 
@@ -477,22 +470,25 @@ public enum ApiType {
      */
     GET_RSC_GIFT_ORDER_SELF_DELIVERY("/api/v2.3/RSC/rewardshop/order/selfDelivery", ResponseResult.class),
 
-
+    /**
+     * Host:
+     */
     TEST("", ResponseResult.class);
-//    private static String server_url = "http://api.xinxinnongren.com";
+
+    //    private static String server_url = "http://api.xinxinnongren.com";
     private static String server_url = "http://101.200.194.203";
-//    private static String server_url = "http://192.168.1.4";
+    //    private static String server_url = "http://192.168.1.4";
 
 
     public static final String url = server_url;
-    private String opt;
+    private String path;
     private Class<? extends ResponseResult> clazz;
     private RequestMethod requestMethod = RequestMethod.POST;
-    private int retryNumber = 1;
 
-    public ApiType setOpt(String opt) {
-        this.opt = opt;
-        return this;
+
+    ApiType(String path, Class<? extends ResponseResult> clazz) {
+        this.path = path;
+        this.clazz = clazz;
     }
 
     public ApiType setMethod(RequestMethod method) {
@@ -500,24 +496,8 @@ public enum ApiType {
         return this;
     }
 
-    private ApiType(String opt, Class<? extends ResponseResult> clazz) {
-        this.opt = opt;
-        this.clazz = clazz;
-    }
-
-    private ApiType(String opt, RequestMethod requestMethod) {
-        this.opt = opt;
-        this.requestMethod = requestMethod;
-    }
-
-    private ApiType(String opt, RequestMethod requestMethod, int retryNumber) {
-        this.opt = opt;
-        this.requestMethod = requestMethod;
-        this.retryNumber = retryNumber;
-    }
-
     public String getOpt() {
-        return server_url + opt;
+        return server_url + path;
     }
 
     public Class<? extends ResponseResult> getClazz() {
@@ -528,20 +508,7 @@ public enum ApiType {
         return requestMethod;
     }
 
-    public int getRetryNumber() {
-        return retryNumber;
-    }
-
     public enum RequestMethod {
-        POST("POST"), GET("GET"), PUT("PUT"), POSTJSON("POSTJSON");
-        private String requestMethodName;
-
-        RequestMethod(String requestMethodName) {
-            this.requestMethodName = requestMethodName;
-        }
-
-        public String getRequestMethodName() {
-            return requestMethodName;
-        }
+        POST, GET, PUT, POSTJSON
     }
 }

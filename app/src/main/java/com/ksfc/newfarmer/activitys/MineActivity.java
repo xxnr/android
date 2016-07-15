@@ -1,5 +1,8 @@
 package com.ksfc.newfarmer.activitys;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
@@ -16,7 +19,6 @@ import com.ksfc.newfarmer.utils.Utils;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.HeadImageView;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -77,12 +79,12 @@ public class MineActivity extends BaseActivity {
                         })
                                 .subscribeOn(Schedulers.computation())
                                 .observeOn(AndroidSchedulers.mainThread())
+                                .compose(MineActivity.this.<Bitmap>bindToLifecycle())
                                 .subscribe(new Action1<Bitmap>() {
                                     @Override
                                     public void call(Bitmap bitmap) {
                                         if (bitmap != null) {
                                             head_View_bg_iv.setImageBitmap(bitmap);
-
                                         }
                                     }
                                 });
@@ -131,18 +133,17 @@ public class MineActivity extends BaseActivity {
             if (userInfo != null) {
                 final String imgUrl = userInfo.photo;
                 if (!StringUtil.empty(imgUrl)) {
-                    new Thread(new Runnable() {
+                    Glide.with(MineActivity.this).load(MsgID.IP + imgUrl).asBitmap().into(new SimpleTarget<Bitmap>() {
                         @Override
-                        public void run() {
-                            Bitmap bitmap = ImageLoader.getInstance().loadImageSync(MsgID.IP + imgUrl);
+                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                             Message msg = Message.obtain();
-                            msg.obj = bitmap;
+                            msg.obj = resource;
                             msg.what = 0;
                             handler.sendMessage(msg);
                         }
-                    }).start();
+                    });
                 } else {
-                    handler.sendEmptyMessageDelayed(1, 100);
+                    handler.sendEmptyMessage(1);
                 }
 
                 if (StringUtil.checkStr(userInfo.nickname)) {
@@ -298,6 +299,9 @@ public class MineActivity extends BaseActivity {
                         RewardShopActivity.class, null, false);
                 break;
             case R.id.my_kefudianhua:
+//                Intent intent1 = new Intent(this, ActivityDetailActivity.class);
+//                intent1.putExtra("url", "http://wpa.qq.com/msgrd?v=3&uin=2487401812&site=qq&menu=yes");
+//                startActivity(intent1);
                 Utils.dial(this, "400-056-0371");
                 break;
             case R.id.my_set:
@@ -363,18 +367,17 @@ public class MineActivity extends BaseActivity {
             Data user = data.datas;
             //下载并存储头像
             if (user != null) {
-                final String imgUrl = user.getImageUrl();
+                String imgUrl = user.getImageUrl();
                 if (!StringUtil.empty(imgUrl)) {
-                    new Thread(new Runnable() {
+                    Glide.with(MineActivity.this).load(MsgID.IP + imgUrl).asBitmap().into(new SimpleTarget<Bitmap>() {
                         @Override
-                        public void run() {
-                            Bitmap bitmap = ImageLoader.getInstance().loadImageSync(MsgID.IP + imgUrl);
+                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                             Message msg = Message.obtain();
-                            msg.obj = bitmap;
+                            msg.obj = resource;
                             msg.what = 0;
                             handler.sendMessage(msg);
                         }
-                    }).start();
+                    });
                 } else {
                     handler.sendEmptyMessage(1);
                 }

@@ -13,7 +13,7 @@ public class HttpsConfig {
 
     public static List<ApiType> httpsConfig() {
         List<ApiType> HttpsApis = new ArrayList<>();
-        if (!MsgID.IP.contains("101")){
+        if (MsgID.IP.contains("api")){
             HttpsApis.add(ApiType.GET_ALI);
             HttpsApis.add(ApiType.GET_UNI);
             HttpsApis.add(ApiType.OFFLINE_PAY);

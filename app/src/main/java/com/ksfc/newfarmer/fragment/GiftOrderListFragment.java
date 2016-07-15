@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.ksfc.newfarmer.BaseFragment;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
+import com.ksfc.newfarmer.common.GlideUtils;
 import com.ksfc.newfarmer.common.LoadMoreOnScrollListener;
 import com.ksfc.newfarmer.http.ApiType;
 import com.ksfc.newfarmer.http.RemoteApi;
@@ -22,7 +23,6 @@ import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.AnimatedExpandableListView;
 import com.ksfc.newfarmer.widget.LoadingFooter;
 import com.ksfc.newfarmer.widget.PtrHeaderView;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import net.yangentao.util.msg.MsgCenter;
 import net.yangentao.util.msg.MsgListener;
@@ -311,10 +311,8 @@ public class GiftOrderListFragment extends BaseFragment  {
                             ? giftordersBean.orderStatus.value : "");
                 }
                 if (giftordersBean.gift != null) {
+                    GlideUtils.setImageRes(GiftOrderListFragment.this,giftordersBean.gift.thumbnail,holder.giftOrderImgIv);
 
-                    if (StringUtil.checkStr(giftordersBean.gift.thumbnail)) {
-                        ImageLoader.getInstance().displayImage(MsgID.IP + giftordersBean.gift.thumbnail, holder.giftOrderImgIv);
-                    }
                     holder.giftOrderNameIv.setText(StringUtil.checkStr(giftordersBean.gift.name)
                             ? giftordersBean.gift.name : "");
                     holder.giftOrderPriceIv.setText(StringUtil.checkStr(String.valueOf(giftordersBean.gift.points))

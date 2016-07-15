@@ -25,6 +25,7 @@ import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.common.CommonAdapter;
 import com.ksfc.newfarmer.common.CommonViewHolder;
+import com.ksfc.newfarmer.common.GlideUtils;
 import com.ksfc.newfarmer.common.LoadMoreOnScrollListener;
 import com.ksfc.newfarmer.http.ApiType;
 import com.ksfc.newfarmer.http.RemoteApi;
@@ -38,7 +39,6 @@ import com.ksfc.newfarmer.widget.ClearEditText;
 import com.ksfc.newfarmer.widget.KeyboardListenRelativeLayout;
 import com.ksfc.newfarmer.widget.LoadingFooter;
 import com.ksfc.newfarmer.widget.PtrHeaderView;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.List;
 import java.util.Timer;
@@ -275,9 +275,7 @@ public class RscSearchGiftOrderActivity extends BaseActivity implements
                     }
                 }
                 if (giftordersBean.gift != null) {
-                    if (StringUtil.checkStr(giftordersBean.gift.thumbnail)) {
-                        ImageLoader.getInstance().displayImage(MsgID.IP + giftordersBean.gift.thumbnail, (ImageView) holder.getView(R.id.gift_order_img_iv));
-                    }
+                    GlideUtils.setImageRes(RscSearchGiftOrderActivity.this,giftordersBean.gift.thumbnail,(ImageView) holder.getView(R.id.gift_order_img_iv));
                     holder.setText(R.id.gift_order_name_iv, StringUtil.checkStr(giftordersBean.gift.name)
                             ? giftordersBean.gift.name : "");
                     holder.setText(R.id.gift_order_price_iv, StringUtil.checkStr(String.valueOf(giftordersBean.gift.points))

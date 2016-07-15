@@ -3,13 +3,12 @@ package com.ksfc.newfarmer.widget;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.bumptech.glide.Glide;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.http.beans.HomeImageResult.Rows;
-import com.ksfc.newfarmer.utils.ImageLoaderUtils;
 import com.ksfc.newfarmer.utils.ScreenUtil;
 import com.ksfc.newfarmer.utils.Utils;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -257,8 +256,7 @@ public class CarouselDiagramViewPager extends ViewPager {
 			// 绑定控件
 			ImageView imageView = (ImageView) view.findViewById(R.id.iv);
 			// 使用BitmapUtil通过图片url加载出图片，设置进imageView中
-			ImageLoader.getInstance().displayImage(MsgID.IP + carouselDiagram.imgUrl, imageView,
-					ImageLoaderUtils.buildImageOptionsBanner(context));
+			Glide.with(context).load(MsgID.IP + carouselDiagram.imgUrl).placeholder(R.drawable.banner_load).into(imageView);
 			// 将该图片加入viewpager中
 			container.addView(view);
 			// 设置该图片的点击监听事件

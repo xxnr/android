@@ -13,17 +13,16 @@ import android.widget.TextView;
 import com.ksfc.newfarmer.BaseFragment;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
+import com.ksfc.newfarmer.common.GlideUtils;
 import com.ksfc.newfarmer.http.Request;
 import com.ksfc.newfarmer.http.beans.GiftListResult;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.utils.Utils;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import net.yangentao.util.msg.MsgCenter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
 /**
  * Created by CAI on 2016/6/14.
@@ -85,8 +84,7 @@ public class IntegralTallGuideFragment extends BaseFragment {
                         layoutParams.width = itemWitch;
                         viewHolder.giftContentRel.setLayoutParams(layoutParams);
                     }
-
-                    ImageLoader.getInstance().displayImage(MsgID.IP + gift.largeUrl, viewHolder.giftImg);
+                    GlideUtils.setImageRes(IntegralTallGuideFragment.this,gift.largeUrl,viewHolder.giftImg);
                     viewHolder.giftNameTv.setText(gift.name);
                     viewHolder.giftPriceTv.setText(gift.points + "");
 

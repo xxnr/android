@@ -8,6 +8,8 @@ import net.yangentao.util.NetUtil;
 import com.ksfc.newfarmer.App;
 
 
+
+
 final class ServerAsyncRequester {
 	private static final String TAG = "ServerAsyncRequester";
 	private ServerInterface mServerInterface;
@@ -19,7 +21,6 @@ final class ServerAsyncRequester {
 	 */
 	ServerAsyncRequester(ServerInterface serverInterface) {
 		mServerInterface = serverInterface;
-
 	}
 
 	private class AsyncRequester extends
@@ -38,7 +39,7 @@ final class ServerAsyncRequester {
 			RndLog.d(TAG, "doInBackground");
 			try {
 				return mServerInterface.request(api, reqParams);
-			} catch (final NetworkException e) {
+			} catch (NetworkException e) {
 				RndLog.e(TAG, e.toString());
 				return new ResponseResult(Request.HTTP_ERROR, "");
 			}

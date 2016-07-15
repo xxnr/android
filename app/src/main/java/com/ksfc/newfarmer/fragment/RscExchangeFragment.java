@@ -74,7 +74,7 @@ public class RscExchangeFragment extends BaseFragment implements ViewPager.OnPag
     @Override
     public void onPageSelected(int position) {
         //通知 订单列表刷新
-        MsgCenter.fireNull(MsgID.gift_swipe_reFlash, position);
+        MsgCenter.fireNull(MsgID.rsc_gift_swipe_reFlash, position);
     }
 
     @Override

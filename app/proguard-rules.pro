@@ -139,9 +139,6 @@
     -dontwarn okio.**
     -dontwarn okhttp3.**
     -keep class okhttp3.** { *;}
-     #picasso
-    -dontwarn com.squareup.picasso.**
-    -keep class com.squareup.picasso.** { *;}
      #Xutils
     -keep class com.lidroid.** { *; }
     #Pulltoreflash
@@ -171,9 +168,6 @@
     #QQ分享
     -dontwarn com.tencent.**
     -keep class com.tencent.** {*;}
-    #fastJson
-    -dontwarn com.alibaba.fastjson.**
-    -keep class com.alibaba.fastjson.** { *; }
      #Photo
     -dontwarn uk.co.senab.photoview.**
     -keep class uk.co.senab.photoview.** { *; }

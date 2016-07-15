@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
+import com.ksfc.newfarmer.common.GlideUtils;
 import com.ksfc.newfarmer.http.ApiType;
 import com.ksfc.newfarmer.http.RemoteApi;
 import com.ksfc.newfarmer.http.Request;
@@ -21,7 +22,6 @@ import com.ksfc.newfarmer.http.beans.IntegralGetResult;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.ScreenUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import net.yangentao.util.msg.MsgCenter;
 import net.yangentao.util.msg.MsgListener;
@@ -121,20 +121,18 @@ public class RewardDetailActivity extends BaseActivity {
             GiftDetailResult reqData = (GiftDetailResult) req.getData();
             gift = reqData.gift;
             if (gift != null) {
-                if (StringUtil.checkStr(gift.originalUrl)) {
-                    ImageLoader.getInstance().displayImage(MsgID.IP + gift.originalUrl, giftDetailImg);
-                }
+                GlideUtils.setImageRes(RewardDetailActivity.this, gift.originalUrl, giftDetailImg);
                 giftDetailTitle.setText(StringUtil.checkStr(gift.name) ? gift.name : "");
                 giftDetailIntegralTv.setText(String.valueOf(gift.points));
                 giftDetailAbleIntegralTv.setText(String.valueOf(score));
                 try {
-                    if (Double.parseDouble(gift.marketPrice)!=0){
+                    if (Double.parseDouble(gift.marketPrice) != 0) {
                         giftDetailMarketPriceTv.setText(gift.marketPrice);
                         giftDetailMarketPriceTv.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG); //中划线
-                    }else {
+                    } else {
                         giftDetailMarketPriceLl.setVisibility(View.GONE);
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                     giftDetailMarketPriceLl.setVisibility(View.GONE);
                 }

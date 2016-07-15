@@ -5,7 +5,6 @@ package com.ksfc.newfarmer;
 
 import java.util.HashMap;
 
-import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.common.FilterClassUtils;
 import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.thrid.UmengPush;
@@ -19,24 +18,23 @@ import com.ksfc.newfarmer.http.beans.LoginResult;
 import com.ksfc.newfarmer.utils.Utils;
 import com.ksfc.newfarmer.widget.dialog.CustomProgressDialog;
 import com.ksfc.newfarmer.widget.dialog.CustomToast;
+import com.trello.rxlifecycle.components.support.RxFragment;
 
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager.BadTokenException;
 
-import com.ksfc.newfarmer.App;
 
 /**
  * 项目名称：newFarmer63 类名称：BaseFragment 类描述： 创建人：王蕾 创建时间：2015-6-3 上午9:29:34 修改备注：
  */
-public abstract class BaseFragment extends Fragment implements
+public abstract class BaseFragment extends RxFragment implements
         OnApiDataReceivedCallback, View.OnClickListener {
 
     public BaseActivity activity;

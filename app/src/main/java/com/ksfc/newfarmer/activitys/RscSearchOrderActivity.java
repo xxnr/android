@@ -31,6 +31,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.jakewharton.rxbinding.view.RxView;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
+import com.ksfc.newfarmer.common.GlideUtils;
 import com.ksfc.newfarmer.common.LoadMoreOnScrollListener;
 import com.ksfc.newfarmer.common.OrderUtils;
 import com.ksfc.newfarmer.R;
@@ -56,7 +57,6 @@ import com.ksfc.newfarmer.widget.LoadingFooter;
 import com.ksfc.newfarmer.widget.RecyclerImageView;
 import com.ksfc.newfarmer.widget.UnSwipeGridView;
 import com.ksfc.newfarmer.widget.WidgetUtil;
-import com.squareup.picasso.Picasso;
 
 import net.yangentao.util.msg.MsgCenter;
 import net.yangentao.util.msg.MsgListener;
@@ -572,14 +572,7 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
                         RscOrderResult.OrdersEntity.SKUsEntity skUsEntity = SKUsList.get(i);
                         if (skUsEntity != null) {
                             //商品图片
-                            if (StringUtil.checkStr(skUsEntity.thumbnail)) {
-                                Picasso.with(RscSearchOrderActivity.this)
-                                        .load(MsgID.IP + skUsEntity.thumbnail)
-                                        .error(R.drawable.error)
-                                        .placeholder(R.drawable.zhanweitu)
-                                        .into(viewHolderChild.ordering_item_img);
-
-                            }
+                            GlideUtils.setImageRes(RscSearchOrderActivity.this,skUsEntity.thumbnail,viewHolderChild.ordering_item_img);
                             //商品个数
                             viewHolderChild.ordering_item_geshu.setText("X " + skUsEntity.count);
                             //商品名

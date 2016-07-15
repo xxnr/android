@@ -18,6 +18,7 @@ import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.common.CommonAdapter;
 import com.ksfc.newfarmer.common.CommonViewHolder;
+import com.ksfc.newfarmer.common.GlideUtils;
 import com.ksfc.newfarmer.http.ApiType;
 import com.ksfc.newfarmer.http.Request;
 import com.ksfc.newfarmer.http.RequestParams;
@@ -28,9 +29,7 @@ import com.ksfc.newfarmer.utils.ExpandViewTouch;
 import com.ksfc.newfarmer.utils.PullToRefreshUtils;
 import com.ksfc.newfarmer.utils.ScreenUtil;
 
-import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.LoadingFooter;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class NewFarmerInfomationActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener {
 
@@ -167,11 +166,8 @@ public class NewFarmerInfomationActivity extends BaseActivity implements PullToR
         @Override
         public void convert(CommonViewHolder holder, ItemsEntity itemsEntity) {
             if (itemsEntity != null) {
-
-                if (StringUtil.checkStr(itemsEntity.image)) {
-                    ImageLoader.getInstance().displayImage(itemsEntity.image,
-                            ((ImageView) holder.getView(R.id.information_image)));
-                }
+                //图片
+                GlideUtils.setBroadImageRes(NewFarmerInfomationActivity.this,itemsEntity.image,(ImageView) holder.getView(R.id.information_image));
                 holder.setText(R.id.information_title, itemsEntity.title);
                 //格式化时间
                 String time = DateFormatUtils.convertTime(itemsEntity.datecreated);

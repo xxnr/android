@@ -212,6 +212,7 @@
         <!-- 浮层页 -->
         <activity
             android:name=".activitys.FloatingLayerActivity"
+            android:launchMode="singleTask"
             android:theme="@style/Theme.Transparent" />
         <!-- 积分商城 -->
         <activity
@@ -231,6 +232,10 @@
         <activity android:name=".activitys.RewardRulesActivity" />
         <!--订单搜索 Rsc兑换订单 -->
         <activity android:name=".activitys.RscSearchGiftOrderActivity" />
+        <!--活动页 活动详情 -->
+        <activity android:name=".activitys.ActivityDetailActivity" />
+
+
         <!-- 支付宝-->
         <activity
             android:name="com.alipay.sdk.app.H5PayActivity"
@@ -425,6 +430,10 @@
             android:name="com.tencent.connect.common.AssistActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <!--glide-->
+        <meta-data
+            android:name="com.ksfc.newfarmer.common.GlideConfiguration"
+            android:value="GlideModule" />
     </application>
 
 </manifest>

@@ -12,10 +12,10 @@ import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshExpandableListView;
 import com.ksfc.newfarmer.BaseActivity;
-import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.activitys.ShoppingCartActivity.Data.Category;
 import com.ksfc.newfarmer.activitys.ShoppingCartActivity.Data.Goods;
+import com.ksfc.newfarmer.common.GlideUtils;
 import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.db.dao.ShoppingDao;
 import com.ksfc.newfarmer.http.ApiType;
@@ -31,7 +31,6 @@ import com.ksfc.newfarmer.utils.PullToRefreshUtils;
 import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.SPUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import android.graphics.Color;
 import android.text.Editable;
@@ -1015,8 +1014,7 @@ public class ShoppingCartActivity extends BaseActivity {
                                 holder.ordering_item_geshu.setText("");
                             }
                             //图片
-                            ImageLoader.getInstance().displayImage(
-                                    MsgID.IP + goodsList.get(childPosition).pic, holder.ordering_item_img);
+                            GlideUtils.setImageRes(ShoppingCartActivity.this,goodsList.get(childPosition).pic,holder.ordering_item_img);
                             //名称
                             if (StringUtil.checkStr(goodsList.get(childPosition).name)) {
                                 holder.ordering_item_name.setText(goodsList.get(childPosition).name);

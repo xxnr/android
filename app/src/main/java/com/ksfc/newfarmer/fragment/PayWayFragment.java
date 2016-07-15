@@ -551,7 +551,7 @@ public class PayWayFragment extends BaseFragment {
                 .url(url)
                 .post(formBody)
                 .build();
-        new NetworkHelper().getInstance().newCall(request).enqueue(new Callback() {
+       NetworkHelper.getClient().newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 handler.sendEmptyMessage(404);

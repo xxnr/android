@@ -1,8 +1,7 @@
 package com.ksfc.newfarmer;
 
 import java.util.HashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.concurrent.TimeUnit;
 
 import com.ksfc.newfarmer.activitys.HomepageActivity;
 import com.ksfc.newfarmer.activitys.LoginActivity;
@@ -20,6 +19,7 @@ import com.ksfc.newfarmer.widget.dialog.CustomProgressDialog;
 import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.SPUtils;
 import com.ksfc.newfarmer.widget.dialog.CustomToast;
+import com.trello.rxlifecycle.components.support.RxFragmentActivity;
 import com.umeng.analytics.MobclickAgent;
 
 import android.annotation.SuppressLint;
@@ -29,15 +29,16 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public abstract class BaseActivity extends FragmentActivity implements OnClickListener, OnApiDataReceivedCallback {
+import rx.Observable;
+import rx.functions.Action1;
+
+public abstract class BaseActivity extends RxFragmentActivity implements OnClickListener, OnApiDataReceivedCallback {
     public String TAG = this.getClass().getSimpleName();
     private boolean titleLoaded = false; // 标题是否加载成功
     protected View titleLeftView;
@@ -379,21 +380,22 @@ public abstract class BaseActivity extends FragmentActivity implements OnClickLi
         try {
             //加入请求队列
             isReturnData.put(api, false);
-
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        if (progressDialog != null && progressDialog.isShowing()) {
-                            progressDialog.dismiss();
+            Observable.timer(20, TimeUnit.SECONDS)
+                    .compose(this.<Long>bindToLifecycle())
+                    .subscribe(new Action1<Long>() {
+                        @Override
+                        public void call(Long aLong) {
+                            try {
+                                if (progressDialog != null && progressDialog.isShowing()) {
+                                    progressDialog.dismiss();
+                                }
+                            } catch (IllegalArgumentException exception) {
+                                exception.printStackTrace();
+                            }
+                            //更改标记不返回数据
+                            isReturnData.put(api, true);
                         }
-                    } catch (IllegalArgumentException exception) {
-                        exception.printStackTrace();
-                    }
-                    //更改标记不返回数据
-                    isReturnData.put(api, true);
-                }
-            }, 20 * 1000);
+                    });
 
         } catch (Exception exception) {
             exception.printStackTrace();

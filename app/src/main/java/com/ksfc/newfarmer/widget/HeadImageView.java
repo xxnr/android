@@ -16,14 +16,13 @@ import android.widget.ImageView;
 
 /**
  * 显示头像的ImageView
- * 
+ *
  * @author wqz
- * 
+ *
  */
 public class HeadImageView extends ImageView {
 
 	private int mBorderThickness = 0;
-	private Context mContext;
 	private int defaultColor = 0xFFFFFFFF;
 	// 如果只有其中一个有值，则只画一个圆形边框
 	private int mBorderOutsideColor = 0;
@@ -34,17 +33,14 @@ public class HeadImageView extends ImageView {
 
 	public HeadImageView(Context context) {
 		super(context);
-		mContext = context;
 	}
 
 	public HeadImageView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		mContext = context;
 	}
 
 	public HeadImageView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
-		mContext = context;
 	}
 
 	@Override
@@ -53,14 +49,18 @@ public class HeadImageView extends ImageView {
 		if (drawable == null) {
 			return;
 		}
-
 		if (getWidth() == 0 || getHeight() == 0) {
 			return;
 		}
 		this.measure(0, 0);
 		if (drawable.getClass() == NinePatchDrawable.class)
 			return;
-		Bitmap b = ((BitmapDrawable) drawable).getBitmap();
+        Bitmap b;
+        if (drawable instanceof BitmapDrawable){
+             b = ((BitmapDrawable) drawable).getBitmap();
+        }else {
+            return;
+        }
 		Bitmap bitmap = b.copy(Bitmap.Config.ARGB_8888, true);
 		if (defaultWidth == 0) {
 			defaultWidth = getWidth();
@@ -107,7 +107,7 @@ public class HeadImageView extends ImageView {
 
 	/**
 	 * 获取裁剪后的圆形图片
-	 * 
+	 *
 	 * @param radius
 	 *            半径
 	 */

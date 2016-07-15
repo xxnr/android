@@ -3,13 +3,11 @@
  */
 package com.ksfc.newfarmer.adapter;
 
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.view.ViewGroup;
 
-import com.ksfc.newfarmer.fragment.RscGiftOrderListFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +23,7 @@ public class CommonFragmentPagerAdapter extends FragmentPagerAdapter {
     public CommonFragmentPagerAdapter(FragmentManager fm, ArrayList<String> titles, List<Fragment> fragments) {
         super(fm);
         this.fragments = fragments;
-        this.titles=titles;
+        this.titles = titles;
     }
 
     @Override
@@ -40,7 +38,10 @@ public class CommonFragmentPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return titles.get(position);
+        if (titles != null && !titles.isEmpty()) {
+            return titles.get(position);
+        }
+        return null;
     }
 
     @Override

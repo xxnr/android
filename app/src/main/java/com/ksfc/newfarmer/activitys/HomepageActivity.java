@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.handmark.pulltorefresh.library.ILoadingLayout;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
@@ -30,10 +31,12 @@ import com.ksfc.newfarmer.common.CommonAdapter;
 import com.ksfc.newfarmer.common.CommonViewHolder;
 import com.ksfc.newfarmer.common.CommonFunction;
 import com.ksfc.newfarmer.common.CompleteReceiver;
+import com.ksfc.newfarmer.common.GlideUtils;
 import com.ksfc.newfarmer.http.ApiType;
 import com.ksfc.newfarmer.http.RemoteApi;
 import com.ksfc.newfarmer.http.Request;
 import com.ksfc.newfarmer.http.beans.AppUpgrade;
+import com.ksfc.newfarmer.http.beans.AttrSelectResult;
 import com.ksfc.newfarmer.http.beans.ClassIDResult;
 import com.ksfc.newfarmer.http.beans.GetGoodsData;
 import com.ksfc.newfarmer.http.beans.GetGoodsData.SingleGood;
@@ -53,7 +56,6 @@ import com.ksfc.newfarmer.widget.CarouselDiagramViewPager;
 import com.ksfc.newfarmer.widget.UnSwipeGridView;
 import com.ksfc.newfarmer.widget.dialog.CustomDialog;
 import com.ksfc.newfarmer.widget.dialog.CustomDialogUpdate;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import net.yangentao.util.PreferenceUtil;
 import net.yangentao.util.msg.MsgCenter;
@@ -143,6 +145,7 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
                     .GET_GOODS(map)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
+                    .compose(this.<GetGoodsData>bindToLifecycle())
                     .subscribe(new Action1<GetGoodsData>() {
                         @Override
                         public void call(GetGoodsData getGoodsData) {
@@ -184,7 +187,7 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
-                bundle.putString("activity", HomepageActivity.this.getClass().getSimpleName());
+                bundle.putString(FloatingLayerActivity.KEY, FloatingLayerActivity.ACTIVITY_LIST);
                 IntentUtil.activityForward(MainActivity.getInstance(), FloatingLayerActivity.class, bundle, false);
                 ActivityAnimationUtils.setActivityAnimation(MainActivity.getInstance(), R.anim.animation_none, R.anim.animation_none);
             }
@@ -474,7 +477,7 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
                     layoutParams.width = itemWitch - Utils.dip2px(HomepageActivity.this, 2);
                     imageView.setLayoutParams(layoutParams);
                 }
-                ImageLoader.getInstance().displayImage(MsgID.IP + singleGood.imgUrl, imageView);
+                GlideUtils.setImageRes(HomepageActivity.this,singleGood.imgUrl,imageView);
                 //商品名
                 if (StringUtil.checkStr(singleGood.goodsName)) {
                     holder.setText(R.id.huafei_name_tv, singleGood.goodsName);

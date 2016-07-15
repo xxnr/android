@@ -31,6 +31,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.jakewharton.rxbinding.view.RxView;
 import com.ksfc.newfarmer.BaseFragment;
 import com.ksfc.newfarmer.MsgID;
+import com.ksfc.newfarmer.common.GlideUtils;
 import com.ksfc.newfarmer.common.LoadMoreOnScrollListener;
 import com.ksfc.newfarmer.common.OrderUtils;
 import com.ksfc.newfarmer.R;
@@ -55,7 +56,6 @@ import com.ksfc.newfarmer.widget.LoadingFooter;
 import com.ksfc.newfarmer.widget.RecyclerImageView;
 import com.ksfc.newfarmer.widget.UnSwipeGridView;
 import com.ksfc.newfarmer.widget.WidgetUtil;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import net.yangentao.util.msg.MsgCenter;
 import net.yangentao.util.msg.MsgListener;
@@ -570,11 +570,8 @@ public class RscOrderListFragment extends BaseFragment implements
                         RscOrderResult.OrdersEntity.SKUsEntity skUsEntity = SKUsList.get(i);
                         if (skUsEntity != null) {
                             //商品图片
-                            if (StringUtil.checkStr(skUsEntity.thumbnail)) {
-                                ImageLoader.getInstance().displayImage(
-                                        MsgID.IP + skUsEntity.thumbnail, viewHolderChild.ordering_item_img);
+                            GlideUtils.setImageRes(RscOrderListFragment.this,skUsEntity.thumbnail,viewHolderChild.ordering_item_img);
 
-                            }
                             //商品个数
                             viewHolderChild.ordering_item_geshu.setText("X " + skUsEntity.count);
                             //商品名

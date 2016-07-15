@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 import com.google.gson.Gson;
 import com.jakewharton.rxbinding.view.RxView;
 import com.ksfc.newfarmer.BaseActivity;
+import com.ksfc.newfarmer.common.GlideUtils;
 import com.ksfc.newfarmer.common.OrderUtils;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
@@ -27,7 +28,6 @@ import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.RecyclerImageView;
 import com.ksfc.newfarmer.widget.UnSwipeListView;
 import com.ksfc.newfarmer.widget.WidgetUtil;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -35,8 +35,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -694,6 +692,7 @@ public class MyOrderDetailActivity extends BaseActivity {
             }
         }
 
+        @SuppressLint("SetTextI18n")
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
@@ -706,10 +705,7 @@ public class MyOrderDetailActivity extends BaseActivity {
 
             if (flag) {
                 //商品图片
-                if (StringUtil.checkStr(SKUsList.get(position).imgs)) {
-                    ImageLoader.getInstance().displayImage(
-                            MsgID.IP + SKUsList.get(position).imgs, holder.ordering_item_img);
-                }
+                GlideUtils.setImageRes(MyOrderDetailActivity.this, SKUsList.get(position).imgs, holder.ordering_item_img);
                 //商品个数
                 holder.ordering_item_geshu.setText("X " + SKUsList.get(position).count + "");
                 //商品名
@@ -790,10 +786,7 @@ public class MyOrderDetailActivity extends BaseActivity {
 
             } else {
                 //商品图片
-                if (StringUtil.checkStr(goodsList.get(position).imgs)) {
-                    ImageLoader.getInstance().displayImage(
-                            MsgID.IP + goodsList.get(position).imgs, holder.ordering_item_img);
-                }
+                GlideUtils.setImageRes(MyOrderDetailActivity.this, goodsList.get(position).imgs, holder.ordering_item_img);
                 //商品个数
                 holder.ordering_item_geshu.setText("X " + goodsList.get(position).goodsCount + "");
                 //商品名

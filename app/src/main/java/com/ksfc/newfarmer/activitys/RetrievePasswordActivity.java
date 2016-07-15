@@ -2,6 +2,7 @@ package com.ksfc.newfarmer.activitys;
 
 import android.annotation.TargetApi;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -9,10 +10,12 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
 
-import com.ksfc.newfarmer.activitys.LoginActivity;
 import com.ksfc.newfarmer.http.ApiType;
 import com.ksfc.newfarmer.http.Request;
 import com.ksfc.newfarmer.http.RequestParams;
@@ -23,8 +26,6 @@ import com.ksfc.newfarmer.utils.RSAUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.ClearEditText;
 import com.ksfc.newfarmer.widget.dialog.CustomDialogForSms;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 
 
 @TargetApi(Build.VERSION_CODES.GINGERBREAD)
@@ -185,10 +186,10 @@ public class RetrievePasswordActivity extends BaseActivity {
                         e.printStackTrace();
                     }
 
-                    Picasso.with(RetrievePasswordActivity.this)
+                    Glide.with(RetrievePasswordActivity.this)
                             .load(smsResult.captcha)
-                            .skipMemoryCache()
-                            .noFade()
+                            .skipMemoryCache(true)
+                            .crossFade()
                             .error(R.drawable.code_load_failed)
                             .into(CustomDialogForSms.sms_auth_code_iv);
                 } else {
@@ -263,24 +264,29 @@ public class RetrievePasswordActivity extends BaseActivity {
      */
     private void reFreshCode() {
 
-        Picasso.with(RetrievePasswordActivity.this)
+
+        Glide.with(RetrievePasswordActivity.this)
                 .load(ApiType.REFRESH_SMS_CODE.getOpt() + "?tel=" + mobile + "&bizcode=resetpwd")
-                .skipMemoryCache()
-                .noFade()
+                .asBitmap()
+                .skipMemoryCache(true)
                 .error(R.drawable.code_load_failed)
-                .into(CustomDialogForSms.sms_auth_code_iv, new Callback() {
+                .listener(new RequestListener<String, Bitmap>() {
                     @Override
-                    public void onSuccess() {
+                    public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource) {
                         CustomDialogForSms.sms_auth_code_iv.setEnabled(true);
                         CustomDialogForSms.sms_auth_code_refresh_iv.setEnabled(true);
+                        return false;
                     }
 
                     @Override
-                    public void onError() {
+                    public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
                         CustomDialogForSms.sms_auth_code_iv.setEnabled(true);
                         CustomDialogForSms.sms_auth_code_refresh_iv.setEnabled(true);
+                        return false;
                     }
-                });
+                })
+                .into(CustomDialogForSms.sms_auth_code_iv);
+
     }
 
 

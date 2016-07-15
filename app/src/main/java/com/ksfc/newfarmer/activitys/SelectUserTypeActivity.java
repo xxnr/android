@@ -7,8 +7,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
@@ -29,10 +27,12 @@ import com.lidroid.xutils.http.client.HttpRequest;
 
 import net.yangentao.util.msg.MsgCenter;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by HePeng on 2015/12/9.
@@ -84,13 +84,22 @@ public class SelectUserTypeActivity extends BaseActivity implements AdapterView.
                             RndLog.v(TAG, arg0.result);
                             list_key = new ArrayList<>();
                             list_value = new ArrayList<>();
-                            JSONObject jsonObject = JSON.parseObject(arg0.result);
-                            JSONObject jsonObject1 = jsonObject.getJSONObject("data");
-                            Set<Map.Entry<String, Object>> entrySet = jsonObject1.entrySet();
-                            for (Map.Entry<String, Object> entry : entrySet) {
-                                list_value.add((String) entry.getValue());
-                                list_key.add(entry.getKey());
+                            try {
+                                JSONObject jsonObject = new JSONObject(arg0.result);
+                                JSONObject data = jsonObject.getJSONObject("data");
+                                Iterator<String> iterator = data.keys();
+                                while (iterator.hasNext()){
+                                    String key = iterator.next();
+                                    list_key.add(key);
+                                    list_value.add(data.getString(key));
+                                }
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
+                            Collections.reverse(list_key);
+                            Collections.reverse(list_value);
+
                             adapter = new AddressAdapter(SelectUserTypeActivity.this, list_value);
                             listView.setAdapter(adapter);
                         }

@@ -25,6 +25,7 @@ import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.activitys.RSCOrderListActivity;
 import com.ksfc.newfarmer.common.CommonAdapter;
 import com.ksfc.newfarmer.common.CommonViewHolder;
+import com.ksfc.newfarmer.common.GlideUtils;
 import com.ksfc.newfarmer.common.LoadMoreOnScrollListener;
 import com.ksfc.newfarmer.http.ApiType;
 import com.ksfc.newfarmer.http.RemoteApi;
@@ -34,7 +35,6 @@ import com.ksfc.newfarmer.utils.DateFormatUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.LoadingFooter;
 import com.ksfc.newfarmer.widget.PtrHeaderView;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import net.yangentao.util.msg.MsgCenter;
 import net.yangentao.util.msg.MsgListener;
@@ -158,7 +158,7 @@ public class RscGiftOrderListFragment extends BaseFragment  {
                     e.printStackTrace();
                 }
             }
-        }, MsgID.gift_swipe_reFlash);
+        }, MsgID.rsc_gift_swipe_reFlash);
 
         RemoteApi.getRscGiftOrderList(this, type, page);
         return inflate;
@@ -244,9 +244,7 @@ public class RscGiftOrderListFragment extends BaseFragment  {
                     }
                 }
                 if (giftordersBean.gift != null) {
-                    if (StringUtil.checkStr(giftordersBean.gift.thumbnail)) {
-                        ImageLoader.getInstance().displayImage(MsgID.IP + giftordersBean.gift.thumbnail, (ImageView) holder.getView(R.id.gift_order_img_iv));
-                    }
+                    GlideUtils.setImageRes(RscGiftOrderListFragment.this,giftordersBean.gift.thumbnail,(ImageView) holder.getView(R.id.gift_order_img_iv));
                     holder.setText(R.id.gift_order_name_iv, StringUtil.checkStr(giftordersBean.gift.name)
                             ? giftordersBean.gift.name : "");
                     holder.setText(R.id.gift_order_price_iv, StringUtil.checkStr(String.valueOf(giftordersBean.gift.points))

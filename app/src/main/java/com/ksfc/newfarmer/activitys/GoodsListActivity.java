@@ -7,6 +7,7 @@ import java.util.Map;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -33,6 +34,7 @@ import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.RndApplication;
 import com.ksfc.newfarmer.common.CommonAdapter;
 import com.ksfc.newfarmer.common.CommonViewHolder;
+import com.ksfc.newfarmer.common.GlideUtils;
 import com.ksfc.newfarmer.http.ApiType;
 import com.ksfc.newfarmer.http.ApiType.RequestMethod;
 import com.ksfc.newfarmer.http.Request;
@@ -43,14 +45,12 @@ import com.ksfc.newfarmer.http.beans.GetGoodsData;
 import com.ksfc.newfarmer.http.beans.GetGoodsData.SingleGood;
 import com.ksfc.newfarmer.http.RxApi.RxService;
 import com.ksfc.newfarmer.utils.ExpandViewTouch;
-import com.ksfc.newfarmer.utils.ImageLoaderUtils;
 import com.ksfc.newfarmer.utils.PullToRefreshUtils;
 import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.ScreenUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.LoadingFooter;
 import com.ksfc.newfarmer.widget.UnSwipeGridView;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -538,6 +538,7 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
                 .GET_GOODS_ATTR("0",classId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
+                .compose(this.<AttrSelectResult>bindToLifecycle())
                 .subscribe(new Action1<AttrSelectResult>() {
                     @Override
                     public void call(AttrSelectResult attrSelectResult) {
@@ -873,25 +874,28 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
 
         @Override
         public void convert(CommonViewHolder holder, SingleGood singleGood) {
-            //设置文本
-            if (!TextUtils.isEmpty(singleGood.imgUrl)) {
-                ImageLoader.getInstance().displayImage((MsgID.IP + singleGood.imgUrl), ((ImageView) holder.getView(R.id.goods_image)),
-                        ImageLoaderUtils.buildImageOptions(getApplicationContext()));
-            }
-            if (StringUtil.checkStr(singleGood.goodsName)) {
-                holder.setText(R.id.goods_title, singleGood.goodsName);
-            }
-            String price = singleGood.unitPrice;
-            TextView price_tv = holder.getView(R.id.goods_price);
 
-            if (singleGood.presale) {
-                price_tv.setText("即将上线");
-                price_tv.setTextColor(Color.GRAY);
-            } else {
-                if (StringUtil.checkStr(price)) {
-                    price_tv.setText("¥" + price);
+            if (singleGood!=null){
+
+                //设置文本
+                GlideUtils.setImageRes(GoodsListActivity.this,singleGood.imgUrl,(ImageView) holder.getView(R.id.goods_image));
+                if (StringUtil.checkStr(singleGood.goodsName)) {
+                    holder.setText(R.id.goods_title, singleGood.goodsName);
                 }
-                price_tv.setTextColor(getResources().getColor(R.color.orange_goods_price));
+                String price = singleGood.unitPrice;
+                TextView price_tv = holder.getView(R.id.goods_price);
+
+                if (singleGood.presale) {
+                    price_tv.setText("即将上线");
+                    price_tv.setTextColor(Color.GRAY);
+                } else {
+                    if (StringUtil.checkStr(price)) {
+                        price_tv.setText("¥" + price);
+                    }
+                    price_tv.setTextColor(getResources().getColor(R.color.orange_goods_price));
+                }
+
+
             }
 
         }

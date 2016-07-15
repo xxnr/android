@@ -4,6 +4,11 @@
 package com.ksfc.newfarmer.activitys;
 
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
@@ -19,11 +24,10 @@ import com.ksfc.newfarmer.utils.RSAUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.ClearEditText;
 import com.ksfc.newfarmer.widget.dialog.CustomDialogForSms;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -206,24 +210,27 @@ public class RegisterActivity extends BaseActivity {
     private void reFreshCode() {
 
 
-        Picasso.with(RegisterActivity.this)
+        Glide.with(RegisterActivity.this)
                 .load(ApiType.REFRESH_SMS_CODE.getOpt() + "?tel=" + mobile + "&bizcode=register")
-                .skipMemoryCache()
+                .asBitmap()
+                .skipMemoryCache(true)
                 .error(R.drawable.code_load_failed)
-                .noFade()
-                .into(CustomDialogForSms.sms_auth_code_iv, new Callback() {
+                .listener(new RequestListener<String, Bitmap>() {
                     @Override
-                    public void onSuccess() {
+                    public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource) {
                         CustomDialogForSms.sms_auth_code_iv.setEnabled(true);
                         CustomDialogForSms.sms_auth_code_refresh_iv.setEnabled(true);
+                        return false;
                     }
 
                     @Override
-                    public void onError() {
+                    public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
                         CustomDialogForSms.sms_auth_code_iv.setEnabled(true);
                         CustomDialogForSms.sms_auth_code_refresh_iv.setEnabled(true);
+                        return false;
                     }
-                });
+                })
+                .into(CustomDialogForSms.sms_auth_code_iv);
 
     }
 
@@ -317,10 +324,10 @@ public class RegisterActivity extends BaseActivity {
                         e.printStackTrace();
                     }
 
-                    Picasso.with(RegisterActivity.this)
+                    Glide.with(RegisterActivity.this)
                             .load(smsResult.captcha)
-                            .skipMemoryCache()
-                            .noFade()
+                            .crossFade()
+                            .skipMemoryCache(true)
                             .error(R.drawable.code_load_failed)
                             .into(CustomDialogForSms.sms_auth_code_iv);
                 } else {

@@ -2,8 +2,11 @@ package com.ksfc.newfarmer.http;
 
 import com.google.gson.Gson;
 import com.ksfc.newfarmer.utils.RndLog;
+
 import org.json.JSONException;
+
 import java.io.IOException;
+
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
@@ -15,40 +18,35 @@ import okhttp3.ResponseBody;
 public final class ServerInterface {
 
     private static final String TAG = "ServerInterface";
-
     private static Gson mGson;
-
     private NetworkHelper mHelper;
 
     public ServerInterface() {
         mGson = new Gson();
-        mHelper = new NetworkHelper();
+        mHelper = NetworkHelper.getInstance();
     }
 
-    public ResponseResult request(final ApiType api, final RequestParams params)
+    public ResponseResult request(ApiType api, RequestParams params)
             throws NetworkException {
 
         Response response = getResponseByApi(api, params);
 
         if (response != null) {// response == null   可能是无网络引起
-
-            ResponseBody responseBody = response.body();
             if (response.isSuccessful()) {
+                ResponseBody responseBody = response.body();
                 if (responseBody != null) {
                     try {
                         String json = responseBody.string();
-                        RndLog.d(TAG, "request. json.length = " + json);
+                        RndLog.d(TAG, "ResponseResult. json.Result = " + json);
                         return parseJson(json, getJsonClassByApi(api));
                     } catch (Exception e) {
-                        e.printStackTrace();
                         throw new NetworkException(e);
                     }
                 }
                 return null;
             } else {
                 RndLog.e(TAG, "HTTP CODE :" + response.code());
-                throw new NetworkException(response.code(),
-                        response.message());
+                throw new NetworkException(response.code(), response.message());
             }
         } else {
             // 执行过程中产生异常
@@ -62,10 +60,8 @@ public final class ServerInterface {
      * @param json
      * @param clazz
      * @return
-     * @throws JSONException
      */
-    public static ResponseResult parseJson(String json,
-                                           Class<? extends ResponseResult> clazz) throws JSONException {
+    public static ResponseResult parseJson(String json, Class<? extends ResponseResult> clazz) {
 
         ResponseResult res;
         try {
@@ -85,8 +81,6 @@ public final class ServerInterface {
      * @return
      */
     private Response getResponseByApi(ApiType api, RequestParams params) {
-
-        params.put("user-agent", "Android-v2.3");
         //判断是否加https
         String url;
         if (HttpsConfig.httpsConfig().contains(api)) {
@@ -94,19 +88,11 @@ public final class ServerInterface {
         } else {
             url = api.getOpt();
         }
-
+        params.put("user-agent", "Android-v2.3");
         try {
             // TODO 判断api类型
-            if (api.getRequestMethod() == ApiType.RequestMethod.GET) {
-                return mHelper.performGet(url, params);
-            } else if (api.getRequestMethod() == ApiType.RequestMethod.POSTJSON) {
-                return mHelper.postBody(url, params);
-            } else if (api.getRequestMethod() == ApiType.RequestMethod.PUT) {
-                return mHelper.putBody(url, params);
-            } else {
-                return mHelper.performPost(url, params);
-            }
-        } catch (IOException e) {
+            return mHelper.getResponse(api, url, params);
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }

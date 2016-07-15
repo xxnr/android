@@ -10,9 +10,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ksfc.newfarmer.BaseActivity;
-import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.common.CompleteReceiver;
+import com.ksfc.newfarmer.common.GlideUtils;
 import com.ksfc.newfarmer.http.ApiType;
 import com.ksfc.newfarmer.http.RemoteApi;
 import com.ksfc.newfarmer.http.Request;
@@ -22,7 +22,6 @@ import com.ksfc.newfarmer.http.beans.GiftDetailResult;
 import com.ksfc.newfarmer.http.beans.RSCStateInfoResult;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.List;
 
@@ -118,9 +117,7 @@ public class RewardGiftSubmitActivity extends BaseActivity {
                 } else {
                     giftSubmitEmptyLl.setVisibility(View.GONE);
                     giftSubmitLl.setVisibility(View.VISIBLE);
-                    if (StringUtil.checkStr(gift.thumbnail)) {
-                        ImageLoader.getInstance().displayImage(MsgID.IP + gift.thumbnail, giftImgIv);
-                    }
+                    GlideUtils.setImageRes(RewardGiftSubmitActivity.this,gift.thumbnail,giftImgIv);
                     giftNameTv.setText(StringUtil.checkStr(gift.name) ? gift.name : "");
                     giftPriceTv.setText(String.valueOf(gift.points));
 

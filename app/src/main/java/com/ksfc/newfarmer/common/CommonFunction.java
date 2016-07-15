@@ -19,7 +19,7 @@ public class CommonFunction {
      */
     public static void showSuccess(Activity activity, PointResult pointResult) {
         Bundle bundle = new Bundle();
-        bundle.putString("activity", activity.getClass().getSimpleName());
+        bundle.putString(FloatingLayerActivity.KEY, FloatingLayerActivity.SIGN_SUCCESS);
         bundle.putSerializable("pointResult", pointResult);
         IntentUtil.activityForward(activity, FloatingLayerActivity.class, bundle, false);
         ActivityAnimationUtils.setActivityAnimation(activity, R.anim.animation_none, R.anim.animation_none);

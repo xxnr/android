@@ -8,6 +8,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.custom.vg.list.CustomAdapter;
 import com.custom.vg.list.CustomListView;
 import com.google.gson.Gson;
@@ -15,9 +19,12 @@ import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.RndApplication;
-import com.ksfc.newfarmer.adapter.GoodsDetailAdapter;
+import com.ksfc.newfarmer.adapter.CommonFragmentPagerAdapter;
+import com.ksfc.newfarmer.common.GlideUtils;
 import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.db.dao.ShoppingDao;
+import com.ksfc.newfarmer.fragment.GoodsDetailButtomFragment;
+import com.ksfc.newfarmer.fragment.GoodsDetailTopFragment;
 import com.ksfc.newfarmer.http.ApiType;
 import com.ksfc.newfarmer.http.Request;
 import com.ksfc.newfarmer.http.RequestParams;
@@ -31,9 +38,9 @@ import com.ksfc.newfarmer.utils.PopWindowUtils;
 import com.ksfc.newfarmer.utils.Utils;
 import com.ksfc.newfarmer.widget.KeyboardListenRelativeLayout;
 import com.ksfc.newfarmer.widget.VerticalViewPager;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.view.Gravity;
@@ -173,7 +180,7 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(GoodsDetailActivity.this, MainActivity.class);
-                intent.putExtra("id",MainActivity.Tab.SHOPPING_CART);
+                intent.putExtra("id", MainActivity.Tab.SHOPPING_CART);
                 startActivity(intent);
                 MsgCenter.fireNull(MsgID.MainActivity_select_tab, MainActivity.Tab.SHOPPING_CART);
                 finish();
@@ -290,7 +297,7 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
                         toast_flag = false;//是否显示toast
                         addToCar();
                     } else {
-                      startActivity(LoginActivity.class);
+                        startActivity(LoginActivity.class);
                     }
                 }
                 break;
@@ -394,9 +401,17 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
     //初始化popWindow上的一些属性
     private void initPopData() {
         if (detail.pictures != null && !detail.pictures.isEmpty()) {
-            if (StringUtil.checkStr(detail.pictures.get(0).thumbnail)) {
-                ImageLoader.getInstance().displayImage(MsgID.IP + detail.pictures.get(0).thumbnail, pop_image);
-            }
+            Glide.with(GoodsDetailActivity.this)
+                    .load(MsgID.IP + detail.pictures.get(0).thumbnail)
+                    .asBitmap()
+                    .placeholder(R.drawable.zhanweitu)
+                    .error(R.drawable.error)
+                    .into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                            pop_image.setImageBitmap(resource);
+                        }
+                    });
         }
         //名称
         if (StringUtil.checkStr(detail.name)) {
@@ -900,14 +915,17 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
             GetGoodsDetail data = (GetGoodsDetail) req.getData();
             detail = data.datas;
             //如果存在bodyUrl加载更多详情
+            List<Fragment> fragmentList = new ArrayList<>();
             if (!TextUtils.isEmpty(detail.app_body_url)) {
-                GoodsDetailAdapter adapter = new GoodsDetailAdapter(getSupportFragmentManager(), 2, detail);
-                viewPager.setAdapter(adapter);
+                fragmentList.add(GoodsDetailTopFragment.newInstance(detail));
+                fragmentList.add(GoodsDetailButtomFragment.newInstance(detail));
                 viewPager.setOffscreenPageLimit(0);
             } else {
-                GoodsDetailAdapter adapter = new GoodsDetailAdapter(getSupportFragmentManager(), 1, detail);
-                viewPager.setAdapter(adapter);
+                fragmentList.add(GoodsDetailTopFragment.newInstance(detail));
             }
+            CommonFragmentPagerAdapter adapter = new CommonFragmentPagerAdapter(getSupportFragmentManager(), null, fragmentList);
+            viewPager.setAdapter(adapter);
+
             //商品是否预售
             if (detail.presale || !detail.online) {
                 jinqingqidai_bar.setVisibility(View.VISIBLE);
@@ -923,9 +941,18 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
                 shangpin_detail_bottom_bar.setVisibility(View.VISIBLE);
             }
             if (detail != null && detail.pictures != null && !detail.pictures.isEmpty()) {
-                if (StringUtil.checkStr(detail.pictures.get(0).thumbnail)) {
-                    ImageLoader.getInstance().displayImage(MsgID.IP + detail.pictures.get(0).thumbnail, animationImage);
-                }
+
+                Glide.with(GoodsDetailActivity.this)
+                        .load(MsgID.IP + detail.pictures.get(0).thumbnail)
+                        .asBitmap()
+                        .placeholder(R.drawable.zhanweitu)
+                        .error(R.drawable.error)
+                        .into(new SimpleTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                                animationImage.setImageBitmap(resource);
+                            }
+                        });
             }
 
             setViewClick(R.id.add_to_shopcart);

@@ -29,6 +29,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.jakewharton.rxbinding.view.RxView;
 import com.ksfc.newfarmer.BaseFragment;
 import com.ksfc.newfarmer.MsgID;
+import com.ksfc.newfarmer.common.GlideUtils;
 import com.ksfc.newfarmer.common.LoadMoreOnScrollListener;
 import com.ksfc.newfarmer.common.OrderUtils;
 import com.ksfc.newfarmer.R;
@@ -53,7 +54,6 @@ import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.LoadingFooter;
 import com.ksfc.newfarmer.widget.RecyclerImageView;
 import com.ksfc.newfarmer.widget.WidgetUtil;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import net.yangentao.util.PreferenceUtil;
 import net.yangentao.util.msg.MsgCenter;
@@ -551,12 +551,7 @@ public class MyOrderListFragment extends BaseFragment implements PullToRefreshBa
 
                     ViewHolderChild viewHolderChild = new ViewHolderChild(rootView);
                     //商品图片
-                    if (StringUtil.checkStr(SKUsList.get(i).thumbnail)) {
-
-                        ImageLoader.getInstance().displayImage(
-                                MsgID.IP + SKUsList.get(i).thumbnail, viewHolderChild.ordering_item_img);
-
-                    }
+                    GlideUtils.setImageRes(MyOrderListFragment.this,SKUsList.get(i).thumbnail,viewHolderChild.ordering_item_img);
                     //商品个数
                     viewHolderChild.ordering_item_geshu.setText("X " + SKUsList.get(i).count + "");
                     //商品名
@@ -630,8 +625,7 @@ public class MyOrderListFragment extends BaseFragment implements PullToRefreshBa
                     ViewHolderChild viewHolderChild = new ViewHolderChild(rootView);
                     //商品图片
                     if (StringUtil.checkStr(goodsList.get(i).thumbnail)) {
-                        ImageLoader.getInstance().displayImage(
-                                MsgID.IP + goodsList.get(i).thumbnail, viewHolderChild.ordering_item_img);
+                        GlideUtils.setImageRes(MyOrderListFragment.this,goodsList.get(i).thumbnail,viewHolderChild.ordering_item_img);
                     }
                     //商品个数
                     viewHolderChild.ordering_item_geshu.setText("X " + goodsList.get(i).count + "");

@@ -2,9 +2,14 @@ package com.ksfc.newfarmer.activitys;
 
 import java.io.File;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
+import com.ksfc.newfarmer.common.GlideUtils;
 import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.http.ApiType;
 import com.ksfc.newfarmer.http.Request;
@@ -24,7 +29,6 @@ import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -149,7 +153,16 @@ public class MyaccountActivity extends BaseActivity {
         }
 
         if (StringUtil.checkStr(me.photo)) {
-            ImageLoader.getInstance().displayImage(MsgID.IP + me.photo, myself_userImg);
+            Glide.with(MyaccountActivity.this)
+                    .load(MsgID.IP + me.photo)
+                    .asBitmap()
+                    .error(R.drawable.mine_account_head_default_head)
+                    .into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                            myself_userImg.setImageBitmap(resource);
+                        }
+                    });
         }
 
         nickName_tv.setText(TextUtils.isEmpty(me.nickname) ? "" : me.nickname);
@@ -368,7 +381,6 @@ public class MyaccountActivity extends BaseActivity {
                 queryMe.photo = datas;
                 Store.User.saveMe(queryMe);
             }
-
             Bitmap decodeFile = BitmapFactory.decodeFile(path);
             myself_userImg.setImageBitmap(decodeFile);
             MsgCenter.fireNull(MsgID.UPDATE_USER, "update");
