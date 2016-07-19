@@ -9,7 +9,7 @@ import com.ksfc.newfarmer.BaseFragment;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.common.CommonFragmentPagerAdapter;
-import com.ksfc.newfarmer.http.Request;
+import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.widget.UnSwipeViewPager;
 
 

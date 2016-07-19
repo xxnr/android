@@ -10,18 +10,18 @@ import java.util.concurrent.TimeUnit;
 import com.google.gson.Gson;
 import com.jakewharton.rxbinding.view.RxView;
 import com.ksfc.newfarmer.BaseActivity;
-import com.ksfc.newfarmer.common.GlideUtils;
-import com.ksfc.newfarmer.common.OrderUtils;
+import com.ksfc.newfarmer.common.GlideHelper;
+import com.ksfc.newfarmer.common.OrderHelper;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.common.CommonAdapter;
 import com.ksfc.newfarmer.common.CommonViewHolder;
 import com.ksfc.newfarmer.db.Store;
-import com.ksfc.newfarmer.http.ApiType;
-import com.ksfc.newfarmer.http.Request;
-import com.ksfc.newfarmer.http.RequestParams;
-import com.ksfc.newfarmer.http.beans.LoginResult;
-import com.ksfc.newfarmer.http.beans.MyOrderDetailResult;
+import com.ksfc.newfarmer.protocol.ApiType;
+import com.ksfc.newfarmer.protocol.Request;
+import com.ksfc.newfarmer.protocol.RequestParams;
+import com.ksfc.newfarmer.beans.LoginResult;
+import com.ksfc.newfarmer.beans.MyOrderDetailResult;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.PopWindowUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
@@ -361,7 +361,7 @@ public class MyOrderDetailActivity extends BaseActivity {
                                                             }
                                                         }
                                                     };
-                                                    OrderUtils.isChecked(subscriberOrderIsChecked, orderId);
+                                                    OrderHelper.isChecked(subscriberOrderIsChecked, orderId);
                                                 }
                                             });
                                     //更改支付方式
@@ -705,7 +705,7 @@ public class MyOrderDetailActivity extends BaseActivity {
 
             if (flag) {
                 //商品图片
-                GlideUtils.setImageRes(MyOrderDetailActivity.this, SKUsList.get(position).imgs, holder.ordering_item_img);
+                GlideHelper.setImageRes(MyOrderDetailActivity.this, SKUsList.get(position).imgs, holder.ordering_item_img);
                 //商品个数
                 holder.ordering_item_geshu.setText("X " + SKUsList.get(position).count + "");
                 //商品名
@@ -786,7 +786,7 @@ public class MyOrderDetailActivity extends BaseActivity {
 
             } else {
                 //商品图片
-                GlideUtils.setImageRes(MyOrderDetailActivity.this, goodsList.get(position).imgs, holder.ordering_item_img);
+                GlideHelper.setImageRes(MyOrderDetailActivity.this, goodsList.get(position).imgs, holder.ordering_item_img);
                 //商品个数
                 holder.ordering_item_geshu.setText("X " + goodsList.get(position).goodsCount + "");
                 //商品名

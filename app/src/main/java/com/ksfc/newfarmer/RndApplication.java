@@ -5,10 +5,10 @@ import java.util.List;
 
 import com.ksfc.newfarmer.db.DBManager;
 import com.ksfc.newfarmer.db.Store;
-import com.ksfc.newfarmer.http.beans.LoginResult;
+import com.ksfc.newfarmer.beans.LoginResult;
 import com.ksfc.newfarmer.utils.CrashHandler;
 import com.ksfc.newfarmer.utils.RndLog;
-import com.ksfc.newfarmer.utils.thrid.UmengPush;
+import com.ksfc.newfarmer.common.UmengPushHelper;
 import com.umeng.message.PushAgent;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
@@ -25,8 +25,6 @@ public class RndApplication extends MultiDexApplication {
     public static Context applicationContext;
     private static RndApplication instance;
 
-    private static final String dbname = "xnrdb.db";
-    public static final String DB_NAME = dbname;
 
     public static List<Activity> unDestroyActivityList = new ArrayList<>();
     public static List<Activity> tempDestroyActivityList = new ArrayList<>();
@@ -45,7 +43,7 @@ public class RndApplication extends MultiDexApplication {
         //是否显示log
         RndLog.DEBUG_MODE = true;
         //初始化数据库管理器
-        DBManager.getInstance().Init(this);
+        DBManager.getInstance(this);
         //初始化CrashHandler
         CrashHandler.getInstance().init(this);
         //初始化推送
@@ -53,7 +51,7 @@ public class RndApplication extends MultiDexApplication {
         mPushAgent.setDebugMode(false);
         mPushAgent.enable();
         //初始化推送接入后台
-        UmengPush.lunchActivity(this);
+        UmengPushHelper.lunchActivity(this);
         //初始化社会化分享
         initSocialShare();
         //初初始化全局的UID

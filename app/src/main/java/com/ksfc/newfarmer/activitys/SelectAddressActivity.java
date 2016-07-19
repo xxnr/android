@@ -13,13 +13,13 @@ import android.widget.TextView;
 
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
-import com.ksfc.newfarmer.http.ApiType;
-import com.ksfc.newfarmer.http.Request;
-import com.ksfc.newfarmer.http.RequestParams;
-import com.ksfc.newfarmer.http.beans.BuildingList;
-import com.ksfc.newfarmer.http.beans.CityList;
-import com.ksfc.newfarmer.http.beans.QueueList;
-import com.ksfc.newfarmer.http.beans.TownList;
+import com.ksfc.newfarmer.protocol.ApiType;
+import com.ksfc.newfarmer.protocol.Request;
+import com.ksfc.newfarmer.protocol.RequestParams;
+import com.ksfc.newfarmer.beans.BuildingList;
+import com.ksfc.newfarmer.beans.CityList;
+import com.ksfc.newfarmer.beans.QueueList;
+import com.ksfc.newfarmer.beans.TownList;
 
 import java.util.ArrayList;
 import java.util.List;

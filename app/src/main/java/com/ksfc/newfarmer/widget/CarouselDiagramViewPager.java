@@ -6,7 +6,7 @@ import java.util.List;
 import com.bumptech.glide.Glide;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
-import com.ksfc.newfarmer.http.beans.HomeImageResult.Rows;
+import com.ksfc.newfarmer.beans.HomeImageResult.Rows;
 import com.ksfc.newfarmer.utils.ScreenUtil;
 import com.ksfc.newfarmer.utils.Utils;
 

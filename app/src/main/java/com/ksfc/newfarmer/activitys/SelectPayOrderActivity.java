@@ -11,8 +11,8 @@ import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.RndApplication;
 import com.ksfc.newfarmer.common.CommonAdapter;
 import com.ksfc.newfarmer.common.CommonViewHolder;
-import com.ksfc.newfarmer.http.Request;
-import com.ksfc.newfarmer.http.beans.AddOrderResult;
+import com.ksfc.newfarmer.protocol.Request;
+import com.ksfc.newfarmer.beans.AddOrderResult;
 import com.ksfc.newfarmer.utils.StringUtil;
 
 

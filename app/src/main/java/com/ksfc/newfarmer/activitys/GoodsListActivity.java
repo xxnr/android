@@ -32,18 +32,18 @@ import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.RndApplication;
 import com.ksfc.newfarmer.common.CommonAdapter;
 import com.ksfc.newfarmer.common.CommonViewHolder;
-import com.ksfc.newfarmer.common.GlideUtils;
-import com.ksfc.newfarmer.http.ApiType;
-import com.ksfc.newfarmer.http.ApiType.RequestMethod;
-import com.ksfc.newfarmer.http.Request;
-import com.ksfc.newfarmer.http.RequestParams;
-import com.ksfc.newfarmer.http.beans.AttrSelectResult;
-import com.ksfc.newfarmer.http.beans.BrandsResult;
-import com.ksfc.newfarmer.http.beans.GetGoodsData;
-import com.ksfc.newfarmer.http.beans.GetGoodsData.SingleGood;
-import com.ksfc.newfarmer.http.RxApi.RxService;
+import com.ksfc.newfarmer.common.GlideHelper;
+import com.ksfc.newfarmer.protocol.ApiType;
+import com.ksfc.newfarmer.protocol.ApiType.RequestMethod;
+import com.ksfc.newfarmer.protocol.Request;
+import com.ksfc.newfarmer.protocol.RequestParams;
+import com.ksfc.newfarmer.beans.AttrSelectResult;
+import com.ksfc.newfarmer.beans.BrandsResult;
+import com.ksfc.newfarmer.beans.GetGoodsData;
+import com.ksfc.newfarmer.beans.GetGoodsData.SingleGood;
+import com.ksfc.newfarmer.protocol.RxApi.RxService;
 import com.ksfc.newfarmer.utils.ExpandViewTouch;
-import com.ksfc.newfarmer.utils.PullToRefreshUtils;
+import com.ksfc.newfarmer.common.PullToRefreshHelper;
 import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.ScreenUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
@@ -144,7 +144,7 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
         //设置加载更多
         mLoadingFooter = new LoadingFooter(this, listView.getRefreshableView());
         //设置刷新的文字
-        PullToRefreshUtils.setFreshText(listView);
+        PullToRefreshHelper.setFreshText(listView);
         //没有商品时的layout
         goods_none_view_rel = (RelativeLayout) findViewById(R.id.goods_none_view_rel);
         // 去顶部
@@ -875,7 +875,7 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
             if (singleGood != null) {
 
                 //设置文本
-                GlideUtils.setImageRes(GoodsListActivity.this, singleGood.imgUrl, (ImageView) holder.getView(R.id.goods_image));
+                GlideHelper.setImageRes(GoodsListActivity.this, singleGood.imgUrl, (ImageView) holder.getView(R.id.goods_image));
                 holder.setText(R.id.goods_title, singleGood.goodsName);
                 String price = singleGood.unitPrice;
                 TextView price_tv = holder.getView(R.id.goods_price);
@@ -899,7 +899,7 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
 
     @Override
     public void onRefresh(PullToRefreshBase refreshView) {
-        PullToRefreshUtils.setFreshClose(refreshView);
+        PullToRefreshHelper.setFreshClose(refreshView);
         oldFlag = true;
         page = 1;
         getData();

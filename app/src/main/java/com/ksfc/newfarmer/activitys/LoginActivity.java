@@ -7,12 +7,12 @@ package com.ksfc.newfarmer.activitys;
 import com.ksfc.newfarmer.App;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
-import com.ksfc.newfarmer.http.ApiType;
-import com.ksfc.newfarmer.http.Request;
-import com.ksfc.newfarmer.http.RequestParams;
-import com.ksfc.newfarmer.http.beans.LoginResult;
-import com.ksfc.newfarmer.http.beans.PublicKeyResult;
-import com.ksfc.newfarmer.utils.thrid.UmengPush;
+import com.ksfc.newfarmer.protocol.ApiType;
+import com.ksfc.newfarmer.protocol.Request;
+import com.ksfc.newfarmer.protocol.RequestParams;
+import com.ksfc.newfarmer.beans.LoginResult;
+import com.ksfc.newfarmer.beans.PublicKeyResult;
+import com.ksfc.newfarmer.common.UmengPushHelper;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.db.Store;
 
@@ -23,7 +23,6 @@ import com.ksfc.newfarmer.widget.ClearEditText;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -186,7 +185,7 @@ public class LoginActivity extends BaseActivity {
                 // 发广播 让我的新农人列表再次刷新
                 MsgCenter.fireNull(MsgID.ISLOGIN);
                 //注册推送alias
-                UmengPush.addAlias(this, login.datas.userid);
+                UmengPushHelper.addAlias(this, login.datas.userid);
                 // 是否进入完善资料页
                 if (!login.datas.isUserInfoFullFilled) {
                     Intent intent = new Intent(this, ImprovePersonActivity.class);

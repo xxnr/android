@@ -15,19 +15,20 @@ import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.activitys.ShoppingCartActivity.Data.Category;
 import com.ksfc.newfarmer.activitys.ShoppingCartActivity.Data.Goods;
-import com.ksfc.newfarmer.common.GlideUtils;
+import com.ksfc.newfarmer.common.GlideHelper;
+import com.ksfc.newfarmer.db.DBManager;
+import com.ksfc.newfarmer.beans.dbbeans.OfflineShoppingCart;
 import com.ksfc.newfarmer.db.Store;
-import com.ksfc.newfarmer.db.dao.ShoppingDao;
-import com.ksfc.newfarmer.http.ApiType;
-import com.ksfc.newfarmer.http.Request;
-import com.ksfc.newfarmer.http.RequestParams;
-import com.ksfc.newfarmer.http.beans.GetGoodsDetail;
-import com.ksfc.newfarmer.http.beans.GetshopCart;
-import com.ksfc.newfarmer.http.beans.GetshopCart.shopCart;
+import com.ksfc.newfarmer.protocol.ApiType;
+import com.ksfc.newfarmer.protocol.Request;
+import com.ksfc.newfarmer.protocol.RequestParams;
+import com.ksfc.newfarmer.beans.GetGoodsDetail;
+import com.ksfc.newfarmer.beans.GetshopCart;
+import com.ksfc.newfarmer.beans.GetshopCart.shopCart;
 import com.ksfc.newfarmer.widget.dialog.CustomDialog;
 import com.ksfc.newfarmer.widget.dialog.CustomDialogForShopCarCount;
 import com.ksfc.newfarmer.utils.ExpandViewTouch;
-import com.ksfc.newfarmer.utils.PullToRefreshUtils;
+import com.ksfc.newfarmer.common.PullToRefreshHelper;
 import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.SPUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
@@ -55,6 +56,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import net.yangentao.util.PreferenceUtil;
+
+import greendao.OfflineShoppingCartDao;
 
 
 public class ShoppingCartActivity extends BaseActivity {
@@ -91,7 +94,8 @@ public class ShoppingCartActivity extends BaseActivity {
 
     //当前activity适配器所用到的实体类
     Data data = null;
-    ShoppingDao dao;
+    private OfflineShoppingCartDao cartDao;
+
     /**
      * 全选按钮监听器
      */
@@ -208,6 +212,9 @@ public class ShoppingCartActivity extends BaseActivity {
     @Override
     public void OnActCreate(Bundle savedInstanceState) {
         data = new Data();
+        cartDao = DBManager.getInstance(ShoppingCartActivity.this)
+                .getWritableDaoSession()
+                .getOfflineShoppingCartDao();
         data.category = new ArrayList<>();
         setTitle("购物车");
         hideLeft();
@@ -280,13 +287,13 @@ public class ShoppingCartActivity extends BaseActivity {
             }
         });
         //设置刷新的文字
-        PullToRefreshUtils.setFreshText(shopCart_list);
+        PullToRefreshHelper.setFreshText(shopCart_list);
         //设置下拉刷新
 
         shopCart_list.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ExpandableListView>() {
             @Override
             public void onRefresh(PullToRefreshBase<ExpandableListView> refreshView) {
-                PullToRefreshUtils.setFreshClose(refreshView);
+                PullToRefreshHelper.setFreshClose(refreshView);
                 if (!isLogin()) {
                     shopCart_list.onRefreshComplete();
                 }
@@ -312,38 +319,28 @@ public class ShoppingCartActivity extends BaseActivity {
     private void getData() {
 
         if (isLogin()) {
-            // 走网络
-            // app/shopCart/getShopCartList
-            // locationUserId:操作人ID
-            // userId:用户ID
             // 把本地的数据加载到用户的购物车中
-            dao = new ShoppingDao(getApplicationContext());
-            allShoppings = dao.getAllShoppings("汽车");
             localToNet = new ArrayList<>();
-            if (allShoppings.size() > 0) {
-                for (int i = 0; i < allShoppings.size(); i++) {
+            List<OfflineShoppingCart> shoppingCartList = cartDao.queryBuilder().list();
+            if (shoppingCartList != null) {
+                for (int i = 0; i < shoppingCartList.size(); i++) {
                     HashMap<String, Object> map = new HashMap<>();
-                    if (allShoppings.get(i).get("numbers") != null) {
-                        map.put("sum",
-                                (String) allShoppings.get(i).get("numbers"));
+                    if (StringUtil.checkStr(shoppingCartList.get(i).getNumbers())) {
+                        map.put("count", shoppingCartList.get(i).getNumbers());
                     }
-                    if (allShoppings.get(i).get("additions") != null) {
-                        String additions = (String) allShoppings.get(i).get("additions");
+                    if (StringUtil.checkStr(shoppingCartList.get(i).getAdditions())) {
+                        String additions = shoppingCartList.get(i).getAdditions();
                         Gson gson = new Gson();
                         List<GetGoodsDetail.GoodsDetail.SKUAdditions> jsonList = gson.fromJson(additions, new TypeToken<List<GetGoodsDetail.GoodsDetail.SKUAdditions>>() {
                         }.getType());
                         map.put("additions", jsonList);
                     }
-                    if (allShoppings.get(i).get("SKUId") != null) {
-                        map.put("SKUId",
-                                (String) allShoppings.get(i).get("SKUId"));
+                    if (shoppingCartList.get(i).getSKUId() != null) {
+                        map.put("_id", shoppingCartList.get(i).getSKUId());
                     }
-
                     localToNet.add(map);
                 }
             }
-
-
             //将本地的购物车 同步到用户
             for (int i = 0; i < localToNet.size(); i++) {
                 RequestParams params = new RequestParams();
@@ -352,8 +349,8 @@ public class ShoppingCartActivity extends BaseActivity {
                 if (isLogin()) {
                     map.put("token", Store.User.queryMe().token);
                 }
-                map.put("quantity", localToNet.get(i).get("sum"));
-                map.put("SKUId", localToNet.get(i).get("SKUId"));
+                map.put("quantity", localToNet.get(i).get("count"));
+                map.put("SKUId", localToNet.get(i).get("_id"));
                 map.put("update_by_add", "true");
 
                 List<GetGoodsDetail.GoodsDetail.SKUAdditions> jsonList = (List<GetGoodsDetail.GoodsDetail.SKUAdditions>) localToNet.get(i).get("additions");
@@ -372,7 +369,7 @@ public class ShoppingCartActivity extends BaseActivity {
                 execApi(ApiType.GET_SHOPCART_LIST.setMethod(ApiType.RequestMethod.GET), params);
             }
             // 删除本地购物车数据
-            dao.deleteAllShopping();
+            cartDao.deleteAll();
         } else {
             //未登录加载本地购物车
             disMissDialog();
@@ -381,35 +378,29 @@ public class ShoppingCartActivity extends BaseActivity {
     }
 
     private void jiadata() {
-
-        dao = new ShoppingDao(getApplicationContext());
-        allShoppings = dao.getAllShoppings(null);
+        List<OfflineShoppingCart> shoppingCartList = cartDao.queryBuilder().list();
         localToNet = new ArrayList<>();
-        if (allShoppings.size() > 0) {
-            for (int i = 0; i < allShoppings.size(); i++) {
+        if (shoppingCartList != null) {
+            for (int i = 0; i < shoppingCartList.size(); i++) {
                 HashMap<String, Object> map = new HashMap<>();
-                if (allShoppings.get(i).get("SKUId") != null) {
-                    map.put("_id", (String) allShoppings.get(i)
-                            .get("SKUId"));
+                if (StringUtil.checkStr(shoppingCartList.get(i).getNumbers())) {
+                    map.put("count", shoppingCartList.get(i).getNumbers());
                 }
-
-                if (allShoppings.get(i).get("additions") != null) {
-
-                    String additions = (String) allShoppings.get(i).get("additions");
+                if (StringUtil.checkStr(shoppingCartList.get(i).getAdditions())) {
+                    String additions = shoppingCartList.get(i).getAdditions();
                     Gson gson = new Gson();
                     List<GetGoodsDetail.GoodsDetail.SKUAdditions> jsonList = gson.fromJson(additions, new TypeToken<List<GetGoodsDetail.GoodsDetail.SKUAdditions>>() {
                     }.getType());
                     map.put("additions", jsonList);
                 }
-                if (allShoppings.get(i).get("numbers") != null) {
-                    map.put("count", (String) allShoppings.get(i)
-                            .get("numbers"));
+                if (shoppingCartList.get(i).getSKUId() != null) {
+                    map.put("_id", shoppingCartList.get(i).getSKUId());
                 }
                 localToNet.add(map);
             }
         }
 
-        if (localToNet.size() == 0) {
+        if (localToNet.isEmpty()) {
             if (adapter != null) {
                 adapter.clear();
             } else {
@@ -418,8 +409,7 @@ public class ShoppingCartActivity extends BaseActivity {
                 shopCart_expandListView.setAdapter(adapter);
             }
             toPay_ll.setVisibility(View.GONE);
-            null_shop_cart_layout
-                    .setVisibility(View.VISIBLE);
+            null_shop_cart_layout.setVisibility(View.VISIBLE);
             hideRight();
             setTitle("购物车");
         }
@@ -547,7 +537,7 @@ public class ShoppingCartActivity extends BaseActivity {
                                                             Boolean isChecked = inCartMap.get(data.category.get(i).goods.get(j).SKUId);
                                                             if (isChecked != null && isChecked) {
                                                                 Goods good = data.category.get(i).goods.get(j);
-                                                                dao.deleteShopping(good.SKUId);
+                                                                cartDao.deleteByKey(good.SKUId);
                                                             }
                                                         }
                                                     }
@@ -783,8 +773,12 @@ public class ShoppingCartActivity extends BaseActivity {
                     goods.product_id = rows.get(i).SKUList.get(j).product_id;
                     goods.SKUId = rows.get(i).SKUList.get(j)._id;//SKUId
                     goods.name = rows.get(i).SKUList.get(j).productName;
-                    goods.num = Integer
-                            .parseInt(rows.get(i).SKUList.get(j).count);
+                    try {
+                        goods.num = Integer.parseInt(rows.get(i).SKUList.get(j).count);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        goods.num = 0;
+                    }
                     goods.pic = rows.get(i).SKUList.get(j).imgUrl;
 
                     //是否online
@@ -1014,7 +1008,7 @@ public class ShoppingCartActivity extends BaseActivity {
                                 holder.ordering_item_geshu.setText("");
                             }
                             //图片
-                            GlideUtils.setImageRes(ShoppingCartActivity.this,goodsList.get(childPosition).pic,holder.ordering_item_img);
+                            GlideHelper.setImageRes(ShoppingCartActivity.this, goodsList.get(childPosition).pic, holder.ordering_item_img);
                             //名称
                             if (StringUtil.checkStr(goodsList.get(childPosition).name)) {
                                 holder.ordering_item_name.setText(goodsList.get(childPosition).name);
@@ -1051,7 +1045,7 @@ public class ShoppingCartActivity extends BaseActivity {
                                                                 showProgressDialog("删除中");
 
                                                             } else {
-                                                                dao.deleteShopping(goodsList.get(childPosition).SKUId);
+                                                                cartDao.deleteByKey(goodsList.get(childPosition).SKUId);
                                                                 getData();
                                                                 showToast("商品删除成功");
                                                             }
@@ -1100,7 +1094,7 @@ public class ShoppingCartActivity extends BaseActivity {
                                                                 showProgressDialog("删除中");
 
                                                             } else {
-                                                                dao.deleteShopping(goodsList.get(childPosition).SKUId);
+                                                                cartDao.deleteByKey(goodsList.get(childPosition).SKUId);
                                                                 getData();
                                                                 showToast("商品删除成功");
                                                             }
@@ -1293,7 +1287,7 @@ public class ShoppingCartActivity extends BaseActivity {
                                                             } catch (NumberFormatException e) {
                                                                 i = 1;
                                                             }
-                                                            if (i>0) {
+                                                            if (i > 0) {
                                                                 holder.ordering_item_geshu.setText(str);
                                                                 if (isLogin()) {
                                                                     RequestParams params = new RequestParams();
@@ -1306,9 +1300,12 @@ public class ShoppingCartActivity extends BaseActivity {
                                                                     showProgressDialog("提交中");
                                                                 } else {
                                                                     goodsList.get(childPosition).num = Integer.valueOf(str);
-                                                                    dao.updateShopping(goodsList.get(childPosition).SKUId,
-                                                                            holder.ordering_item_geshu.getText().toString()
-                                                                                    .trim());
+
+                                                                    OfflineShoppingCart offlineShoppingCart = cartDao.load(goodsList.get(childPosition).SKUId);
+                                                                    if (offlineShoppingCart != null) {
+                                                                        offlineShoppingCart.setNumbers(holder.ordering_item_geshu.getText().toString().trim());
+                                                                        cartDao.update(offlineShoppingCart);
+                                                                    }
                                                                     RndLog.i("pid..............jian1", goodsList.size()
                                                                             + "name,," + goodsList.get(childPosition).name
                                                                             + "SKUId--" + goodsList.get(childPosition).SKUId
@@ -1394,8 +1391,7 @@ public class ShoppingCartActivity extends BaseActivity {
                                     }
 
                                     goodsList.get(childPosition).num--;
-                                    holder.ordering_item_geshu.setText(goodsList.get(childPosition).num
-                                            + "");
+                                    holder.ordering_item_geshu.setText(goodsList.get(childPosition).num + "");
                                     if (isLogin()) {
                                         RequestParams params = new RequestParams();
                                         if (isLogin()) {
@@ -1408,9 +1404,11 @@ public class ShoppingCartActivity extends BaseActivity {
                                         showProgressDialog("提交中");
                                         isQuery = false;
                                     } else {
-                                        dao.updateShopping(goodsList.get(childPosition).SKUId,
-                                                holder.ordering_item_geshu.getText().toString()
-                                                        .trim());
+                                        OfflineShoppingCart offlineShoppingCart = cartDao.load(goodsList.get(childPosition).SKUId);
+                                        if (offlineShoppingCart != null) {
+                                            offlineShoppingCart.setNumbers(holder.ordering_item_geshu.getText().toString().trim());
+                                            cartDao.update(offlineShoppingCart);
+                                        }
                                         RndLog.i("pid..............jian1", goodsList.size()
                                                 + "name,," + goodsList.get(childPosition).name
                                                 + "SKUId--" + goodsList.get(childPosition).SKUId
@@ -1450,11 +1448,11 @@ public class ShoppingCartActivity extends BaseActivity {
                                         execApi(ApiType.CHANGE_NUM, params);
                                         isQuery = false;
                                     } else {
-
-
-                                        dao.updateShopping(goodsList.get(childPosition).SKUId,
-                                                holder.ordering_item_geshu.getText().toString()
-                                                        .trim());
+                                        OfflineShoppingCart offlineShoppingCart = cartDao.load(goodsList.get(childPosition).SKUId);
+                                        if (offlineShoppingCart != null) {
+                                            offlineShoppingCart.setNumbers(holder.ordering_item_geshu.getText().toString().trim());
+                                            cartDao.update(offlineShoppingCart);
+                                        }
                                         RndLog.i("pid..............jia1", goodsList.size()
                                                 + "name,," + goodsList.get(childPosition).name
                                                 + "SKUId--" + goodsList.get(childPosition).SKUId

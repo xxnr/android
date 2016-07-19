@@ -4,10 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.webkit.JavascriptInterface;
 
-import com.google.gson.Gson;
 import com.ksfc.newfarmer.activitys.LoginActivity;
 import com.ksfc.newfarmer.db.Store;
-import com.ksfc.newfarmer.http.beans.LoginResult;
+import com.ksfc.newfarmer.beans.LoginResult;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
 

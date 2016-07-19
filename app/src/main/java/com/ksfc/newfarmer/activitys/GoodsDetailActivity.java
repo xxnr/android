@@ -19,15 +19,16 @@ import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.RndApplication;
 import com.ksfc.newfarmer.common.CommonFragmentPagerAdapter;
+import com.ksfc.newfarmer.db.DBManager;
+import com.ksfc.newfarmer.beans.dbbeans.OfflineShoppingCart;
 import com.ksfc.newfarmer.db.Store;
-import com.ksfc.newfarmer.db.dao.ShoppingDao;
 import com.ksfc.newfarmer.fragment.GoodsDetailButtomFragment;
 import com.ksfc.newfarmer.fragment.GoodsDetailTopFragment;
-import com.ksfc.newfarmer.http.ApiType;
-import com.ksfc.newfarmer.http.Request;
-import com.ksfc.newfarmer.http.RequestParams;
-import com.ksfc.newfarmer.http.beans.GetGoodsDetail;
-import com.ksfc.newfarmer.http.beans.RemainGoodsAttr;
+import com.ksfc.newfarmer.protocol.ApiType;
+import com.ksfc.newfarmer.protocol.Request;
+import com.ksfc.newfarmer.protocol.RequestParams;
+import com.ksfc.newfarmer.beans.GetGoodsDetail;
+import com.ksfc.newfarmer.beans.RemainGoodsAttr;
 import com.ksfc.newfarmer.utils.ExpandViewTouch;
 import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.ScreenUtil;
@@ -61,13 +62,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import net.yangentao.util.msg.MsgCenter;
 
+import greendao.OfflineShoppingCartDao;
+
 public class GoodsDetailActivity extends BaseActivity implements KeyboardListenRelativeLayout.IOnKeyboardStateChangedListener {
-    private ShoppingDao dao;
     private String goodId;
     private GetGoodsDetail.GoodsDetail detail;
     private TextView jinqingqidai_bar;
@@ -119,7 +120,6 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
         goodId = getIntent().getStringExtra("goodId");
         setTitle("商品详情");
         initView();
-        dao = new ShoppingDao(GoodsDetailActivity.this);
         getData();
 
         mAnimation_top = AnimationUtils.loadAnimation(this, R.anim.cart_anim_top);
@@ -820,17 +820,21 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
         } else {
             // 查询数据库 为空 就插入 不为空 就更新
             if (StringUtil.checkStr(SKUId)) {
-                Map<String, String> shopping = dao.getShopping(SKUId);
-                if (shopping.isEmpty()) {
-                    // 新插入
-                    Map<String, String> map = new HashMap<>();
-                    map.put("pid", detail.id);
-                    map.put("title", detail.name);
-                    map.put("imageurl", detail.imgUrl);
-                    map.put("numbers", pop_discount_geshu.getText().toString()
-                            .trim()
-                            + "");
+
+                OfflineShoppingCartDao shoppingCartDao = DBManager.getInstance(GoodsDetailActivity.this)
+                        .getWritableDaoSession()
+                        .getOfflineShoppingCartDao();
+
+                OfflineShoppingCart  offlineShoppingCart= shoppingCartDao.load(SKUId);
+
+                if (offlineShoppingCart==null) {//新插入一条数据
+
+                    OfflineShoppingCart offlineData=new OfflineShoppingCart();
+
+                    offlineData.setSKUId(SKUId);
+                    offlineData.setNumbers(pop_discount_geshu.getText().toString().trim() + "");
                     //附加选项存在本地数据库
+                    String additions="[]";
                     if (detail.SKUAdditions != null && !detail.SKUAdditions.isEmpty()) {
                         if (additionsAdapter != null
                                 && additionsAdapter.states != null
@@ -848,25 +852,21 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
                                 }
                             }
                             Gson gson = new Gson();
-                            String additions = gson.toJson(skuAdditions);
-                            map.put("additions", additions);
+                            additions= gson.toJson(skuAdditions);
                         }
                     }
-                    map.put("SKUId", SKUId);
-                    map.put("stars", "");
-                    map.put("pricenow", detail.price);
-                    dao.saveShopping(map);
-                } else {
+                    offlineData.setAdditions(additions);
+                    shoppingCartDao.insertInTx(offlineData);
+                } else {//更新一条数据
                     // 先从数据库获取对应id的个数 然后相加本地的个数
-                    Map<String, String> shop = dao.getShopping(SKUId);
-                    String numbers = shop.get("numbers");
+                    String numbers = offlineShoppingCart.getNumbers();
                     // 更新数据库商品对应的id
                     int sumNum = Integer.valueOf(numbers)
                             + Integer.valueOf(pop_discount_geshu.getText()
                             .toString().trim());
-                    dao.updateShopping(SKUId, sumNum + "");
-
+                    offlineShoppingCart.setNumbers(sumNum + "");
                     //附加选项存在本地数据库
+                    String additions = "[]";
                     if (detail.SKUAdditions != null && !detail.SKUAdditions.isEmpty()) {
                         if (additionsAdapter != null
                                 && additionsAdapter.states != null
@@ -884,12 +884,11 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
                                 }
                             }
                             Gson gson = new Gson();
-                            String additions = gson.toJson(skuAdditions);
-                            dao.updateShoppingAdditions(SKUId, additions);
-                        } else {
-                            dao.updateShoppingAdditions(SKUId, "[]");
+                            additions = gson.toJson(skuAdditions);
                         }
                     }
+                    offlineShoppingCart.setAdditions(additions);
+                    shoppingCartDao.update(offlineShoppingCart);
                 }
                 if (popupWindow != null && popupWindow.isShowing()) {
                     popupWindow.dismiss();

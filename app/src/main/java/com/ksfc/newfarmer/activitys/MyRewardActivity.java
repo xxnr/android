@@ -18,18 +18,18 @@ import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.common.CommonAdapter;
 import com.ksfc.newfarmer.common.CommonViewHolder;
 import com.ksfc.newfarmer.common.CommonFunction;
-import com.ksfc.newfarmer.common.GlideUtils;
-import com.ksfc.newfarmer.common.LoadMoreOnScrollListener;
+import com.ksfc.newfarmer.common.GlideHelper;
+import com.ksfc.newfarmer.common.LoadMoreScrollListener;
 import com.ksfc.newfarmer.db.Store;
-import com.ksfc.newfarmer.http.ApiType;
-import com.ksfc.newfarmer.http.RemoteApi;
-import com.ksfc.newfarmer.http.Request;
-import com.ksfc.newfarmer.http.RequestParams;
-import com.ksfc.newfarmer.http.beans.IntegralGetResult;
-import com.ksfc.newfarmer.http.beans.PointLogsResult;
-import com.ksfc.newfarmer.http.beans.PointResult;
+import com.ksfc.newfarmer.protocol.ApiType;
+import com.ksfc.newfarmer.protocol.remoteapi.RemoteApi;
+import com.ksfc.newfarmer.protocol.Request;
+import com.ksfc.newfarmer.protocol.RequestParams;
+import com.ksfc.newfarmer.beans.IntegralGetResult;
+import com.ksfc.newfarmer.beans.PointLogsResult;
+import com.ksfc.newfarmer.beans.PointResult;
 import com.ksfc.newfarmer.utils.DateFormatUtils;
-import com.ksfc.newfarmer.utils.PullToRefreshUtils;
+import com.ksfc.newfarmer.common.PullToRefreshHelper;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.LoadingFooter;
 
@@ -55,7 +55,7 @@ public class MyRewardActivity extends BaseActivity implements PullToRefreshBase.
 
 
     private LoadingFooter loadingFooter;
-    private LoadMoreOnScrollListener moreOnsrcollListener = new LoadMoreOnScrollListener() {
+    private LoadMoreScrollListener moreOnsrcollListener = new LoadMoreScrollListener() {
         @Override
         public void loadMore() {
             //加载更多
@@ -143,7 +143,7 @@ public class MyRewardActivity extends BaseActivity implements PullToRefreshBase.
                     holder.signButtonTv.setText(isSign ? "已签到" : "签到");
                     setSignMsg(holder.signDescriptionTv, isSign, consecutiveTimes);
                     //加载图片
-                    GlideUtils.setImageRes(MyRewardActivity.this,data.datas.sign.large_imgUrl,holder.signStateImgIv);
+                    GlideHelper.setImageRes(MyRewardActivity.this,data.datas.sign.large_imgUrl,holder.signStateImgIv);
                 } else {
                     setSignMsg(holder.signDescriptionTv, false, 0);
                 }
@@ -204,7 +204,7 @@ public class MyRewardActivity extends BaseActivity implements PullToRefreshBase.
 
     @Override
     public void onRefresh(PullToRefreshBase refreshView) {
-        PullToRefreshUtils.setFreshClose(refreshView);
+        PullToRefreshHelper.setFreshClose(refreshView);
         page = 1;
         RemoteApi.getPointsLogs(this, page);
     }

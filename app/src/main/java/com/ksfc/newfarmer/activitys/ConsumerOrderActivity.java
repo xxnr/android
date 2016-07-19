@@ -11,15 +11,15 @@ import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.common.CommonAdapter;
 import com.ksfc.newfarmer.common.CommonViewHolder;
-import com.ksfc.newfarmer.common.LoadMoreOnScrollListener;
+import com.ksfc.newfarmer.common.LoadMoreScrollListener;
 import com.ksfc.newfarmer.db.Store;
-import com.ksfc.newfarmer.http.ApiType;
-import com.ksfc.newfarmer.http.Request;
-import com.ksfc.newfarmer.http.RequestParams;
-import com.ksfc.newfarmer.http.beans.ConsumerOrderResult;
-import com.ksfc.newfarmer.http.beans.InviteeResult;
+import com.ksfc.newfarmer.protocol.ApiType;
+import com.ksfc.newfarmer.protocol.Request;
+import com.ksfc.newfarmer.protocol.RequestParams;
+import com.ksfc.newfarmer.beans.ConsumerOrderResult;
+import com.ksfc.newfarmer.beans.dbbeans.InviteeEntity;
 import com.ksfc.newfarmer.utils.DateFormatUtils;
-import com.ksfc.newfarmer.utils.PullToRefreshUtils;
+import com.ksfc.newfarmer.common.PullToRefreshHelper;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.utils.Utils;
 import com.ksfc.newfarmer.widget.LoadingFooter;
@@ -35,7 +35,7 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
     private TextView name;
     private TextView phone;
     private PullToRefreshListView listView;
-    private InviteeResult.InviteeEntity consumer;
+    private InviteeEntity consumer;
     private int page = 1;
     private TextView consumer_count;
     private OrderAdapter adapter;
@@ -81,10 +81,10 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
         listView.setOnScrollListener(moreOnsrcollListener);
         loadingFooter = new LoadingFooter(this, listView.getRefreshableView());
         //设置刷新的文字
-        PullToRefreshUtils.setFreshText(listView);
+        PullToRefreshHelper.setFreshText(listView);
         consumer_count = (TextView) findViewById(R.id.consumer_count);
 
-        consumer = (InviteeResult.InviteeEntity) getIntent().getSerializableExtra("consumer");
+        consumer = (InviteeEntity) getIntent().getSerializableExtra("consumer");
         if (consumer != null) {
             if (!StringUtil.empty(consumer.name)) {
                 name.setText("姓名：" + consumer.name);
@@ -291,12 +291,12 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
 
     @Override
     public void onRefresh(PullToRefreshBase refreshView) {
-        PullToRefreshUtils.setFreshClose(refreshView);
+        PullToRefreshHelper.setFreshClose(refreshView);
         page = 1;
         getData();
     }
 
-    private LoadMoreOnScrollListener moreOnsrcollListener = new LoadMoreOnScrollListener() {
+    private LoadMoreScrollListener moreOnsrcollListener = new LoadMoreScrollListener() {
         @Override
         public void loadMore() {
             //加载更多

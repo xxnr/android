@@ -17,12 +17,12 @@ import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.fragment.InviteFriendsListFragment;
 import com.ksfc.newfarmer.fragment.MyInviterFragment;
 import com.ksfc.newfarmer.fragment.PotentialCustomer;
-import com.ksfc.newfarmer.http.ApiType;
-import com.ksfc.newfarmer.http.Request;
-import com.ksfc.newfarmer.http.RequestParams;
-import com.ksfc.newfarmer.http.beans.CustomerIsLatestResult;
-import com.ksfc.newfarmer.http.beans.LoginResult;
-import com.ksfc.newfarmer.http.beans.PersonalData;
+import com.ksfc.newfarmer.protocol.ApiType;
+import com.ksfc.newfarmer.protocol.Request;
+import com.ksfc.newfarmer.protocol.RequestParams;
+import com.ksfc.newfarmer.beans.CustomerIsLatestResult;
+import com.ksfc.newfarmer.beans.LoginResult;
+import com.ksfc.newfarmer.beans.PersonalData;
 import com.ksfc.newfarmer.utils.IntentUtil;
 
 import net.yangentao.util.PreferenceUtil;

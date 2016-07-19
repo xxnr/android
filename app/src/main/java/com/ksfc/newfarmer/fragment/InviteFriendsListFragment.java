@@ -9,20 +9,18 @@ import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.activitys.ConsumerOrderActivity;
 import com.ksfc.newfarmer.common.CommonAdapter;
 import com.ksfc.newfarmer.common.CommonViewHolder;
+import com.ksfc.newfarmer.db.DBManager;
 import com.ksfc.newfarmer.db.Store;
-import com.ksfc.newfarmer.db.XUtilsDb.XUtilsDbHelper;
-import com.ksfc.newfarmer.http.ApiType;
-import com.ksfc.newfarmer.http.Request;
-import com.ksfc.newfarmer.http.RequestParams;
-import com.ksfc.newfarmer.http.beans.InviteeResult;
-import com.ksfc.newfarmer.http.beans.LoginResult;
+import com.ksfc.newfarmer.protocol.ApiType;
+import com.ksfc.newfarmer.protocol.Request;
+import com.ksfc.newfarmer.protocol.RequestParams;
+import com.ksfc.newfarmer.beans.LoginResult;
+import com.ksfc.newfarmer.beans.dbbeans.InviteeEntity;
+import com.ksfc.newfarmer.beans.dbbeans.InviteeResult;
 import com.ksfc.newfarmer.utils.ScreenUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.utils.Utils;
 import com.ksfc.newfarmer.widget.QuickAlphabeticBar;
-import com.lidroid.xutils.DbUtils;
-import com.lidroid.xutils.db.sqlite.Selector;
-import com.lidroid.xutils.exception.DbException;
 
 import android.content.Context;
 import android.content.Intent;
@@ -34,7 +32,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.ksfc.newfarmer.App;
+import greendao.DaoSession;
+import greendao.InviteeEntityDao;
 
 
 /**
@@ -72,24 +71,21 @@ public class InviteFriendsListFragment extends BaseFragment {
         listView.addHeaderView(headerLayout);
 
         //从数据库中取数据
-        DbUtils dbUtils = XUtilsDbHelper.getInstance(activity, App.getApp().getUid());
-        try {
-            List<InviteeResult.InviteeEntity> inviteeEntityList = dbUtils.findAll(Selector.from(InviteeResult.InviteeEntity.class));
-            if (inviteeEntityList != null && !inviteeEntityList.isEmpty()) {
-                adapter = new InviteAdapter(activity, inviteeEntityList);
-                listView.setAdapter(adapter);
-                initAlphabeticBar(inviteeEntityList);
+        DaoSession readableDaoSession = DBManager.getInstance(activity).getReadableDaoSession();
+        List<InviteeEntity> inviteeEntityList = readableDaoSession.getInviteeEntityDao().queryBuilder().list();
+        if (inviteeEntityList != null && !inviteeEntityList.isEmpty()) {
+            adapter = new InviteAdapter(activity, inviteeEntityList);
+            listView.setAdapter(adapter);
+            initAlphabeticBar(inviteeEntityList);
 
-                none_invitee_customer_ll.setVisibility(View.GONE);
+            none_invitee_customer_ll.setVisibility(View.GONE);
 
-                //好友数量
-                if (StringUtil.checkStr(inviteeEntityList.size() + "")) {
-                    count_tv.setText(inviteeEntityList.size() + "");
-                }
+            //好友数量
+            if (StringUtil.checkStr(inviteeEntityList.size() + "")) {
+                count_tv.setText(inviteeEntityList.size() + "");
             }
-        } catch (DbException e) {
-            e.printStackTrace();
         }
+
 
         getData();
         return view;
@@ -130,10 +126,10 @@ public class InviteFriendsListFragment extends BaseFragment {
                     }
                     initAlphabeticBar(data.invitee);
                     //删除并重新 存入数据库
-                    DbUtils dbUtils = XUtilsDbHelper.getInstance(activity, App.getApp().getUid());
-                    XUtilsDbHelper.deleteAll(dbUtils, InviteeResult.InviteeEntity.class);
-                    XUtilsDbHelper.saveOrUpdateAll(dbUtils, data.invitee);
-
+                    DaoSession daoSession = DBManager.getInstance(activity).getReadableDaoSession();
+                    InviteeEntityDao inviteeEntityDao = daoSession.getInviteeEntityDao();
+                    inviteeEntityDao.deleteAll();
+                    inviteeEntityDao.insertInTx(data.invitee);
                 } else {
                     none_invitee_customer_ll.setVisibility(View.VISIBLE);
                 }
@@ -146,7 +142,7 @@ public class InviteFriendsListFragment extends BaseFragment {
     }
 
     //初始化滚动条
-    public void initAlphabeticBar(List<InviteeResult.InviteeEntity> data) {
+    public void initAlphabeticBar(List<InviteeEntity> data) {
 
         HashMap<String, Integer> alphaIndexer = new HashMap<>();
         ArrayList<String> alphas = new ArrayList<>();
@@ -170,16 +166,16 @@ public class InviteFriendsListFragment extends BaseFragment {
     }
 
     //适配器
-    class InviteAdapter extends CommonAdapter<InviteeResult.InviteeEntity> {
-        private List<InviteeResult.InviteeEntity> list;
+    class InviteAdapter extends CommonAdapter<InviteeEntity> {
+        private List<InviteeEntity> list;
 
-        public InviteAdapter(Context context, List<InviteeResult.InviteeEntity> data) {
+        public InviteAdapter(Context context, List<InviteeEntity> data) {
             super(context, data, R.layout.item_invite_list);
             this.list = data;
         }
 
         @Override
-        public void convert(final CommonViewHolder holder, final InviteeResult.InviteeEntity invitee) {
+        public void convert(final CommonViewHolder holder, final InviteeEntity invitee) {
 
             if (invitee != null) {
                 //分组 性别 姓名 是否更新订单 手机号

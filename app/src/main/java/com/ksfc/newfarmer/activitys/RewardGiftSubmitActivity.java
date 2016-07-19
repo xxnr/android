@@ -12,14 +12,14 @@ import android.widget.TextView;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.common.CompleteReceiver;
-import com.ksfc.newfarmer.common.GlideUtils;
-import com.ksfc.newfarmer.http.ApiType;
-import com.ksfc.newfarmer.http.RemoteApi;
-import com.ksfc.newfarmer.http.Request;
-import com.ksfc.newfarmer.http.beans.AddGiftOrderResult;
-import com.ksfc.newfarmer.http.beans.ConsigneeResult;
-import com.ksfc.newfarmer.http.beans.GiftDetailResult;
-import com.ksfc.newfarmer.http.beans.RSCStateInfoResult;
+import com.ksfc.newfarmer.common.GlideHelper;
+import com.ksfc.newfarmer.protocol.ApiType;
+import com.ksfc.newfarmer.protocol.remoteapi.RemoteApi;
+import com.ksfc.newfarmer.protocol.Request;
+import com.ksfc.newfarmer.beans.AddGiftOrderResult;
+import com.ksfc.newfarmer.beans.ConsigneeResult;
+import com.ksfc.newfarmer.beans.GiftDetailResult;
+import com.ksfc.newfarmer.beans.RSCStateInfoResult;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
 
@@ -117,7 +117,7 @@ public class RewardGiftSubmitActivity extends BaseActivity {
                 } else {
                     giftSubmitEmptyLl.setVisibility(View.GONE);
                     giftSubmitLl.setVisibility(View.VISIBLE);
-                    GlideUtils.setImageRes(RewardGiftSubmitActivity.this,gift.thumbnail,giftImgIv);
+                    GlideHelper.setImageRes(RewardGiftSubmitActivity.this,gift.thumbnail,giftImgIv);
                     giftNameTv.setText(StringUtil.checkStr(gift.name) ? gift.name : "");
                     giftPriceTv.setText(String.valueOf(gift.points));
 

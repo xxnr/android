@@ -18,9 +18,9 @@ import android.widget.TextView;
 import com.ksfc.newfarmer.BaseFragment;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.activitys.BigImageActivity;
-import com.ksfc.newfarmer.common.GlideUtils;
-import com.ksfc.newfarmer.http.Request;
-import com.ksfc.newfarmer.http.beans.GetGoodsDetail;
+import com.ksfc.newfarmer.common.GlideHelper;
+import com.ksfc.newfarmer.protocol.Request;
+import com.ksfc.newfarmer.beans.GetGoodsDetail;
 import com.ksfc.newfarmer.utils.ActivityAnimationUtils;
 import com.ksfc.newfarmer.utils.ScreenUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
@@ -195,7 +195,7 @@ public class GoodsDetailTopFragment extends BaseFragment implements ViewPager.On
 
             View view = inflater.inflate(R.layout.viewpager_pic, null);
             ImageView imageView = (ImageView) view.findViewById(R.id.imageView);
-            GlideUtils.setImageRes(GoodsDetailTopFragment.this,pictures.get(position).imgUrl,imageView);
+            GlideHelper.setImageRes(GoodsDetailTopFragment.this,pictures.get(position).imgUrl,imageView);
 
             container.addView(view);
             view.setOnClickListener(new View.OnClickListener() {

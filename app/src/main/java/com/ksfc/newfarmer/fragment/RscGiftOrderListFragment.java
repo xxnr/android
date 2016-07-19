@@ -25,12 +25,12 @@ import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.activitys.RSCOrderListActivity;
 import com.ksfc.newfarmer.common.CommonAdapter;
 import com.ksfc.newfarmer.common.CommonViewHolder;
-import com.ksfc.newfarmer.common.GlideUtils;
-import com.ksfc.newfarmer.common.LoadMoreOnScrollListener;
-import com.ksfc.newfarmer.http.ApiType;
-import com.ksfc.newfarmer.http.RemoteApi;
-import com.ksfc.newfarmer.http.Request;
-import com.ksfc.newfarmer.http.beans.RscGiftOrderListResult;
+import com.ksfc.newfarmer.common.GlideHelper;
+import com.ksfc.newfarmer.common.LoadMoreScrollListener;
+import com.ksfc.newfarmer.protocol.ApiType;
+import com.ksfc.newfarmer.protocol.remoteapi.RemoteApi;
+import com.ksfc.newfarmer.protocol.Request;
+import com.ksfc.newfarmer.beans.RscGiftOrderListResult;
 import com.ksfc.newfarmer.utils.DateFormatUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.LoadingFooter;
@@ -71,7 +71,7 @@ public class RscGiftOrderListFragment extends BaseFragment  {
 
     private LoadingFooter loadingFooter;
 
-    private LoadMoreOnScrollListener moreOnsrcollListener = new LoadMoreOnScrollListener() {
+    private LoadMoreScrollListener moreOnsrcollListener = new LoadMoreScrollListener() {
         @Override
         public void loadMore() {
             //加载更多
@@ -244,7 +244,7 @@ public class RscGiftOrderListFragment extends BaseFragment  {
                     }
                 }
                 if (giftordersBean.gift != null) {
-                    GlideUtils.setImageRes(RscGiftOrderListFragment.this,giftordersBean.gift.thumbnail,(ImageView) holder.getView(R.id.gift_order_img_iv));
+                    GlideHelper.setImageRes(RscGiftOrderListFragment.this,giftordersBean.gift.thumbnail,(ImageView) holder.getView(R.id.gift_order_img_iv));
                     holder.setText(R.id.gift_order_name_iv, StringUtil.checkStr(giftordersBean.gift.name)
                             ? giftordersBean.gift.name : "");
                     holder.setText(R.id.gift_order_price_iv, StringUtil.checkStr(String.valueOf(giftordersBean.gift.points))

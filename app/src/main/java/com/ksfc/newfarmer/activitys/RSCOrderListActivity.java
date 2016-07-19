@@ -17,7 +17,7 @@ import com.ksfc.newfarmer.fragment.RscExchangeFragment;
 import com.ksfc.newfarmer.fragment.RscGiftOrderListFragment;
 import com.ksfc.newfarmer.fragment.RscOrderListFragment;
 import com.ksfc.newfarmer.fragment.RscOrderFragment;
-import com.ksfc.newfarmer.http.Request;
+import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.PopWindowUtils;
 import com.ksfc.newfarmer.utils.Utils;

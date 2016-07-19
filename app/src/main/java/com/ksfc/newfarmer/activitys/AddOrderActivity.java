@@ -14,23 +14,23 @@ import com.ksfc.newfarmer.RndApplication;
 
 import com.ksfc.newfarmer.common.CommonAdapter;
 import com.ksfc.newfarmer.common.CommonViewHolder;
-import com.ksfc.newfarmer.common.GlideUtils;
+import com.ksfc.newfarmer.common.GlideHelper;
 import com.ksfc.newfarmer.db.Store;
-import com.ksfc.newfarmer.http.ApiType;
-import com.ksfc.newfarmer.http.Request;
-import com.ksfc.newfarmer.http.RequestParams;
-import com.ksfc.newfarmer.http.beans.AddOrderResult;
-import com.ksfc.newfarmer.http.beans.AddressList;
-import com.ksfc.newfarmer.http.beans.ConsigneeResult;
-import com.ksfc.newfarmer.http.beans.DeliveriesResult;
-import com.ksfc.newfarmer.http.beans.GetGoodsDetail;
-import com.ksfc.newfarmer.http.beans.GetshopCart;
-import com.ksfc.newfarmer.http.beans.AddressList.Address;
-import com.ksfc.newfarmer.http.beans.GetshopCart.shopCart;
+import com.ksfc.newfarmer.protocol.ApiType;
+import com.ksfc.newfarmer.protocol.Request;
+import com.ksfc.newfarmer.protocol.RequestParams;
+import com.ksfc.newfarmer.beans.AddOrderResult;
+import com.ksfc.newfarmer.beans.AddressList;
+import com.ksfc.newfarmer.beans.ConsigneeResult;
+import com.ksfc.newfarmer.beans.DeliveriesResult;
+import com.ksfc.newfarmer.beans.GetGoodsDetail;
+import com.ksfc.newfarmer.beans.GetshopCart;
+import com.ksfc.newfarmer.beans.AddressList.Address;
+import com.ksfc.newfarmer.beans.GetshopCart.shopCart;
 
 
-import com.ksfc.newfarmer.http.beans.LoginResult;
-import com.ksfc.newfarmer.http.beans.RSCStateInfoResult;
+import com.ksfc.newfarmer.beans.LoginResult;
+import com.ksfc.newfarmer.beans.RSCStateInfoResult;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.SPUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
@@ -411,7 +411,7 @@ public class AddOrderActivity extends BaseActivity implements RadioGroup.OnCheck
         public void convert(CommonViewHolder holder, Data.Goods goods) {
             if (goods != null) {
                 try {//图片
-                    GlideUtils.setImageRes(AddOrderActivity.this, goods.pic, (ImageView) holder.getView(R.id.ordering_item_img));
+                    GlideHelper.setImageRes(AddOrderActivity.this, goods.pic, (ImageView) holder.getView(R.id.ordering_item_img));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

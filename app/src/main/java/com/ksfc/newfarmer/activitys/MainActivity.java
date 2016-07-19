@@ -11,7 +11,7 @@ import net.yangentao.util.msg.MsgListener;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.db.Store;
-import com.ksfc.newfarmer.http.beans.LoginResult;
+import com.ksfc.newfarmer.beans.LoginResult;
 import com.ksfc.newfarmer.utils.Constants;
 import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.ScreenUtil;

@@ -2,12 +2,9 @@ package com.ksfc.newfarmer.activitys;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -29,18 +26,18 @@ import com.google.gson.Gson;
 import com.jakewharton.rxbinding.view.RxView;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
-import com.ksfc.newfarmer.common.GlideUtils;
-import com.ksfc.newfarmer.common.OrderUtils;
+import com.ksfc.newfarmer.common.GlideHelper;
+import com.ksfc.newfarmer.common.OrderHelper;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.common.CommonAdapter;
 import com.ksfc.newfarmer.common.CommonViewHolder;
 import com.ksfc.newfarmer.db.Store;
-import com.ksfc.newfarmer.http.ApiType;
-import com.ksfc.newfarmer.http.Request;
-import com.ksfc.newfarmer.http.RequestParams;
-import com.ksfc.newfarmer.http.beans.LoginResult;
-import com.ksfc.newfarmer.http.beans.OfflinePayWayResult;
-import com.ksfc.newfarmer.http.beans.RscOrderDetailResult;
+import com.ksfc.newfarmer.protocol.ApiType;
+import com.ksfc.newfarmer.protocol.Request;
+import com.ksfc.newfarmer.protocol.RequestParams;
+import com.ksfc.newfarmer.beans.LoginResult;
+import com.ksfc.newfarmer.beans.OfflinePayWayResult;
+import com.ksfc.newfarmer.beans.RscOrderDetailResult;
 import com.ksfc.newfarmer.utils.DateFormatUtils;
 import com.ksfc.newfarmer.utils.PopWindowUtils;
 import com.ksfc.newfarmer.utils.ShowHideUtils;
@@ -392,7 +389,7 @@ public class RscOrderDetailActivity extends BaseActivity implements KeyboardList
                                                             }
                                                         }
                                                     };
-                                                    OrderUtils.CheckOffline(subscriber, orderId);
+                                                    OrderHelper.CheckOffline(subscriber, orderId);
                                                 }
 
                                             }
@@ -633,7 +630,7 @@ public class RscOrderDetailActivity extends BaseActivity implements KeyboardList
             if (skUsEntity != null) {
 
                 //商品图片
-                GlideUtils.setImageRes(RscOrderDetailActivity.this,skUsEntity.thumbnail,(RecyclerImageView) holder.getView(R.id.ordering_item_img));
+                GlideHelper.setImageRes(RscOrderDetailActivity.this,skUsEntity.thumbnail,(RecyclerImageView) holder.getView(R.id.ordering_item_img));
                 //商品个数
                 TextView goodsCount = (TextView) holder.getView(R.id.ordering_item_geshu_for_rsc_detail);
                 goodsCount.setVisibility(View.VISIBLE);

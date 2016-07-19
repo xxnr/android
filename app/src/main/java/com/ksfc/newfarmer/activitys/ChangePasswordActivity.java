@@ -1,14 +1,15 @@
 package com.ksfc.newfarmer.activitys;
 
+import com.ksfc.newfarmer.App;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.db.Store;
 
-import com.ksfc.newfarmer.http.ApiType;
-import com.ksfc.newfarmer.http.Request;
-import com.ksfc.newfarmer.http.RequestParams;
-import com.ksfc.newfarmer.http.beans.PublicKeyResult;
+import com.ksfc.newfarmer.protocol.ApiType;
+import com.ksfc.newfarmer.protocol.Request;
+import com.ksfc.newfarmer.protocol.RequestParams;
+import com.ksfc.newfarmer.beans.PublicKeyResult;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.RSAUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
@@ -101,7 +102,7 @@ public class ChangePasswordActivity extends BaseActivity {
             if ("1000".equals(req.getData().getStatus())) {
                 // 找回密码成功后 就跳到MainActivity
                 showToast("修改密码成功");
-                exitLogin();
+                App.loginOut();
                 //通知 "我"activity 结束
                 MsgCenter.fireNull(MsgID.MyaccountActivityFinish, "finish");
                 IntentUtil.activityForward(ChangePasswordActivity.this,

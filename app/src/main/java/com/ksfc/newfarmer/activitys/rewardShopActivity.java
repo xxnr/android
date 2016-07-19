@@ -25,13 +25,13 @@ import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.common.CommonAdapter;
 import com.ksfc.newfarmer.common.CommonViewHolder;
-import com.ksfc.newfarmer.common.GlideUtils;
-import com.ksfc.newfarmer.http.ApiType;
-import com.ksfc.newfarmer.http.RemoteApi;
-import com.ksfc.newfarmer.http.Request;
-import com.ksfc.newfarmer.http.beans.GiftCategoriesResult;
-import com.ksfc.newfarmer.http.beans.GiftListResult;
-import com.ksfc.newfarmer.http.beans.IntegralGetResult;
+import com.ksfc.newfarmer.common.GlideHelper;
+import com.ksfc.newfarmer.protocol.ApiType;
+import com.ksfc.newfarmer.protocol.remoteapi.RemoteApi;
+import com.ksfc.newfarmer.protocol.Request;
+import com.ksfc.newfarmer.beans.GiftCategoriesResult;
+import com.ksfc.newfarmer.beans.GiftListResult;
+import com.ksfc.newfarmer.beans.IntegralGetResult;
 import com.ksfc.newfarmer.utils.ActivityAnimationUtils;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.ScreenUtil;
@@ -408,7 +408,7 @@ public class RewardShopActivity extends BaseActivity {
                 }
                 //商品图
                 ImageView imageView = holder.getView(R.id.gift_img);
-                GlideUtils.setImageRes(RewardShopActivity.this,gift.largeUrl,imageView);
+                GlideHelper.setImageRes(RewardShopActivity.this,gift.largeUrl,imageView);
 
                 TextView gift_name_tv = holder.getView(R.id.gift_name_tv);
                 TextView gift_price_tv = holder.getView(R.id.gift_price_tv);

@@ -12,12 +12,12 @@ import android.widget.TextView;
 import com.ksfc.newfarmer.BaseFragment;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
-import com.ksfc.newfarmer.common.GlideUtils;
-import com.ksfc.newfarmer.common.LoadMoreOnScrollListener;
-import com.ksfc.newfarmer.http.ApiType;
-import com.ksfc.newfarmer.http.RemoteApi;
-import com.ksfc.newfarmer.http.Request;
-import com.ksfc.newfarmer.http.beans.GiftOrderListResult;
+import com.ksfc.newfarmer.common.GlideHelper;
+import com.ksfc.newfarmer.common.LoadMoreScrollListener;
+import com.ksfc.newfarmer.protocol.ApiType;
+import com.ksfc.newfarmer.protocol.remoteapi.RemoteApi;
+import com.ksfc.newfarmer.protocol.Request;
+import com.ksfc.newfarmer.beans.GiftOrderListResult;
 import com.ksfc.newfarmer.utils.DateFormatUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.AnimatedExpandableListView;
@@ -51,7 +51,7 @@ public class GiftOrderListFragment extends BaseFragment  {
 
     private LoadingFooter loadingFooter;
 
-    private LoadMoreOnScrollListener moreOnsrcollListener = new LoadMoreOnScrollListener() {
+    private LoadMoreScrollListener moreOnsrcollListener = new LoadMoreScrollListener() {
         @Override
         public void loadMore() {
             //加载更多
@@ -311,7 +311,7 @@ public class GiftOrderListFragment extends BaseFragment  {
                             ? giftordersBean.orderStatus.value : "");
                 }
                 if (giftordersBean.gift != null) {
-                    GlideUtils.setImageRes(GiftOrderListFragment.this,giftordersBean.gift.thumbnail,holder.giftOrderImgIv);
+                    GlideHelper.setImageRes(GiftOrderListFragment.this,giftordersBean.gift.thumbnail,holder.giftOrderImgIv);
 
                     holder.giftOrderNameIv.setText(StringUtil.checkStr(giftordersBean.gift.name)
                             ? giftordersBean.gift.name : "");

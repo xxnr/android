@@ -5,16 +5,17 @@ import java.io.File;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.ksfc.newfarmer.App;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.db.Store;
-import com.ksfc.newfarmer.http.ApiType;
-import com.ksfc.newfarmer.http.Request;
-import com.ksfc.newfarmer.http.RequestParams;
-import com.ksfc.newfarmer.http.RxApi.RxService;
-import com.ksfc.newfarmer.http.beans.CameraResult;
-import com.ksfc.newfarmer.http.beans.LoginResult.UserInfo;
+import com.ksfc.newfarmer.protocol.ApiType;
+import com.ksfc.newfarmer.protocol.Request;
+import com.ksfc.newfarmer.protocol.RequestParams;
+import com.ksfc.newfarmer.protocol.RxApi.RxService;
+import com.ksfc.newfarmer.beans.CameraResult;
+import com.ksfc.newfarmer.beans.LoginResult.UserInfo;
 import com.ksfc.newfarmer.utils.ShowHideUtils;
 import com.ksfc.newfarmer.widget.dialog.CustomDialog;
 import com.ksfc.newfarmer.widget.dialog.CustomDialogForHead;
@@ -276,7 +277,7 @@ public class MyaccountActivity extends BaseActivity {
                                         public void onClick(DialogInterface dialog,
                                                             int which) {
                                             dialog.dismiss();
-                                            exitLogin();
+                                            App.loginOut();
                                             showToast("您已退出登录");
                                             IntentUtil.activityForward(MyaccountActivity.this, MainActivity.class, null, true);
                                         }

@@ -10,7 +10,7 @@ import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.activitys.MainActivity;
 import com.ksfc.newfarmer.activitys.MyOrderDetailActivity;
-import com.ksfc.newfarmer.http.Request;
+import com.ksfc.newfarmer.protocol.Request;
 
 import com.ksfc.newfarmer.App;
 import net.yangentao.util.msg.MsgCenter;

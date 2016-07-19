@@ -5,16 +5,15 @@ package com.ksfc.newfarmer;
 
 import java.util.HashMap;
 
-import com.ksfc.newfarmer.common.FilterClassUtils;
+import com.ksfc.newfarmer.common.ClassFilter;
 import com.ksfc.newfarmer.utils.RndLog;
-import com.ksfc.newfarmer.utils.thrid.UmengPush;
 import com.ksfc.newfarmer.activitys.LoginActivity;
 import com.ksfc.newfarmer.db.Store;
-import com.ksfc.newfarmer.http.ApiType;
-import com.ksfc.newfarmer.http.OnApiDataReceivedCallback;
-import com.ksfc.newfarmer.http.Request;
-import com.ksfc.newfarmer.http.RequestParams;
-import com.ksfc.newfarmer.http.beans.LoginResult;
+import com.ksfc.newfarmer.protocol.ApiType;
+import com.ksfc.newfarmer.protocol.OnApiDataReceivedCallback;
+import com.ksfc.newfarmer.protocol.Request;
+import com.ksfc.newfarmer.protocol.RequestParams;
+import com.ksfc.newfarmer.beans.LoginResult;
 import com.ksfc.newfarmer.utils.Utils;
 import com.ksfc.newfarmer.widget.dialog.CustomProgressDialog;
 import com.ksfc.newfarmer.widget.dialog.CustomToast;
@@ -84,7 +83,7 @@ public abstract class BaseFragment extends RxFragment implements
             } else if (req.isSuccess()) {
                 onResponsed(req);
             } else {
-                if (!FilterClassUtils.getUnToastApis().contains(req.getApi())) {
+                if (!ClassFilter.getUnToastApis().contains(req.getApi())) {
                     if (req.getApi() == ApiType.RSC_ORDER_SELF_DELIVERY && req.getData().getStatus().equals("1429")) {
                         App.getApp().showToast("您输入错误次数较多，请1分钟后再操作");
                     } else if (req.getData().getStatus().equals("1403")) {
@@ -218,14 +217,7 @@ public abstract class BaseFragment extends RxFragment implements
 
     // 调用此方法 去登录页面
     public void tokenToLogin() {
-
-        LoginResult.UserInfo userInfo = Store.User.queryMe();
-        if (userInfo != null) {
-            //解除推送alias
-            UmengPush.removeAlias(activity, userInfo.userid);
-        }
-        Store.User.removeMe();
-        App.getApp().setUid("");
+        App.loginOut();
         Intent intent = new Intent(activity, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("isTokenError", true);

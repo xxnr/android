@@ -9,19 +9,19 @@ import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.db.Store;
-import com.ksfc.newfarmer.db.XUtilsDb.XUtilsDbHelper;
-import com.ksfc.newfarmer.http.ApiType;
-import com.ksfc.newfarmer.http.Request;
-import com.ksfc.newfarmer.http.RequestParams;
-import com.ksfc.newfarmer.http.beans.PotentialCustomerDetailResult;
-import com.ksfc.newfarmer.http.beans.PotentialListResult;
+import com.ksfc.newfarmer.db.DBManager;
+import com.ksfc.newfarmer.protocol.ApiType;
+import com.ksfc.newfarmer.protocol.Request;
+import com.ksfc.newfarmer.protocol.RequestParams;
+import com.ksfc.newfarmer.beans.PotentialCustomerDetailResult;
+import com.ksfc.newfarmer.beans.dbbeans.PotentialCustomersEntity;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.utils.Utils;
-import com.lidroid.xutils.DbUtils;
-import com.lidroid.xutils.exception.DbException;
 
-import com.ksfc.newfarmer.App;
+
 import net.yangentao.util.msg.MsgCenter;
+
+import greendao.DaoSession;
 
 /**
  * Created by HePeng on 2016/2/2.
@@ -146,44 +146,35 @@ public class CustomerDetailActivity extends BaseActivity {
                     //如果有变化更新客户的数据库
                     if (data.potentialCustomer != null) {
 
-                        DbUtils dbUtils = XUtilsDbHelper.getInstance(CustomerDetailActivity.this, App.getApp().getUid());
-                        try {
-                            PotentialListResult.PotentialCustomersEntity customersEntity =
-                                    dbUtils.findById(PotentialListResult.PotentialCustomersEntity.class, _id);
+                        DaoSession writableDaoSession = DBManager.getInstance(CustomerDetailActivity.this).getWritableDaoSession();
+                        PotentialCustomersEntity customersEntity =
+                                writableDaoSession.load(PotentialCustomersEntity.class, _id);
 
-                            if (!(customersEntity.name.equals(data.potentialCustomer.name)
-                                    && customersEntity.isRegistered == data.potentialCustomer.isRegistered
-                                    && customersEntity.namePinyin.equals(data.potentialCustomer.namePinyin)
-                                    && customersEntity.nameInitial.equals(data.potentialCustomer.nameInitial)
-                                    && customersEntity.phone.equals(data.potentialCustomer.phone)
-                                    && customersEntity.sex == data.potentialCustomer.sex
-                                    && customersEntity.nameInitialType == data.potentialCustomer.nameInitialType
-                            )) {
+                        if (!(customersEntity.name.equals(data.potentialCustomer.name)
+                                && customersEntity.isRegistered == data.potentialCustomer.isRegistered
+                                && customersEntity.namePinyin.equals(data.potentialCustomer.namePinyin)
+                                && customersEntity.nameInitial.equals(data.potentialCustomer.nameInitial)
+                                && customersEntity.phone.equals(data.potentialCustomer.phone)
+                                && customersEntity.sex == data.potentialCustomer.sex
+                                && customersEntity.nameInitialType == data.potentialCustomer.nameInitialType
+                        )) {
 
 
-                                customersEntity.name = data.potentialCustomer.name;
-                                customersEntity.isRegistered = data.potentialCustomer.isRegistered;
-                                customersEntity.namePinyin = data.potentialCustomer.namePinyin;
-                                customersEntity.nameInitial = data.potentialCustomer.nameInitial;
-                                customersEntity.phone = data.potentialCustomer.phone;
-                                customersEntity.sex = data.potentialCustomer.sex;
-                                customersEntity.nameInitialType = data.potentialCustomer.nameInitialType;
-                                dbUtils.saveOrUpdate(customersEntity);
-                                MsgCenter.fireNull(MsgID.change_potential_success, "change");
-                            }
-
-                        } catch (DbException e) {
-                            e.printStackTrace();
+                            customersEntity.name = data.potentialCustomer.name;
+                            customersEntity.isRegistered = data.potentialCustomer.isRegistered;
+                            customersEntity.namePinyin = data.potentialCustomer.namePinyin;
+                            customersEntity.nameInitial = data.potentialCustomer.nameInitial;
+                            customersEntity.phone = data.potentialCustomer.phone;
+                            customersEntity.sex = data.potentialCustomer.sex;
+                            customersEntity.nameInitialType = data.potentialCustomer.nameInitialType;
+                            writableDaoSession.update(customersEntity);
+                            MsgCenter.fireNull(MsgID.change_potential_success, "change");
                         }
+
                     }
-
-
                 }
-
-
             }
         }
-
-
     }
+
 }

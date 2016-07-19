@@ -3,11 +3,9 @@ package com.ksfc.newfarmer.activitys;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -17,24 +15,23 @@ import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.common.CommonAdapter;
 import com.ksfc.newfarmer.common.CommonViewHolder;
-import com.ksfc.newfarmer.db.XUtilsDb.XUtilsDbHelper;
-import com.ksfc.newfarmer.http.Request;
-import com.ksfc.newfarmer.http.beans.InviteeResult;
-import com.ksfc.newfarmer.http.beans.PotentialListResult;
+import com.ksfc.newfarmer.db.DBManager;
+import com.ksfc.newfarmer.protocol.Request;
+import com.ksfc.newfarmer.beans.dbbeans.InviteeEntity;
+import com.ksfc.newfarmer.beans.dbbeans.PotentialCustomersEntity;
 import com.ksfc.newfarmer.utils.StringUtil;
-import com.ksfc.newfarmer.utils.Utils;
 import com.ksfc.newfarmer.widget.BaseViewUtils;
 import com.ksfc.newfarmer.widget.ClearEditText;
 import com.ksfc.newfarmer.widget.UnSwipeListView;
-import com.lidroid.xutils.DbUtils;
-import com.lidroid.xutils.db.sqlite.Selector;
-import com.lidroid.xutils.exception.DbException;
 
-import com.ksfc.newfarmer.App;
 
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import greendao.DaoSession;
+import greendao.InviteeEntityDao;
+import greendao.PotentialCustomersEntityDao;
 
 /**
  * Created by HePeng on 2016/3/28.
@@ -45,8 +42,8 @@ public class InviterSearchActivity extends BaseActivity {
     private ClearEditText inviter_search_edit;
     private UnSwipeListView invitee_search_customer_listView, invitee_search_potential_listView;
     private RelativeLayout null_customer_layout;
-    private List<PotentialListResult.PotentialCustomersEntity> potentialCustomersEntities;
-    private List<InviteeResult.InviteeEntity> inviteeEntityList;
+    private List<PotentialCustomersEntity> potentialCustomersEntities;
+    private List<InviteeEntity> inviteeEntityList;
 
     @Override
     public int getLayout() {
@@ -77,29 +74,40 @@ public class InviterSearchActivity extends BaseActivity {
                 /*判断是否是“搜索”键*/
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     /*隐藏软键盘*/
-                    BaseViewUtils.hideSoftInput(InviterSearchActivity.this,inviter_search_edit);
+                    BaseViewUtils.hideSoftInput(InviterSearchActivity.this, inviter_search_edit);
                     String searchText = inviter_search_edit.getText().toString().trim();
                     if (StringUtil.checkStr(searchText)) {
                         //请求数据库数据
                         invitee_search_customer_separatrix.setVisibility(View.GONE);
 
-                        DbUtils dbUtils = XUtilsDbHelper.getInstance(InviterSearchActivity.this, App.getApp().getUid());
-                        if (isMobileNum(searchText)) {
-                            try {
-                                potentialCustomersEntities = dbUtils.findAll(Selector.from(PotentialListResult.PotentialCustomersEntity.class).where("phone", "=", searchText));
-                                inviteeEntityList = dbUtils.findAll(Selector.from(InviteeResult.InviteeEntity.class).where("account", "=", searchText));
-                            } catch (DbException e) {
-                                e.printStackTrace();
-                            }
-                        } else {
-                            try {
-                                potentialCustomersEntities = dbUtils.findAll(Selector.from(PotentialListResult.PotentialCustomersEntity.class).where("name", "like", "%" + searchText + "%"));
-                                inviteeEntityList = dbUtils.findAll(Selector.from(InviteeResult.InviteeEntity.class).where("name", "like", "%" + searchText + "%"));
-                            } catch (DbException e) {
-                                e.printStackTrace();
-                            }
-                        }
 
+                        DaoSession readableDaoSession = DBManager.getInstance(InviterSearchActivity.this).getReadableDaoSession();
+                        if (isMobileNum(searchText)) {
+                            PotentialCustomersEntityDao potentialCustomersEntityDao = readableDaoSession.getPotentialCustomersEntityDao();
+                            potentialCustomersEntities = potentialCustomersEntityDao
+                                    .queryBuilder()
+                                    .where(PotentialCustomersEntityDao.Properties.Phone.eq(searchText))
+                                    .list();
+                            InviteeEntityDao inviteeEntityDao = readableDaoSession.getInviteeEntityDao();
+                            inviteeEntityList = inviteeEntityDao
+                                    .queryBuilder()
+                                    .where(InviteeEntityDao.Properties.Account.eq(searchText))
+                                    .list();
+
+                        } else {
+
+                            PotentialCustomersEntityDao potentialCustomersEntityDao = readableDaoSession.getPotentialCustomersEntityDao();
+                            potentialCustomersEntities = potentialCustomersEntityDao
+                                    .queryBuilder()
+                                    .where(PotentialCustomersEntityDao.Properties.Name.like("%" + searchText + "%"))
+                                    .list();
+                            InviteeEntityDao inviteeEntityDao = readableDaoSession.getInviteeEntityDao();
+                            inviteeEntityList = inviteeEntityDao
+                                    .queryBuilder()
+                                    .where(InviteeEntityDao.Properties.Name.like("%" + searchText + "%"))
+                                    .list();
+
+                        }
                         if (potentialCustomersEntities != null && !potentialCustomersEntities.isEmpty()) {
                             invitee_search_potential_listView.setVisibility(View.VISIBLE);
                             View headView = getLayoutInflater().inflate(R.layout.item_tab_bar, null);
@@ -150,7 +158,7 @@ public class InviterSearchActivity extends BaseActivity {
         timer.schedule(new TimerTask() {
             @Override
             public void run() { //弹出软键盘的代码
-               BaseViewUtils.showSoftInput(InviterSearchActivity.this,inviter_search_edit);
+                BaseViewUtils.showSoftInput(InviterSearchActivity.this, inviter_search_edit);
             }
         }, 300); //设置300毫秒的时
     }
@@ -161,7 +169,7 @@ public class InviterSearchActivity extends BaseActivity {
 
         switch (v.getId()) {
             case R.id.inviter_search_text:
-                BaseViewUtils.hideSoftInput(InviterSearchActivity.this,v);
+                BaseViewUtils.hideSoftInput(InviterSearchActivity.this, v);
                 finish();
                 break;
         }
@@ -174,14 +182,14 @@ public class InviterSearchActivity extends BaseActivity {
 
 
     //我的客户列表适配器
-    class InviteAdapter extends CommonAdapter<InviteeResult.InviteeEntity> {
+    class InviteAdapter extends CommonAdapter<InviteeEntity> {
 
-        public InviteAdapter(Context context, List<InviteeResult.InviteeEntity> data) {
+        public InviteAdapter(Context context, List<InviteeEntity> data) {
             super(context, data, R.layout.item_invite_list);
         }
 
         @Override
-        public void convert(final CommonViewHolder holder, final InviteeResult.InviteeEntity invitee) {
+        public void convert(final CommonViewHolder holder, final InviteeEntity invitee) {
 
             if (invitee != null) {
                 //分组 性别 姓名 是否更新订单 手机号
@@ -223,15 +231,15 @@ public class InviterSearchActivity extends BaseActivity {
 
 
     //客户登记列表适配器
-    class PotentialCustomerAdapter extends CommonAdapter<PotentialListResult.PotentialCustomersEntity> {
-        private List<PotentialListResult.PotentialCustomersEntity> list;
+    class PotentialCustomerAdapter extends CommonAdapter<PotentialCustomersEntity> {
+        private List<PotentialCustomersEntity> list;
 
-        public PotentialCustomerAdapter(Context context, List<PotentialListResult.PotentialCustomersEntity> data) {
+        public PotentialCustomerAdapter(Context context, List<PotentialCustomersEntity> data) {
             super(context, data, R.layout.item_already_customer);
         }
 
         @Override
-        public void convert(CommonViewHolder holder, final PotentialListResult.PotentialCustomersEntity potentialCustomers) {
+        public void convert(CommonViewHolder holder, final PotentialCustomersEntity potentialCustomers) {
 
             if (potentialCustomers != null) {
 

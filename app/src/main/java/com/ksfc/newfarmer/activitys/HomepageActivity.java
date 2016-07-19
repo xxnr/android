@@ -20,7 +20,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.handmark.pulltorefresh.library.ILoadingLayout;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
@@ -31,24 +30,23 @@ import com.ksfc.newfarmer.common.CommonAdapter;
 import com.ksfc.newfarmer.common.CommonViewHolder;
 import com.ksfc.newfarmer.common.CommonFunction;
 import com.ksfc.newfarmer.common.CompleteReceiver;
-import com.ksfc.newfarmer.common.GlideUtils;
-import com.ksfc.newfarmer.http.ApiType;
-import com.ksfc.newfarmer.http.RemoteApi;
-import com.ksfc.newfarmer.http.Request;
-import com.ksfc.newfarmer.http.beans.AppUpgrade;
-import com.ksfc.newfarmer.http.beans.AttrSelectResult;
-import com.ksfc.newfarmer.http.beans.ClassIDResult;
-import com.ksfc.newfarmer.http.beans.GetGoodsData;
-import com.ksfc.newfarmer.http.beans.GetGoodsData.SingleGood;
-import com.ksfc.newfarmer.http.beans.HomeImageResult;
-import com.ksfc.newfarmer.http.beans.HomeImageResult.Rows;
-import com.ksfc.newfarmer.http.beans.HomeImageResult.UserRollImage;
-import com.ksfc.newfarmer.http.beans.IntegralGetResult;
-import com.ksfc.newfarmer.http.beans.PointResult;
-import com.ksfc.newfarmer.http.RxApi.RxService;
+import com.ksfc.newfarmer.common.GlideHelper;
+import com.ksfc.newfarmer.protocol.ApiType;
+import com.ksfc.newfarmer.protocol.remoteapi.RemoteApi;
+import com.ksfc.newfarmer.protocol.Request;
+import com.ksfc.newfarmer.beans.AppUpgrade;
+import com.ksfc.newfarmer.beans.ClassIDResult;
+import com.ksfc.newfarmer.beans.GetGoodsData;
+import com.ksfc.newfarmer.beans.GetGoodsData.SingleGood;
+import com.ksfc.newfarmer.beans.HomeImageResult;
+import com.ksfc.newfarmer.beans.HomeImageResult.Rows;
+import com.ksfc.newfarmer.beans.HomeImageResult.UserRollImage;
+import com.ksfc.newfarmer.beans.IntegralGetResult;
+import com.ksfc.newfarmer.beans.PointResult;
+import com.ksfc.newfarmer.protocol.RxApi.RxService;
 import com.ksfc.newfarmer.utils.ActivityAnimationUtils;
 import com.ksfc.newfarmer.utils.IntentUtil;
-import com.ksfc.newfarmer.utils.PullToRefreshUtils;
+import com.ksfc.newfarmer.common.PullToRefreshHelper;
 import com.ksfc.newfarmer.utils.ScreenUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.utils.Utils;
@@ -433,7 +431,7 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
 
     @Override
     public void onRefresh(PullToRefreshBase refreshView) {
-        PullToRefreshUtils.setFreshClose(refreshView);
+        PullToRefreshHelper.setFreshClose(refreshView);
         RemoteApi.getBanner(this);
         RemoteApi.getClassId(this);
     }
@@ -477,7 +475,7 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
                     layoutParams.width = itemWitch - Utils.dip2px(HomepageActivity.this, 2);
                     imageView.setLayoutParams(layoutParams);
                 }
-                GlideUtils.setImageRes(HomepageActivity.this,singleGood.imgUrl,imageView);
+                GlideHelper.setImageRes(HomepageActivity.this,singleGood.imgUrl,imageView);
                 //商品名
                 if (StringUtil.checkStr(singleGood.goodsName)) {
                     holder.setText(R.id.huafei_name_tv, singleGood.goodsName);

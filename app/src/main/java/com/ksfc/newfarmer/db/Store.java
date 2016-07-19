@@ -2,7 +2,7 @@ package com.ksfc.newfarmer.db;
 
 
 import com.google.gson.Gson;
-import com.ksfc.newfarmer.http.beans.LoginResult.UserInfo;
+import com.ksfc.newfarmer.beans.LoginResult.UserInfo;
 
 import net.yangentao.util.SerialMap;
 
@@ -18,13 +18,13 @@ public class Store {
 
         public static void saveMe(UserInfo userInfo) {
             SerialMap map = getUserMap();
-            map.put("userinfo", mGson.toJson(userInfo));
+            map.put("userInfo", mGson.toJson(userInfo));
             map.close();
         }
 
         public static UserInfo queryMe() {
             SerialMap map = getUserMap();
-            String s = map.get("userinfo");
+            String s = map.get("userInfo");
             map.close();
             if (s != null) {
                 return  mGson.fromJson(s,UserInfo.class);
@@ -34,7 +34,7 @@ public class Store {
 
         public static void removeMe() {
             SerialMap map = getUserMap();
-            map.remove("userinfo");
+            map.remove("userInfo");
             map.close();
         }
     }

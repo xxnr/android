@@ -3,39 +3,71 @@ package com.ksfc.newfarmer.db;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
-/**
- * 
- * 项目名称：QianXihe 类名称：DBManager 类描述： 创建人：范东 创建时间：2015年6月16日 下午5:04:30 修改备注：
- */
+import greendao.DaoMaster;
+import greendao.DaoSession;
+
 public class DBManager {
+    private final static String dbName = "xxnr_db";
+    private static DBManager mInstance;
+    private DaoMaster.DevOpenHelper openHelper;
+    private Context context;
 
-	private KsfcDBOpenHelper dbOpenHelper = null;
-	private SQLiteDatabase database = null;
-	// private Context appContext ;
+    public DBManager(Context context) {
+        this.context = context;
+        openHelper = new DaoMaster.DevOpenHelper(context, dbName, null);
+    }
 
-	private static DBManager instance;
+    /**
+     * 获取单例引用
+     *
+     * @param context
+     * @return
+     */
+    public static DBManager getInstance(Context context) {
+        if (mInstance == null) {
+            synchronized (DBManager.class) {
+                if (mInstance == null) {
+                    mInstance = new DBManager(context);
+                }
+            }
+        }
+        return mInstance;
+    }
 
-	/** 保证单例类 */
-	private DBManager() {
+    /**
+     * 获取可读数据库
+     */
+    private SQLiteDatabase getReadableDatabase() {
+        if (openHelper == null) {
+            openHelper = new DaoMaster.DevOpenHelper(context, dbName, null);
+        }
+        return openHelper.getReadableDatabase();
+    }
 
-	}
+    /**
+     * 获取可写数据库
+     */
+    private SQLiteDatabase getWritableDatabase() {
+        if (openHelper == null) {
+            openHelper = new DaoMaster.DevOpenHelper(context, dbName, null);
+        }
+        return openHelper.getWritableDatabase();
+    }
 
-	public static DBManager getInstance() {
-		if (instance == null) {
-			instance = new DBManager();
-		}
-		return instance;
-	}
 
-	public void Init(Context context) {
-		dbOpenHelper = KsfcDBOpenHelper.getInstance(context);
-		database = dbOpenHelper.getWritableDatabase();
-		dbOpenHelper.createTables(database);
-	}
+    /**
+     * 获取可写Session
+     */
+    public DaoSession getWritableDaoSession() {
+        DaoMaster daoMaster = new DaoMaster(getWritableDatabase());
+        return daoMaster.newSession();
+    }
 
-	public void closeDB(Context context) {
-		dbOpenHelper = KsfcDBOpenHelper.getInstance(context);
-		database = dbOpenHelper.getWritableDatabase();
-		dbOpenHelper.closeDB();
-	}
+    /**
+     * 获取可读Session
+     */
+    public DaoSession getReadableDaoSession() {
+        DaoMaster daoMaster = new DaoMaster(getReadableDatabase());
+        return daoMaster.newSession();
+    }
 }

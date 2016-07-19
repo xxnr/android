@@ -17,8 +17,8 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.ksfc.newfarmer.http.beans.InviteeResult;
-import com.ksfc.newfarmer.http.beans.PotentialListResult;
+import com.ksfc.newfarmer.beans.dbbeans.InviteeEntity;
+import com.ksfc.newfarmer.beans.dbbeans.PotentialCustomersEntity;
 import com.ksfc.newfarmer.utils.Utils;
 
 
@@ -70,7 +70,7 @@ public class QuickAlphabeticBar extends ImageButton {
 
 
     // 设置需要索引的列表(潜在客户列表)
-    public void setListViewAndPotentailList(final List<PotentialListResult.PotentialCustomersEntity> potentialCustomers, final ListView mList) {
+    public void setListViewAndPotentailList(final List<PotentialCustomersEntity> potentialCustomers, final ListView mList) {
         this.mList = mList;
         mList.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
@@ -82,7 +82,7 @@ public class QuickAlphabeticBar extends ImageButton {
                 if (oldItemPosition != firstVisibleItem) {
                     if (potentialCustomers != null && !potentialCustomers.isEmpty()) {
                         if (firstVisibleItem >= 1) {
-                            PotentialListResult.PotentialCustomersEntity potentialCustomer = potentialCustomers.get(firstVisibleItem - 1);
+                            PotentialCustomersEntity potentialCustomer = potentialCustomers.get(firstVisibleItem - 1);
                             choose = Utils.getNum(potentialCustomer.nameInitial, letters);
                         } else {
                             //初始化选中第一个TAB
@@ -98,7 +98,7 @@ public class QuickAlphabeticBar extends ImageButton {
     }
 
     // 设置需要索引的列表(客户列表)
-    public void setListViewAndCustomerList(final List<InviteeResult.InviteeEntity> inviteeEntities, final ListView mList) {
+    public void setListViewAndCustomerList(final List<InviteeEntity> inviteeEntities, final ListView mList) {
         this.mList = mList;
         mList.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
@@ -110,7 +110,7 @@ public class QuickAlphabeticBar extends ImageButton {
                 if (oldItemPosition != firstVisibleItem) {
                     if (inviteeEntities != null && !inviteeEntities.isEmpty()) {
                         if (firstVisibleItem >= 1) {
-                            InviteeResult.InviteeEntity inviteeEntity = inviteeEntities.get(firstVisibleItem - 1);
+                            InviteeEntity inviteeEntity = inviteeEntities.get(firstVisibleItem - 1);
                             choose = Utils.getNum(inviteeEntity.nameInitial, letters);
                         } else {
                             //初始化选中第一个TAB

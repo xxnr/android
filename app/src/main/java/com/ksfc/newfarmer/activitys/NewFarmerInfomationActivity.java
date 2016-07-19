@@ -18,15 +18,15 @@ import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.common.CommonAdapter;
 import com.ksfc.newfarmer.common.CommonViewHolder;
-import com.ksfc.newfarmer.common.GlideUtils;
-import com.ksfc.newfarmer.http.ApiType;
-import com.ksfc.newfarmer.http.Request;
-import com.ksfc.newfarmer.http.RequestParams;
-import com.ksfc.newfarmer.http.beans.InformationResult;
-import com.ksfc.newfarmer.http.beans.InformationResult.DatasEntity.ItemsEntity;
+import com.ksfc.newfarmer.common.GlideHelper;
+import com.ksfc.newfarmer.protocol.ApiType;
+import com.ksfc.newfarmer.protocol.Request;
+import com.ksfc.newfarmer.protocol.RequestParams;
+import com.ksfc.newfarmer.beans.InformationResult;
+import com.ksfc.newfarmer.beans.InformationResult.DatasEntity.ItemsEntity;
 import com.ksfc.newfarmer.utils.DateFormatUtils;
 import com.ksfc.newfarmer.utils.ExpandViewTouch;
-import com.ksfc.newfarmer.utils.PullToRefreshUtils;
+import com.ksfc.newfarmer.common.PullToRefreshHelper;
 import com.ksfc.newfarmer.utils.ScreenUtil;
 
 import com.ksfc.newfarmer.widget.LoadingFooter;
@@ -59,7 +59,7 @@ public class NewFarmerInfomationActivity extends BaseActivity implements PullToR
         mLoadingFooter = new LoadingFooter(this, listView.getRefreshableView());
 
         //设置刷新的文字
-        PullToRefreshUtils.setFreshText(listView);
+        PullToRefreshHelper.setFreshText(listView);
         return_top = (ImageView) findViewById(R.id.return_top);
         //扩大点击区域
         ExpandViewTouch.expandViewTouchDelegate(return_top, 100, 100, 100, 100);
@@ -151,7 +151,7 @@ public class NewFarmerInfomationActivity extends BaseActivity implements PullToR
 
     @Override
     public void onRefresh(PullToRefreshBase refreshView) {
-        PullToRefreshUtils.setFreshClose(refreshView);
+        PullToRefreshHelper.setFreshClose(refreshView);
         page = 1;
         getData();
     }
@@ -167,7 +167,7 @@ public class NewFarmerInfomationActivity extends BaseActivity implements PullToR
         public void convert(CommonViewHolder holder, ItemsEntity itemsEntity) {
             if (itemsEntity != null) {
                 //图片
-                GlideUtils.setBroadImageRes(NewFarmerInfomationActivity.this,itemsEntity.image,(ImageView) holder.getView(R.id.information_image));
+                GlideHelper.setBroadImageRes(NewFarmerInfomationActivity.this,itemsEntity.image,(ImageView) holder.getView(R.id.information_image));
                 holder.setText(R.id.information_title, itemsEntity.title);
                 //格式化时间
                 String time = DateFormatUtils.convertTime(itemsEntity.datecreated);

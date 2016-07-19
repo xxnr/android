@@ -8,10 +8,10 @@ import com.ksfc.newfarmer.RndApplication;
 import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.fragment.OrderPaidFragment;
 import com.ksfc.newfarmer.fragment.PayWayFragment;
-import com.ksfc.newfarmer.http.ApiType;
-import com.ksfc.newfarmer.http.Request;
-import com.ksfc.newfarmer.http.RequestParams;
-import com.ksfc.newfarmer.http.beans.MyOrderDetailResult;
+import com.ksfc.newfarmer.protocol.ApiType;
+import com.ksfc.newfarmer.protocol.Request;
+import com.ksfc.newfarmer.protocol.RequestParams;
+import com.ksfc.newfarmer.beans.MyOrderDetailResult;
 import com.ksfc.newfarmer.utils.RndLog;
 
 import android.content.Intent;

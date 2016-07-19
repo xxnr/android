@@ -15,30 +15,30 @@ import com.ksfc.newfarmer.activitys.AddPotentialActivity;
 import com.ksfc.newfarmer.activitys.CustomerDetailActivity;
 import com.ksfc.newfarmer.common.CommonAdapter;
 import com.ksfc.newfarmer.common.CommonViewHolder;
+import com.ksfc.newfarmer.db.DBManager;
 import com.ksfc.newfarmer.db.Store;
-import com.ksfc.newfarmer.db.XUtilsDb.XUtilsDbHelper;
-import com.ksfc.newfarmer.http.ApiType;
-import com.ksfc.newfarmer.http.Request;
-import com.ksfc.newfarmer.http.RequestParams;
-import com.ksfc.newfarmer.http.beans.CustomerIsLatestResult;
-import com.ksfc.newfarmer.http.beans.LoginResult;
-import com.ksfc.newfarmer.http.beans.PotentialListResult;
+import com.ksfc.newfarmer.protocol.ApiType;
+import com.ksfc.newfarmer.protocol.Request;
+import com.ksfc.newfarmer.protocol.RequestParams;
+import com.ksfc.newfarmer.beans.CustomerIsLatestResult;
+import com.ksfc.newfarmer.beans.LoginResult;
+import com.ksfc.newfarmer.beans.dbbeans.PotentialCustomersEntity;
+import com.ksfc.newfarmer.beans.dbbeans.PotentialListResult;
 import com.ksfc.newfarmer.widget.QuickAlphabeticBar;
 import com.ksfc.newfarmer.utils.ScreenUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.utils.Utils;
-import com.lidroid.xutils.DbUtils;
-import com.lidroid.xutils.db.sqlite.Selector;
-import com.lidroid.xutils.exception.DbException;
-
 import net.yangentao.util.PreferenceUtil;
-import com.ksfc.newfarmer.App;
+
+
 import net.yangentao.util.msg.MsgCenter;
 import net.yangentao.util.msg.MsgListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import greendao.PotentialCustomersEntityDao;
 
 /**
  * Created by HePeng on 2016/2/1.
@@ -124,19 +124,23 @@ public class PotentialCustomer extends BaseFragment {
     //从数据库中适配
     private void getOfflineList() {
         //从数据库中适配
-        DbUtils dbUtils = XUtilsDbHelper.getInstance(activity, App.getApp().getUid());
-        try {
-            List<PotentialListResult.PotentialCustomersEntity> potentialCustomersEntities =
-                    dbUtils.findAll(Selector.from(PotentialListResult.PotentialCustomersEntity.class).orderBy("nameInitialType , namePinyin"));
+        PotentialCustomersEntityDao potentialCustomersEntityDao = DBManager
+                .getInstance(activity).getReadableDaoSession()
+                .getPotentialCustomersEntityDao();
+
+            List<PotentialCustomersEntity> potentialCustomersEntities =
+                    potentialCustomersEntityDao
+                            .queryBuilder()
+                            .orderAsc(PotentialCustomersEntityDao.Properties.NameInitialType)
+                            .orderAsc(PotentialCustomersEntityDao.Properties.NamePinyin)
+                            .list();
             if (potentialCustomersEntities != null && !potentialCustomersEntities.isEmpty()) {
                 count = potentialCustomersEntities.size();
                 adapter = new PotentialCustomerAdapter(activity, potentialCustomersEntities);
                 listView.setAdapter(adapter);
                 initAlphabeticBar(potentialCustomersEntities);
             }
-        } catch (DbException e) {
-            e.printStackTrace();
-        }
+
     }
 
     //获取全部的客户列表
@@ -168,7 +172,7 @@ public class PotentialCustomer extends BaseFragment {
         } else if (req.getApi() == ApiType.GET_POTENTIAL_CUSTOMER_LIST_NEW) {
             if (req.getData().getStatus().equals("1000")) {
                 PotentialListResult data = (PotentialListResult) req.getData();
-                List<PotentialListResult.PotentialCustomersEntity> potentialCustomersEntities = data.potentialCustomers;
+                List<PotentialCustomersEntity> potentialCustomersEntities = data.potentialCustomers;
                 if (potentialCustomersEntities != null && !potentialCustomersEntities.isEmpty()) {
                     if (adapter != null) {
                         adapter.clear();
@@ -179,10 +183,11 @@ public class PotentialCustomer extends BaseFragment {
                     }
                     initAlphabeticBar(potentialCustomersEntities);
                     //删除并重新 存入数据库
-                    DbUtils dbUtils = XUtilsDbHelper.getInstance(activity, App.getApp().getUid());
-                    XUtilsDbHelper.deleteAll(dbUtils, PotentialListResult.PotentialCustomersEntity.class);
-                    XUtilsDbHelper.saveOrUpdateAll(dbUtils, potentialCustomersEntities);
-
+                    PotentialCustomersEntityDao potentialCustomersEntityDao = DBManager.getInstance(activity)
+                            .getWritableDaoSession()
+                            .getPotentialCustomersEntityDao();
+                    potentialCustomersEntityDao.deleteAll();
+                    potentialCustomersEntityDao.insertInTx(potentialCustomersEntities);
                     //记下更新时间
                     PreferenceUtil pu = new PreferenceUtil(activity, "config");
                     pu.putLong("customer_up_date", System.currentTimeMillis());
@@ -198,7 +203,7 @@ public class PotentialCustomer extends BaseFragment {
     }
 
     //初始化滚动条
-    public void initAlphabeticBar(List<PotentialListResult.PotentialCustomersEntity> data) {
+    public void initAlphabeticBar(List<PotentialCustomersEntity> data) {
 
         HashMap<String, Integer> alphaIndexer = new HashMap<>();
         ArrayList<String> alphas = new ArrayList<>();
@@ -223,10 +228,10 @@ public class PotentialCustomer extends BaseFragment {
     }
 
 
-    class PotentialCustomerAdapter extends CommonAdapter<PotentialListResult.PotentialCustomersEntity> {
-        private List<PotentialListResult.PotentialCustomersEntity> list;
+    class PotentialCustomerAdapter extends CommonAdapter<PotentialCustomersEntity> {
+        private List<PotentialCustomersEntity> list;
 
-        public PotentialCustomerAdapter(Context context, List<PotentialListResult.PotentialCustomersEntity> data) {
+        public PotentialCustomerAdapter(Context context, List<PotentialCustomersEntity> data) {
             super(context, data, R.layout.item_already_customer);
             this.list = data;
 
@@ -234,7 +239,7 @@ public class PotentialCustomer extends BaseFragment {
         }
 
         @Override
-        public void convert(CommonViewHolder holder, final PotentialListResult.PotentialCustomersEntity potentialCustomers) {
+        public void convert(CommonViewHolder holder, final PotentialCustomersEntity potentialCustomers) {
 
             if (potentialCustomers != null) {
 
@@ -254,7 +259,7 @@ public class PotentialCustomer extends BaseFragment {
                     alpha.setVisibility(View.GONE);
                 }
 
-                ImageView sex_icon =  holder.getView(R.id.item_already_customer_sex);
+                ImageView sex_icon = holder.getView(R.id.item_already_customer_sex);
                 if (potentialCustomers.sex) {
                     sex_icon.setBackgroundResource(R.drawable.girl_icon);
                 } else {

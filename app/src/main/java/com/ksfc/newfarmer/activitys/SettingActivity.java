@@ -6,13 +6,11 @@ package com.ksfc.newfarmer.activitys;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.common.CompleteReceiver;
-import com.ksfc.newfarmer.db.XUtilsDb.XUtilsDbHelper;
-import com.ksfc.newfarmer.http.ApiType;
-import com.ksfc.newfarmer.http.RemoteApi;
-import com.ksfc.newfarmer.http.Request;
-import com.ksfc.newfarmer.http.beans.AppUpgrade;
-import com.ksfc.newfarmer.http.beans.InviteeResult;
-import com.ksfc.newfarmer.http.beans.PotentialListResult;
+import com.ksfc.newfarmer.db.DBManager;
+import com.ksfc.newfarmer.protocol.ApiType;
+import com.ksfc.newfarmer.protocol.remoteapi.RemoteApi;
+import com.ksfc.newfarmer.protocol.Request;
+import com.ksfc.newfarmer.beans.AppUpgrade;
 import com.ksfc.newfarmer.utils.PopWindowUtils;
 import com.ksfc.newfarmer.utils.Utils;
 import com.ksfc.newfarmer.widget.dialog.CustomDialog;
@@ -22,8 +20,6 @@ import com.ksfc.newfarmer.widget.dialog.CustomProgressDialogForCache;
 import com.ksfc.newfarmer.utils.DataCleanManager;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
-import com.lidroid.xutils.DbUtils;
-import com.lidroid.xutils.exception.DbException;
 import com.umeng.message.PushAgent;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.ShareAction;
@@ -51,7 +47,7 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.ksfc.newfarmer.App;
+import greendao.DaoSession;
 
 /**
  * 项目名称：newFarmer 类名称：SettingActivity 类描述： 创建人：王蕾 创建时间：2015-5-29 下午2:28:31 修改备注：
@@ -258,15 +254,9 @@ public class SettingActivity extends BaseActivity implements CompoundButton.OnCh
                                         DataCleanManager.cleanInternalCache(getApplicationContext());
                                         DataCleanManager.cleanExternalCache(getApplicationContext());
                                         //清除当前用户的数据库 部分数据库
-                                        if (StringUtil.checkStr(App.getApp().getUid())) {
-                                            DbUtils dbUtils = XUtilsDbHelper.getInstance(SettingActivity.this, App.getApp().getUid());
-                                            try {
-                                                dbUtils.deleteAll(PotentialListResult.PotentialCustomersEntity.class);
-                                                dbUtils.deleteAll(InviteeResult.InviteeEntity.class);
-                                            } catch (DbException e) {
-                                                e.printStackTrace();
-                                            }
-                                        }
+                                        DaoSession writableDaoSession = DBManager.getInstance(SettingActivity.this).getWritableDaoSession();
+                                        writableDaoSession.getInviteeEntityDao().deleteAll();
+                                        writableDaoSession.getPotentialCustomersEntityDao().deleteAll();
                                         //进度条
                                         progressDialog = CustomProgressDialogForCache.createLoadingDialog(SettingActivity.this, "正在清除缓存请稍后...");
                                         progressDialog.show();
@@ -345,7 +335,6 @@ public class SettingActivity extends BaseActivity implements CompoundButton.OnCh
     }
 
 
-
     //推送开关
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -384,7 +373,6 @@ public class SettingActivity extends BaseActivity implements CompoundButton.OnCh
         }
 
     }
-
 
 
     @Override

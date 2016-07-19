@@ -13,9 +13,9 @@ import android.widget.TextView;
 import com.ksfc.newfarmer.BaseFragment;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
-import com.ksfc.newfarmer.common.GlideUtils;
-import com.ksfc.newfarmer.http.Request;
-import com.ksfc.newfarmer.http.beans.GiftListResult;
+import com.ksfc.newfarmer.common.GlideHelper;
+import com.ksfc.newfarmer.protocol.Request;
+import com.ksfc.newfarmer.beans.GiftListResult;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.utils.Utils;
 
@@ -84,7 +84,7 @@ public class IntegralTallGuideFragment extends BaseFragment {
                         layoutParams.width = itemWitch;
                         viewHolder.giftContentRel.setLayoutParams(layoutParams);
                     }
-                    GlideUtils.setImageRes(IntegralTallGuideFragment.this,gift.largeUrl,viewHolder.giftImg);
+                    GlideHelper.setImageRes(IntegralTallGuideFragment.this,gift.largeUrl,viewHolder.giftImg);
                     viewHolder.giftNameTv.setText(gift.name);
                     viewHolder.giftPriceTv.setText(gift.points + "");
 

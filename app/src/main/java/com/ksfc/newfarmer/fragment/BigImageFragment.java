@@ -8,7 +8,7 @@ import com.bumptech.glide.Glide;
 import com.ksfc.newfarmer.BaseFragment;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
-import com.ksfc.newfarmer.http.Request;
+import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.utils.StringUtil;
 
 import uk.co.senab.photoview.PhotoView;

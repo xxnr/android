@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -31,24 +29,24 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.jakewharton.rxbinding.view.RxView;
 import com.ksfc.newfarmer.BaseFragment;
 import com.ksfc.newfarmer.MsgID;
-import com.ksfc.newfarmer.common.GlideUtils;
-import com.ksfc.newfarmer.common.LoadMoreOnScrollListener;
-import com.ksfc.newfarmer.common.OrderUtils;
+import com.ksfc.newfarmer.common.GlideHelper;
+import com.ksfc.newfarmer.common.LoadMoreScrollListener;
+import com.ksfc.newfarmer.common.OrderHelper;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.activitys.RSCOrderListActivity;
 import com.ksfc.newfarmer.activitys.RscOrderDetailActivity;
 import com.ksfc.newfarmer.common.CommonAdapter;
 import com.ksfc.newfarmer.common.CommonViewHolder;
 import com.ksfc.newfarmer.db.Store;
-import com.ksfc.newfarmer.http.ApiType;
-import com.ksfc.newfarmer.http.Request;
-import com.ksfc.newfarmer.http.RequestParams;
-import com.ksfc.newfarmer.http.beans.LoginResult;
-import com.ksfc.newfarmer.http.beans.OfflinePayWayResult;
-import com.ksfc.newfarmer.http.beans.RscOrderDetailResult;
-import com.ksfc.newfarmer.http.beans.RscOrderResult;
+import com.ksfc.newfarmer.protocol.ApiType;
+import com.ksfc.newfarmer.protocol.Request;
+import com.ksfc.newfarmer.protocol.RequestParams;
+import com.ksfc.newfarmer.beans.LoginResult;
+import com.ksfc.newfarmer.beans.OfflinePayWayResult;
+import com.ksfc.newfarmer.beans.RscOrderDetailResult;
+import com.ksfc.newfarmer.beans.RscOrderResult;
 import com.ksfc.newfarmer.utils.DateFormatUtils;
-import com.ksfc.newfarmer.utils.PullToRefreshUtils;
+import com.ksfc.newfarmer.common.PullToRefreshHelper;
 import com.ksfc.newfarmer.utils.ShowHideUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.KeyboardListenRelativeLayout;
@@ -103,7 +101,7 @@ public class RscOrderListFragment extends BaseFragment implements
     private KeyboardListenRelativeLayout rootView;
     private LoadingFooter loadingFooter;
 
-    private LoadMoreOnScrollListener moreOnsrcollListener = new LoadMoreOnScrollListener() {
+    private LoadMoreScrollListener moreOnsrcollListener = new LoadMoreScrollListener() {
         @Override
         public void loadMore() {
             //加载更多
@@ -146,7 +144,7 @@ public class RscOrderListFragment extends BaseFragment implements
         rootView.setOnKeyboardStateChangedListener(this);
 
         //设置刷新的文字
-        PullToRefreshUtils.setFreshText(waitingpay_lv);
+        PullToRefreshHelper.setFreshText(waitingpay_lv);
         //无订单下的状态
         null_layout = ((RelativeLayout) view.findViewById(R.id.null_shop_cart_layout));
 
@@ -480,7 +478,7 @@ public class RscOrderListFragment extends BaseFragment implements
                                                         }
                                                     }
                                                 };
-                                                OrderUtils.CheckOffline(subscriber, ordersEntity.id);
+                                                OrderHelper.CheckOffline(subscriber, ordersEntity.id);
                                             }
 
                                         }
@@ -570,7 +568,7 @@ public class RscOrderListFragment extends BaseFragment implements
                         RscOrderResult.OrdersEntity.SKUsEntity skUsEntity = SKUsList.get(i);
                         if (skUsEntity != null) {
                             //商品图片
-                            GlideUtils.setImageRes(RscOrderListFragment.this,skUsEntity.thumbnail,viewHolderChild.ordering_item_img);
+                            GlideHelper.setImageRes(RscOrderListFragment.this,skUsEntity.thumbnail,viewHolderChild.ordering_item_img);
 
                             //商品个数
                             viewHolderChild.ordering_item_geshu.setText("X " + skUsEntity.count);
@@ -1127,7 +1125,7 @@ public class RscOrderListFragment extends BaseFragment implements
 
     @Override
     public void onRefresh(PullToRefreshBase refreshView) {
-        PullToRefreshUtils.setFreshClose(refreshView);
+        PullToRefreshHelper.setFreshClose(refreshView);
         page = 1;
         getData(page);
     }

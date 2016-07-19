@@ -6,10 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,9 +26,9 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.jakewharton.rxbinding.view.RxView;
 import com.ksfc.newfarmer.BaseFragment;
 import com.ksfc.newfarmer.MsgID;
-import com.ksfc.newfarmer.common.GlideUtils;
-import com.ksfc.newfarmer.common.LoadMoreOnScrollListener;
-import com.ksfc.newfarmer.common.OrderUtils;
+import com.ksfc.newfarmer.common.GlideHelper;
+import com.ksfc.newfarmer.common.LoadMoreScrollListener;
+import com.ksfc.newfarmer.common.OrderHelper;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.activitys.MyOrderListActivity;
 import com.ksfc.newfarmer.activitys.MyOrderDetailActivity;
@@ -42,14 +39,14 @@ import com.ksfc.newfarmer.activitys.PickUpStateActivity;
 import com.ksfc.newfarmer.common.CommonAdapter;
 import com.ksfc.newfarmer.common.CommonViewHolder;
 import com.ksfc.newfarmer.db.Store;
-import com.ksfc.newfarmer.http.ApiType;
-import com.ksfc.newfarmer.http.Request;
-import com.ksfc.newfarmer.http.RequestParams;
-import com.ksfc.newfarmer.http.beans.LoginResult;
-import com.ksfc.newfarmer.http.beans.WaitingPay;
+import com.ksfc.newfarmer.protocol.ApiType;
+import com.ksfc.newfarmer.protocol.Request;
+import com.ksfc.newfarmer.protocol.RequestParams;
+import com.ksfc.newfarmer.beans.LoginResult;
+import com.ksfc.newfarmer.beans.WaitingPay;
 import com.ksfc.newfarmer.utils.ExpandViewTouch;
 import com.ksfc.newfarmer.utils.IntentUtil;
-import com.ksfc.newfarmer.utils.PullToRefreshUtils;
+import com.ksfc.newfarmer.common.PullToRefreshHelper;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.LoadingFooter;
 import com.ksfc.newfarmer.widget.RecyclerImageView;
@@ -93,7 +90,7 @@ public class MyOrderListFragment extends BaseFragment implements PullToRefreshBa
 
     private LoadingFooter loadingFooter;
 
-    private LoadMoreOnScrollListener moreOnsrcollListener = new LoadMoreOnScrollListener() {
+    private LoadMoreScrollListener moreOnsrcollListener = new LoadMoreScrollListener() {
         @Override
         public void loadMore() {
             //加载更多
@@ -135,7 +132,7 @@ public class MyOrderListFragment extends BaseFragment implements PullToRefreshBa
         waitingpay_lv.setOnScrollListener(moreOnsrcollListener);
         loadingFooter = new LoadingFooter(activity, waitingpay_lv.getRefreshableView());
         //设置刷新的文字
-        PullToRefreshUtils.setFreshText(waitingpay_lv);
+        PullToRefreshHelper.setFreshText(waitingpay_lv);
         //无订单下的状态
         null_layout = ((RelativeLayout) view.findViewById(R.id.null_shop_cart_layout));
         null_layout.setVisibility(View.GONE);
@@ -321,7 +318,7 @@ public class MyOrderListFragment extends BaseFragment implements PullToRefreshBa
 
     @Override
     public void onRefresh(PullToRefreshBase refreshView) {
-        PullToRefreshUtils.setFreshClose(refreshView);
+        PullToRefreshHelper.setFreshClose(refreshView);
         page = 1;
         getData(page);
     }
@@ -450,7 +447,7 @@ public class MyOrderListFragment extends BaseFragment implements PullToRefreshBa
                                                 }
                                             };
                                             if (StringUtil.checkStr(order.orderId)) {
-                                                OrderUtils.isChecked(subscriberOrderIsChecked, order.orderId);
+                                                OrderHelper.isChecked(subscriberOrderIsChecked, order.orderId);
                                             }
                                         }
                                     });
@@ -551,7 +548,7 @@ public class MyOrderListFragment extends BaseFragment implements PullToRefreshBa
 
                     ViewHolderChild viewHolderChild = new ViewHolderChild(rootView);
                     //商品图片
-                    GlideUtils.setImageRes(MyOrderListFragment.this,SKUsList.get(i).thumbnail,viewHolderChild.ordering_item_img);
+                    GlideHelper.setImageRes(MyOrderListFragment.this,SKUsList.get(i).thumbnail,viewHolderChild.ordering_item_img);
                     //商品个数
                     viewHolderChild.ordering_item_geshu.setText("X " + SKUsList.get(i).count + "");
                     //商品名
@@ -625,7 +622,7 @@ public class MyOrderListFragment extends BaseFragment implements PullToRefreshBa
                     ViewHolderChild viewHolderChild = new ViewHolderChild(rootView);
                     //商品图片
                     if (StringUtil.checkStr(goodsList.get(i).thumbnail)) {
-                        GlideUtils.setImageRes(MyOrderListFragment.this,goodsList.get(i).thumbnail,viewHolderChild.ordering_item_img);
+                        GlideHelper.setImageRes(MyOrderListFragment.this,goodsList.get(i).thumbnail,viewHolderChild.ordering_item_img);
                     }
                     //商品个数
                     viewHolderChild.ordering_item_geshu.setText("X " + goodsList.get(i).count + "");

@@ -9,8 +9,8 @@ import android.widget.TextView;
 
 import com.ksfc.newfarmer.BaseFragment;
 import com.ksfc.newfarmer.R;
-import com.ksfc.newfarmer.http.Request;
-import com.ksfc.newfarmer.http.beans.PointResult;
+import com.ksfc.newfarmer.protocol.Request;
+import com.ksfc.newfarmer.beans.PointResult;
 
 import java.util.concurrent.TimeUnit;
 

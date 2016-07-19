@@ -21,16 +21,16 @@ import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.common.CommonAdapter;
 import com.ksfc.newfarmer.common.CommonViewHolder;
-import com.ksfc.newfarmer.common.LoadMoreOnScrollListener;
+import com.ksfc.newfarmer.common.LoadMoreScrollListener;
 import com.ksfc.newfarmer.db.Store;
-import com.ksfc.newfarmer.http.ApiType;
-import com.ksfc.newfarmer.http.Request;
-import com.ksfc.newfarmer.http.RequestParams;
-import com.ksfc.newfarmer.http.beans.LoginResult;
-import com.ksfc.newfarmer.http.beans.RSCAddressListResult;
-import com.ksfc.newfarmer.http.beans.RSCStateInfoResult;
+import com.ksfc.newfarmer.protocol.ApiType;
+import com.ksfc.newfarmer.protocol.Request;
+import com.ksfc.newfarmer.protocol.RequestParams;
+import com.ksfc.newfarmer.beans.LoginResult;
+import com.ksfc.newfarmer.beans.RSCAddressListResult;
+import com.ksfc.newfarmer.beans.RSCStateInfoResult;
 import com.ksfc.newfarmer.utils.PopWindowUtils;
-import com.ksfc.newfarmer.utils.PullToRefreshUtils;
+import com.ksfc.newfarmer.common.PullToRefreshHelper;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.LoadingFooter;
 
@@ -88,7 +88,7 @@ public class SelectDeliveriesStateActivity extends BaseActivity implements PullT
 
     private LoadingFooter loadingFooter;
 
-    private LoadMoreOnScrollListener moreOnsrcollListener =new LoadMoreOnScrollListener() {
+    private LoadMoreScrollListener moreOnsrcollListener =new LoadMoreScrollListener() {
         @Override
         public void loadMore() {
             //加载更多
@@ -169,7 +169,7 @@ public class SelectDeliveriesStateActivity extends BaseActivity implements PullT
         select_state_listView.setOnScrollListener(moreOnsrcollListener);
         loadingFooter = new LoadingFooter(this,select_state_listView.getRefreshableView());
         //设置刷新的文字
-        PullToRefreshUtils.setFreshText(select_state_listView);
+        PullToRefreshHelper.setFreshText(select_state_listView);
     }
 
 
@@ -342,7 +342,7 @@ public class SelectDeliveriesStateActivity extends BaseActivity implements PullT
 
     @Override
     public void onRefresh(PullToRefreshBase refreshView) {
-        PullToRefreshUtils.setFreshClose(refreshView);
+        PullToRefreshHelper.setFreshClose(refreshView);
         page = 1;
         getStateList(provinceId, cityId, countyId);
     }

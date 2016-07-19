@@ -8,8 +8,7 @@ import android.webkit.WebViewClient;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
-import com.ksfc.newfarmer.http.Request;
-import com.ksfc.newfarmer.jsinterface.JavaScriptObject;
+import com.ksfc.newfarmer.protocol.Request;
 
 import net.yangentao.util.NetUtil;
 

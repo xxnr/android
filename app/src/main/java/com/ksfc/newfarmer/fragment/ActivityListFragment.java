@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import com.ksfc.newfarmer.BaseFragment;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.activitys.ActivityDetailActivity;
-import com.ksfc.newfarmer.http.Request;
+import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.Utils;
 import com.ksfc.newfarmer.widget.transformer.ScaleInTransformer;

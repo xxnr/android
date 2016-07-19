@@ -4,7 +4,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -14,7 +13,7 @@ import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.fragment.ActivityListFragment;
 import com.ksfc.newfarmer.fragment.IntegralTallGuideFragment;
 import com.ksfc.newfarmer.fragment.SignSuccessFragment;
-import com.ksfc.newfarmer.http.Request;
+import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.utils.ActivityAnimationUtils;
 import com.ksfc.newfarmer.utils.ScreenUtil;
 

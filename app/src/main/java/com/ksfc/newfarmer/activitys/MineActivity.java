@@ -8,12 +8,12 @@ import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.db.Store;
-import com.ksfc.newfarmer.http.ApiType;
-import com.ksfc.newfarmer.http.Request;
-import com.ksfc.newfarmer.http.RequestParams;
-import com.ksfc.newfarmer.http.beans.LoginResult;
-import com.ksfc.newfarmer.http.beans.PersonalData;
-import com.ksfc.newfarmer.http.beans.PersonalData.Data;
+import com.ksfc.newfarmer.protocol.ApiType;
+import com.ksfc.newfarmer.protocol.Request;
+import com.ksfc.newfarmer.protocol.RequestParams;
+import com.ksfc.newfarmer.beans.LoginResult;
+import com.ksfc.newfarmer.beans.PersonalData;
+import com.ksfc.newfarmer.beans.PersonalData.Data;
 import com.ksfc.newfarmer.utils.FastBlur;
 import com.ksfc.newfarmer.utils.ScreenUtil;
 import com.ksfc.newfarmer.utils.Utils;
@@ -470,7 +470,7 @@ public class MineActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         if (!isLogin()) {
-            exitLogin();
+            App.loginOut();
             setLayout(false);
         } else {
             setLayout(true);
