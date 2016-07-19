@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.custom.vg.list.CustomAdapter;
@@ -19,8 +18,7 @@ import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.RndApplication;
-import com.ksfc.newfarmer.adapter.CommonFragmentPagerAdapter;
-import com.ksfc.newfarmer.common.GlideUtils;
+import com.ksfc.newfarmer.common.CommonFragmentPagerAdapter;
 import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.db.dao.ShoppingDao;
 import com.ksfc.newfarmer.fragment.GoodsDetailButtomFragment;
@@ -102,7 +100,6 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
     private AdditionsAdapter additionsAdapter;
     private LinearLayout add_sku_tv_gv_ll;//动态添加sku的父布局
     private LinearLayout market_price_ll;//商品市场价lin
-    private ScrollView scrollView;
     private KeyboardListenRelativeLayout activity_rootView;
     private LinearLayout shangpin_detail_bottom;
     private ImageView animationImage;
@@ -322,8 +319,6 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
         ScreenUtil.setHeight(this, popupWindow_view.findViewById(R.id.pop_layout), 480);
         //初始化popWindow中的组件
         ImageView pop_close = (ImageView) popupWindow_view.findViewById(R.id.pop_close);
-
-        scrollView = (ScrollView) popupWindow_view.findViewById(R.id.pop_scrollView);
         //扩大点击区域
         ExpandViewTouch.expandViewTouchDelegate(pop_close, 100, 100, 100, 100);
         pop_close.setOnClickListener(this);
@@ -923,7 +918,7 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
             } else {
                 fragmentList.add(GoodsDetailTopFragment.newInstance(detail));
             }
-            CommonFragmentPagerAdapter adapter = new CommonFragmentPagerAdapter(getSupportFragmentManager(), null, fragmentList);
+            CommonFragmentPagerAdapter adapter = new CommonFragmentPagerAdapter(getSupportFragmentManager(), fragmentList);
             viewPager.setAdapter(adapter);
 
             //商品是否预售

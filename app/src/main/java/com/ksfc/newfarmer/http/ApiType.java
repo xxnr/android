@@ -69,7 +69,7 @@ public enum ApiType {
     /**
      * 获取用户白名单
      */
-    GET_WRITE_LIST("/api/v2.0/user/isInWhiteList", ResponseResult.class),
+    fGET_WRITE_LIST("/api/v2.0/user/isInWhiteList", ResponseResult.class),
 
     /**
      * 银联
@@ -80,14 +80,9 @@ public enum ApiType {
      */
     GET_ALI("/alipay", AlipayResult.class),
     /**
-     * 汽车
-     */
-    GET_NYC("/api/v2.1/product/getProductsListPage", GetGoodsData.class),
-    /**
      * 化肥
      */
-    GET_HUAFEI("/api/v2.1/product/getProductsListPage", GetGoodsData.class),
-
+    GET_GOODS("/api/v2.1/product/getProductsListPage", GetGoodsData.class),
     /**
      * 头像上传
      */
@@ -258,7 +253,6 @@ public enum ApiType {
     /**
      * 订单相关 更新订单支付方式
      */
-    @Deprecated
     GET_UPDATPAYWAY("/api/v2.0/order/updateOrderPaytype", ResponseResult.class),
     /**
      * 用户相关 查找有无此用户
@@ -494,6 +488,10 @@ public enum ApiType {
     public ApiType setMethod(RequestMethod method) {
         requestMethod = method;
         return this;
+    }
+
+    public String getPath() {
+        return path;
     }
 
     public String getOpt() {

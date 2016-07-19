@@ -2,12 +2,11 @@ package com.ksfc.newfarmer.activitys;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.view.View;
 
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
+import com.ksfc.newfarmer.common.CommonFragmentPagerAdapter;
 import com.ksfc.newfarmer.fragment.BigImageFragment;
 import com.ksfc.newfarmer.http.Request;
 import com.ksfc.newfarmer.http.beans.GetGoodsDetail;
@@ -15,6 +14,7 @@ import com.ksfc.newfarmer.utils.ActivityAnimationUtils;
 import com.ksfc.newfarmer.widget.CirclePageIndicator;
 import com.ksfc.newfarmer.widget.HackyViewPager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -36,8 +36,11 @@ public class BigImageActivity extends BaseActivity {
         GetGoodsDetail.GoodsDetail detail = (GetGoodsDetail.GoodsDetail) getIntent().getSerializableExtra("detail");
         int position = getIntent().getIntExtra("position", 0);
         if (detail != null && detail.pictures != null) {
-            MyPagerAdapter myPagerAdapter = new MyPagerAdapter(getSupportFragmentManager(), detail.pictures);
-            viewPager.setAdapter(myPagerAdapter);
+            List<Fragment>  fragments =new ArrayList<>();
+            for (int i = 0; i <detail.pictures.size() ; i++) {
+                fragments.add(BigImageFragment.newInstance(detail.pictures.get(i).originalUrl));
+            }
+            viewPager.setAdapter(new CommonFragmentPagerAdapter(getSupportFragmentManager(),fragments));
             viewPager.setOffscreenPageLimit(detail.pictures.size());
             if (detail.pictures.size() > 1) {
                 indicator.setViewPager(viewPager);
@@ -57,27 +60,6 @@ public class BigImageActivity extends BaseActivity {
     public void onResponsed(Request req) {
 
     }
-
-    class MyPagerAdapter extends FragmentPagerAdapter {
-
-        private List<GetGoodsDetail.GoodsDetail.Pictures> pictures;
-
-        public MyPagerAdapter(FragmentManager fm, List<GetGoodsDetail.GoodsDetail.Pictures> pictures) {
-            super(fm);
-            this.pictures = pictures;
-        }
-
-        @Override
-        public Fragment getItem(int pos) {
-            return BigImageFragment.newInstance(pictures.get(pos).originalUrl);
-        }
-
-        @Override
-        public int getCount() {
-            return pictures.size();
-        }
-    }
-
 
     @Override
     public void finish() {

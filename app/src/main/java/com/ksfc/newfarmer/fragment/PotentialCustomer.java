@@ -240,7 +240,7 @@ public class PotentialCustomer extends BaseFragment {
 
                 //姓名 性别 是否注册 点击进入详情
                 holder.setText(R.id.item_already_customer_name, potentialCustomers.name);
-                TextView alpha = (TextView) holder.getView(R.id.alpha);
+                TextView alpha = holder.getView(R.id.alpha);
 
                 // 当前字母
                 String currentStr = potentialCustomers.nameInitial;
@@ -254,7 +254,7 @@ public class PotentialCustomer extends BaseFragment {
                     alpha.setVisibility(View.GONE);
                 }
 
-                ImageView sex_icon = (ImageView) holder.getView(R.id.item_already_customer_sex);
+                ImageView sex_icon =  holder.getView(R.id.item_already_customer_sex);
                 if (potentialCustomers.sex) {
                     sex_icon.setBackgroundResource(R.drawable.girl_icon);
                 } else {

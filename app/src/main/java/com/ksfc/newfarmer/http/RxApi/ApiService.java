@@ -1,18 +1,24 @@
 package com.ksfc.newfarmer.http.RxApi;
 
+import com.ksfc.newfarmer.http.ResponseResult;
 import com.ksfc.newfarmer.http.beans.AttrSelectResult;
+import com.ksfc.newfarmer.http.beans.CameraResult;
 import com.ksfc.newfarmer.http.beans.GetGoodsData;
 import com.ksfc.newfarmer.http.beans.MyOrderDetailResult;
 import com.ksfc.newfarmer.http.beans.RscOrderDetailResult;
 
 import java.util.Map;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Query;
 import rx.Observable;
 
@@ -54,6 +60,25 @@ public interface ApiService {
     Observable<RscOrderDetailResult> GET_RSC_ORDER_Detail(
             @Query("token") String token,
             @Query("orderId") String orderId);
+
+    /**
+     * 头像上传
+     */
+    @Multipart
+    @POST("/api/v2.0/user/uploadPortrait")
+    Observable<CameraResult> UP_HEAD_IMG(
+            @Part("token") RequestBody token,
+            @Part MultipartBody.Part photo
+    );
+
+
+    /**
+     * 获取用户白名单
+     */
+    @FormUrlEncoded
+    @POST("/api/v2.0/user/isInWhiteList")
+    Observable<ResponseResult> GET_WRITE_LIST(
+            @Field("token") String token);
 
 
 }

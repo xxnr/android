@@ -25,6 +25,7 @@ import com.ksfc.newfarmer.http.NetworkHelper;
 import com.ksfc.newfarmer.http.Request;
 import com.ksfc.newfarmer.http.RequestParams;
 import com.ksfc.newfarmer.http.ResponseResult;
+import com.ksfc.newfarmer.http.RxApi.RxService;
 import com.ksfc.newfarmer.http.beans.AlipayResult;
 import com.ksfc.newfarmer.http.beans.LoginResult;
 import com.ksfc.newfarmer.http.beans.MinPayPriceResult;
@@ -32,11 +33,7 @@ import com.ksfc.newfarmer.http.beans.MyOrderDetailResult;
 import com.ksfc.newfarmer.http.beans.UnionPayResponse;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
-import com.lidroid.xutils.HttpUtils;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
+
 import com.unionpay.UPPayAssistEx;
 import com.unionpay.uppay.PayActivity;
 
@@ -44,13 +41,14 @@ import net.yangentao.util.msg.MsgCenter;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
-import okhttp3.OkHttpClient;
 import okhttp3.Response;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by CAI on 2016/5/13.
@@ -450,31 +448,26 @@ public class PayWayFragment extends BaseFragment {
 
     //获取白名单
     private void getWriteList() {
-
-        com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
         if (StringUtil.checkStr(token)) {
-            params.addBodyParameter("token", token);
+            RxService.createApi().GET_WRITE_LIST(token)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .compose(this.<ResponseResult>bindToLifecycle())
+                    .subscribe(new Action1<ResponseResult>() {
+                                   @Override
+                                   public void call(ResponseResult responseResult) {
+                                       if (responseResult != null && responseResult.getStatus().equals("1000")) {
+                                           handler.sendEmptyMessage(1);
+                                       }
+                                   }
+                               }, new Action1<Throwable>() {
+                                   @Override
+                                   public void call(Throwable throwable) {
+                                       handler.sendEmptyMessage(404);
+                                   }
+                               }
+                    );
         }
-        HttpUtils http = new HttpUtils();
-        http.send(HttpRequest.HttpMethod.POST, ApiType.GET_WRITE_LIST.getOpt(), params,
-                new RequestCallBack<String>() {
-                    @Override
-                    public void onFailure(HttpException arg0, String arg1) {
-                        handler.sendEmptyMessage(404);
-                    }
-
-                    @Override
-                    public void onSuccess(ResponseInfo<String> arg0) {
-
-                        Gson gson = new Gson();
-                        ResponseResult responseResult = gson.fromJson(arg0.result, ResponseResult.class);
-                        if (responseResult.getStatus().equals("1000")) {
-                            handler.sendEmptyMessage(1);
-                        }
-
-                    }
-
-                });
     }
 
 
@@ -518,10 +511,6 @@ public class PayWayFragment extends BaseFragment {
     public void getUnipay() {
 
         showProgressDialog();
-
-        OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        builder.connectTimeout(10 * 1000, TimeUnit.MILLISECONDS);
-
         FormBody.Builder builder1 = new FormBody.Builder();
         builder1.add("consumer", "app");
         builder1.add("orderId", orderId);
@@ -551,7 +540,7 @@ public class PayWayFragment extends BaseFragment {
                 .url(url)
                 .post(formBody)
                 .build();
-       NetworkHelper.getClient().newCall(request).enqueue(new Callback() {
+        NetworkHelper.getClient().newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 handler.sendEmptyMessage(404);

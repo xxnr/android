@@ -12,6 +12,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.jakewharton.rxbinding.widget.RxTextView;
+import com.jakewharton.rxbinding.widget.TextViewTextChangeEvent;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
@@ -29,11 +31,16 @@ import net.yangentao.util.msg.MsgCenter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 
 /**
  * Created by HePeng on 2015/12/10.
  */
 public class AddPotentialActivity extends BaseActivity {
+
     private EditText name;
     private final int cityRequestCode = 1;//省市区
     private final int townRequestCode = 2;//乡镇
@@ -94,38 +101,32 @@ public class AddPotentialActivity extends BaseActivity {
         boy_box.setChecked(true);//默认选中性别 男
 
         //输到11位 自动 判断该客户的登记状态和注册状态
-        phone.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        RxTextView.textChangeEvents(phone)
+                .debounce(500, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<TextViewTextChangeEvent>() {
+                    @Override
+                    public void call(TextViewTextChangeEvent textViewTextChangeEvent) {
+                        String key = textViewTextChangeEvent.text().toString().trim();
+                        if (isMobileNum(key)) {
+                            RequestParams params = new RequestParams();
+                            if (isLogin()) {
+                                params.put("userId", Store.User.queryMe().userid);
+                                params.put("phone", key.trim());
+                                execApi(ApiType.IS_POTENTIAL_CUSTOMER
+                                        .setMethod(ApiType.RequestMethod.GET), params);
+                            }
+                        } else {
+                            if (key.length() == 11) {
+                                showToast("请输入正确的手机号");
+                            } else {
+                                phone_error_ll.setVisibility(View.GONE);
+                                dividing_line.setVisibility(View.GONE);
+                            }
+                        }
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (isMobileNum(s.toString())) {
-                    RequestParams params = new RequestParams();
-                    if (isLogin()) {
-                        params.put("userId", Store.User.queryMe().userid);
-                        params.put("phone", s.toString().trim());
-                        execApi(ApiType.IS_POTENTIAL_CUSTOMER
-                                .setMethod(ApiType.RequestMethod.GET), params);
                     }
-                } else {
-                    if (s.length() == 11) {
-                        showToast("请输入正确的手机号");
-                    } else {
-                        phone_error_ll.setVisibility(View.GONE);
-                        dividing_line.setVisibility(View.GONE);
-                    }
-                }
-
-            }
-        });
+                });
 
         boy_box.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

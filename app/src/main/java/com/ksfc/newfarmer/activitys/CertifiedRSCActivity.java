@@ -60,10 +60,8 @@ public class CertifiedRSCActivity extends BaseActivity {
 
     @Override
     public void OnActCreate(Bundle savedInstanceState) {
-
+        setTitle("");
         initView();
-
-
     }
 
     private void initView() {

@@ -370,15 +370,17 @@ public class MineActivity extends BaseActivity {
             if (user != null) {
                 String imgUrl = user.getImageUrl();
                 if (!StringUtil.empty(imgUrl)) {
-                    Glide.with(App.getApp()).load(MsgID.IP + imgUrl).asBitmap().into(new SimpleTarget<Bitmap>() {
-                        @Override
-                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                            Message msg = Message.obtain();
-                            msg.obj = resource;
-                            msg.what = 0;
-                            handler.sendMessage(msg);
-                        }
-                    });
+                    Glide.with(App.getApp())
+                            .load(MsgID.IP + imgUrl).asBitmap()
+                            .into(new SimpleTarget<Bitmap>() {
+                                @Override
+                                public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                                    Message msg = Message.obtain();
+                                    msg.obj = resource;
+                                    msg.what = 0;
+                                    handler.sendMessage(msg);
+                                }
+                            });
                 } else {
                     handler.sendEmptyMessage(1);
                 }

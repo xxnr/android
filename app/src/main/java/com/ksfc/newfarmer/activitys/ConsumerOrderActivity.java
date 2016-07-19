@@ -208,7 +208,7 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
                 if (StringUtil.checkStr(rows.totalPrice)) {
                     holder.setText(R.id.consumer_item_orderPrice, "¥" + rows.totalPrice);
                 }
-                String state = "";
+                String state;
                 switch (rows.typeValue) {
                     case 0:
                         state = "交易关闭";
@@ -235,7 +235,7 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
                 }
 
 
-                UnSwipeListView listView = (UnSwipeListView) holder.getView(R.id.consumer_item_listView);
+                UnSwipeListView listView = holder.getView(R.id.consumer_item_listView);
                 if (rows.SKUs != null && !rows.SKUs.isEmpty()) {
                     SkusAdapter carAdapter = new SkusAdapter(ConsumerOrderActivity.this, rows.SKUs);
                     listView.setAdapter(carAdapter);
@@ -265,10 +265,8 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
         public void convert(CommonViewHolder holder, ConsumerOrderResult.Product product) {
             if (product != null) {
                 //设置文本
-                if (StringUtil.checkStr(product.name)) {
-                    holder.setText(R.id.product_name, product.name);
-                }
-                holder.setText(R.id.product_count, "X " + product.count);
+                holder.setText(R.id.product_name, product.name)
+                        .setText(R.id.product_count, "X " + product.count);
             }
 
         }
@@ -284,11 +282,8 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
         @Override
         public void convert(CommonViewHolder holder, ConsumerOrderResult.SKUS skus) {
             if (skus != null) {
-                //设置文本
-                if (StringUtil.checkStr(skus.productName)) {
-                    holder.setText(R.id.product_name, skus.productName);
-                }
-                holder.setText(R.id.product_count, "X " + skus.count);
+                holder.setText(R.id.product_name, skus.productName)
+                        .setText(R.id.product_count, "X " + skus.count);
             }
 
         }
@@ -301,7 +296,6 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
         getData();
     }
 
-
     private LoadMoreOnScrollListener moreOnsrcollListener = new LoadMoreOnScrollListener() {
         @Override
         public void loadMore() {
@@ -313,6 +307,5 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
             }
         }
     };
-
 
 }

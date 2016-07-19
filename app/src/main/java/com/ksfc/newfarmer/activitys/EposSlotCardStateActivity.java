@@ -287,11 +287,7 @@ public class EposSlotCardStateActivity extends BaseActivity implements PullToRef
             //初始化一切文本
             if (rsCsEntity != null && rsCsEntity.RSCInfo != null) {
                 //网点名
-                if (StringUtil.checkStr(rsCsEntity.RSCInfo.companyName)) {
-                    holder.setText(R.id.title_delivery_state_item, rsCsEntity.RSCInfo.companyName);
-                } else {
-                    holder.setText(R.id.title_delivery_state_item, "");
-                }
+                holder.setText(R.id.title_delivery_state_item, rsCsEntity.RSCInfo.companyName);
                 //电话
                 if (StringUtil.checkStr(rsCsEntity.RSCInfo.phone)) {
                     holder.setText(R.id.phone_delivery_state_item, "电话：" + rsCsEntity.RSCInfo.phone);
@@ -341,7 +337,7 @@ public class EposSlotCardStateActivity extends BaseActivity implements PullToRef
         @Override
         public void convert(CommonViewHolder holder, final RSCAddressListResult.ProvinceListEntity provinceListEntity) {
             if (provinceListEntity != null) {
-                TextView textView = (TextView) holder.getView(R.id.item_delivery_address_text);
+                TextView textView = holder.getView(R.id.item_delivery_address_text);
                 textView.setText(provinceListEntity.name);
 
                 if (provinceListEntity.name.equals(state_province_text.getText().toString())) {

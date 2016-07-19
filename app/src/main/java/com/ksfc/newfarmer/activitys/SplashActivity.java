@@ -17,6 +17,7 @@ import android.os.Message;
 
 import net.yangentao.util.PreferenceUtil;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -72,13 +73,17 @@ public class SplashActivity extends RxActivity implements DSInappDataListener {
                 return;
             }
             String activity = jsonObject.getString("activity");
-            String key = jsonObject.getString("key");
-            String value = jsonObject.getString("value");
+            JSONArray array = jsonObject.getJSONArray("params");
             Class aClass = Class.forName("com.ksfc.newfarmer.activitys." + activity);
             Intent intent = new Intent(this, aClass);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            if (StringUtil.checkStr(key) && StringUtil.checkStr(value)) {
-                intent.putExtra(key, value);
+            for (int i = 0; i < array.length(); i++) {
+                JSONObject jsonObject1 = array.getJSONObject(i);
+                String key = jsonObject1.getString("key");
+                String value = jsonObject1.getString("value");
+                if (StringUtil.checkStr(key)&&StringUtil.checkStr(value)){
+                    intent.putExtra(key,value);
+                }
             }
             startActivity(intent);
             finish();

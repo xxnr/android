@@ -3,17 +3,16 @@ package com.ksfc.newfarmer.activitys;
 import java.io.File;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
-import com.ksfc.newfarmer.common.GlideUtils;
 import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.http.ApiType;
 import com.ksfc.newfarmer.http.Request;
 import com.ksfc.newfarmer.http.RequestParams;
+import com.ksfc.newfarmer.http.RxApi.RxService;
 import com.ksfc.newfarmer.http.beans.CameraResult;
 import com.ksfc.newfarmer.http.beans.LoginResult.UserInfo;
 import com.ksfc.newfarmer.utils.ShowHideUtils;
@@ -24,11 +23,6 @@ import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.HeadImageView;
-import com.lidroid.xutils.HttpUtils;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -43,6 +37,13 @@ import android.widget.TextView;
 
 import net.yangentao.util.msg.MsgCenter;
 import net.yangentao.util.msg.MsgListener;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 public class MyaccountActivity extends BaseActivity {
     private HeadImageView myself_userImg;
@@ -351,12 +352,8 @@ public class MyaccountActivity extends BaseActivity {
             path = data.getStringExtra(ChoicePicActivity.EXTRA_PIC_PATH);
             RndLog.v("返回图片的路径:", path);
             if (!TextUtils.isEmpty(path)) {
-                UserInfo me = Store.User.queryMe();
-                if (me == null) {
-                    return;
-                }
                 // 头像上传
-                uploadhead(path, me.userid, "userId");
+                uploadhead(path);
             }
         } else if (resultCode == 0x11) {//昵称
 
@@ -396,61 +393,38 @@ public class MyaccountActivity extends BaseActivity {
         }
     }
 
-    private void uploadhead(final String path, String value, String name) {
-//        if (isLogin()){
-//            Map<String,RequestBody> map =new HashMap<>();
-//            map.put(path.replace("/", ""),RequestBody.create(MediaType.parse("image/jpeg"),new File(path)));
-//            map.put("token",RequestBody.create(MediaType.parse("text/plain"), Store.User.queryMe().token));
-//            map.put("userId",RequestBody.create(MediaType.parse("text/plain"), Store.User.queryMe().userid));
-//            RxService.createApi(ApiService.class)
-//                    .UP_HEAD_IMG(map)
-//                    .subscribeOn(Schedulers.io())
-//                    .observeOn(AndroidSchedulers.mainThread())
-//                    .subscribe(new Action1<CameraResult>() {
-//                        @Override
-//                        public void call(CameraResult cameraResult) {
-//
-//                            if (cameraResult.getStatus().equals("1000")){
-//                                showToast("头像上传成功！");
-//                                Bitmap decodeFile = BitmapFactory.decodeFile(path);
-//                                myself_userImg.setImageBitmap(decodeFile);
-//                            }
-//                        }
-//                    }, new Action1<Throwable>() {
-//                        @Override
-//                        public void call(Throwable throwable) {
-//                                    throwable.printStackTrace();
-//                        }
-//                    });
-
-//        }
-
-
-
-        com.lidroid.xutils.http.RequestParams params = new com.lidroid.xutils.http.RequestParams();
-        params.addQueryStringParameter(name, value);
-        params.addBodyParameter(path.replace("/", ""), new File(path),
-                "image/jpeg");
-        if (isLogin()) {
-            params.addBodyParameter("token", Store.User.queryMe().token);
+    /**
+     * 上传用户头像
+     *
+     * @param path 图片path
+     */
+    private void uploadhead(final String path) {
+        UserInfo me = Store.User.queryMe();
+        if (me == null) {
+            return;
         }
-        HttpUtils http = new HttpUtils();
-        http.send(HttpMethod.POST, ApiType.UP_HEAD_IMG.getOpt(), params,
-                new RequestCallBack<String>() {
+        RequestBody token = RequestBody.create(MediaType.parse("multipart/form-data"), me.token);
+        RequestBody photo = RequestBody.create(MediaType.parse("multipart/form-data"), new File(path));
+        MultipartBody.Part part = MultipartBody.Part.createFormData("photo", path, photo);
+        RxService.createApi()
+                .UP_HEAD_IMG(token, part)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .compose(this.<CameraResult>bindToLifecycle())
+                .subscribe(new Action1<CameraResult>() {
                     @Override
-                    public void onFailure(HttpException arg0, String arg1) {
-
+                    public void call(CameraResult cameraResult) {
+                        if (cameraResult.getStatus().equals("1000")) {
+                            showToast("头像上传成功！");
+                            Bitmap decodeFile = BitmapFactory.decodeFile(path);
+                            myself_userImg.setImageBitmap(decodeFile);
+                        }
                     }
-
+                }, new Action1<Throwable>() {
                     @Override
-                    public void onSuccess(ResponseInfo<String> arg0) {
-                        showToast("头像上传成功！");
-                                Bitmap decodeFile = BitmapFactory.decodeFile(path);
-                                myself_userImg.setImageBitmap(decodeFile);
+                    public void call(Throwable throwable) {
+                        throwable.printStackTrace();
                     }
-
                 });
     }
-
-
 }

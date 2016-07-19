@@ -125,7 +125,7 @@ public class LoginActivity extends BaseActivity {
             case R.id.login_layout_complete:
                 phoneNumber = login_layout_phone.getText().toString();
                 phonePassword = login_layout_password.getText().toString();
-                if (TextUtils.isEmpty(phoneNumber)) {
+                if (!StringUtil.checkStr(phoneNumber)) {
                     showToast("请输入手机号");
                     return;
                 }
@@ -133,7 +133,7 @@ public class LoginActivity extends BaseActivity {
                     showToast("请输入正确的手机号");
                     return;
                 }
-                if (TextUtils.isEmpty(phonePassword)) {
+                if (!StringUtil.checkStr(phonePassword)) {
                     showToast("请输入密码");
                     return;
                 }

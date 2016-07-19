@@ -44,6 +44,7 @@ public class ActivityDetailActivity extends BaseActivity {
                 view.loadUrl(url);
                 return true;
             }
+
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
@@ -51,7 +52,7 @@ public class ActivityDetailActivity extends BaseActivity {
             }
         });
         if (NetUtil.isConnected(this)) {
-            webView.loadUrl("http://192.168.1.11:8070/campaigns/events/rewardShopLaunch");
+            webView.loadUrl("http://192.168.1.13:8070/campaigns/events/shareAndGetPoints");
         } else {
             showToast("网络未连接");
         }
@@ -67,4 +68,13 @@ public class ActivityDetailActivity extends BaseActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (NetUtil.isConnected(this)) {
+            webView.loadUrl("http://192.168.1.13:8070/campaigns/events/shareAndGetPoints");
+        } else {
+            showToast("网络未连接");
+        }
+    }
 }

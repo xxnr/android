@@ -208,7 +208,7 @@ public class OfflinePayActivity extends BaseActivity {
             if (offlinePayTypeEntity != null) {
 
                 holder.getView(R.id.city_ll).setBackgroundColor(getResources().getColor(R.color.white));
-                TextView textView = (TextView) holder.getView(R.id.cityTextView);
+                TextView textView = holder.getView(R.id.cityTextView);
                 textView.setTextSize(16);
                 textView.setText(offlinePayTypeEntity.name);
 

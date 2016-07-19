@@ -1,18 +1,14 @@
 package com.ksfc.newfarmer.fragment;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.widget.LinearLayout;
 
 import com.ksfc.newfarmer.BaseFragment;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
-import com.ksfc.newfarmer.adapter.CommonFragmentPagerAdapter;
+import com.ksfc.newfarmer.common.CommonFragmentPagerAdapter;
 import com.ksfc.newfarmer.http.Request;
 import com.ksfc.newfarmer.widget.UnSwipeViewPager;
 

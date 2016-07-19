@@ -11,7 +11,9 @@ import android.widget.ImageView;
 
 import com.ksfc.newfarmer.BaseFragment;
 import com.ksfc.newfarmer.R;
+import com.ksfc.newfarmer.activitys.ActivityDetailActivity;
 import com.ksfc.newfarmer.http.Request;
+import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.Utils;
 import com.ksfc.newfarmer.widget.transformer.ScaleInTransformer;
 
@@ -80,6 +82,7 @@ public class ActivityListFragment extends BaseFragment {
             }
         });
 
+
         //第一次展示tips
         PreferenceUtil pu = new PreferenceUtil(activity, "config");
         boolean firstInMine = pu.getBool("firstActivityList", true);
@@ -116,6 +119,12 @@ public class ActivityListFragment extends BaseFragment {
             ImageView iv = (ImageView) inflate.findViewById(R.id.imageView);
             iv.setImageResource(res[position]);
             container.addView(inflate);
+            iv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    IntentUtil.activityForward(activity, ActivityDetailActivity.class,null,true);
+                }
+            });
             return inflate;
         }
 

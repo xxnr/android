@@ -102,7 +102,6 @@ public class AddressmanageActivity extends BaseActivity {
         if (req.getApi() == ApiType.ADDRESS_LIST) {
             if (req.getData().getStatus().equals("1000")) {
                 AddressList data = (AddressList) req.getData();
-
                 if (data.datas == null) {
                     return;
                 }
@@ -156,20 +155,19 @@ public class AddressmanageActivity extends BaseActivity {
         public void convert(CommonViewHolder holder, final Address address) {
 
             if (address != null) {
-                //文本内容
-                holder.setText(R.id.address_tv, StringUtil.checkBufferStrWithSpace
-                        (address.areaName,
-                                address.cityName,
-                                address.countyName,
-                                address.townName,
-                                address.address));
-                holder.setText(R.id.address_name_tv, address.receiptPeople);
-                holder.setText(R.id.address_phone_tv, address.receiptPhone);
+                //文本内容  地址 收货人姓名 收货人手机号
+                holder.setText(R.id.address_tv, StringUtil.checkBufferStrWithSpace(address.areaName,
+                        address.cityName,
+                        address.countyName,
+                        address.townName,
+                        address.address))
+                        .setText(R.id.address_name_tv, address.receiptPeople)
+                        .setText(R.id.address_phone_tv, address.receiptPhone);
+
                 //初始化其他组件
                 CheckBox btn_check_item = holder.getView(R.id.btn_check_item);
                 //设置控件点击区域扩大
                 ExpandViewTouch.expandViewTouchDelegate(btn_check_item, 100, 100, 100, 100);
-
                 //编辑地址
                 holder.getView(R.id.edit_address_img).setOnClickListener(new OnClickListener() {
 
@@ -181,19 +179,11 @@ public class AddressmanageActivity extends BaseActivity {
                         startActivity(intent);
                     }
                 });
-
                 //删除地址
                 holder.getView(R.id.delete_address_img).setOnClickListener(new OnClickListener() {
 
                     @Override
                     public void onClick(View v) {
-                        // app/buildUser/deleteAddress
-                        // id:主键
-                        // locationUserId:操作人ID
-                        // app/user/saveUserAddress
-                        // userId:用户ID,
-                        // addressId:地址唯一标识
-
                         CustomDialog.Builder builder = new CustomDialog.Builder(
                                 AddressmanageActivity.this);
                         builder.setMessage("确认要删除该地址吗")
@@ -227,15 +217,12 @@ public class AddressmanageActivity extends BaseActivity {
                                             @Override
                                             public void onClick(DialogInterface dialog,
                                                                 int which) {
-
                                                 dialog.dismiss();
-
                                             }
                                         });
                         builder.create().show();
                     }
                 });
-
 
                 if (map.get("pos") != null) {
                     if (holder.getPosition() == map.get("pos")) {
@@ -244,7 +231,6 @@ public class AddressmanageActivity extends BaseActivity {
                         btn_check_item.setChecked(false);
                     }
                 }
-
                 btn_check_item.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

@@ -7,7 +7,6 @@ import java.util.Map;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -29,7 +28,6 @@ import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.ksfc.newfarmer.BaseActivity;
-import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.RndApplication;
 import com.ksfc.newfarmer.common.CommonAdapter;
@@ -189,7 +187,7 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
             }
             String json = gson.toJson(map);
             params.put("JSON", json);
-            execApi(ApiType.GET_HUAFEI.setMethod(RequestMethod.POSTJSON), params);
+            execApi(ApiType.GET_GOODS.setMethod(RequestMethod.POSTJSON), params);
 
         } else {
             RequestParams params = new RequestParams();
@@ -211,7 +209,7 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
             oldBrand = brand;
             String json = gson.toJson(map);
             params.put("JSON", json);
-            execApi(ApiType.GET_HUAFEI.setMethod(RequestMethod.POSTJSON), params);
+            execApi(ApiType.GET_GOODS.setMethod(RequestMethod.POSTJSON), params);
 
         }
 
@@ -535,7 +533,7 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
     private void getCommonAttr() {
 
         RxService.createApi()
-                .GET_GOODS_ATTR("0",classId)
+                .GET_GOODS_ATTR("0", classId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .compose(this.<AttrSelectResult>bindToLifecycle())
@@ -568,8 +566,7 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
     public void onResponsed(Request req) {
         listView.onRefreshComplete();
         disMissDialog();
-        if (req.getApi() == ApiType.GET_NYC
-                || req.getApi() == ApiType.GET_HUAFEI) {
+        if (req.getApi() == ApiType.GET_GOODS) {
             GetGoodsData goodsData = (GetGoodsData) req.getData();
             if ("1000".equals(goodsData.getStatus())) {
                 List<SingleGood> list = goodsData.datas.rows;
@@ -875,13 +872,11 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
         @Override
         public void convert(CommonViewHolder holder, SingleGood singleGood) {
 
-            if (singleGood!=null){
+            if (singleGood != null) {
 
                 //设置文本
-                GlideUtils.setImageRes(GoodsListActivity.this,singleGood.imgUrl,(ImageView) holder.getView(R.id.goods_image));
-                if (StringUtil.checkStr(singleGood.goodsName)) {
-                    holder.setText(R.id.goods_title, singleGood.goodsName);
-                }
+                GlideUtils.setImageRes(GoodsListActivity.this, singleGood.imgUrl, (ImageView) holder.getView(R.id.goods_image));
+                holder.setText(R.id.goods_title, singleGood.goodsName);
                 String price = singleGood.unitPrice;
                 TextView price_tv = holder.getView(R.id.goods_price);
 

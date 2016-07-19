@@ -849,8 +849,8 @@ public class MyOrderDetailActivity extends BaseActivity {
         @Override
         public void convert(CommonViewHolder holder, MyOrderDetailResult.Rows.SKUS.Additions additions) {
             if (additions != null) {
-                if (StringUtil.checkStr(additions.name)) {
-                    holder.setText(R.id.item_additions_name, additions.name);
+                holder.setText(R.id.item_additions_name, additions.name);
+                if (StringUtil.checkStr(additions.price + "")) {
                     holder.setText(R.id.item_additions_price, "¥" + StringUtil.toTwoString(additions.price + ""));
                 }
             }

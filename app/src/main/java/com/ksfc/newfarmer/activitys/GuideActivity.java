@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.widget.ImageView;
 
+import com.ksfc.newfarmer.common.CommonFragmentPagerAdapter;
 import com.ksfc.newfarmer.fragment.GuideFragment;
 import com.ksfc.newfarmer.R;
 
@@ -56,9 +57,7 @@ public class GuideActivity extends FragmentActivity implements ViewPager.OnPageC
         for (int i = 0; i < 3; i++) {
             fragmentsList.add(GuideFragment.newInstance(i));
         }
-        viewPager_guide.setAdapter(new GuideAdapter(
-                getSupportFragmentManager(), fragmentsList));
-
+        viewPager_guide.setAdapter(new CommonFragmentPagerAdapter(getSupportFragmentManager(), fragmentsList));
         viewPager_guide.setCurrentItem(0);
         viewPager_guide.addOnPageChangeListener(this);
 
@@ -83,24 +82,4 @@ public class GuideActivity extends FragmentActivity implements ViewPager.OnPageC
 
     }
 
-    class GuideAdapter extends FragmentPagerAdapter {
-
-        private List<Fragment> fragmentsList = null;
-
-        public GuideAdapter(FragmentManager fm, List<Fragment> fragmentsList) {
-            super(fm);
-            this.fragmentsList = fragmentsList;
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return fragmentsList.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return fragmentsList.size();
-        }
-
-    }
 }

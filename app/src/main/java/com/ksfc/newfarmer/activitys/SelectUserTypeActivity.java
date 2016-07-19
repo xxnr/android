@@ -14,25 +14,26 @@ import com.ksfc.newfarmer.common.CommonAdapter;
 import com.ksfc.newfarmer.common.CommonViewHolder;
 import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.http.ApiType;
+import com.ksfc.newfarmer.http.NetworkHelper;
 import com.ksfc.newfarmer.http.Request;
 import com.ksfc.newfarmer.http.RequestParams;
 import com.ksfc.newfarmer.http.beans.LoginResult;
 import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.StringUtil;
-import com.lidroid.xutils.HttpUtils;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
 
 import net.yangentao.util.msg.MsgCenter;
 
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 /**
  * Created by HePeng on 2015/12/9.
@@ -57,54 +58,55 @@ public class SelectUserTypeActivity extends BaseActivity implements AdapterView.
         setTitle("选择用户类型");
         listView = ((ListView) findViewById(R.id.select_address_list));
         listView.setOnItemClickListener(this);
-        if (getIntent().getExtras()!=null){
+        if (getIntent().getExtras() != null) {
             flag = getIntent().getExtras().getBoolean("flag");
         }
         showProgressDialog();
         getData();
     }
 
-    //加载用户类型 因数据类型问题采用Xutils
+    //加载用户类型
     private void getData() {
-
-        HttpUtils http = new HttpUtils();
-        http.send(HttpRequest.HttpMethod.GET, ApiType.USER_TYPE.getOpt(), null,
-                new RequestCallBack<String>() {
-
-                    @Override
-                    public void onFailure(HttpException arg0, String arg1) {
-                        disMissDialog();
-                        showToast("数据加载失败");
-                    }
-
-                    @Override
-                    public void onSuccess(ResponseInfo<String> arg0) {
-                        disMissDialog();
-                        if (!StringUtil.empty(arg0.result)) {
-                            RndLog.v(TAG, arg0.result);
-                            list_key = new ArrayList<>();
-                            list_value = new ArrayList<>();
-                            try {
-                                JSONObject jsonObject = new JSONObject(arg0.result);
-                                JSONObject data = jsonObject.getJSONObject("data");
-                                Iterator<String> iterator = data.keys();
-                                while (iterator.hasNext()){
-                                    String key = iterator.next();
-                                    list_key.add(key);
-                                    list_value.add(data.getString(key));
-                                }
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
+        okhttp3.Request request = new okhttp3.Request.Builder()
+                .url(ApiType.USER_TYPE.getOpt())
+                .get()
+                .build();
+        NetworkHelper.getClient().newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                disMissDialog();
+                showToast("数据加载失败");
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                disMissDialog();
+                if (response.isSuccessful() && response.body() != null) {
+                    String result = response.body().string();
+                    if (StringUtil.checkStr(result)) {
+                        RndLog.v(TAG, result);
+                        list_key = new ArrayList<>();
+                        list_value = new ArrayList<>();
+                        try {
+                            JSONObject jsonObject = new JSONObject(result);
+                            JSONObject data = jsonObject.getJSONObject("data");
+                            Iterator<String> iterator = data.keys();
+                            while (iterator.hasNext()) {
+                                String key = iterator.next();
+                                list_key.add(key);
+                                list_value.add(data.getString(key));
                             }
-                            Collections.reverse(list_key);
-                            Collections.reverse(list_value);
-
-                            adapter = new AddressAdapter(SelectUserTypeActivity.this, list_value);
-                            listView.setAdapter(adapter);
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
+                        Collections.reverse(list_key);
+                        Collections.reverse(list_value);
+
+                        adapter = new AddressAdapter(SelectUserTypeActivity.this, list_value);
+                        listView.setAdapter(adapter);
                     }
-                });
+                }
+            }
+        });
     }
 
 

@@ -60,7 +60,6 @@ public class CustomerDetailActivity extends BaseActivity {
     private void initView() {
         name = (TextView) findViewById(R.id.name_tv);
         phone = (TextView) findViewById(R.id.phone_tv);
-        //点击拨打电话
         setViewClick(R.id.phone_lin);
         sex = (TextView) findViewById(R.id.choice_sex_text);
         phone_tv_icon = (ImageView) findViewById(R.id.phone_tv_icon);
@@ -73,8 +72,7 @@ public class CustomerDetailActivity extends BaseActivity {
     @Override
     public void OnViewClick(View v) {
         switch (v.getId()) {
-
-            case R.id.phone_lin:
+            case R.id.phone_lin:            //点击拨打电话
                 if (isMobileNum(phone.getText().toString().trim())) {
                     Utils.dial(this, phone.getText().toString().trim());
                 }

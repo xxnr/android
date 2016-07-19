@@ -381,7 +381,6 @@ public class AddOrderActivity extends BaseActivity implements RadioGroup.OnCheck
 
     public class OrderListAdapter extends CommonAdapter<Data.Category> {
 
-
         public OrderListAdapter(Context context, List<Data.Category> data) {
             super(context, data, R.layout.item_order_list);
         }
@@ -389,15 +388,11 @@ public class AddOrderActivity extends BaseActivity implements RadioGroup.OnCheck
         @Override
         public void convert(CommonViewHolder holder, Data.Category category) {
             if (category != null) {
-
-                if (StringUtil.checkStr(category.title)) {
-                    holder.setText(R.id.car_name, category.title);
-                }
+                holder.setText(R.id.car_name, category.title);
                 CarAdapter carAdapter = new CarAdapter(AddOrderActivity.this, category.goods);
                 UnSwipeListView car_list = holder.getView(R.id.car_list);
                 car_list.setAdapter(carAdapter);
                 WidgetUtil.setListViewHeightBasedOnChildren(car_list);
-
             }
 
         }
@@ -415,24 +410,17 @@ public class AddOrderActivity extends BaseActivity implements RadioGroup.OnCheck
         @Override
         public void convert(CommonViewHolder holder, Data.Goods goods) {
             if (goods != null) {
-
-                try {
-                    //图片
+                try {//图片
                     GlideUtils.setImageRes(AddOrderActivity.this, goods.pic, (ImageView) holder.getView(R.id.ordering_item_img));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
                 //数量
                 holder.setText(R.id.ordering_item_geshu, "X " + goods.num + "");
                 //名字
-                if (StringUtil.checkStr(goods.name)) {
-                    holder.setText(R.id.ordering_item_name, goods.name);
-                }
+                holder.setText(R.id.ordering_item_name, goods.name);
                 //Sku
-                if (StringUtil.checkStr(goods.attr)) {
-                    holder.setText(R.id.ordering_item_attr, goods.attr);
-                }
+                holder.setText(R.id.ordering_item_attr, goods.attr);
                 //是否显示阶段
                 TextView ordering_now_pri = holder.getView(R.id.ordering_now_pri);
                 TextView goods_car_deposit = holder.getView(R.id.goods_car_item_bar_deposit);
@@ -475,7 +463,6 @@ public class AddOrderActivity extends BaseActivity implements RadioGroup.OnCheck
     //附加选项
     class AdditionsAdapter extends CommonAdapter<GetshopCart.SKU.Additions> {
 
-
         public AdditionsAdapter(Context context, List<GetshopCart.SKU.Additions> data) {
             super(context, data, R.layout.item_for_additions);
         }
@@ -483,8 +470,8 @@ public class AddOrderActivity extends BaseActivity implements RadioGroup.OnCheck
         @Override
         public void convert(CommonViewHolder holder, GetshopCart.SKU.Additions additions) {
             if (additions != null) {
-                if (StringUtil.checkStr(additions.name) && StringUtil.checkStr(additions.price + "")) {
-                    holder.setText(R.id.item_additions_name, additions.name);
+                holder.setText(R.id.item_additions_name, additions.name);
+                if (StringUtil.checkStr(additions.price + "")) {
                     holder.setText(R.id.item_additions_price, "¥" + StringUtil.toTwoString(additions.price + ""));
                 }
             }

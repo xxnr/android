@@ -186,7 +186,7 @@ public class InviterSearchActivity extends BaseActivity {
             if (invitee != null) {
                 //分组 性别 姓名 是否更新订单 手机号
                 holder.getView(R.id.alpha).setVisibility(View.GONE);
-                ImageView sex_iv = (ImageView) holder.getView(R.id.item_invite_sex);
+                ImageView sex_iv = holder.getView(R.id.item_invite_sex);
 
                 if (invitee.sex) {
                     sex_iv.setBackgroundResource(R.drawable.girl_icon);
@@ -194,8 +194,8 @@ public class InviterSearchActivity extends BaseActivity {
                     sex_iv.setBackgroundResource(R.drawable.boy_icon);
                 }
 
-                TextView nickname_tv = (TextView) holder.getView(R.id.my_inviter_nickname);
-                if (!TextUtils.isEmpty(invitee.name)) {
+                TextView nickname_tv = holder.getView(R.id.my_inviter_nickname);
+                if (StringUtil.checkStr(invitee.name)) {
                     nickname_tv.setText(invitee.name);
                 } else {
                     nickname_tv.setText("好友未填姓名");
@@ -240,7 +240,7 @@ public class InviterSearchActivity extends BaseActivity {
 
                 holder.setText(R.id.item_already_customer_name, potentialCustomers.name);
 
-                ImageView sex_icon = (ImageView) holder.getView(R.id.item_already_customer_sex);
+                ImageView sex_icon = holder.getView(R.id.item_already_customer_sex);
                 if (potentialCustomers.sex) {
                     sex_icon.setBackgroundResource(R.drawable.girl_icon);
                 } else {

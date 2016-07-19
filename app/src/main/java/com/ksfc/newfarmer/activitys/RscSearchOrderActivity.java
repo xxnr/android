@@ -572,7 +572,7 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
                         RscOrderResult.OrdersEntity.SKUsEntity skUsEntity = SKUsList.get(i);
                         if (skUsEntity != null) {
                             //商品图片
-                            GlideUtils.setImageRes(RscSearchOrderActivity.this,skUsEntity.thumbnail,viewHolderChild.ordering_item_img);
+                            GlideUtils.setImageRes(RscSearchOrderActivity.this, skUsEntity.thumbnail, viewHolderChild.ordering_item_img);
                             //商品个数
                             viewHolderChild.ordering_item_geshu.setText("X " + skUsEntity.count);
                             //商品名
@@ -752,7 +752,7 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
                 }
 
                 //附加选项
-                TextView sku_addiction = (TextView) holder.getView(R.id.sku_addiction);
+                TextView sku_addiction = holder.getView(R.id.sku_addiction);
 
                 StringBuilder stringAdditions = new StringBuilder();
                 if (skus.additions != null && !skus.additions.isEmpty()) {
@@ -775,19 +775,12 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
 
 
                 //CheckBox
-                final CheckBox checkBox = (CheckBox) holder.getView(R.id.btn_surr_order_item);
+                final CheckBox checkBox = holder.getView(R.id.btn_surr_order_item);
 
                 holder.getConvertView().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
-                        if (checkBox.isChecked()) {
-                            checkedMap.put(skus.ref,
-                                    false);
-                        } else {
-                            checkedMap.put(skus.ref,
-                                    true);
-                        }
+                        checkedMap.put(skus.ref, !checkBox.isChecked());
                         //刷新适配器中的选中状态
                         notifyDataSetChanged();
                         //刷新确定按钮的选中数量
@@ -886,7 +879,7 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
         public void convert(final CommonViewHolder holder, final OfflinePayWayResult.OfflinePayTypeEntity offlinePayTypeEntity) {
             if (offlinePayTypeEntity != null) {
 
-                final CheckBox checkBox = (CheckBox) holder.getView(R.id.offline_pay_way_checkBox);
+                final CheckBox checkBox = holder.getView(R.id.offline_pay_way_checkBox);
                 checkBox.setText(offlinePayTypeEntity.name);
 
                 //如果选中，集合中的值为true 否则为false
@@ -1049,7 +1042,7 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
                 }
 
                 //附加选项
-                TextView sku_addiction = (TextView) holder.getView(R.id.sku_addiction);
+                TextView sku_addiction = holder.getView(R.id.sku_addiction);
 
                 StringBuilder stringAdditions = new StringBuilder();
                 if (skus.additions != null && !skus.additions.isEmpty()) {
@@ -1071,19 +1064,14 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
                 }
 
                 //CheckBox
-                final CheckBox checkBox = (CheckBox) holder.getView(R.id.btn_surr_order_item);
+                final CheckBox checkBox = holder.getView(R.id.btn_surr_order_item);
 
                 holder.getConvertView().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
-                        if (checkBox.isChecked()) {
-                            checkedMap.put(skus.ref,
-                                    false);
-                        } else {
-                            checkedMap.put(skus.ref,
-                                    true);
-                        }
+                        checkedMap.put(skus.ref, !checkBox.isChecked());
+
                         //刷新适配器中的选中状态
                         notifyDataSetChanged();
                         //刷新确定按钮的选中数量

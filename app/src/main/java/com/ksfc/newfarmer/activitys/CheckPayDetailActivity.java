@@ -129,10 +129,14 @@ public class CheckPayDetailActivity extends BaseActivity {
                 //支付金额
                 if (StringUtil.checkStr(payments.price)) {
                     holder.setText(R.id.pay_price, "¥" + payments.price);
+                }else {
+                    holder.setText(R.id.pay_price,"");
                 }
                 //支付时间
                 if (StringUtil.checkStr(payments.datePaid)) {
                     holder.setText(R.id.order_pay_time, DateFormatUtils.convertTime(payments.datePaid));
+                }else {
+                    holder.setText(R.id.order_pay_time, "");
                 }
                 //支付结果
                 if (payments.payStatus == 1) {

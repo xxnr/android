@@ -1,7 +1,7 @@
 /**
  *
  */
-package com.ksfc.newfarmer.adapter;
+package com.ksfc.newfarmer.common;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -24,6 +24,11 @@ public class CommonFragmentPagerAdapter extends FragmentPagerAdapter {
         super(fm);
         this.fragments = fragments;
         this.titles = titles;
+    }
+
+    public CommonFragmentPagerAdapter(FragmentManager fm, List<Fragment> fragments) {
+        super(fm);
+        this.fragments = fragments;
     }
 
     @Override

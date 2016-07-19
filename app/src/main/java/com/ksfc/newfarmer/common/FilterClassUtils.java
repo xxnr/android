@@ -56,6 +56,8 @@ public class FilterClassUtils {
         UnToastApis.add(ApiType.SAVE_CONSIGNEE_INFO);
         UnToastApis.add(ApiType.SURE_GET_GOODS);
         UnToastApis.add(ApiType.GET_RECOMMEND_INVITER);
+        UnToastApis.add(ApiType.GET_INVITEE_ORDER_BY_NAME);
+        UnToastApis.add(ApiType.GET_POTENTIAL_CUSTOMER_LIST_NEW);
 
         return UnToastApis;
     }

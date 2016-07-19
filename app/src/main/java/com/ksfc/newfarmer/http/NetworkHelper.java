@@ -36,6 +36,7 @@ public class NetworkHelper {
 
     public static final MediaType MEDIA_TYPE = MediaType.parse("application/json; charset=utf-8");
     private static final int CONNECTION_TIMEOUT = 20 * 1000;
+    private static final int READ_TIMEOUT= 20 * 1000;
 
     private static final NetworkHelper mNetworkHelper = new NetworkHelper();
     private static final OkHttpClient mOkHttpClient;
@@ -45,6 +46,7 @@ public class NetworkHelper {
         mGson = new Gson();
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.connectTimeout(CONNECTION_TIMEOUT, TimeUnit.MILLISECONDS);
+        builder.readTimeout(READ_TIMEOUT,TimeUnit.MILLISECONDS);
         try {
             builder.sslSocketFactory(setCertificates(App.getApp().getAssets().open("xxnr.cer")));
         } catch (Exception e) {
