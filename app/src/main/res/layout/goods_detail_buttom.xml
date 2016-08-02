@@ -5,6 +5,12 @@
     android:background="@color/white"
     android:orientation="vertical">
 
+
+    <View
+        android:id="@+id/goods_bottom_div"
+        android:layout_width="match_parent"
+        android:layout_height="70dp" />
+
     <LinearLayout
         android:id="@+id/good_detail_buttom_lin"
         android:layout_width="match_parent"
@@ -45,11 +51,11 @@
             </LinearLayout>
 
             <TextView
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
                 android:layout_width="1dp"
-                android:background="@color/deep1_gray"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/deep1_gray" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -78,11 +84,11 @@
             </LinearLayout>
 
             <TextView
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
                 android:layout_width="1dp"
-                android:background="@color/deep1_gray"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/deep1_gray" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -113,7 +119,7 @@
 
         </LinearLayout>
 
-        <include layout="@layout/line_lay"/>
+        <include layout="@layout/line_lay" />
 
 
     </LinearLayout>

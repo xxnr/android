@@ -4,14 +4,12 @@ import net.yangentao.util.PreferenceUtil;
 
 import com.ksfc.newfarmer.App;
 
-import net.yangentao.util.msg.MsgCenter;
-import net.yangentao.util.msg.MsgListener;
 
 
-import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.beans.LoginResult;
+import com.ksfc.newfarmer.event.MainTabSelectEvent;
 import com.ksfc.newfarmer.utils.Constants;
 import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.ScreenUtil;
@@ -32,6 +30,10 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.RelativeLayout;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 /**
  * 类名称：MainActivity 类描述：程序的主页面
@@ -64,6 +66,7 @@ public class MainActivity extends TabActivity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
         instance = this;
         // 屏幕竖屏
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -82,21 +85,23 @@ public class MainActivity extends TabActivity implements View.OnClickListener {
         Tab tab = (Tab) getIntent().getSerializableExtra("id");
         if (tab != null) {
             setRadioGroupCheckById(tab);
-        }else {
+        } else {
             setRadioGroupCheckById(Tab.INDEX);
         }
-        MsgCenter.addListener(new MsgListener() {
-            @Override
-            public void onMsg(Object sender, String msg, Object... args) {
-                Tab tab = Tab.INDEX;
-                try {
-                    tab = (Tab) args[0];
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                setRadioGroupCheckById(tab);
-            }
-        }, MsgID.MainActivity_select_tab);
+    }
+
+    /**
+     * 首页切换tab
+     *
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void mainTabChange(MainTabSelectEvent event) {
+        Tab tab = event.tab;
+        if (tab == null) {
+            tab = Tab.INDEX;
+        }
+        setRadioGroupCheckById(tab);
     }
 
     public void initView() {
@@ -225,5 +230,11 @@ public class MainActivity extends TabActivity implements View.OnClickListener {
             return true;
         }
         return super.dispatchKeyEvent(event);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

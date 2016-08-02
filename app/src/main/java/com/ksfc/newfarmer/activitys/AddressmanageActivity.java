@@ -17,7 +17,6 @@ import com.ksfc.newfarmer.beans.AddressList.Address;
 import com.ksfc.newfarmer.beans.LoginResult.UserInfo;
 import com.ksfc.newfarmer.widget.dialog.CustomDialog;
 import com.ksfc.newfarmer.utils.ExpandViewTouch;
-import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
 
 import android.content.Context;
@@ -38,7 +37,6 @@ import android.widget.RelativeLayout;
 public class AddressmanageActivity extends BaseActivity {
     private ListView address_list;
     HashMap<String, Integer> map = new HashMap<>();//创建一个map集合用于存放  是否是默认地址
-    private final int reqestcode = 1;
     private AddressAdapter adapter;
     private List<AddressList.Address> addList;
     private RelativeLayout none_address_rel;
@@ -69,15 +67,11 @@ public class AddressmanageActivity extends BaseActivity {
         setRightTextViewListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                bundle.putInt("addressCount", addressCount);
-                IntentUtil.startActivityForResult(AddressmanageActivity.this, AddAddressActivity.class,
-                        reqestcode, bundle);
+                Intent callingIntent = AddAddressActivity.getCallingIntent(AddressmanageActivity.this, addressCount);
+                startActivity(callingIntent);
             }
         });
     }
-
-
     //获得地址列表
 
     private void getAddressList() {
@@ -234,7 +228,6 @@ public class AddressmanageActivity extends BaseActivity {
                 btn_check_item.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        showProgressDialog();
                         RequestParams params = new RequestParams();
                         if (isLogin()) {
                             params.put("userId", Store.User.queryMe().userid);

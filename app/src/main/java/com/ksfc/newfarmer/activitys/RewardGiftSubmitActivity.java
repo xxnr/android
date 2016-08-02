@@ -12,7 +12,8 @@ import android.widget.TextView;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.common.CompleteReceiver;
-import com.ksfc.newfarmer.common.GlideHelper;
+import com.ksfc.newfarmer.common.PicassoHelper;
+import com.ksfc.newfarmer.event.RewardConsumeEvent;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.remoteapi.RemoteApi;
 import com.ksfc.newfarmer.protocol.Request;
@@ -22,6 +23,9 @@ import com.ksfc.newfarmer.beans.GiftDetailResult;
 import com.ksfc.newfarmer.beans.RSCStateInfoResult;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
+
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -117,7 +121,7 @@ public class RewardGiftSubmitActivity extends BaseActivity {
                 } else {
                     giftSubmitEmptyLl.setVisibility(View.GONE);
                     giftSubmitLl.setVisibility(View.VISIBLE);
-                    GlideHelper.setImageRes(RewardGiftSubmitActivity.this,gift.thumbnail,giftImgIv);
+                    PicassoHelper.setImageRes(RewardGiftSubmitActivity.this, gift.thumbnail, giftImgIv);
                     giftNameTv.setText(StringUtil.checkStr(gift.name) ? gift.name : "");
                     giftPriceTv.setText(String.valueOf(gift.points));
 
@@ -186,6 +190,7 @@ public class RewardGiftSubmitActivity extends BaseActivity {
                 }
             }
         } else if (ApiType.ADD_GIFT_ORDER == req.getApi()) {
+            EventBus.getDefault().post(new RewardConsumeEvent());
             AddGiftOrderResult reqData = (AddGiftOrderResult) req.getData();
             Bundle bundle = new Bundle();
             bundle.putSerializable("giftOrder", reqData.giftOrder);

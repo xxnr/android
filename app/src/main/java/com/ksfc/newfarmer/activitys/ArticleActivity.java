@@ -1,6 +1,7 @@
 package com.ksfc.newfarmer.activitys;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -11,11 +12,11 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
+import com.ksfc.newfarmer.beans.InformationResult;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.StringUtil;
@@ -30,9 +31,19 @@ import com.umeng.socialize.media.UMImage;
 
 import net.yangentao.util.NetUtil;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
+
 
 @SuppressLint("SetJavaScriptEnabled")
 public class ArticleActivity extends BaseActivity {
+    private InformationResult.DatasEntity.ItemsEntity itemsEntity;
+
     private UMImage image;      //分享内容的图片
     private String urlImage;    //分享内容的图片
     private String urlTitle;    //分享内容的标题
@@ -40,7 +51,24 @@ public class ArticleActivity extends BaseActivity {
     private String shareUrl;        //分享内容的url
     private String newsAbstract;    //分享内容的摘要
     private PopupWindow popupWindow;
-    private RelativeLayout share_dialog_bg;//分享dialog的背景
+
+    public static final String ARG_PARAM1 = "param1";
+    public static final String ARG_SHARE_URL = "param2";
+    public static final String ARG_URL_IMG = "param3";
+    public static final String ARG_URL_TITLE = "param4";
+    public static final String ARG_ABSTRACT = "param5";
+
+    @BindView(R.id.webView)
+    WebView web;
+    @BindView(R.id.share_dialog_bg)
+    View share_dialog_bg;
+
+    public static Intent getCallingIntent(Context context, InformationResult.DatasEntity.ItemsEntity itemsEntity) {
+        Intent callingIntent = new Intent(context, ArticleActivity.class);
+        callingIntent.putExtra(ARG_PARAM1, itemsEntity);
+        return callingIntent;
+    }
+
 
     //友盟分享的回调
     private UMShareListener umShareListener = new UMShareListener() {
@@ -69,34 +97,68 @@ public class ArticleActivity extends BaseActivity {
     @Override
     public int getLayout() {
         // TODO Auto-generated method stub
-        return R.layout.activity_information_detail;
+        return R.layout.activity_web_view;
     }
 
 
     @Override
     public void OnActCreate(Bundle savedInstanceState) {
+        ButterKnife.bind(this);
         setTitle("资讯详情");
-        url = getIntent().getStringExtra("articleUrl");
-        shareUrl = getIntent().getStringExtra("shareUrl");
-        urlImage = getIntent().getStringExtra("urlImage");
-        urlTitle = getIntent().getStringExtra("urlTitle");
-        newsAbstract = getIntent().getStringExtra("newsAbstract");
+        initView();
+        itemsEntity = ((InformationResult.DatasEntity.ItemsEntity) getIntent().getSerializableExtra(ARG_PARAM1));
+        if (itemsEntity != null) {
+            url = itemsEntity.url;
+            shareUrl = itemsEntity.shareurl;
+            urlImage = itemsEntity.image;
+            urlTitle = itemsEntity.title;
+            newsAbstract = itemsEntity.newsabstract;
+            //加载url内容
+            if (StringUtil.checkStr(url) && NetUtil.isConnected(this)) {
+                RndLog.d(TAG, url);
+                showProgressDialog();
+                web.loadUrl(url);
+            } else {
+                showToast("网络未连接");
+            }
 
-        //默认分享的标题 和图片 摘要
-        if (!StringUtil.checkStr(urlTitle)) {
-            urlTitle = "新农资讯";
+            //分享content
+            if (!StringUtil.checkStr(urlTitle)) {
+                urlTitle = "新农资讯";
+            }
+            if (StringUtil.checkStr(urlImage)) {
+                //验证urlImage是否有效
+                Observable
+                        .create(new Observable.OnSubscribe<Boolean>() {
+                            @Override
+                            public void call(Subscriber<? super Boolean> subscriber) {
+                                subscriber.onNext(NetUtil.isValid(urlImage));
+                            }
+                        })
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .compose(this.<Boolean>bindToLifecycle())
+                        .subscribe(new Action1<Boolean>() {
+                            @Override
+                            public void call(Boolean aBoolean) {
+                                if (aBoolean) {
+                                    image = new UMImage(ArticleActivity.this, urlImage);
+                                } else {
+                                    image = new UMImage(ArticleActivity.this, R.drawable.share_app_icon);
+                                }
+                            }
+                        });
+            } else {
+                image = new UMImage(ArticleActivity.this, R.drawable.share_app_icon);
+            }
+            if (!StringUtil.checkStr(newsAbstract)) {
+                newsAbstract = "分享自@新新农人";
+            }
         }
-        if (StringUtil.checkStr(urlImage)) {
-            image = new UMImage(ArticleActivity.this, urlImage);
-        } else {
-            image = new UMImage(ArticleActivity.this, R.drawable.share_app_icon);
-        }
-        if (!StringUtil.checkStr(newsAbstract)) {
-            newsAbstract = "分享自@新新农人";
-        }
-        share_dialog_bg = (RelativeLayout) findViewById(R.id.share_dialog_bg);
 
-        WebView web = (WebView) findViewById(R.id.webView);
+    }
+
+    private void initView() {
         // 允许运行js脚本
         web.getSettings().setJavaScriptEnabled(true);
         // 如果web内出现链接 依旧由当前webVIew加载
@@ -122,14 +184,6 @@ public class ArticleActivity extends BaseActivity {
                 });
             }
         });
-        if (StringUtil.checkStr(url)&& NetUtil.isConnected(this)) {
-            RndLog.d(TAG, url);
-            showProgressDialog();
-            web.loadUrl(url);
-        }else {
-            showToast("网络未连接");
-        }
-
     }
 
     @Override

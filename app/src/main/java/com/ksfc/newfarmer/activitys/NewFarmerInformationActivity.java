@@ -4,8 +4,8 @@ import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -18,7 +18,6 @@ import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.common.CommonAdapter;
 import com.ksfc.newfarmer.common.CommonViewHolder;
-import com.ksfc.newfarmer.common.GlideHelper;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
@@ -29,9 +28,12 @@ import com.ksfc.newfarmer.utils.ExpandViewTouch;
 import com.ksfc.newfarmer.common.PullToRefreshHelper;
 import com.ksfc.newfarmer.utils.ScreenUtil;
 
+import com.ksfc.newfarmer.utils.StringUtil;
+import com.ksfc.newfarmer.utils.Utils;
 import com.ksfc.newfarmer.widget.LoadingFooter;
+import com.squareup.picasso.Picasso;
 
-public class NewFarmerInfomationActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener {
+public class NewFarmerInformationActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener {
 
     private PullToRefreshListView listView;
     private InformationAdapter adapter;
@@ -39,6 +41,7 @@ public class NewFarmerInfomationActivity extends BaseActivity implements PullToR
     private ImageView return_top;
 
     private LoadingFooter mLoadingFooter;
+
 
     @Override
     public int getLayout() {
@@ -71,17 +74,10 @@ public class NewFarmerInfomationActivity extends BaseActivity implements PullToR
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 ItemsEntity entity = adapter.getItem(position);
-                Intent intent = new Intent(NewFarmerInfomationActivity.this,
-                        ArticleActivity.class);
-                if (!TextUtils.isEmpty(entity.url)) {
-                    intent.putExtra("articleUrl", entity.url);
-                    intent.putExtra("shareUrl", entity.shareurl);
-                    intent.putExtra("urlImage", entity.image);
-                    intent.putExtra("urlTitle", entity.title);
-                    intent.putExtra("newsAbstract", entity.newsabstract);
+                if (entity!=null){
+                    Intent intent = ArticleActivity.getCallingIntent(NewFarmerInformationActivity.this, entity);
                     startActivity(intent);
                 }
-
             }
         });
 
@@ -115,7 +111,7 @@ public class NewFarmerInfomationActivity extends BaseActivity implements PullToR
                 if (data.datas != null) {
                     List<ItemsEntity> list = data.datas.items;
                     if (list != null && !list.isEmpty()) {
-                        mLoadingFooter.setSize(page,list.size());
+                        mLoadingFooter.setSize(page, list.size());
                         if (page == 1) {
                             if (adapter == null) {
                                 adapter = new InformationAdapter(this, list);
@@ -130,7 +126,7 @@ public class NewFarmerInfomationActivity extends BaseActivity implements PullToR
                             }
                         }
                     } else {
-                        mLoadingFooter.setSize(page,0);
+                        mLoadingFooter.setSize(page, 0);
 
                         if (page == 1) {
                             if (adapter != null) {
@@ -167,7 +163,16 @@ public class NewFarmerInfomationActivity extends BaseActivity implements PullToR
         public void convert(CommonViewHolder holder, ItemsEntity itemsEntity) {
             if (itemsEntity != null) {
                 //图片
-                GlideHelper.setBroadImageRes(NewFarmerInfomationActivity.this,itemsEntity.image,(ImageView) holder.getView(R.id.information_image));
+                if (StringUtil.checkStr(itemsEntity.image)){
+                    Picasso.with(NewFarmerInformationActivity.this)
+                            .load(itemsEntity.image)
+                            .placeholder(R.drawable.zhanweitu_wide)
+                            .config(Bitmap.Config.RGB_565)
+                            .error(R.drawable.error)
+                            .resize(Utils.dip2px(NewFarmerInformationActivity.this,100),Utils.dip2px(NewFarmerInformationActivity.this,75))
+                            .into((ImageView) holder.getView(R.id.information_image));
+                }
+
                 holder.setText(R.id.information_title, itemsEntity.title);
                 //格式化时间
                 String time = DateFormatUtils.convertTime(itemsEntity.datecreated);
@@ -193,7 +198,6 @@ public class NewFarmerInfomationActivity extends BaseActivity implements PullToR
                         return_top.setVisibility(View.VISIBLE);
 
                         //加载更多
-
                         if (mLoadingFooter.getState() == LoadingFooter.State.Idle) {
                             mLoadingFooter.setState(LoadingFooter.State.Loading);
                             page++;
@@ -212,7 +216,7 @@ public class NewFarmerInfomationActivity extends BaseActivity implements PullToR
         public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
             // 当开始滑动且ListView底部的Y轴点超出屏幕最大范围时，显示或隐藏顶部按钮
             if (getScrollY() >= ScreenUtil
-                    .getScreenHeight(NewFarmerInfomationActivity.this)) {
+                    .getScreenHeight(NewFarmerInformationActivity.this)) {
                 return_top.setVisibility(View.VISIBLE);
             }
         }

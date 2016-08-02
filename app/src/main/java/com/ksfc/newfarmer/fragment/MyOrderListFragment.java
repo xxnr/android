@@ -24,9 +24,8 @@ import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.jakewharton.rxbinding.view.RxView;
-import com.ksfc.newfarmer.BaseFragment;
-import com.ksfc.newfarmer.MsgID;
-import com.ksfc.newfarmer.common.GlideHelper;
+import com.ksfc.newfarmer.EventBaseFragment;
+import com.ksfc.newfarmer.common.PicassoHelper;
 import com.ksfc.newfarmer.common.LoadMoreScrollListener;
 import com.ksfc.newfarmer.common.OrderHelper;
 import com.ksfc.newfarmer.R;
@@ -39,6 +38,8 @@ import com.ksfc.newfarmer.activitys.PickUpStateActivity;
 import com.ksfc.newfarmer.common.CommonAdapter;
 import com.ksfc.newfarmer.common.CommonViewHolder;
 import com.ksfc.newfarmer.db.Store;
+import com.ksfc.newfarmer.event.OrderListRefresh;
+import com.ksfc.newfarmer.event.OrderListSwipeEvent;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
@@ -53,8 +54,9 @@ import com.ksfc.newfarmer.widget.RecyclerImageView;
 import com.ksfc.newfarmer.widget.WidgetUtil;
 
 import net.yangentao.util.PreferenceUtil;
-import net.yangentao.util.msg.MsgCenter;
-import net.yangentao.util.msg.MsgListener;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -69,7 +71,7 @@ import rx.functions.Action1;
 /**
  * Created by HePeng on 2015/12/3.
  */
-public class MyOrderListFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener {
+public class MyOrderListFragment extends EventBaseFragment implements PullToRefreshBase.OnRefreshListener {
 
     private static final String ARG_PARAM1 = "param1";
 
@@ -143,41 +145,6 @@ public class MyOrderListFragment extends BaseFragment implements PullToRefreshBa
         if (TYPE == 0) {
             showProgressDialog();
         }
-        //订单支付成功时刷新
-        MsgCenter.addListener(new MsgListener() {
-            @Override
-            public void onMsg(Object sender, String msg, Object... args) {
-                page = 1;
-                getData(page);
-            }
-        }, MsgID.Pay_success);
-
-
-        //订单状态改变时刷新
-        MsgCenter.addListener(new MsgListener() {
-            @Override
-            public void onMsg(Object sender, String msg, Object... args) {
-                page = 1;
-                getData(page);
-            }
-        }, MsgID.order_Change);
-
-        //滑动时刷新
-        MsgCenter.addListener(new MsgListener() {
-            @Override
-            public void onMsg(Object sender, String msg, Object... args) {
-                try {
-                    if (((Integer) args[0]) == TYPE) {
-                        showProgressDialog();
-                        page = 1;
-                        getData(page);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }, MsgID.swipe_reFlash);
 
         //设置classId
         PreferenceUtil pu = new PreferenceUtil(activity, "config");
@@ -187,6 +154,31 @@ public class MyOrderListFragment extends BaseFragment implements PullToRefreshBa
         getData(page);
         return view;
     }
+
+    /**
+     * 滑动时刷新
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void SwpieChange(OrderListSwipeEvent event){
+        if (event.getPosition()== TYPE) {
+            showProgressDialog();
+            page = 1;
+            getData(page);
+        }
+    }
+
+    /**
+     * 滑动时刷新
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void SwpieChange(OrderListRefresh event){
+        page = 1;
+        getData(page);
+    }
+
+
 
     /**
      * 数据请求
@@ -548,7 +540,7 @@ public class MyOrderListFragment extends BaseFragment implements PullToRefreshBa
 
                     ViewHolderChild viewHolderChild = new ViewHolderChild(rootView);
                     //商品图片
-                    GlideHelper.setImageRes(MyOrderListFragment.this,SKUsList.get(i).thumbnail,viewHolderChild.ordering_item_img);
+                    PicassoHelper.setImageRes(MyOrderListFragment.this,SKUsList.get(i).thumbnail,viewHolderChild.ordering_item_img);
                     //商品个数
                     viewHolderChild.ordering_item_geshu.setText("X " + SKUsList.get(i).count + "");
                     //商品名
@@ -622,7 +614,7 @@ public class MyOrderListFragment extends BaseFragment implements PullToRefreshBa
                     ViewHolderChild viewHolderChild = new ViewHolderChild(rootView);
                     //商品图片
                     if (StringUtil.checkStr(goodsList.get(i).thumbnail)) {
-                        GlideHelper.setImageRes(MyOrderListFragment.this,goodsList.get(i).thumbnail,viewHolderChild.ordering_item_img);
+                        PicassoHelper.setImageRes(MyOrderListFragment.this,goodsList.get(i).thumbnail,viewHolderChild.ordering_item_img);
                     }
                     //商品个数
                     viewHolderChild.ordering_item_geshu.setText("X " + goodsList.get(i).count + "");

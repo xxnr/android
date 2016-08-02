@@ -51,5 +51,6 @@ public class CommonFragmentPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
+
     }
 }

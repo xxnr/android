@@ -200,7 +200,7 @@ public class EposActivity extends BaseActivity {
                     public void run() {
                         try {
                             EposServiceManager.getInstance().mUmsMposService.pay(args, new PayOrderResultListener());
-                        } catch (RemoteException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }

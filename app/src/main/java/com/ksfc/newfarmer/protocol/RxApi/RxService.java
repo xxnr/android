@@ -24,6 +24,7 @@ public class RxService {
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 
+
     private RxService() {
         //construct
     }

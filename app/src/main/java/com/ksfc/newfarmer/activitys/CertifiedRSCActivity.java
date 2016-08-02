@@ -8,9 +8,9 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.ksfc.newfarmer.BaseActivity;
-import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.db.Store;
+import com.ksfc.newfarmer.event.UserTypeChangeEvent;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
@@ -21,7 +21,8 @@ import com.ksfc.newfarmer.utils.MaxLengthWatcher;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.utils.Utils;
 
-import net.yangentao.util.msg.MsgCenter;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -202,13 +203,12 @@ public class CertifiedRSCActivity extends BaseActivity {
         if (req.getApi() == ApiType.ADD_RSC_INFO) {
             if (req.getData().getStatus().equals("1000")) {
                 showToast("提交成功");
-
                 LoginResult.UserInfo me = Store.User.queryMe();
                 if (me != null) {
                     me.RSCInfoVerifing = true;
                     Store.User.saveMe(me);
-                    MsgCenter.fireNull(MsgID.UPDATE_USER_TYPE, "update");
                 }
+                EventBus.getDefault().post(new UserTypeChangeEvent());
                 finish();
             }
         } else if (req.getApi() == ApiType.GET_RSC_INFO) {

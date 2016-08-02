@@ -8,8 +8,8 @@ import android.view.View;
 import android.view.WindowManager;
 
 import com.ksfc.newfarmer.BaseActivity;
-import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
+import com.ksfc.newfarmer.event.RewardShopGuideEvent;
 import com.ksfc.newfarmer.fragment.ActivityListFragment;
 import com.ksfc.newfarmer.fragment.IntegralTallGuideFragment;
 import com.ksfc.newfarmer.fragment.SignSuccessFragment;
@@ -17,8 +17,10 @@ import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.utils.ActivityAnimationUtils;
 import com.ksfc.newfarmer.utils.ScreenUtil;
 
-import net.yangentao.util.msg.MsgCenter;
-import net.yangentao.util.msg.MsgListener;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,6 +49,7 @@ public class FloatingLayerActivity extends BaseActivity {
     @Override
     public void OnActCreate(Bundle savedInstanceState) {
         ButterKnife.bind(this);
+        EventBus.getDefault().register(this);
         initView();
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -63,22 +66,6 @@ public class FloatingLayerActivity extends BaseActivity {
                         unLogin_bar.setVisibility(View.VISIBLE);
                     }
                     changFragment(1, fragmentTransaction);
-                    //浮层引导页切换通知
-                    MsgCenter.addListener(new MsgListener() {
-                        @Override
-                        public void onMsg(Object sender, String msg, Object... args) {
-                            if (args != null) {
-                                if (fragmentManager == null) {
-                                    fragmentManager = getSupportFragmentManager();
-                                }
-                                FragmentTransaction transaction = fragmentManager.beginTransaction();
-                                changFragment((int) args[0], transaction);
-                                transaction.commitAllowingStateLoss();
-                            } else {
-                                finish();
-                            }
-                        }
-                    }, MsgID.Integral_Guide_Change);
                     break;
                 case SIGN_SUCCESS://加载签到成功动画
                     SignSuccessFragment fragment = new SignSuccessFragment();
@@ -103,6 +90,19 @@ public class FloatingLayerActivity extends BaseActivity {
         } else {
             mStatus_bar.setVisibility(View.GONE);
         }
+    }
+
+    /**
+     * 积分商城guild切换
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void changeRewardShopGuide(RewardShopGuideEvent event) {
+        if (fragmentManager == null) {
+            fragmentManager = getSupportFragmentManager();
+        }
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        changFragment(event.page, transaction);
+        transaction.commitAllowingStateLoss();
     }
 
     @Override
@@ -137,5 +137,11 @@ public class FloatingLayerActivity extends BaseActivity {
     public void finish() {
         super.finish();
         ActivityAnimationUtils.setActivityAnimation(this, R.anim.animation_none, R.anim.animation_none);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

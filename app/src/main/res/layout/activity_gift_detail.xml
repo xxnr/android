@@ -1,127 +1,157 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/base_activity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical">
 
-    <include layout="@layout/title_lay" />
-
-
-    <ScrollView
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:descendantFocusability="blocksDescendants"
-        android:scrollbars="none">
+        android:layout_weight="1">
+
+        <com.ksfc.newfarmer.widget.ObservableScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:descendantFocusability="blocksDescendants"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/gift_detail_img"
+                    android:layout_width="match_parent"
+                    android:layout_height="360dp"
+                    android:scaleType="centerCrop" />
+
+                <include layout="@layout/line_lay" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:paddingTop="10dp">
+
+                    <TextView
+                        android:id="@+id/gift_detail_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLines="2"
+                        android:text="" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/gift_integral_icon" />
+
+                        <TextView
+                            android:id="@+id/gift_detail_integral_tv"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="9dp"
+                            android:layout_weight="1"
+                            android:text=""
+                            android:textColor="@color/orange_goods_price" />
+
+
+                        <TextView
+                            android:id="@+id/gift_detail_able_integral_text_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="可用积分"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/gift_detail_able_integral_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="9dp"
+                            android:text=""
+                            android:textColor="@color/orange_goods_price" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/gift_detail_market_price_ll"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="7dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="市场价"
+                            android:textColor="@color/deep_gray"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/gift_detail_market_price_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="9dp"
+                            android:text=""
+                            android:textColor="@color/deep_gray"
+                            android:textSize="12sp" />
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <include layout="@layout/div_view" />
+
+                <WebView
+                    android:id="@+id/gift_detail_webView"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:background="@color/white"
+                    android:scrollbars="none"
+                    tools:ignore="WebViewLayout" />
+            </LinearLayout>
+
+        </com.ksfc.newfarmer.widget.ObservableScrollView>
+
+        <View
+            android:id="@+id/title_bg_down"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:background="@drawable/goods_title_gray_bar" />
+
+        <View
+            android:id="@+id/title_bg_up"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:background="@color/green" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/gift_detail_img"
+            <View
+                android:id="@+id/title_div"
                 android:layout_width="match_parent"
-                android:layout_height="360dp"
-                android:scaleType="centerCrop" />
+                android:layout_height="25dp" />
 
-            <include layout="@layout/line_lay" />
+            <include layout="@layout/title_lay" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:orientation="vertical"
-                android:paddingBottom="8dp"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:paddingTop="10dp">
-
-                <TextView
-                    android:id="@+id/gift_detail_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:maxLines="2"
-                    android:text="" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:gravity="center_vertical">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/gift_integral_icon" />
-
-                    <TextView
-                        android:id="@+id/gift_detail_integral_tv"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="9dp"
-                        android:layout_weight="1"
-                        android:text=""
-                        android:textColor="@color/orange_goods_price" />
-
-
-                    <TextView
-                        android:id="@+id/gift_detail_able_integral_text_tv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="可用积分"
-                        android:textSize="12sp" />
-
-                    <TextView
-                        android:id="@+id/gift_detail_able_integral_tv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="9dp"
-                        android:text=""
-                        android:textColor="@color/orange_goods_price" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/gift_detail_market_price_ll"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="7dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="市场价"
-                        android:textColor="@color/deep_gray"
-                        android:textSize="12sp" />
-
-                    <TextView
-                        android:id="@+id/gift_detail_market_price_tv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="9dp"
-                        android:text=""
-                        android:textColor="@color/deep_gray"
-                        android:textSize="12sp" />
-
-                </LinearLayout>
-            </LinearLayout>
-
-            <include layout="@layout/div_view" />
-
-            <WebView
-                android:id="@+id/gift_detail_webView"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:background="@color/white"
-                android:scrollbars="none"
-                tools:ignore="WebViewLayout" />
         </LinearLayout>
-
-    </ScrollView>
+    </FrameLayout>
 
 
     <LinearLayout
@@ -130,7 +160,9 @@
         android:layout_gravity="bottom"
         android:background="@color/white"
         android:orientation="vertical">
+
         <include layout="@layout/line_lay" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"

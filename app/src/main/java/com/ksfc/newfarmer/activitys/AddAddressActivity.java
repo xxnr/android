@@ -16,6 +16,7 @@ import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.BaseViewUtils;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -48,21 +49,26 @@ public class AddAddressActivity extends BaseActivity {
     private CheckBox default_address;//是否是默认地址
 
     private int count = -1;//之前是否有地址
+    public static final String ARG_PARAM1 = "param1";
 
     @Override
     public int getLayout() {
         return R.layout.activity_add_edit_address;
     }
 
+
+    public static Intent getCallingIntent(Context context, int addressCount) {
+        Intent callingIntent = new Intent(context, AddAddressActivity.class);
+        callingIntent.putExtra(ARG_PARAM1, addressCount);
+        return callingIntent;
+    }
+
+
     @Override
     public void OnActCreate(Bundle savedInstanceState) {
         setTitle("新增收货地址");
         initView();
-
-        Bundle bundle = getIntent().getExtras();
-        if (bundle != null) {
-            count = bundle.getInt("addressCount");
-        }
+        count = getIntent().getIntExtra(ARG_PARAM1, -1);
         //如果新加地址是第一个 ，默认选中默认
         if (count == 0) {
             UserInfo userInfo = Store.User.queryMe();
@@ -87,7 +93,7 @@ public class AddAddressActivity extends BaseActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 //关闭软键盘
-                BaseViewUtils.hideSoftInput(AddAddressActivity.this,room_edit);
+                BaseViewUtils.hideSoftInput(AddAddressActivity.this, room_edit);
                 return (event.getKeyCode() == KeyEvent.KEYCODE_ENTER);
             }
         });

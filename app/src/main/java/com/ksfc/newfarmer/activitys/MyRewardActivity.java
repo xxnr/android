@@ -1,6 +1,7 @@
 package com.ksfc.newfarmer.activitys;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -18,9 +19,9 @@ import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.common.CommonAdapter;
 import com.ksfc.newfarmer.common.CommonViewHolder;
 import com.ksfc.newfarmer.common.CommonFunction;
-import com.ksfc.newfarmer.common.GlideHelper;
 import com.ksfc.newfarmer.common.LoadMoreScrollListener;
 import com.ksfc.newfarmer.db.Store;
+import com.ksfc.newfarmer.event.SignEvent;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.remoteapi.RemoteApi;
 import com.ksfc.newfarmer.protocol.Request;
@@ -32,8 +33,10 @@ import com.ksfc.newfarmer.utils.DateFormatUtils;
 import com.ksfc.newfarmer.common.PullToRefreshHelper;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.LoadingFooter;
+import com.squareup.picasso.Picasso;
 
-import net.yangentao.util.msg.MsgCenter;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -143,7 +146,11 @@ public class MyRewardActivity extends BaseActivity implements PullToRefreshBase.
                     holder.signButtonTv.setText(isSign ? "已签到" : "签到");
                     setSignMsg(holder.signDescriptionTv, isSign, consecutiveTimes);
                     //加载图片
-                    GlideHelper.setImageRes(MyRewardActivity.this,data.datas.sign.large_imgUrl,holder.signStateImgIv);
+                    Picasso
+                            .with(MyRewardActivity.this)
+                            .load(MsgID.IP + data.datas.sign.large_imgUrl)
+                            .config(Bitmap.Config.RGB_565)
+                            .into(holder.signStateImgIv);
                 } else {
                     setSignMsg(holder.signDescriptionTv, false, 0);
                 }
@@ -191,7 +198,7 @@ public class MyRewardActivity extends BaseActivity implements PullToRefreshBase.
             }
 
         } else if (ApiType.SIGN_IN_POINT == req.getApi()) {
-            MsgCenter.fireNull(MsgID.IS_Signed);
+            EventBus.getDefault().post(new SignEvent());
             //签到成功后，重新请求数据
             PointResult reqData = (PointResult) req.getData();
             //展示签到成功的页面

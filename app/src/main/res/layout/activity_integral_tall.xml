@@ -6,6 +6,7 @@
     <include layout="@layout/title_lay" />
 
     <FrameLayout
+        android:id="@+id/integral_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 

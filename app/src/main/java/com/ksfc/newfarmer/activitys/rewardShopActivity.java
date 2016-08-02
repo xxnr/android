@@ -7,7 +7,6 @@ package com.ksfc.newfarmer.activitys;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
@@ -21,11 +20,13 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.ksfc.newfarmer.BaseActivity;
-import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.common.CommonAdapter;
 import com.ksfc.newfarmer.common.CommonViewHolder;
-import com.ksfc.newfarmer.common.GlideHelper;
+import com.ksfc.newfarmer.common.PicassoHelper;
+import com.ksfc.newfarmer.event.IsLoginEvent;
+import com.ksfc.newfarmer.event.RewardConsumeEvent;
+import com.ksfc.newfarmer.event.SignEvent;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.remoteapi.RemoteApi;
 import com.ksfc.newfarmer.protocol.Request;
@@ -42,8 +43,10 @@ import com.ksfc.newfarmer.widget.PtrHeaderView;
 import com.ksfc.newfarmer.widget.UnSwipeGridView;
 
 import net.yangentao.util.PreferenceUtil;
-import net.yangentao.util.msg.MsgCenter;
-import net.yangentao.util.msg.MsgListener;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,7 +91,6 @@ public class RewardShopActivity extends BaseActivity {
     private int score = 0;
     private int count;
     private boolean isShow = false;
-    private Handler handler = new Handler();
 
     @Override
     public int getLayout() {
@@ -98,6 +100,7 @@ public class RewardShopActivity extends BaseActivity {
     @Override
     public void OnActCreate(Bundle savedInstanceState) {
         ButterKnife.bind(this);
+        EventBus.getDefault().register(this);
         setTitle("积分商城");
         initView();
         if (isLogin()) {
@@ -109,23 +112,41 @@ public class RewardShopActivity extends BaseActivity {
         }
         showProgressDialog();
         RemoteApi.getGiftCategories(this);
-        //监听登录事件
-        MsgCenter.addListener(new MsgListener() {
-            @Override
-            public void onMsg(Object sender, String msg, Object... args) {
-                RemoteApi.getIntegral(RewardShopActivity.this);
-                headUnLoginTallLayout.setVisibility(View.GONE);
-                headUnLoginTallLayoutFloat.setVisibility(View.GONE);
-            }
-        }, MsgID.ISLOGIN);
 
-        //签到通知
-        MsgCenter.addListener(new MsgListener() {
-            @Override
-            public void onMsg(Object sender, String msg, Object... args) {
-                RemoteApi.getIntegral(RewardShopActivity.this);
-            }
-        }, MsgID.IS_Signed);
+
+    }
+
+    /**
+     * 消费通知
+     *
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void rewardConsume(RewardConsumeEvent event) {
+        RemoteApi.getIntegral(RewardShopActivity.this);
+    }
+
+
+    /**
+     * 监听登录事件
+     *
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void isLoginEvent(IsLoginEvent event) {
+        RemoteApi.getIntegral(RewardShopActivity.this);
+        headUnLoginTallLayout.setVisibility(View.GONE);
+        headUnLoginTallLayoutFloat.setVisibility(View.GONE);
+    }
+
+    /**
+     * 签到通知
+     *
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void isSignEvent(SignEvent event) {
+        RemoteApi.getIntegral(RewardShopActivity.this);
     }
 
 
@@ -343,19 +364,13 @@ public class RewardShopActivity extends BaseActivity {
                             integralBean.unSwipeGridView.setAdapter(adapter);
                             integralBean.viewGroup.setVisibility(View.VISIBLE);
                             count += integralBean.unSwipeGridView.getCount();
-                            if (i == ViewBeanList.size() - 1) {
+                            if (i == 0) {
                                 try {
                                     //加载完成数据后展示引导页
                                     final GiftListResult.DatasBean.GiftsBean giftsBean1 = (GiftListResult.DatasBean.GiftsBean) ViewBeanList.get(0).unSwipeGridView.getAdapter().getItem(0);
-                                    handler.postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            if (isShow) {
-                                                showGuide(score, giftsBean1);
-                                            }
-                                        }
-                                    }, 1000);
-
+                                    if (isShow) {
+                                        showGuide(score, giftsBean1);
+                                    }
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
@@ -408,7 +423,7 @@ public class RewardShopActivity extends BaseActivity {
                 }
                 //商品图
                 ImageView imageView = holder.getView(R.id.gift_img);
-                GlideHelper.setImageRes(RewardShopActivity.this,gift.largeUrl,imageView);
+                PicassoHelper.setImageRes(RewardShopActivity.this, gift.largeUrl, imageView);
 
                 TextView gift_name_tv = holder.getView(R.id.gift_name_tv);
                 TextView gift_price_tv = holder.getView(R.id.gift_price_tv);
@@ -436,7 +451,7 @@ public class RewardShopActivity extends BaseActivity {
                         Bundle bundle = new Bundle();
                         bundle.putString("id", gift.id);
                         bundle.putInt("score", score);
-                        IntentUtil.activityForward(RewardShopActivity.this, RewardDetailActivity.class, bundle, false);
+                        IntentUtil.activityForward(RewardShopActivity.this, GiftDetailActivity.class, bundle, false);
                     }
                 });
             }
@@ -470,5 +485,11 @@ public class RewardShopActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         isShow = true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

@@ -3,7 +3,7 @@
  */
 package com.ksfc.newfarmer.beans;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.ksfc.newfarmer.protocol.ResponseResult;
 
@@ -14,15 +14,13 @@ public class QueueList extends ResponseResult {
 	public Data datas;
 
 	public class Data {
-		public ArrayList<Rows> rows;
+		public List<Rows> rows;
 
 		public class Rows {
-			public String areaId;
 			public String name;
 			public String id;
 			public String _id;
-
-		};
+		}
 	}
 
 }

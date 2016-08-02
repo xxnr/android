@@ -99,7 +99,6 @@ public class NetworkHelper {
     private String initGetRequest(String url, HashMap<String, String> params) {
         StringBuilder sb = new StringBuilder(url);
         //has params ?
-        RndLog.d(TAG, "performGet. url=" + url);
         if (params != null && !params.isEmpty()) {
             sb.append('?');
             Set<Map.Entry<String, String>> entries = params.entrySet();

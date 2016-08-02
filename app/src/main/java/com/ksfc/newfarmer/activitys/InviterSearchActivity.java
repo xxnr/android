@@ -218,9 +218,7 @@ public class InviterSearchActivity extends BaseActivity {
                 holder.getConvertView().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(InviterSearchActivity.this, ConsumerOrderActivity.class);
-                        intent.putExtra("consumer", invitee);
-                        startActivity(intent);
+                        startActivity(ConsumerOrderActivity.getCallingIntent(InviterSearchActivity.this,invitee));
                     }
                 });
 
@@ -267,9 +265,8 @@ public class InviterSearchActivity extends BaseActivity {
                 holder.getConvertView().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(InviterSearchActivity.this, CustomerDetailActivity.class);
                         if (StringUtil.checkStr(potentialCustomers._id)) {
-                            intent.putExtra("_id", potentialCustomers._id);
+                            Intent intent =   CustomerDetailActivity.getCallingIntent(InviterSearchActivity.this,potentialCustomers._id);
                             startActivity(intent);
                         }
                     }

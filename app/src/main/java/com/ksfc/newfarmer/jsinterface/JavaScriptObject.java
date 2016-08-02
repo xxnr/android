@@ -1,24 +1,28 @@
 package com.ksfc.newfarmer.jsinterface;
 
-import android.content.Context;
 import android.content.Intent;
 import android.webkit.JavascriptInterface;
 
+import com.ksfc.newfarmer.activitys.CampaignDetailActivity;
 import com.ksfc.newfarmer.activitys.LoginActivity;
 import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.beans.LoginResult;
+import com.ksfc.newfarmer.event.WebShareUrlEvent;
 import com.ksfc.newfarmer.utils.IntentUtil;
+import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.StringUtil;
 
+
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 
 public class JavaScriptObject {
-    Context mContxt;
+    CampaignDetailActivity mContxt;
 
     //sdk17版本以上加上注解
-    public JavaScriptObject(Context mContxt) {
+    public JavaScriptObject(CampaignDetailActivity mContxt) {
         this.mContxt = mContxt;
     }
 
@@ -28,16 +32,17 @@ public class JavaScriptObject {
     public void startActivity(String activity) {
         Class<?> aClass;
         try {
+            RndLog.d("JavaScriptObject", "startActivity:" + activity);
             aClass = Class.forName("com.ksfc.newfarmer.activitys." + activity);
             Intent intent = new Intent(mContxt, aClass);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             mContxt.startActivity(intent);
-        } catch (ClassNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    //启动一个页面并且携带一个参数的function
+    //启动一个页面并且携带参数的function
     @JavascriptInterface
     public void startActivity(String activity, String params) {
         Class<?> aClass;
@@ -68,6 +73,7 @@ public class JavaScriptObject {
     public String getToken() {
         LoginResult.UserInfo userInfo = Store.User.queryMe();
         if (userInfo != null && StringUtil.checkStr(userInfo.token)) {
+            RndLog.d("JavaScriptObject", "token:" + userInfo.token);
             return userInfo.token;
         }
         return null;
@@ -82,10 +88,16 @@ public class JavaScriptObject {
         IntentUtil.activityForward(mContxt, LoginActivity.class, null, false);
     }
 
-
     @JavascriptInterface
     public boolean isLogin() {
         LoginResult.UserInfo userInfo = Store.User.queryMe();
-        return userInfo != null && StringUtil.checkStr(userInfo.token);
+        boolean isLogin = userInfo != null && StringUtil.checkStr(userInfo.token);
+        RndLog.d("JavaScriptObject", "isLogin:" + isLogin);
+        return isLogin;
+    }
+
+    @JavascriptInterface
+    public void shareUrl(String shareUrl) {
+        EventBus.getDefault().post(new WebShareUrlEvent(shareUrl));
     }
 }

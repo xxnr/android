@@ -1,9 +1,7 @@
 package com.ksfc.newfarmer.activitys;
 
-import net.yangentao.util.msg.MsgCenter;
 
 import com.ksfc.newfarmer.BaseActivity;
-import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.protocol.ApiType;
@@ -106,7 +104,6 @@ public class ChooseNameActivity extends BaseActivity {
             Intent intent = new Intent();
             intent.putExtra("str", str);
             setResult(0x11, intent);
-            MsgCenter.fireNull(MsgID.UPDATE_USER_TYPE, "update");
             finish();
         }
 

@@ -1,6 +1,7 @@
 package com.ksfc.newfarmer.fragment;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
@@ -15,26 +16,34 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.ksfc.newfarmer.BaseFragment;
+import com.ksfc.newfarmer.EventBaseFragment;
+import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.activitys.BigImageActivity;
-import com.ksfc.newfarmer.common.GlideHelper;
+import com.ksfc.newfarmer.event.BigImageEvent;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.beans.GetGoodsDetail;
 import com.ksfc.newfarmer.utils.ActivityAnimationUtils;
 import com.ksfc.newfarmer.utils.ScreenUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.CirclePageIndicator;
+import com.squareup.picasso.Picasso;
+
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
 /**
  * Created by CAI on 2016/7/15.
  */
-public class GoodsDetailTopFragment extends BaseFragment implements ViewPager.OnPageChangeListener {
+public class GoodsDetailTopFragment extends EventBaseFragment implements ViewPager.OnPageChangeListener {
     private static final String ARG_PARAM1 = "param1";
+
     private GetGoodsDetail.GoodsDetail detail;
     private TextView current_count;
+    private ViewPager viewPager;
 
 
     @Override
@@ -63,9 +72,9 @@ public class GoodsDetailTopFragment extends BaseFragment implements ViewPager.On
     public View InItView() {
 
         View view = inflater.inflate(R.layout.goods_detail_top, null);
-        ViewPager viewPager = (ViewPager) view.findViewById(R.id.goods_detail_top_viewpager);
+        viewPager = (ViewPager) view.findViewById(R.id.goods_detail_top_viewpager);
         View goods_detail_top_viewpager_rel = view.findViewById(R.id.goods_detail_top_viewpager_rel);
-        ScreenUtil.setHeight(activity,goods_detail_top_viewpager_rel,360);
+        ScreenUtil.setHeight(activity, goods_detail_top_viewpager_rel, 360);
 
         TextView good_xianjia = (TextView) view.findViewById(R.id.product_price);//xianjia:价格
         CirclePageIndicator indicator = (CirclePageIndicator) view.findViewById(R.id.circlePageIndicator);//Viewpager的指示器Indicator
@@ -86,7 +95,7 @@ public class GoodsDetailTopFragment extends BaseFragment implements ViewPager.On
         }
         if (StringUtil.checkStr(detail.description)) {
             product_description.setText(detail.description);
-        }else {
+        } else {
             product_description_rel.setVisibility(View.GONE);
         }
         if (detail.pictures != null) {
@@ -161,20 +170,25 @@ public class GoodsDetailTopFragment extends BaseFragment implements ViewPager.On
         } else {
             market_price_ll.setVisibility(View.GONE);
         }
-
         return view;
     }
 
-    @Override
-    public void onResponsed(Request req) {
-
+    /**
+     * 监听在大图页选中的是哪个item
+     *
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void updateItem(BigImageEvent event) {
+        if (viewPager != null) {
+            viewPager.setCurrentItem(event.position);
+        }
     }
-
-
 
     class MyPagerAdapter extends PagerAdapter {
 
         private List<GetGoodsDetail.GoodsDetail.Pictures> pictures;
+
 
         public MyPagerAdapter(List<GetGoodsDetail.GoodsDetail.Pictures> pictures) {
             this.pictures = pictures;
@@ -194,18 +208,28 @@ public class GoodsDetailTopFragment extends BaseFragment implements ViewPager.On
         public Object instantiateItem(ViewGroup container, final int position) {
 
             View view = inflater.inflate(R.layout.viewpager_pic, null);
-            ImageView imageView = (ImageView) view.findViewById(R.id.imageView);
-            GlideHelper.setImageRes(GoodsDetailTopFragment.this,pictures.get(position).imgUrl,imageView);
-
+            final ImageView imageView = (ImageView) view.findViewById(R.id.imageView);
+            if (StringUtil.checkStr(pictures.get(position).imgUrl)){
+                Picasso.with(activity)
+                        .load(MsgID.IP+pictures.get(position).imgUrl)
+                        .placeholder(R.drawable.zhanweitu)
+                        .error(R.drawable.error)
+                        .config(Bitmap.Config.RGB_565)
+                        .into(imageView);
+            }else {
+               imageView.setImageResource(R.drawable.error);
+            }
             container.addView(view);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable(BigImageActivity.DETAIL, detail);
+                    bundle.putInt(BigImageActivity.POSITION, position);
                     Intent intent = new Intent(activity, BigImageActivity.class);
-                    intent.putExtra("detail", detail);
-                    intent.putExtra("position", position);
-                    activity.startActivity(intent);
-                    ActivityAnimationUtils.setActivityAnimation(activity,R.anim.zoom_enter,R.anim.animation_none);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                    ActivityAnimationUtils.setActivityAnimation(activity, 0, 0);
 
                 }
             });
@@ -219,7 +243,6 @@ public class GoodsDetailTopFragment extends BaseFragment implements ViewPager.On
     }
 
 
-    //当前是第几个item
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -239,4 +262,9 @@ public class GoodsDetailTopFragment extends BaseFragment implements ViewPager.On
 
     }
 
+
+    @Override
+    public void onResponsed(Request req) {
+
+    }
 }

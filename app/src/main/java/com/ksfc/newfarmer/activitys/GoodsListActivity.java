@@ -32,7 +32,7 @@ import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.RndApplication;
 import com.ksfc.newfarmer.common.CommonAdapter;
 import com.ksfc.newfarmer.common.CommonViewHolder;
-import com.ksfc.newfarmer.common.GlideHelper;
+import com.ksfc.newfarmer.common.PicassoHelper;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.ApiType.RequestMethod;
 import com.ksfc.newfarmer.protocol.Request;
@@ -875,7 +875,7 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
             if (singleGood != null) {
 
                 //设置文本
-                GlideHelper.setImageRes(GoodsListActivity.this, singleGood.imgUrl, (ImageView) holder.getView(R.id.goods_image));
+                PicassoHelper.setImageRes(GoodsListActivity.this, singleGood.imgUrl, (ImageView) holder.getView(R.id.goods_image));
                 holder.setText(R.id.goods_title, singleGood.goodsName);
                 String price = singleGood.unitPrice;
                 TextView price_tv = holder.getView(R.id.goods_price);

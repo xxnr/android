@@ -2,14 +2,14 @@ package com.ksfc.newfarmer.activitys;
 
 import java.io.File;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.ksfc.newfarmer.App;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.db.Store;
+import com.ksfc.newfarmer.event.ChangePassWordEvent;
+import com.ksfc.newfarmer.event.UserInfoChangeEvent;
+import com.ksfc.newfarmer.event.UserTypeChangeEvent;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
@@ -24,6 +24,7 @@ import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.HeadImageView;
+import com.squareup.picasso.Picasso;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -36,8 +37,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 
-import net.yangentao.util.msg.MsgCenter;
-import net.yangentao.util.msg.MsgListener;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -71,6 +74,7 @@ public class MyaccountActivity extends BaseActivity {
 
     @Override
     public void OnActCreate(Bundle savedInstanceState) {
+        EventBus.getDefault().register(this);
         setTitle("我");
         me = Store.User.queryMe();
         initView();
@@ -78,7 +82,7 @@ public class MyaccountActivity extends BaseActivity {
         setLeftClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                MsgCenter.fireNull(MsgID.UPDATE_USER, "update");
+                EventBus.getDefault().post(new UserInfoChangeEvent());
                 finish();
             }
         });
@@ -89,7 +93,7 @@ public class MyaccountActivity extends BaseActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-            MsgCenter.fireNull(MsgID.UPDATE_USER, "update");
+            EventBus.getDefault().post(new UserInfoChangeEvent());
             finish();
             return true;
         }
@@ -119,52 +123,15 @@ public class MyaccountActivity extends BaseActivity {
         setViewClick(R.id.choose_home_address_ll);
         setViewClick(R.id.choose_type_ll);
         setViewClick(R.id.choose_type_Certified_ll);//申请县级网店认证
-
-
-        //修改密码成功销毁此活动
-        MsgCenter.addListener(new MsgListener() {
-            @Override
-            public void onMsg(Object sender, String msg, Object... args) {
-                finish();
-            }
-        }, MsgID.MyaccountActivityFinish);
-
-
-        //用户类型改变
-        MsgCenter.addListener(new MsgListener() {
-            @Override
-            public void onMsg(Object sender, String msg, Object... args) {
-                me = Store.User.queryMe();
-                if (me == null) {
-                    return;
-                }
-                if (me.userType.equals("5")) {
-                    ShowHideUtils.showFadeOut(choose_type_Certified_ll);
-                    choose_type_Certified_ll.setVisibility(View.VISIBLE);
-                    choose_type_Certified_tv.setText(me.RSCInfoVerifing ? "资料正在审核，请耐心等候" : me.isRSC ? "查看认证信息" : "想成为新新农人的县级网点？去申请认证吧");
-                } else {
-                    choose_type_Certified_ll.setVisibility(View.GONE);
-                    ShowHideUtils.hideFadeIn(choose_type_Certified_ll);
-                }
-            }
-        }, MsgID.UPDATE_USER_TYPE);
-
-
         if (me == null) {
             return;
         }
-
         if (StringUtil.checkStr(me.photo)) {
-            Glide.with(MyaccountActivity.this)
+            Picasso.with(MyaccountActivity.this)
                     .load(MsgID.IP + me.photo)
-                    .asBitmap()
+                    .resize(210, 210)
                     .error(R.drawable.mine_account_head_default_head)
-                    .into(new SimpleTarget<Bitmap>() {
-                        @Override
-                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                            myself_userImg.setImageBitmap(resource);
-                        }
-                    });
+                    .into(myself_userImg);
         }
 
         nickName_tv.setText(TextUtils.isEmpty(me.nickname) ? "" : me.nickname);
@@ -172,9 +139,43 @@ public class MyaccountActivity extends BaseActivity {
         name_tv.setText(TextUtils.isEmpty(me.name) ? "" : me.name);
         address_home_tv.setText(TextUtils.isEmpty(me.addressCity) ? "" : me.addressCity + me.addressTown);
         type_tv.setText(StringUtil.empty(me.userTypeInName) ? "还没填写呦~" : me.userTypeInName);
-
         //设置一下申请认证的标志
-        MsgCenter.fireNull(MsgID.UPDATE_USER_TYPE);
+        EventBus.getDefault().post(new UserTypeChangeEvent());
+    }
+
+
+    /**
+     * 用户类型改变
+     *
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void userTypeChange(UserTypeChangeEvent event) {
+        me = Store.User.queryMe();
+        if (me == null) {
+            return;
+        }
+        if (me.userType.equals("5")) {
+            ShowHideUtils.showFadeOut(choose_type_Certified_ll);
+            choose_type_Certified_ll.setVisibility(View.VISIBLE);
+            choose_type_Certified_tv.setText(
+                    me.RSCInfoVerifing ? "资料正在审核，请耐心等候" :
+                            me.isRSC ? "查看认证信息" : "想成为新新农人的县级网点？去申请认证吧");
+        } else {
+            choose_type_Certified_ll.setVisibility(View.GONE);
+            ShowHideUtils.hideFadeIn(choose_type_Certified_ll);
+        }
+    }
+
+
+    /**
+     * 修改密码成功销毁此活动
+     *
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void changePassWord(ChangePassWordEvent event) {
+        finish();
     }
 
     @Override
@@ -381,7 +382,7 @@ public class MyaccountActivity extends BaseActivity {
             }
             Bitmap decodeFile = BitmapFactory.decodeFile(path);
             myself_userImg.setImageBitmap(decodeFile);
-            MsgCenter.fireNull(MsgID.UPDATE_USER, "update");
+            EventBus.getDefault().post(new UserInfoChangeEvent());
         } else if (ApiType.SAVE_MYUSER == req.getApi()) {
             UserInfo queryMe = Store.User.queryMe();
             if (queryMe != null) {
@@ -427,5 +428,11 @@ public class MyaccountActivity extends BaseActivity {
                         throwable.printStackTrace();
                     }
                 });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

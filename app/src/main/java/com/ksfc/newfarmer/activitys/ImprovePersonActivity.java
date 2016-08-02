@@ -14,9 +14,10 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.ksfc.newfarmer.BaseActivity;
-import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.db.Store;
+import com.ksfc.newfarmer.event.MainTabSelectEvent;
+import com.ksfc.newfarmer.event.UserInfoChangeEvent;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
@@ -26,7 +27,8 @@ import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.MaxLengthWatcher;
 import com.ksfc.newfarmer.utils.StringUtil;
 
-import net.yangentao.util.msg.MsgCenter;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -79,11 +81,11 @@ public class ImprovePersonActivity extends BaseActivity {
         setLeftClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MsgCenter.fireNull(MsgID.UPDATE_USER, "update");
+                EventBus.getDefault().post(new UserInfoChangeEvent());
                 Intent intent = new Intent(ImprovePersonActivity.this, MainActivity.class);
                 intent.putExtra("id",MainActivity.Tab.MINE);
                 startActivity(intent);
-                MsgCenter.fireNull(MsgID.MainActivity_select_tab, MainActivity.Tab.MINE);
+                EventBus.getDefault().post(new MainTabSelectEvent(MainActivity.Tab.MINE));
                 finish();
             }
         });
@@ -94,11 +96,11 @@ public class ImprovePersonActivity extends BaseActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-            MsgCenter.fireNull(MsgID.UPDATE_USER, "update");
+            EventBus.getDefault().post(new UserInfoChangeEvent());
             Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra("id",MainActivity.Tab.MINE);
             startActivity(intent);
-            MsgCenter.fireNull(MsgID.MainActivity_select_tab, MainActivity.Tab.MINE);
+            EventBus.getDefault().post(new MainTabSelectEvent(MainActivity.Tab.MINE));
             finish();
             return true;
         }
@@ -268,11 +270,11 @@ public class ImprovePersonActivity extends BaseActivity {
                 }
                 break;
             case R.id.choice_cancel:
-                MsgCenter.fireNull(MsgID.UPDATE_USER, "update");
+                EventBus.getDefault().post(new UserInfoChangeEvent());
                 Intent intent = new Intent(ImprovePersonActivity.this, MainActivity.class);
                 intent.putExtra("id",MainActivity.Tab.MINE);
                 startActivity(intent);
-                MsgCenter.fireNull(MsgID.MainActivity_select_tab, MainActivity.Tab.MINE);
+                EventBus.getDefault().post(new MainTabSelectEvent(MainActivity.Tab.MINE));
                 finish();
                 break;
         }
@@ -310,11 +312,11 @@ public class ImprovePersonActivity extends BaseActivity {
         if (req.getApi() == ApiType.SAVE_MYUSER) {
             if (req.getData().getStatus().equals("1000")) {
                 showToast("保存成功");
-                MsgCenter.fireNull(MsgID.UPDATE_USER, "update");
+                EventBus.getDefault().post(new UserInfoChangeEvent());
                 Intent intent = new Intent(ImprovePersonActivity.this, MainActivity.class);
                 intent.putExtra("id",MainActivity.Tab.MINE);
                 startActivity(intent);
-                MsgCenter.fireNull(MsgID.MainActivity_select_tab, MainActivity.Tab.MINE);
+                EventBus.getDefault().post(new MainTabSelectEvent(MainActivity.Tab.MINE));
                 finish();
             }
         } else if (req.getApi() == ApiType.QUERYTOWNID) {

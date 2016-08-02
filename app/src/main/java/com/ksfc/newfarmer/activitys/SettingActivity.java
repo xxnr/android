@@ -18,8 +18,8 @@ import com.ksfc.newfarmer.widget.dialog.CustomDialogUpdate;
 import com.ksfc.newfarmer.widget.dialog.CustomProgressDialog;
 import com.ksfc.newfarmer.widget.dialog.CustomProgressDialogForCache;
 import com.ksfc.newfarmer.utils.DataCleanManager;
-import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
+
 import com.umeng.message.PushAgent;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.ShareAction;
@@ -61,7 +61,7 @@ public class SettingActivity extends BaseActivity implements CompoundButton.OnCh
     private String msg = "农业互联网综合服务领先者";
     private String title = "新新农人-农业互联网综合服务平台";
     private String url = "http://www.xinxinnongren.com/shareApp.html";
-    private UMImage image = new UMImage(SettingActivity.this, R.drawable.share_app_icon);
+    private UMImage image ;
 
     //去清除缓存需要三秒
     private Handler handler = new Handler() {
@@ -114,7 +114,7 @@ public class SettingActivity extends BaseActivity implements CompoundButton.OnCh
     public void OnActCreate(Bundle savedInstanceState) {
         setTitle("设置");
         initView();
-
+        image=new UMImage(SettingActivity.this, R.drawable.share_app_icon);
         //在主页判断版本是否需要升级 并注册监听下载完成之后的广播
         completeReceiver = new CompleteReceiver();
         registerReceiver(completeReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
@@ -257,6 +257,8 @@ public class SettingActivity extends BaseActivity implements CompoundButton.OnCh
                                         DaoSession writableDaoSession = DBManager.getInstance(SettingActivity.this).getWritableDaoSession();
                                         writableDaoSession.getInviteeEntityDao().deleteAll();
                                         writableDaoSession.getPotentialCustomersEntityDao().deleteAll();
+
+
                                         //进度条
                                         progressDialog = CustomProgressDialogForCache.createLoadingDialog(SettingActivity.this, "正在清除缓存请稍后...");
                                         progressDialog.show();
@@ -279,10 +281,8 @@ public class SettingActivity extends BaseActivity implements CompoundButton.OnCh
                 showPopUp(v);
                 break;
             case R.id.about_us://关于我们
-                Bundle bundle = new Bundle();
-                bundle.putString("versionName", Utils.getVersionInfo(this));
-                IntentUtil.activityForward(SettingActivity.this,
-                        AboutUsActivity.class, bundle, false);
+                Intent callingIntent = AboutUsActivity.getCallingIntent(SettingActivity.this, Utils.getVersionInfo(this));
+                startActivity(callingIntent);
                 break;
             case R.id.wechat_friends:
                 share(SHARE_MEDIA.WEIXIN);
@@ -296,7 +296,6 @@ public class SettingActivity extends BaseActivity implements CompoundButton.OnCh
             case R.id.qq_zone_share:
                 share(SHARE_MEDIA.QZONE);
                 break;
-
             default:
                 break;
         }

@@ -6,14 +6,15 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.ksfc.newfarmer.BaseFragment;
-import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.activitys.MainActivity;
 import com.ksfc.newfarmer.activitys.MyOrderDetailActivity;
+import com.ksfc.newfarmer.event.MainTabSelectEvent;
 import com.ksfc.newfarmer.protocol.Request;
 
 import com.ksfc.newfarmer.App;
-import net.yangentao.util.msg.MsgCenter;
+
+import org.greenrobot.eventbus.EventBus;
 
 /**
  * Created by CAI on 2016/5/13. 订单已支付
@@ -51,7 +52,7 @@ public class OrderPaidFragment extends BaseFragment {
                 intent1.putExtra("id",MainActivity.Tab.INDEX);
                 startActivity(intent1);
                 //通知 首页选中的位置
-                MsgCenter.fireNull(MsgID.MainActivity_select_tab, MainActivity.Tab.INDEX);
+                EventBus.getDefault().post(new MainTabSelectEvent(MainActivity.Tab.INDEX));
                 App.getApp().partQuit();
                 break;
         }

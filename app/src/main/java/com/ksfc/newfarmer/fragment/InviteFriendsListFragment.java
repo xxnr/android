@@ -23,7 +23,6 @@ import com.ksfc.newfarmer.utils.Utils;
 import com.ksfc.newfarmer.widget.QuickAlphabeticBar;
 
 import android.content.Context;
-import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -222,9 +221,8 @@ public class InviteFriendsListFragment extends BaseFragment {
                     @Override
                     public void onClick(View v) {
                         dotView.setVisibility(View.INVISIBLE);
-                        Intent intent = new Intent(activity, ConsumerOrderActivity.class);
-                        intent.putExtra("consumer", invitee);
-                        startActivity(intent);
+                        startActivity(ConsumerOrderActivity.getCallingIntent(activity,invitee));
+
                     }
                 });
 

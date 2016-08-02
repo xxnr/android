@@ -9,27 +9,18 @@
     <title>积分商城上线了</title>
 </head>
 <body>
-<a>点击获取token</a>
-<a>点击到积分商城</a>
+<a>点击分享</a>
 <script>
-      
 
-   
-	var aTag = document.getElementsByTagName('a')[0];  
-    
-	aTag.addEventListener('click', function(){  
-        //调用android本地方法  
-        document.getElementById("hello_web").innerHTML=mObj.fun1FromAndroid();
-        return false;
-    }, false);
 
-    var aTag = document.getElementsByTagName('a')[1];
+    var aTag = document.getElementsByTagName('a')[0];
 
 	aTag.addEventListener('click', function(){
         //调用android本地方法
-        mObj.fun2ToActivity();
+        jsObj.shareUrl("https://www.baidu.com");
         return false;
     }, false);
+
 
 
 </script>

@@ -35,6 +35,8 @@
     -keep public class com.android.vending.licensing.ILicensingService
     -keep public class * extends android.support.v4.app.Fragment
 
+
+
     #忽略警告
     -ignorewarning
     ##记录生成的日志数据,gradle build时在本项目根目录输出##
@@ -73,8 +75,10 @@
         public void set*(...);
     }
     #保证实体类不混淆
-     -dontwarn com.ksfc.newfarmer.protocol.beans.**
-        -keep class com.ksfc.newfarmer.protocol.beans.** { *;}
+     -dontwarn com.ksfc.newfarmer.beans.**
+     -keep class com.ksfc.newfarmer.beans.** { *;}
+     -dontwarn com.ksfc.newfarmer.beans.dbbeans.**
+     -keep class com.ksfc.newfarmer.beans.dbbeans.** { *;}
 
     #保持 native 方法不被混淆
     -keepclasseswithmembernames class * {
@@ -124,23 +128,25 @@
     
     #不混淆资源类
     -keepclassmembers class **.R$* {
+        public static final int *;
         public static <fields>;
     }
     #不混淆 泛型
-     -keepattributes Signature
-    #gson
-    # Gson specific classes
+     #gson
+    -keepattributes Signature
     -keep class sun.misc.Unsafe { *; }
-    # Application classes that will be serialized/deserialized over Gson
     -keep class com.google.gson.examples.android.model.** { *; }
     #okhttp
-    -dontwarn com.squareup.okhttp.**
-    -keep class com.squareup.okhttp.** { *;}
+    -keepattributes Signature
+    -keepattributes Annotation
+    -keep class okhttp3.** {*; }
+    -keep interface okhttp3.* {*; }
+    -dontwarn okhttp3.*
+    #okio
     -dontwarn okio.**
-    -dontwarn okhttp3.**
-    -keep class okhttp3.** { *;}
-     #Xutils
-    -keep class com.lidroid.** { *; }
+    -keep interface okio.** {*; }
+    -keep class okio.** {*; }
+
     #Pulltoreflash
     -dontwarn com.handmark.pulltorefresh.library.**
     -keep class com.handmark.pulltorefresh.library.** { *;}
@@ -157,25 +163,125 @@
     -keep class org.simalliance.openmobileapi.** {*;}
     -keep class org.simalliance.openmobileapi.service.** {*;}
     -keep class com.unionpay.** {*;}
-    #友盟
-    -dontwarn com.umeng.**
-    -keep class com.umeng.** {*; }
-    #友盟分享用到的网络请求工具
-    -dontwarn  com.squareup.wire.**
-    -keep class  com.squareup.wire.** {*; }
-    -dontwarn  org.android.**
-    -keep class  org.android.** {*; }
-    #QQ分享
-    -dontwarn com.tencent.**
-    -keep class com.tencent.** {*;}
      #Photo
     -dontwarn uk.co.senab.photoview.**
     -keep class uk.co.senab.photoview.** { *; }
-    #glide
-    -keep public class * implements com.bumptech.glide.module.GlideModule
-    -keep public class * implements com.bumptech.glide.module.GlideModule
-    -keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
-        **[] $VALUES;
-        public *;
+    #js
+    -keep class com.ksfc.newfarmer.jsinterface.** { *;
+          public <methods>;
     }
+    #swipwLayout
+    -dontwarn com.daimajia.swipe.**
+    -keep class com.daimajia.swipe.** { *; }
+    -keep interface com.daimajia.swipe.** { *; }
+    #systembartint
+    -dontwarn com.readystatesoftware.systembartint.**
+    -keep class com.readystatesoftware.systembartint.** { *; }
+    #ptr
+    -keep class in.srain.cube.** { *; }
+    -keep interface in.srain.cube.** { *; }
+    -dontwarn in.srain.cube.**
+    #butterknife
+    -keep class butterknife.*
+    -dontwarn butterknife.internal.**
+    -keep class **$$ViewBinder { *; }
+    -keepclasseswithmembernames class * { @butterknife.* <methods>; }
+    -keepclasseswithmembernames class * { @butterknife.* <fields>; }
+    #Rx
+    -dontwarn rx.**
+    -keep class rx.** { *; }
+    -keep interface rx.** { *; }
+    #rxbinding
+    -dontwarn com.jakewharton.rxbinding.**
+    -keep class com.jakewharton.rxbinding.** { *; }
+     #rxlifecycle
+    -dontwarn com.trello.rxlifecycle.**
+    -keep class com.trello.rxlifecycle.** { *; }
+    -keep interface com.trello.rxlifecycle.** { *; }
+    #retrofit
+    -dontwarn retrofit2.**
+    -keep class retrofit2.** { *; }
+    -keepattributes Signature
+    -keepattributes Exceptions
+   -keepattributes *Annotation*
+   #eventBus
+   -keepclassmembers class ** {
+       @org.greenrobot.eventbus.Subscribe <methods>;
+   }
+   -keep enum org.greenrobot.eventbus.ThreadMode { *; }
+   -keepclassmembers class * extends org.greenrobot.eventbus.util.ThrowableFailureEvent {
+       <init>(java.lang.Throwable);
+   }
+    #greendao
+   -keep class org.greenrobot.greendao.** {*;}
+   #保持greenDao的方法不被混淆  #用来保持生成的表名不被混淆
+   -keepclassmembers class * extends org.greenrobot.greendao.AbstractDao {
+   public static java.lang.String TABLENAME;
+   }
+   -keep class **$Properties
+   #友盟统计
+    -keepclassmembers class * {
+        public <init> (org.json.JSONObject);
+    }
+  #友盟分享
+    -dontshrink
+    -dontoptimize
+    -dontwarn com.google.android.maps.**
+    -dontwarn android.webkit.WebView
+    -dontwarn com.umeng.**
+    -keep class com.umeng.**{ *; }
+    -keep interface com.umeng.**{ *; }
+    -dontwarn com.tencent.weibo.sdk.**
+    -dontwarn com.facebook.**
+    -keep enum com.facebook.**
+    -keepattributes Exceptions,InnerClasses,Signature
+    -keepattributes *Annotation*
+    -keepattributes SourceFile,LineNumberTable
+    -keep public interface com.facebook.**
+    -keep public interface com.tencent.**
+    -keep public interface com.umeng.socialize.**
+    -keep public interface com.umeng.socialize.sensor.**
+    -keep public interface com.umeng.scrshot.**
+    -keep public class com.umeng.socialize.* {*;}
+    -keep public class javax.**
+    -keep public class android.webkit.**
+    -keep class com.facebook.**
+    -keep class com.umeng.scrshot.**
+    -keep public class com.tencent.** {*;}
+    -keep class com.umeng.socialize.sensor.**
+    -keep class com.tencent.mm.sdk.modelmsg.WXMediaMessage {*;}
+    -keep class com.tencent.mm.sdk.modelmsg.** implements com.tencent.mm.sdk.modelmsg.WXMediaMessage$IMediaObject {*;}
+    -keep class im.yixin.sdk.api.YXMessage {*;}
+    -keep class im.yixin.sdk.api.** implements im.yixin.sdk.api.YXMessage$YXMessageData{*;}
+    #友盟推送
+    -dontwarn com.ut.mini.**
+    -dontwarn okio.**
+    -dontwarn com.xiaomi.**
+    -dontwarn com.squareup.wire.**
+    -dontwarn android.support.v4.**
+    -keepattributes *Annotation*
+    -keep class android.support.v4.** { *; }
+    -keep interface android.support.v4.app.** { *; }
+    -keep class okio.** {*;}
+    -keep class com.squareup.wire.** {*;}
+    -keep class com.umeng.message.protobuffer.* {
+    	 public <fields>;
+             public <methods>;
+    }
+    -keep class com.umeng.message.* {
+    	 public <fields>;
+             public <methods>;
+    }
+    -keep class org.android.agoo.impl.* {
+    	 public <fields>;
+             public <methods>;
+    }
+    -keep class org.android.agoo.service.* {*;}
+    -keep class org.android.spdy.**{*;}
+
+
+
+
+
+
 

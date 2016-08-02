@@ -2,6 +2,7 @@ package com.ksfc.newfarmer.activitys;
 
 import android.annotation.SuppressLint;
 import android.graphics.Paint;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebView;
@@ -11,9 +12,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ksfc.newfarmer.BaseActivity;
-import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
-import com.ksfc.newfarmer.common.GlideHelper;
+import com.ksfc.newfarmer.common.PicassoHelper;
+import com.ksfc.newfarmer.event.IsLoginEvent;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.remoteapi.RemoteApi;
 import com.ksfc.newfarmer.protocol.Request;
@@ -22,9 +23,13 @@ import com.ksfc.newfarmer.beans.IntegralGetResult;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.ScreenUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
+import com.ksfc.newfarmer.utils.Utils;
+import com.ksfc.newfarmer.widget.ObservableScrollView;
 
-import net.yangentao.util.msg.MsgCenter;
-import net.yangentao.util.msg.MsgListener;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,7 +37,7 @@ import butterknife.ButterKnife;
 /**
  * Created by CAI on 2016/6/15.
  */
-public class RewardDetailActivity extends BaseActivity {
+public class GiftDetailActivity extends BaseActivity {
 
     @BindView(R.id.gift_detail_img)
     ImageView giftDetailImg;
@@ -52,6 +57,18 @@ public class RewardDetailActivity extends BaseActivity {
     WebView giftDetailWebView;
     @BindView(R.id.gift_detail_sure_tv)
     TextView giftDetailSureTv;
+    @BindView(R.id.scrollView)
+    ObservableScrollView scrollView;
+    @BindView(R.id.title_bg_up)
+    View title_bg_up;
+    @BindView(R.id.title_bg_down)
+    View title_bg_down;
+    @BindView(R.id.title_div)
+    View title_div;
+    @BindView(R.id.titleview)
+    View titleview;
+    @BindView(R.id.title_name_text)
+    View title_name_text;
 
     private int score;
     private String id;
@@ -66,12 +83,52 @@ public class RewardDetailActivity extends BaseActivity {
     @Override
     public void OnActCreate(Bundle savedInstanceState) {
         ButterKnife.bind(this);
+        EventBus.getDefault().register(this);
         setTitle("礼品详情");
+
+        titleview.setBackgroundResource(R.color.transparent);
+
+        title_bg_up.setVisibility(View.INVISIBLE);
+        title_name_text.setVisibility(View.INVISIBLE);
+        //透明状态栏和设置状态栏颜色
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            int statusHeight = ScreenUtil.getStatusHeight(this);
+            title_div.setVisibility(View.VISIBLE);
+            title_div.getLayoutParams().height = statusHeight;
+            title_bg_down.getLayoutParams().height = Utils.dip2px(GiftDetailActivity.this, 45) + statusHeight;
+            title_bg_up.getLayoutParams().height = Utils.dip2px(GiftDetailActivity.this, 45) + statusHeight;
+        } else {
+            title_div.setVisibility(View.GONE);
+            title_bg_down.getLayoutParams().height = Utils.dip2px(GiftDetailActivity.this, 45);
+            title_bg_up.getLayoutParams().height = Utils.dip2px(GiftDetailActivity.this, 45);
+        }
+        scrollView.setScrollViewListener(new ObservableScrollView.ScrollViewListener() {
+            @Override
+            public void onScrollChanged(ObservableScrollView scrollView, int x, int y, int oldx, int oldy) {
+                title_name_text.setVisibility(View.VISIBLE);
+                title_bg_up.setVisibility(View.VISIBLE);
+                float offset = Utils.px2dip(GiftDetailActivity.this, y) * 0.005f;
+                if (0 <= offset && offset <= 1.0f) {
+                    if (offset < 0.5f) {
+                        title_name_text.setAlpha(0);
+                        title_bg_up.setAlpha(0);
+                        title_bg_down.setAlpha((1 - offset * 2));
+                    } else {
+                        title_bg_down.setAlpha(0);
+                        title_bg_up.setAlpha((offset - 0.5f) * 2);
+                        title_name_text.setAlpha((offset - 0.5f) * 2);
+                    }
+                } else if (offset > 1.0f) {
+                    title_bg_up.setAlpha(1);
+                    title_name_text.setAlpha(1);
+                    title_bg_down.setAlpha(0);
+                }
+            }
+        });
 
         ScreenUtil.setHeight(this, giftDetailImg, 360);
         setViewClick(R.id.gift_detail_sure_tv);
         giftDetailSureTv.setEnabled(false);
-
         Bundle extras = getIntent().getExtras();
         if (extras == null) {
             return;
@@ -82,13 +139,16 @@ public class RewardDetailActivity extends BaseActivity {
         showProgressDialog();
         RemoteApi.getGiftDetail(this, id);
 
-        //监听登录事件
-        MsgCenter.addListener(new MsgListener() {
-            @Override
-            public void onMsg(Object sender, String msg, Object... args) {
-                RemoteApi.getIntegral(RewardDetailActivity.this);
-            }
-        }, MsgID.ISLOGIN);
+
+    }
+
+    /**
+     * 监听登录事件
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void isLoginEvent(IsLoginEvent event){
+        RemoteApi.getIntegral(GiftDetailActivity.this);
     }
 
 
@@ -121,7 +181,7 @@ public class RewardDetailActivity extends BaseActivity {
             GiftDetailResult reqData = (GiftDetailResult) req.getData();
             gift = reqData.gift;
             if (gift != null) {
-                GlideHelper.setImageRes(RewardDetailActivity.this, gift.originalUrl, giftDetailImg);
+                PicassoHelper.setImageRes(GiftDetailActivity.this, gift.originalUrl, giftDetailImg);
                 giftDetailTitle.setText(StringUtil.checkStr(gift.name) ? gift.name : "");
                 giftDetailIntegralTv.setText(String.valueOf(gift.points));
                 giftDetailAbleIntegralTv.setText(String.valueOf(score));
@@ -185,4 +245,9 @@ public class RewardDetailActivity extends BaseActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 }

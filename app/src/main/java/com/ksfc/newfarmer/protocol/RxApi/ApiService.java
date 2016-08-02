@@ -81,4 +81,11 @@ public interface ApiService {
             @Field("token") String token);
 
 
+    /**
+     * 获取用户白名单
+     */
+    @GET("/api/v2.0/usertypes")
+    Observable<String> USER_TYPE();
+
+
 }

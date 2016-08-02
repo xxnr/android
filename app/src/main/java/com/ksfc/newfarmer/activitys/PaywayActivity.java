@@ -2,10 +2,11 @@ package com.ksfc.newfarmer.activitys;
 
 
 import com.ksfc.newfarmer.BaseActivity;
-import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.RndApplication;
 import com.ksfc.newfarmer.db.Store;
+import com.ksfc.newfarmer.event.OrderListRefresh;
+import com.ksfc.newfarmer.event.PayAndPriceEvent;
 import com.ksfc.newfarmer.fragment.OrderPaidFragment;
 import com.ksfc.newfarmer.fragment.PayWayFragment;
 import com.ksfc.newfarmer.protocol.ApiType;
@@ -21,8 +22,11 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 
 import com.ksfc.newfarmer.App;
-import net.yangentao.util.msg.MsgCenter;
-import net.yangentao.util.msg.MsgListener;
+
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 
 public class PaywayActivity extends BaseActivity {
@@ -44,18 +48,16 @@ public class PaywayActivity extends BaseActivity {
         initView();
         showProgressDialog();
         getData();
+    }
 
-        //登陆通知 银联支付成功后的金额
-        MsgCenter.addListener(new MsgListener() {
-
-            @Override
-            public void onMsg(Object sender, String msg, Object... args) {
-                if (args != null && args.length > 0) {
-                    price = (String) args[0];
-                }
-            }
-        }, MsgID.PAY_PRICE);
-
+    /**
+     * 银联支付成功后的金额
+     *
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void payPrice(PayAndPriceEvent event) {
+        price = event.price;
     }
 
     //请求订单详情
@@ -115,7 +117,7 @@ public class PaywayActivity extends BaseActivity {
                             bundle1.putString("orderId", orderId);
                             orderPaidFragment.setArguments(bundle1);
                             fragmentTransaction.replace(R.id.payWay_frameLayout, orderPaidFragment);
-                            MsgCenter.fireNull(MsgID.order_Change);//订单状态改变需要刷新列表
+                            EventBus.getDefault().post(new OrderListRefresh());
                             break;
                     }
                     fragmentTransaction.commitAllowingStateLoss();

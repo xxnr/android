@@ -10,9 +10,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.ksfc.newfarmer.BaseActivity;
-import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.db.Store;
+import com.ksfc.newfarmer.event.UserInfoChangeEvent;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
@@ -20,7 +20,8 @@ import com.ksfc.newfarmer.beans.LoginResult;
 import com.ksfc.newfarmer.utils.MaxLengthWatcher;
 import com.ksfc.newfarmer.utils.StringUtil;
 
-import net.yangentao.util.msg.MsgCenter;
+
+import org.greenrobot.eventbus.EventBus;
 
 /**
  * Created by HePeng on 2015/12/10.
@@ -111,8 +112,7 @@ public class ChoiceTrueNameActivity extends BaseActivity {
             Intent intent = new Intent();
             intent.putExtra("str", str);
             setResult(0x12, intent);
-
-            MsgCenter.fireNull(MsgID.UPDATE_USER, "update");
+            EventBus.getDefault().post(new UserInfoChangeEvent());
             finish();
         }
 

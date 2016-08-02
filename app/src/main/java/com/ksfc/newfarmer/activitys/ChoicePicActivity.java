@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.utils.IoUtils;
+import com.soundcloud.android.crop.Crop;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -15,6 +16,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -24,6 +26,7 @@ import android.widget.Toast;
 import net.yangentao.util.TaskUtil;
 import net.yangentao.util.TaskUtil.BackFore;
 import net.yangentao.util.XLog;
+
 
 /**
  * 选择照片
@@ -42,11 +45,12 @@ public class ChoicePicActivity extends Activity {
 
     private boolean needZoom;
     private boolean fromCamra;
-
+    private boolean isVivo = false;
     private String filePath = IoUtils.getImageCacheDir().getAbsolutePath()
             + File.separator + System.currentTimeMillis() + ".jpg";
     private String filePath_1 = IoUtils.getImageCacheDir().getAbsolutePath()
             + File.separator + System.currentTimeMillis() + "-1.jpg";//此路径为备份原图片
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +63,7 @@ public class ChoicePicActivity extends Activity {
             finish();
             return;
         }
+        isVivo = Build.MODEL.toLowerCase().contains("vivo");
         fromCamra = intent.getBooleanExtra(EXTRA_IS_FROM_CAMRA, false);
         needZoom = intent.getBooleanExtra(EXTRA_IS_NEED_ZOOM, false);
         start();
@@ -68,11 +73,13 @@ public class ChoicePicActivity extends Activity {
         if (fromCamra) {
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             // 下面这句指定调用相机拍照后的照片存储的路径
+            intent.putExtra("return-data", false);
             intent.putExtra(MediaStore.EXTRA_OUTPUT,
                     Uri.fromFile(new File(filePath)));
+            intent.putExtra("noFaceDetection", true);
             startActivityForResult(intent, FROM_CAMRA);
         } else {
-            Intent intent2 = new Intent(Intent.ACTION_PICK, null);
+            Intent intent2 = new Intent(Intent.ACTION_PICK);
             intent2.setDataAndType(
                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
             startActivityForResult(intent2, FROM_CHOICE);
@@ -84,24 +91,45 @@ public class ChoicePicActivity extends Activity {
      *
      * @param uri
      */
-    public void startPhotoZoom(Uri uri) {
-        Intent intent = new Intent("com.android.camera.action.CROP");
+    public void startPhotoZoom(final Uri uri) {
 
-        intent.setDataAndType(uri, "image/*");
-        // 下面这个crop=true是设置在开启的Intent中设置显示的VIEW可裁剪
-        intent.putExtra("crop", "true");
-        // aspectX aspectY 是宽高的比例
-        intent.putExtra("aspectX", 1);
-        intent.putExtra("aspectY", 1);
-        // outputX outputY 是裁剪图片宽高
-        intent.putExtra("outputX", 300);
-        intent.putExtra("outputY", 300);
-        intent.putExtra("noFaceDetection", true);
-        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
-        intent.putExtra("return-data", true);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-        startActivityForResult(intent, FROM_ZOOM);
+
+        if (isVivo) {
+            if (fromCamra) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Bitmap bitmap = IoUtils.decodeFile(new File(uri.getPath()));
+                        int angle = readPictureDegree(uri.getPath());
+                        bitmap = getRotatedBitmap(angle, bitmap);
+                        IoUtils.saveBitmap(bitmap, filePath);
+                        Crop.of(uri, Uri.fromFile(new File(filePath))).asSquare().start(ChoicePicActivity.this);
+                    }
+                }).start();
+            } else {
+                Crop.of(uri, Uri.fromFile(new File(filePath))).asSquare().start(this);
+            }
+        } else {
+            Intent intent = new Intent("com.android.camera.action.CROP");
+            intent.setDataAndType(uri, "image/*");
+            // 下面这个crop=true是设置在开启的Intent中设置显示的VIEW可裁剪
+            intent.putExtra("crop", "true");
+            // aspectX aspectY 是宽高的比例
+            intent.putExtra("aspectX", 1);
+            intent.putExtra("aspectY", 1);
+            // outputX outputY 是裁剪图片宽高
+            intent.putExtra("outputX", 300);
+            intent.putExtra("outputY", 300);
+            intent.putExtra("noFaceDetection", true);
+            intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
+            intent.putExtra("return-data", true);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+            startActivityForResult(intent, FROM_ZOOM);
+        }
+
+
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -158,9 +186,17 @@ public class ChoicePicActivity extends Activity {
                     done(null);
                 }
                 break;
+            case Crop.REQUEST_CROP: //vivo手机
+
+                new Thread() {
+                    @Override
+                    public void run() {
+                        done(filePath);
+                    }
+
+                }.start();
 
             default:
-
                 break;
         }
     }
@@ -209,16 +245,13 @@ public class ChoicePicActivity extends Activity {
                     }
                     filePath = path;
                     Bitmap bitmap = IoUtils.decodeFile(new File(path));
-
                     // 三星上的问题
                     if (fromCamra) {
                         int angle = readPictureDegree(path);
-                        if (angle != 0) {
-                            bitmap = getRotatedBitmap(angle, bitmap);
-                        }
+                        bitmap = getRotatedBitmap(angle, bitmap);
                     }
-                    IoUtils.compressImageAndSave(bitmap, filePath);
-                    // IoUtils.saveBitmap(bitmap, filePath);
+                    //压缩并保存
+                    IoUtils.comp(bitmap, filePath);
                     XLog.d("压缩图片.结束..");
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -227,17 +260,24 @@ public class ChoicePicActivity extends Activity {
         });
     }
 
-    private Bitmap getRotatedBitmap(int rotate, Bitmap bitmap) {
+    private Bitmap getRotatedBitmap(int angle, Bitmap bitmap) {
+        Bitmap returnBm = null;
+
+        // 根据旋转角度，生成旋转矩阵
         Matrix matrix = new Matrix();
-        if (rotate == 180) {
-            matrix.setRotate(rotate);
-        } else {
-            matrix.setRotate(rotate, (float) bitmap.getWidth() / 2,
-                    (float) bitmap.getHeight() / 2);
+        matrix.postRotate(angle);
+        try {
+            // 将原始图片按照旋转矩阵进行旋转，并得到新的图片
+            returnBm = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        } catch (OutOfMemoryError e) {
         }
-        bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(),
-                bitmap.getHeight(), matrix, true);
-        return bitmap;
+        if (returnBm == null) {
+            returnBm = bitmap;
+        }
+        if (bitmap != returnBm) {
+            bitmap.recycle();
+        }
+        return returnBm;
     }
 
     public static int readPictureDegree(String path) {

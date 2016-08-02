@@ -1,4 +1,4 @@
-<resources xmlns:android="http://schemas.android.com/apk/res/android">
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
@@ -115,15 +115,7 @@
 
     <style name="nornal_style" parent="android:Theme.NoTitleBar" />
 
-    <!--
-    <style name="horizontal_slide2" parent="android:style/Theme.Holo.Light.NoActionBar">
-        <item name="android:windowAnimationStyle">@style/AnimFade2</item>
-    </style>
 
-
-
-
-    -->
 
     <style name="MyDialogStyle">
         <item name="android:windowBackground">@android:color/transparent</item>
@@ -235,6 +227,7 @@
         <item name="android:layout_height">0.5dp</item>
         <item name="android:layout_gravity">center</item>
     </style>
+
     <!-- 指定消失的动画xml -->
     <style name="PopupAnimation" mce_bogus="1" parent="android:Animation">
         <item name="android:windowEnterAnimation">@anim/popup_enter</item>
@@ -247,9 +240,6 @@
         <item name="android:windowContentOverlay">@null</item>
     </style>
 
-    <style name="BigImage_theme" parent="@style/AppBaseTheme">
-        <item name="android:windowIsTranslucent">true</item>
-    </style>
 
     <!-- Activity root布局默认-->
     <style name="base_activity">
@@ -270,10 +260,24 @@
         <item name="android:maxHeight">60dp</item>
     </style>
 
+    <!--自定义验证码输入框时的progress-->
     <style name="Progress_circle_gray">
         <item name="android:indeterminateDrawable">@drawable/progress_circle_gray</item>
         <item name="android:minWidth">18dp</item>
         <item name="android:minHeight">18dp</item>
+    </style>
+
+    <!--图片裁剪框-->
+    <style tools:ignore="NewApi" name="CustomTheme" parent="android:Theme.DeviceDefault">
+        <item name="cropImageStyle">@style/Widget.CropImageView</item>
+    </style>
+
+
+    <style name="Widget.CropImageView" parent="android:Widget">
+        <item name="showThirds">true</item>
+        <item name="showCircle">false</item>
+        <item name="showHandles">always</item>
+        <item name="highlightColor">@color/white</item>
     </style>
 
 </resources>

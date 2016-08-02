@@ -6,13 +6,14 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 
 import com.ksfc.newfarmer.BaseFragment;
-import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.common.CommonFragmentPagerAdapter;
+import com.ksfc.newfarmer.event.RscSwipeEvent;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.widget.UnSwipeViewPager;
 
-import net.yangentao.util.msg.MsgCenter;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 
@@ -76,7 +77,7 @@ public class RscOrderFragment extends BaseFragment implements ViewPager.OnPageCh
     @Override
     public void onPageSelected(int position) {
         //通知 订单列表刷新
-        MsgCenter.fireNull(MsgID.rsc_swipe_reFlash, position);
+        EventBus.getDefault().post(new RscSwipeEvent(position));
     }
 
     @Override

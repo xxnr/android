@@ -309,6 +309,7 @@ public class PhotoView extends ImageView implements IPhotoView {
     protected void onDetachedFromWindow() {
         mAttacher.cleanup();
         super.onDetachedFromWindow();
+        setImageDrawable(null);
     }
 
     @Override

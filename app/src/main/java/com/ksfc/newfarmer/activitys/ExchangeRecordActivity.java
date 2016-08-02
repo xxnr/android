@@ -9,13 +9,14 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 
 import com.ksfc.newfarmer.BaseActivity;
-import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
+import com.ksfc.newfarmer.event.GiftListReFresh;
 import com.ksfc.newfarmer.fragment.GiftOrderListFragment;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.widget.UnSwipeViewPager;
 
-import net.yangentao.util.msg.MsgCenter;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +59,7 @@ public class ExchangeRecordActivity extends BaseActivity {
             @Override
             public void onPageSelected(int position) {
                 //通知 订单列表刷新
-                MsgCenter.fireNull(MsgID.gift_swipe_reFlash, position);
+                EventBus.getDefault().post(new GiftListReFresh(position));
             }
 
             @Override
@@ -68,6 +69,9 @@ public class ExchangeRecordActivity extends BaseActivity {
         });
 
     }
+
+
+
 
     @Override
     public void OnViewClick(View v) {

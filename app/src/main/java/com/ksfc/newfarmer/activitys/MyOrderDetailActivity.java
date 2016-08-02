@@ -1,6 +1,5 @@
 package com.ksfc.newfarmer.activitys;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,13 +9,13 @@ import java.util.concurrent.TimeUnit;
 import com.google.gson.Gson;
 import com.jakewharton.rxbinding.view.RxView;
 import com.ksfc.newfarmer.BaseActivity;
-import com.ksfc.newfarmer.common.GlideHelper;
+import com.ksfc.newfarmer.common.PicassoHelper;
 import com.ksfc.newfarmer.common.OrderHelper;
-import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.common.CommonAdapter;
 import com.ksfc.newfarmer.common.CommonViewHolder;
 import com.ksfc.newfarmer.db.Store;
+import com.ksfc.newfarmer.event.OrderListRefresh;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
@@ -50,7 +49,8 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import net.yangentao.util.msg.MsgCenter;
+
+import org.greenrobot.eventbus.EventBus;
 
 import rx.Subscriber;
 import rx.functions.Action1;
@@ -357,7 +357,7 @@ public class MyOrderDetailActivity extends BaseActivity {
                                                                 IntentUtil.activityForward(MyOrderDetailActivity.this, OfflinePayActivity.class, bundle, false);
                                                             } else {
                                                                 requestData(orderId);
-                                                                MsgCenter.fireNull(MsgID.order_Change);
+                                                                EventBus.getDefault().post(new OrderListRefresh());
                                                             }
                                                         }
                                                     };
@@ -462,7 +462,7 @@ public class MyOrderDetailActivity extends BaseActivity {
             if (req.getData().getStatus().equals("1000")) {
                 showCustomToast("收货成功", R.drawable.toast_success_icon);
                 requestData(orderId);
-                MsgCenter.fireNull(MsgID.order_Change, "SURE_GET_GOODS");
+                EventBus.getDefault().post(new OrderListRefresh());
             }
 
 
@@ -603,10 +603,9 @@ public class MyOrderDetailActivity extends BaseActivity {
                     to_get_pay_detail.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent intent = new Intent(MyOrderDetailActivity.this, CheckPayDetailActivity.class);
-                            intent.putExtra("payInfo", (Serializable) subOrder);
-                            intent.putExtra("orderId", orderId);
-                            startActivity(intent);
+                            Intent callingIntent = CheckPayDetailActivity
+                                    .getCallingIntent(MyOrderDetailActivity.this, orderId, subOrder);
+                            startActivity(callingIntent);
                         }
                     });
                 } else {
@@ -705,7 +704,7 @@ public class MyOrderDetailActivity extends BaseActivity {
 
             if (flag) {
                 //商品图片
-                GlideHelper.setImageRes(MyOrderDetailActivity.this, SKUsList.get(position).imgs, holder.ordering_item_img);
+                PicassoHelper.setImageRes(MyOrderDetailActivity.this, SKUsList.get(position).imgs, holder.ordering_item_img);
                 //商品个数
                 holder.ordering_item_geshu.setText("X " + SKUsList.get(position).count + "");
                 //商品名
@@ -786,7 +785,7 @@ public class MyOrderDetailActivity extends BaseActivity {
 
             } else {
                 //商品图片
-                GlideHelper.setImageRes(MyOrderDetailActivity.this, goodsList.get(position).imgs, holder.ordering_item_img);
+                PicassoHelper.setImageRes(MyOrderDetailActivity.this, goodsList.get(position).imgs, holder.ordering_item_img);
                 //商品个数
                 holder.ordering_item_geshu.setText("X " + goodsList.get(position).goodsCount + "");
                 //商品名

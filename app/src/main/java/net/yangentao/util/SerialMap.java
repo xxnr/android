@@ -20,7 +20,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import net.yangentao.util.sql.SQLiteHelper;
 
@@ -56,7 +55,6 @@ public class SerialMap implements SortedMap<String, String> {
 
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-			Log.d("hehe","数据库更新了");
 			super.onUpgrade(db, oldVersion, newVersion);
 		}
 	}

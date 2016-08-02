@@ -25,8 +25,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
-
-
 public class MyInviterFragment extends BaseFragment {
 
     private EditText edit;//输入代表人的手机号
@@ -99,17 +97,17 @@ public class MyInviterFragment extends BaseFragment {
 
             case R.id.add_inviter:
                 if (TextUtils.isEmpty(phoneNumber)) {
-                    showToast("请输入一个手机号码");
+                    showToast(activity.getString(R.string.please_input_phone));
                     return;
                 }
 
                 if (!Utils.isMobileNum(phoneNumber)) {
-                    showToast("您输入的手机号码格式不正确");
+                    showToast(activity.getString(R.string.please_input_right_phone));
                     return;
                 }
 
                 if (phoneNumber.equals(user_phone)) {
-                    showToast("不能设置自己为新农代表哦");
+                    showToast("不能绑定自己为新农代表,请重新输入");
                     return;
                 }
 

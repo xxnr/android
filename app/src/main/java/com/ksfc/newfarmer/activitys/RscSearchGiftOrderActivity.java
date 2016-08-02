@@ -24,7 +24,7 @@ import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.common.CommonAdapter;
 import com.ksfc.newfarmer.common.CommonViewHolder;
-import com.ksfc.newfarmer.common.GlideHelper;
+import com.ksfc.newfarmer.common.PicassoHelper;
 import com.ksfc.newfarmer.common.LoadMoreScrollListener;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.remoteapi.RemoteApi;
@@ -274,7 +274,7 @@ public class RscSearchGiftOrderActivity extends BaseActivity implements
                     }
                 }
                 if (giftordersBean.gift != null) {
-                    GlideHelper.setImageRes(RscSearchGiftOrderActivity.this,giftordersBean.gift.thumbnail,(ImageView) holder.getView(R.id.gift_order_img_iv));
+                    PicassoHelper.setImageRes(RscSearchGiftOrderActivity.this,giftordersBean.gift.thumbnail,(ImageView) holder.getView(R.id.gift_order_img_iv));
                     holder.setText(R.id.gift_order_name_iv, StringUtil.checkStr(giftordersBean.gift.name)
                             ? giftordersBean.gift.name : "");
                     holder.setText(R.id.gift_order_price_iv, StringUtil.checkStr(String.valueOf(giftordersBean.gift.points))

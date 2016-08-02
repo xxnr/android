@@ -14,10 +14,10 @@ import android.widget.TextView;
 import com.alipay.sdk.pay.demo.AlipayClass;
 import com.google.gson.Gson;
 import com.ksfc.newfarmer.BaseFragment;
-import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.activitys.EposActivity;
 import com.ksfc.newfarmer.activitys.OfflinePayActivity;
+import com.ksfc.newfarmer.event.OrderListRefresh;
 import com.ksfc.newfarmer.protocol.config.HttpsConfig;
 import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.protocol.ApiType;
@@ -37,7 +37,8 @@ import com.ksfc.newfarmer.utils.StringUtil;
 import com.unionpay.UPPayAssistEx;
 import com.unionpay.uppay.PayActivity;
 
-import net.yangentao.util.msg.MsgCenter;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -406,7 +407,7 @@ public class PayWayFragment extends BaseFragment {
                             break;
                     }
                 }
-                MsgCenter.fireNull(MsgID.order_Change, "payType_change");
+                EventBus.getDefault().post(new OrderListRefresh());
                 break;
             default:
                 break;
@@ -522,11 +523,11 @@ public class PayWayFragment extends BaseFragment {
             price = payWay_times_price_et.getText().toString().trim();
             if (StringUtil.checkStr(price)) {
                 builder1.add("price", price);
-                MsgCenter.fireNull(MsgID.PAY_PRICE, price);
+                EventBus.getDefault().post(price);
             }
         } else {
             if (datas != null && datas.rows != null && datas.rows.payment != null) {
-                MsgCenter.fireNull(MsgID.PAY_PRICE, datas.rows.payment.price);
+                EventBus.getDefault().post(datas.rows.payment.price);
             }
         }
 

@@ -8,32 +8,31 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.ksfc.newfarmer.BaseActivity;
-import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.common.CommonAdapter;
 import com.ksfc.newfarmer.common.CommonViewHolder;
 import com.ksfc.newfarmer.db.Store;
+import com.ksfc.newfarmer.event.UserTypeChangeEvent;
 import com.ksfc.newfarmer.protocol.ApiType;
-import com.ksfc.newfarmer.protocol.NetworkHelper;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
 import com.ksfc.newfarmer.beans.LoginResult;
+import com.ksfc.newfarmer.protocol.RxApi.RxUnParseService;
 import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.StringUtil;
 
-import net.yangentao.util.msg.MsgCenter;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by HePeng on 2015/12/9.
@@ -67,48 +66,48 @@ public class SelectUserTypeActivity extends BaseActivity implements AdapterView.
 
     //加载用户类型
     private void getData() {
-        okhttp3.Request request = new okhttp3.Request.Builder()
-                .url(ApiType.USER_TYPE.getOpt())
-                .get()
-                .build();
-        NetworkHelper.getClient().newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                disMissDialog();
-                showToast("数据加载失败");
-            }
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                disMissDialog();
-                if (response.isSuccessful() && response.body() != null) {
-                    String result = response.body().string();
-                    if (StringUtil.checkStr(result)) {
-                        RndLog.v(TAG, result);
-                        list_key = new ArrayList<>();
-                        list_value = new ArrayList<>();
-                        try {
-                            JSONObject jsonObject = new JSONObject(result);
-                            JSONObject data = jsonObject.getJSONObject("data");
-                            Iterator<String> iterator = data.keys();
-                            while (iterator.hasNext()) {
-                                String key = iterator.next();
-                                list_key.add(key);
-                                list_value.add(data.getString(key));
+
+        RxUnParseService.createApi()
+                .USER_TYPE()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .compose(this.<String>bindToLifecycle())
+                .subscribe(new Action1<String>() {
+                    @Override
+                    public void call(String result) {
+                        disMissDialog();
+                        if (StringUtil.checkStr(result)) {
+                            RndLog.v(TAG, result);
+                            list_key = new ArrayList<>();
+                            list_value = new ArrayList<>();
+                            try {
+                                JSONObject jsonObject = new JSONObject(result);
+                                JSONObject data = jsonObject.getJSONObject("data");
+                                Iterator<String> iterator = data.keys();
+                                while (iterator.hasNext()) {
+                                    String key = iterator.next();
+                                    list_key.add(key);
+                                    list_value.add(data.getString(key));
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                            Collections.reverse(list_key);
+                            Collections.reverse(list_value);
+                            adapter = new AddressAdapter(SelectUserTypeActivity.this, list_value);
+                            listView.setAdapter(adapter);
                         }
-                        Collections.reverse(list_key);
-                        Collections.reverse(list_value);
-
-                        adapter = new AddressAdapter(SelectUserTypeActivity.this, list_value);
-                        listView.setAdapter(adapter);
                     }
-                }
-            }
-        });
-    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        disMissDialog();
+                        showToast("数据加载失败");
+                        throwable.printStackTrace();
+                    }
+                });
 
+    }
 
     @Override
     public void OnViewClick(View v) {
@@ -125,7 +124,7 @@ public class SelectUserTypeActivity extends BaseActivity implements AdapterView.
                 Store.User.saveMe(queryMe);
             }
             showToast("保存成功");
-            MsgCenter.fireNull(MsgID.UPDATE_USER_TYPE);
+            EventBus.getDefault().post(new UserTypeChangeEvent());
             finish();
         }
 

@@ -6,9 +6,10 @@ package com.ksfc.newfarmer.activitys;
 import java.util.ArrayList;
 
 import com.ksfc.newfarmer.BaseActivity;
-import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.common.CommonFragmentPagerAdapter;
+import com.ksfc.newfarmer.event.MainTabSelectEvent;
+import com.ksfc.newfarmer.event.OrderListSwipeEvent;
 import com.ksfc.newfarmer.fragment.MyOrderListFragment;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.utils.PopWindowUtils;
@@ -23,7 +24,8 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-import net.yangentao.util.msg.MsgCenter;
+
+import org.greenrobot.eventbus.EventBus;
 
 /**
  * 项目名称：QianXihe518 类名称：MyOrderListActivity 类描述： 创建人：王蕾 创建时间：2015-5-29 下午5:31:11
@@ -51,7 +53,7 @@ public class MyOrderListActivity extends BaseActivity implements MyOrderListFrag
                 Intent intent = new Intent(MyOrderListActivity.this, MainActivity.class);
                 intent.putExtra("id", MainActivity.Tab.MINE);
                 startActivity(intent);
-                MsgCenter.fireNull(MsgID.MainActivity_select_tab, MainActivity.Tab.MINE);
+                EventBus.getDefault().post(new MainTabSelectEvent(MainActivity.Tab.MINE));
                 finish();
             }
         });
@@ -63,7 +65,7 @@ public class MyOrderListActivity extends BaseActivity implements MyOrderListFrag
             Intent intent = new Intent(MyOrderListActivity.this, MainActivity.class);
             intent.putExtra("id", MainActivity.Tab.MINE);
             startActivity(intent);
-            MsgCenter.fireNull(MsgID.MainActivity_select_tab, MainActivity.Tab.MINE);
+            EventBus.getDefault().post(new MainTabSelectEvent(MainActivity.Tab.MINE));
             finish();
             return true;
         }
@@ -126,7 +128,7 @@ public class MyOrderListActivity extends BaseActivity implements MyOrderListFrag
     @Override
     public void onPageSelected(int position) {
         //通知 订单列表刷新
-        MsgCenter.fireNull(MsgID.swipe_reFlash, position);
+        EventBus.getDefault().post(new OrderListSwipeEvent(position));
     }
 
     @Override

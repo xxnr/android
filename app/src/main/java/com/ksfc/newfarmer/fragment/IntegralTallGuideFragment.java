@@ -11,15 +11,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ksfc.newfarmer.BaseFragment;
-import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
-import com.ksfc.newfarmer.common.GlideHelper;
+import com.ksfc.newfarmer.common.PicassoHelper;
+import com.ksfc.newfarmer.event.RewardShopGuideEvent;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.beans.GiftListResult;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.utils.Utils;
 
-import net.yangentao.util.msg.MsgCenter;
+
+import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,9 +37,9 @@ public class IntegralTallGuideFragment extends BaseFragment {
         switch (v.getId()) {
             case R.id.guide_next_button:
                 if (page == 1) {
-                    MsgCenter.fireNull(MsgID.Integral_Guide_Change, 2);
+                    EventBus.getDefault().post(new RewardShopGuideEvent(2));
                 } else if (page == 2) {
-                    MsgCenter.fireNull(MsgID.Integral_Guide_Change, 3);
+                    EventBus.getDefault().post(new RewardShopGuideEvent(3));
                 }
                 break;
             case R.id.guide_finish_button:
@@ -84,7 +85,7 @@ public class IntegralTallGuideFragment extends BaseFragment {
                         layoutParams.width = itemWitch;
                         viewHolder.giftContentRel.setLayoutParams(layoutParams);
                     }
-                    GlideHelper.setImageRes(IntegralTallGuideFragment.this,gift.largeUrl,viewHolder.giftImg);
+                    PicassoHelper.setImageRes(IntegralTallGuideFragment.this,gift.largeUrl,viewHolder.giftImg);
                     viewHolder.giftNameTv.setText(gift.name);
                     viewHolder.giftPriceTv.setText(gift.points + "");
 

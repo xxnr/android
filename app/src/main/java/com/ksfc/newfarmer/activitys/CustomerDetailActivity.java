@@ -1,15 +1,17 @@
 package com.ksfc.newfarmer.activitys;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ksfc.newfarmer.BaseActivity;
-import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.db.DBManager;
+import com.ksfc.newfarmer.event.ChangePotentialEvent;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
@@ -19,7 +21,8 @@ import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.utils.Utils;
 
 
-import net.yangentao.util.msg.MsgCenter;
+
+import org.greenrobot.eventbus.EventBus;
 
 import greendao.DaoSession;
 
@@ -33,6 +36,17 @@ public class CustomerDetailActivity extends BaseActivity {
     private ImageView phone_tv_icon;
     private TextView choice_remark_text;
 
+
+    public static final String ARG_PARAM1 = "param1";
+
+    public static Intent getCallingIntent(Context context, String _id) {
+        Intent callingIntent = new Intent(context, CustomerDetailActivity.class);
+        callingIntent.putExtra(ARG_PARAM1, _id);
+        return callingIntent;
+    }
+
+
+
     @Override
     public int getLayout() {
         return R.layout.activity_potential_detail;
@@ -42,7 +56,7 @@ public class CustomerDetailActivity extends BaseActivity {
     public void OnActCreate(Bundle savedInstanceState) {
         initView();
         setTitle("客户详情");
-        _id = getIntent().getStringExtra("_id");
+        _id = getIntent().getStringExtra(ARG_PARAM1);
         showProgressDialog();
         getData();
     }
@@ -168,7 +182,7 @@ public class CustomerDetailActivity extends BaseActivity {
                             customersEntity.sex = data.potentialCustomer.sex;
                             customersEntity.nameInitialType = data.potentialCustomer.nameInitialType;
                             writableDaoSession.update(customersEntity);
-                            MsgCenter.fireNull(MsgID.change_potential_success, "change");
+                            EventBus.getDefault().post(new ChangePotentialEvent());
                         }
 
                     }

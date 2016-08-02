@@ -8,14 +8,14 @@ import java.util.Map;
 
 import com.google.gson.Gson;
 import com.ksfc.newfarmer.BaseActivity;
-import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.RndApplication;
 
 import com.ksfc.newfarmer.common.CommonAdapter;
 import com.ksfc.newfarmer.common.CommonViewHolder;
-import com.ksfc.newfarmer.common.GlideHelper;
+import com.ksfc.newfarmer.common.PicassoHelper;
 import com.ksfc.newfarmer.db.Store;
+import com.ksfc.newfarmer.event.AddressChangeEvent;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
@@ -50,8 +50,10 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import net.yangentao.util.msg.MsgCenter;
-import net.yangentao.util.msg.MsgListener;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 public class AddOrderActivity extends BaseActivity implements RadioGroup.OnCheckedChangeListener {
 
@@ -117,6 +119,7 @@ public class AddOrderActivity extends BaseActivity implements RadioGroup.OnCheck
         data = new Data();
         data.category = new ArrayList<>();
         setTitle("提交订单");
+        EventBus.getDefault().register(this);
         initView();
     }
 
@@ -158,28 +161,30 @@ public class AddOrderActivity extends BaseActivity implements RadioGroup.OnCheck
         getDeliveries();
         //获取历史联系人
         getConsignees();
-        // 显示地址
-        MsgCenter.addListener(new MsgListener() {// 收货人信息
-            @Override
-            public void onMsg(Object sender, String msg, Object... args) {
-                initHeadView();
-                Address str = (Address) args[0];
-                if (str == null) {
-                    order_detail_address_tv.setText("");
-                    getAddress();
-                } else {
+    }
 
-                    address_shouhuo_ll.setVisibility(View.VISIBLE);
-                    String name = str.receiptPeople + "  " + str.receiptPhone;
-                    selectedAddress = str;
-                    order_detail_address_tv.setText(StringUtil.checkBufferStrWithSpace(str.areaName, str.cityName
-                            , str.countyName
-                            , str.townName
-                            , str.address));
-                    name_phone_tv.setText(name);
-                }
-            }
-        }, MsgID.MSG_Change_ADDRESS);
+    /**
+     * 选中地址
+     *
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void addressChange(AddressChangeEvent event) {
+        initHeadView();
+        Address str = event.address;
+        if (str == null) {
+            order_detail_address_tv.setText("");
+            getAddress();
+        } else {
+            address_shouhuo_ll.setVisibility(View.VISIBLE);
+            String name = str.receiptPeople + "  " + str.receiptPhone;
+            selectedAddress = str;
+            order_detail_address_tv.setText(StringUtil.checkBufferStrWithSpace(str.areaName, str.cityName
+                    , str.countyName
+                    , str.townName
+                    , str.address));
+            name_phone_tv.setText(name);
+        }
     }
 
 
@@ -411,7 +416,7 @@ public class AddOrderActivity extends BaseActivity implements RadioGroup.OnCheck
         public void convert(CommonViewHolder holder, Data.Goods goods) {
             if (goods != null) {
                 try {//图片
-                    GlideHelper.setImageRes(AddOrderActivity.this, goods.pic, (ImageView) holder.getView(R.id.ordering_item_img));
+                    PicassoHelper.setImageRes(AddOrderActivity.this, goods.pic, (ImageView) holder.getView(R.id.ordering_item_img));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -906,5 +911,11 @@ public class AddOrderActivity extends BaseActivity implements RadioGroup.OnCheck
             params.put("userId", Store.User.queryMe().userid);
         }
         execApi(ApiType.GET_CONSIGNEE_INFO.setMethod(ApiType.RequestMethod.GET), params);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

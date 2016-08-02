@@ -2,6 +2,7 @@ package com.ksfc.newfarmer.beans;
 
 import com.ksfc.newfarmer.protocol.ResponseResult;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class InformationResult extends ResponseResult {
@@ -35,7 +36,7 @@ public class InformationResult extends ResponseResult {
 
         public List<ItemsEntity> items;
 
-        public static class ItemsEntity {
+        public static class ItemsEntity implements Serializable{
             public String image;
             public String category;
             public String title;

@@ -28,14 +28,14 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.jakewharton.rxbinding.view.RxView;
 import com.ksfc.newfarmer.BaseActivity;
-import com.ksfc.newfarmer.MsgID;
-import com.ksfc.newfarmer.common.GlideHelper;
+import com.ksfc.newfarmer.common.PicassoHelper;
 import com.ksfc.newfarmer.common.LoadMoreScrollListener;
 import com.ksfc.newfarmer.common.OrderHelper;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.common.CommonAdapter;
 import com.ksfc.newfarmer.common.CommonViewHolder;
 import com.ksfc.newfarmer.db.Store;
+import com.ksfc.newfarmer.event.RscOrderChangeEvent;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
@@ -56,8 +56,10 @@ import com.ksfc.newfarmer.widget.RecyclerImageView;
 import com.ksfc.newfarmer.widget.UnSwipeGridView;
 import com.ksfc.newfarmer.widget.WidgetUtil;
 
-import net.yangentao.util.msg.MsgCenter;
-import net.yangentao.util.msg.MsgListener;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -125,6 +127,7 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
 
     @Override
     public void OnActCreate(Bundle savedInstanceState) {
+        EventBus.getDefault().register(this);
         initView();
         getPayWay();
     }
@@ -174,19 +177,18 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
         PullToRefreshHelper.setFreshText(waitingpay_lv);
         //无订单下的状态
         null_layout = ((RelativeLayout) findViewById(R.id.null_shop_cart_layout));
-
         pop_bg = (RelativeLayout) findViewById(R.id.pop_bg);
 
+    }
 
-        //订单状态改变时刷新
-        MsgCenter.addListener(new MsgListener() {
-            @Override
-            public void onMsg(Object sender, String msg, Object... args) {
-                page = 1;
-                getData(page);
-            }
-        }, MsgID.Rsc_order_Change);
-
+    /**
+     * 订单状态改变时刷新
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void RscOrderChange(RscOrderChangeEvent event){
+        page = 1;
+        getData(page);
     }
 
     @Override
@@ -570,7 +572,7 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
                         RscOrderResult.OrdersEntity.SKUsEntity skUsEntity = SKUsList.get(i);
                         if (skUsEntity != null) {
                             //商品图片
-                            GlideHelper.setImageRes(RscSearchOrderActivity.this, skUsEntity.thumbnail, viewHolderChild.ordering_item_img);
+                            PicassoHelper.setImageRes(RscSearchOrderActivity.this, skUsEntity.thumbnail, viewHolderChild.ordering_item_img);
                             //商品个数
                             viewHolderChild.ordering_item_geshu.setText("X " + skUsEntity.count);
                             //商品名
@@ -1181,5 +1183,9 @@ public class RscSearchOrderActivity extends BaseActivity implements PullToRefres
 
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 }

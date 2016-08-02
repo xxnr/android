@@ -15,7 +15,7 @@ import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.activitys.ShoppingCartActivity.Data.Category;
 import com.ksfc.newfarmer.activitys.ShoppingCartActivity.Data.Goods;
-import com.ksfc.newfarmer.common.GlideHelper;
+import com.ksfc.newfarmer.common.PicassoHelper;
 import com.ksfc.newfarmer.db.DBManager;
 import com.ksfc.newfarmer.beans.dbbeans.OfflineShoppingCart;
 import com.ksfc.newfarmer.db.Store;
@@ -1008,7 +1008,7 @@ public class ShoppingCartActivity extends BaseActivity {
                                 holder.ordering_item_geshu.setText("");
                             }
                             //图片
-                            GlideHelper.setImageRes(ShoppingCartActivity.this, goodsList.get(childPosition).pic, holder.ordering_item_img);
+                            PicassoHelper.setImageRes(ShoppingCartActivity.this, goodsList.get(childPosition).pic, holder.ordering_item_img);
                             //名称
                             if (StringUtil.checkStr(goodsList.get(childPosition).name)) {
                                 holder.ordering_item_name.setText(goodsList.get(childPosition).name);
@@ -1274,18 +1274,22 @@ public class ShoppingCartActivity extends BaseActivity {
                                     public void onClick(View v) {
                                         CustomDialogForShopCarCount.Builder builder = new CustomDialogForShopCarCount.Builder(
                                                 ShoppingCartActivity.this);
-                                        car_num = Integer.parseInt(holder.ordering_item_geshu.getText().toString().trim());
+                                        try {
+                                            car_num = Integer.parseInt(holder.ordering_item_geshu.getText().toString().trim());
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
                                         builder.setMessage("修改购买数量").setEditText(car_num + "")
                                                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                                     @Override
                                                     public void onClick(DialogInterface dialog, int which) {
                                                         String str = CustomDialogForShopCarCount.editText.getText().toString().trim();
                                                         if (StringUtil.checkStr(str)) {
-                                                            int i;
+                                                            int i = 1;
                                                             try {
                                                                 i = Integer.parseInt(str);
-                                                            } catch (NumberFormatException e) {
-                                                                i = 1;
+                                                            } catch (Exception e) {
+                                                                e.printStackTrace();
                                                             }
                                                             if (i > 0) {
                                                                 holder.ordering_item_geshu.setText(str);
@@ -1295,12 +1299,11 @@ public class ShoppingCartActivity extends BaseActivity {
                                                                         params.put("userId", Store.User.queryMe().userid);
                                                                     }
                                                                     params.put("SKUId", goodsList.get(childPosition).SKUId);
-                                                                    params.put("quantity", Integer.valueOf(str));
+                                                                    params.put("quantity", i);
                                                                     execApi(ApiType.CHANGE_NUM, params);
                                                                     showProgressDialog("提交中");
                                                                 } else {
-                                                                    goodsList.get(childPosition).num = Integer.valueOf(str);
-
+                                                                    goodsList.get(childPosition).num = i;
                                                                     OfflineShoppingCart offlineShoppingCart = cartDao.load(goodsList.get(childPosition).SKUId);
                                                                     if (offlineShoppingCart != null) {
                                                                         offlineShoppingCart.setNumbers(holder.ordering_item_geshu.getText().toString().trim());
@@ -1339,9 +1342,8 @@ public class ShoppingCartActivity extends BaseActivity {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
                                                 car_num = Integer.parseInt(CustomDialogForShopCarCount.editText.getText().toString().trim());
-                                                if (car_num == 1) {
+                                                if (car_num < 1) {
                                                     showToast("商品不能再减少了哦");
-
                                                 } else {
                                                     car_num--;
                                                     CustomDialogForShopCarCount.editText.setText(car_num + "");

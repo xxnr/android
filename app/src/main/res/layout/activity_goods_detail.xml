@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.ksfc.newfarmer.widget.KeyboardListenRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/shangpin_detail_ll"
-    style="@style/base_activity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/white">
 
     <LinearLayout
@@ -9,14 +10,46 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <include layout="@layout/title_lay" />
-
-        <com.ksfc.newfarmer.widget.VerticalViewPager
-            android:id="@+id/viewPager_vertical"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:scrollbars="none" />
+            android:layout_weight="1">
+
+            <com.ksfc.newfarmer.widget.VerticalViewPager
+                android:id="@+id/viewPager_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="none" />
+
+
+            <View
+                android:id="@+id/title_bg_down"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:background="@drawable/goods_title_gray_bar" />
+
+            <View
+                android:id="@+id/title_bg_up"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:background="@color/green" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <View
+                    android:id="@+id/title_div"
+                    android:layout_width="match_parent"
+                    android:layout_height="25dp" />
+
+                <include layout="@layout/title_lay" />
+
+            </LinearLayout>
+
+        </FrameLayout>
+
 
         <LinearLayout
             android:id="@+id/shangpin_detail_bottom"

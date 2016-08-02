@@ -1,5 +1,7 @@
 package com.ksfc.newfarmer.activitys;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -19,6 +21,14 @@ public class AboutUsActivity extends BaseActivity {
     @BindView(R.id.about_us_version)
     TextView aboutUsVersion;
 
+    public static final String ARG_PARAM1 = "param1";
+
+    public static Intent getCallingIntent(Context context, String versionName) {
+        Intent callingIntent = new Intent(context, AboutUsActivity.class);
+        callingIntent.putExtra(ARG_PARAM1, versionName);
+        return callingIntent;
+    }
+
     @Override
     public int getLayout() {
         return R.layout.activity_about_us;
@@ -29,13 +39,10 @@ public class AboutUsActivity extends BaseActivity {
         ButterKnife.bind(this);
         setTitle("关于我们");
         //设置版本
-        Bundle bundle = getIntent().getExtras();
-        String versionName = null;
-        if (bundle != null) {
-            versionName = bundle.getString("versionName");
-        }
+        String versionName = getIntent().getStringExtra(ARG_PARAM1);
         aboutUsVersion.setText(StringUtil.checkStr(versionName) ? "V" + versionName : "");
     }
+
 
     @Override
     public void OnViewClick(View v) {

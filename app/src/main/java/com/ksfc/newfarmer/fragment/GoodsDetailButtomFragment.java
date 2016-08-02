@@ -1,5 +1,6 @@
 package com.ksfc.newfarmer.fragment;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -13,12 +14,14 @@ import com.ksfc.newfarmer.BaseFragment;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.beans.GetGoodsDetail;
+import com.ksfc.newfarmer.utils.ScreenUtil;
+import com.ksfc.newfarmer.utils.Utils;
 
 
 /**
  * Created by CAI on 2016/7/15.
  */
-public class GoodsDetailButtomFragment extends BaseFragment implements View.OnClickListener{
+public class GoodsDetailButtomFragment extends BaseFragment implements View.OnClickListener {
     private static final String ARG_PARAM1 = "param1";
     private GetGoodsDetail.GoodsDetail detail;
     private WebView web;
@@ -86,6 +89,15 @@ public class GoodsDetailButtomFragment extends BaseFragment implements View.OnCl
     public View InItView() {
 
         View view = inflater.inflate(R.layout.goods_detail_buttom, null);
+        View goods_bottom_div = view.findViewById(R.id.goods_bottom_div);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            int statusHeight = ScreenUtil.getStatusHeight(activity);
+            goods_bottom_div.getLayoutParams().height = Utils.dip2px(activity, 45) + statusHeight;
+        } else {
+            goods_bottom_div.getLayoutParams().height = Utils.dip2px(activity, 45);
+        }
+
         web = (WebView) view.findViewById(R.id.goods_detail_list);
         guild_1 = (TextView) view.findViewById(R.id.tv_guid1);
         guild_2 = (TextView) view.findViewById(R.id.tv_guid2);

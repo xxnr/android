@@ -3,7 +3,7 @@
  */
 package com.ksfc.newfarmer.beans;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.ksfc.newfarmer.protocol.ResponseResult;
 
@@ -25,7 +25,7 @@ public class CityList extends ResponseResult {
 	public Data datas;
 
 	public class Data {
-		public ArrayList<Rows> rows;
+		public List<Rows> rows;
 
 		public class Rows {
 			public String name;

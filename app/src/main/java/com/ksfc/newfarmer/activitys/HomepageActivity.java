@@ -24,13 +24,15 @@ import com.handmark.pulltorefresh.library.ILoadingLayout;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.ksfc.newfarmer.BaseActivity;
-import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
+import com.ksfc.newfarmer.beans.CampaignListResult;
 import com.ksfc.newfarmer.common.CommonAdapter;
 import com.ksfc.newfarmer.common.CommonViewHolder;
 import com.ksfc.newfarmer.common.CommonFunction;
 import com.ksfc.newfarmer.common.CompleteReceiver;
-import com.ksfc.newfarmer.common.GlideHelper;
+import com.ksfc.newfarmer.common.PicassoHelper;
+import com.ksfc.newfarmer.event.IsLoginEvent;
+import com.ksfc.newfarmer.event.SignEvent;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.remoteapi.RemoteApi;
 import com.ksfc.newfarmer.protocol.Request;
@@ -54,10 +56,13 @@ import com.ksfc.newfarmer.widget.CarouselDiagramViewPager;
 import com.ksfc.newfarmer.widget.UnSwipeGridView;
 import com.ksfc.newfarmer.widget.dialog.CustomDialog;
 import com.ksfc.newfarmer.widget.dialog.CustomDialogUpdate;
+import com.trello.rxlifecycle.ActivityEvent;
 
 import net.yangentao.util.PreferenceUtil;
-import net.yangentao.util.msg.MsgCenter;
-import net.yangentao.util.msg.MsgListener;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -101,6 +106,7 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
     @Override
     public void OnActCreate(Bundle savedInstanceState) {
         ButterKnife.bind(this);
+        EventBus.getDefault().register(this);
         setTitle("新新农人");
         initView();
         //在主页判断版本是否需要升级 并注册监听下载完成之后的广播
@@ -115,22 +121,31 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
         if (isLogin()) {
             RemoteApi.getIntegral(this);
         }
-        //签到通知
-        MsgCenter.addListener(new MsgListener() {
-            @Override
-            public void onMsg(Object sender, String msg, Object... args) {
-                isSigned = true;
-            }
-        }, MsgID.IS_Signed);
 
-        //登录通知
-        MsgCenter.addListener(new MsgListener() {
-            @Override
-            public void onMsg(Object sender, String msg, Object... args) {
-                RemoteApi.getIntegral(HomepageActivity.this);
-            }
-        }, MsgID.ISLOGIN);
+
+
+        //获取活动列表
+        execApi(ApiType.GET_CAMPAIGNS.setMethod(ApiType.RequestMethod.GET), null);
     }
+
+    /**
+     * 监听登录事件
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void isLoginEvent(IsLoginEvent event){
+        RemoteApi.getIntegral(HomepageActivity.this);
+    }
+
+    /**
+     * 签到通知
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void isSignEvent(SignEvent event){
+        isSigned = true;
+    }
+
 
     //获得首页列表数据
     private void getData(final HomepageViewBean homepageViewBean) {
@@ -143,7 +158,7 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
                     .GET_GOODS(map)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .compose(this.<GetGoodsData>bindToLifecycle())
+                    .compose(this.<GetGoodsData>bindUntilEvent(ActivityEvent.DESTROY))
                     .subscribe(new Action1<GetGoodsData>() {
                         @Override
                         public void call(GetGoodsData getGoodsData) {
@@ -184,10 +199,7 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
         setLeftClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                bundle.putString(FloatingLayerActivity.KEY, FloatingLayerActivity.ACTIVITY_LIST);
-                IntentUtil.activityForward(MainActivity.getInstance(), FloatingLayerActivity.class, bundle, false);
-                ActivityAnimationUtils.setActivityAnimation(MainActivity.getInstance(), R.anim.animation_none, R.anim.animation_none);
+                showCampaign();
             }
         });
         //设置下拉刷新
@@ -426,6 +438,30 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
 
                 }
             }
+        } else if (ApiType.GET_CAMPAIGNS == req.getApi()) {
+            if (req.getData().getStatus().equals("1000")) {
+                CampaignListResult reqData = (CampaignListResult) req.getData();
+                List<CampaignListResult.CampaignsBean> campaigns = reqData.campaigns;
+                //是否看过的活动
+                boolean isSeeAll = true;
+                PreferenceUtil pu = new PreferenceUtil(HomepageActivity.this, "config");
+                for (int i = 0; i < campaigns.size(); i++) {
+                    CampaignListResult.CampaignsBean campaignsBean = campaigns.get(i);
+                    if (campaignsBean != null) {
+                        boolean see = pu.getBool("seeCampaign" + campaignsBean._id, false);
+                        if (!see) { //只要有一个未看过
+                            isSeeAll = false;
+                        }
+                    }
+                }
+                if (!isSeeAll) {
+
+                    showCampaign();
+                }
+
+
+            }
+
         }
     }
 
@@ -475,7 +511,7 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
                     layoutParams.width = itemWitch - Utils.dip2px(HomepageActivity.this, 2);
                     imageView.setLayoutParams(layoutParams);
                 }
-                GlideHelper.setImageRes(HomepageActivity.this,singleGood.imgUrl,imageView);
+                PicassoHelper.setImageRes(HomepageActivity.this, singleGood.imgUrl, imageView);
                 //商品名
                 if (StringUtil.checkStr(singleGood.goodsName)) {
                     holder.setText(R.id.huafei_name_tv, singleGood.goodsName);
@@ -523,6 +559,15 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
         super.onDestroy();
         //解除对下载完成事件的监听
         unregisterReceiver(completeReceiver);
+        EventBus.getDefault().unregister(this);
+    }
+
+    private void showCampaign() {
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FloatingLayerActivity.KEY, FloatingLayerActivity.ACTIVITY_LIST);
+        IntentUtil.activityForward(MainActivity.getInstance(), FloatingLayerActivity.class, bundle, false);
+        ActivityAnimationUtils.setActivityAnimation(MainActivity.getInstance(), R.anim.animation_none, R.anim.animation_none);
     }
 
 }

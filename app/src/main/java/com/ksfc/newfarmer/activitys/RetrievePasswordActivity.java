@@ -10,23 +10,20 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
-
+import com.ksfc.newfarmer.beans.PublicKeyResult;
+import com.ksfc.newfarmer.beans.SmsResult;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
-import com.ksfc.newfarmer.beans.PublicKeyResult;
-import com.ksfc.newfarmer.beans.SmsResult;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.RSAUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.ClearEditText;
 import com.ksfc.newfarmer.widget.dialog.CustomDialogForSms;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 
 @TargetApi(Build.VERSION_CODES.GINGERBREAD)
@@ -63,28 +60,28 @@ public class RetrievePasswordActivity extends BaseActivity {
         switch (v.getId()) {
             case R.id.backdengLubutton:
                 if (!StringUtil.checkStr(backedit1.getText().toString())) {
-                    showToast("请输入手机号");
+                    showToast(getString(R.string.please_input_phone));
                     return;
                 } else if (!isMobileNum(backedit1.getText().toString())) {
-                    showToast("请输入正确的手机号");
+                    showToast(getString(R.string.please_input_right_phone));
                     return;
                 } else if (!StringUtil.checkStr(backyanzhengma.getText().toString())) {
-                    showToast("请输入验证码");
+                    showToast(getString(R.string.input_sms_code));
                     return;
                 } else if (backnewpassword.getText().toString().isEmpty()) {
-                    showToast("请输入密码");
+                    showToast(getString(R.string.input_password));
                     return;
                 } else if (confimPasword.getText().toString().isEmpty()) {
-                    showToast("请输入确认密码");
+                    showToast(getString(R.string.input_confirm_password));
                     return;
                 } else if (!password.equals(backnewpassword.getText().toString())) {
-                    showToast("两次密码输入不一致，请重新输入");
+                    showToast(getString(R.string.password_not_fit));
                     return;
-                } else if (backnewpassword.getText().toString().length()<6) {
-                    showToast("密码长度不小于6位");
+                } else if (backnewpassword.getText().toString().length() < 6) {
+                    showToast(getString(R.string.password_lt_6));
                     return;
                 } else if (backnewpassword.getText().toString().length() > 20) {
-                    showToast("密码长度不能大于20位");
+                    showToast(getString(R.string.password_gt_20));
                     return;
                 }
                 showProgressDialog();
@@ -187,11 +184,11 @@ public class RetrievePasswordActivity extends BaseActivity {
                         e.printStackTrace();
                     }
 
-                    Glide.with(RetrievePasswordActivity.this)
+                    Picasso.with(RetrievePasswordActivity.this)
                             .load(smsResult.captcha)
-                            .skipMemoryCache(true)
-                            .diskCacheStrategy(DiskCacheStrategy.NONE)
-                            .crossFade()
+                            .noFade()
+                            .skipMemoryCache()
+                            .config(Bitmap.Config.RGB_565)
                             .error(R.drawable.code_load_failed)
                             .into(CustomDialogForSms.sms_auth_code_iv);
                 } else {
@@ -230,11 +227,12 @@ public class RetrievePasswordActivity extends BaseActivity {
 
         mobile = backedit1.getText().toString();
         if (!StringUtil.checkStr(mobile)) {
-            showToast("请输入手机号");
+            showToast(getString(R.string.please_input_phone));
             return;
         }
         if (!isMobileNum(mobile)) {
-            showToast("请输入正确的手机号");
+            showToast(getString(R.string.please_input_right_phone));
+
             return;
         }
         sendSMS();
@@ -266,30 +264,25 @@ public class RetrievePasswordActivity extends BaseActivity {
      */
     private void reFreshCode() {
 
-
-        Glide.with(RetrievePasswordActivity.this)
+        Picasso.with(RetrievePasswordActivity.this)
                 .load(ApiType.REFRESH_SMS_CODE.getOpt() + "?tel=" + mobile + "&bizcode=resetpwd")
-                .asBitmap()
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
+                .skipMemoryCache()
+                .config(Bitmap.Config.RGB_565)
+                .noFade()
                 .error(R.drawable.code_load_failed)
-                .listener(new RequestListener<String, Bitmap>() {
+                .into(CustomDialogForSms.sms_auth_code_iv, new Callback() {
                     @Override
-                    public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource) {
+                    public void onSuccess() {
                         CustomDialogForSms.sms_auth_code_iv.setEnabled(true);
                         CustomDialogForSms.sms_auth_code_refresh_iv.setEnabled(true);
-                        return false;
                     }
 
                     @Override
-                    public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                    public void onError() {
                         CustomDialogForSms.sms_auth_code_iv.setEnabled(true);
                         CustomDialogForSms.sms_auth_code_refresh_iv.setEnabled(true);
-                        return false;
                     }
-                })
-                .into(CustomDialogForSms.sms_auth_code_iv);
-
+                });
     }
 
 

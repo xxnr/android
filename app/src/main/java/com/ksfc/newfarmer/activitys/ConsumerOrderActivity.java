@@ -1,6 +1,7 @@
 package com.ksfc.newfarmer.activitys;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -42,6 +43,15 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
     private TextView consumer_address;
     private LoadingFooter loadingFooter;
 
+    public static final String ARG_PARAM1 = "param1";
+
+    public static Intent getCallingIntent(Context context, InviteeEntity consumer) {
+        Intent callingIntent = new Intent(context, ConsumerOrderActivity.class);
+        callingIntent.putExtra(ARG_PARAM1, consumer);
+        return callingIntent;
+    }
+
+
     @Override
     public int getLayout() {
         return R.layout.activity_consumer_order;
@@ -51,6 +61,17 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
     public void OnActCreate(Bundle savedInstanceState) {
         setTitle("客户订单");
         initView();
+        consumer = (InviteeEntity) getIntent().getSerializableExtra(ARG_PARAM1);
+        if (consumer != null) {
+            if (!StringUtil.empty(consumer.name)) {
+                name.setText("姓名：" + consumer.name);
+            } else {
+                name.setText("姓名：该好友未填写姓名");
+            }
+            if (!StringUtil.empty(consumer.account)) {
+                phone.setText("手机号：" + consumer.account);
+            }
+        }
         showProgressDialog();
         getData();
 
@@ -84,18 +105,7 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
         PullToRefreshHelper.setFreshText(listView);
         consumer_count = (TextView) findViewById(R.id.consumer_count);
 
-        consumer = (InviteeEntity) getIntent().getSerializableExtra("consumer");
-        if (consumer != null) {
-            if (!StringUtil.empty(consumer.name)) {
-                name.setText("姓名：" + consumer.name);
-            } else {
-                name.setText("姓名：该好友未填写姓名");
-            }
 
-            if (!StringUtil.empty(consumer.account)) {
-                phone.setText("手机号：" + consumer.account);
-            }
-        }
 
         setViewClick(R.id.consumer_phone);
         setViewClick(R.id.consumer_phone_icon);

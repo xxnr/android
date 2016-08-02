@@ -6,7 +6,8 @@ package com.ksfc.newfarmer.activitys;
 
 import com.ksfc.newfarmer.App;
 import com.ksfc.newfarmer.BaseActivity;
-import com.ksfc.newfarmer.MsgID;
+import com.ksfc.newfarmer.event.IsLoginEvent;
+import com.ksfc.newfarmer.event.MainTabSelectEvent;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
@@ -28,7 +29,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 
 import net.yangentao.util.PreferenceUtil;
-import net.yangentao.util.msg.MsgCenter;
+
+import org.greenrobot.eventbus.EventBus;
 
 /**
  * 项目名称：newFarmer 类名称：LoginActivity 类描述： 创建人：王蕾 创建时间：2015-5-28 上午11:05:33 修改备注：
@@ -93,7 +95,7 @@ public class LoginActivity extends BaseActivity {
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     intent.putExtra("id",MainActivity.Tab.MINE);
                     startActivity(intent);
-                    MsgCenter.fireNull(MsgID.MainActivity_select_tab, MainActivity.Tab.MINE);
+                    EventBus.getDefault().post(new MainTabSelectEvent(MainActivity.Tab.MINE));
                 }
                 finish();
             }
@@ -109,7 +111,7 @@ public class LoginActivity extends BaseActivity {
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 intent.putExtra("id",MainActivity.Tab.MINE);
                 startActivity(intent);
-                MsgCenter.fireNull(MsgID.MainActivity_select_tab,  MainActivity.Tab.MINE);
+                EventBus.getDefault().post(new MainTabSelectEvent(MainActivity.Tab.MINE));
             }
             finish();
             return true;
@@ -125,15 +127,15 @@ public class LoginActivity extends BaseActivity {
                 phoneNumber = login_layout_phone.getText().toString();
                 phonePassword = login_layout_password.getText().toString();
                 if (!StringUtil.checkStr(phoneNumber)) {
-                    showToast("请输入手机号");
+                    showToast(getString(R.string.please_input_phone));
                     return;
                 }
                 if (!isMobileNum(phoneNumber)) {
-                    showToast("请输入正确的手机号");
+                    showToast(getString(R.string.please_input_right_phone));
                     return;
                 }
                 if (!StringUtil.checkStr(phonePassword)) {
-                    showToast("请输入密码");
+                    showToast(getString(R.string.input_password));
                     return;
                 }
                 showProgressDialog();
@@ -182,8 +184,8 @@ public class LoginActivity extends BaseActivity {
                 //保存到本地此用户的上次登陆的手机号
                 PreferenceUtil pu = new PreferenceUtil(this, "config");
                 pu.putString("lastPhoneNumber", login.datas.phone);
-                // 发广播 让我的新农人列表再次刷新
-                MsgCenter.fireNull(MsgID.ISLOGIN);
+                //登陆msg
+                EventBus.getDefault().post(new IsLoginEvent());
                 //注册推送alias
                 UmengPushHelper.addAlias(this, login.datas.userid);
                 // 是否进入完善资料页
@@ -197,7 +199,7 @@ public class LoginActivity extends BaseActivity {
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     intent.putExtra("id",MainActivity.Tab.MINE);
                     startActivity(intent);
-                    MsgCenter.fireNull(MsgID.MainActivity_select_tab,  MainActivity.Tab.MINE);
+                    EventBus.getDefault().post(new MainTabSelectEvent(MainActivity.Tab.MINE));
                 }
                 finish();
             }

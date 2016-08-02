@@ -1,14 +1,12 @@
 package com.ksfc.newfarmer.common;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.ksfc.newfarmer.utils.StringUtil;
 
 /**
  * @author Stephen Huang

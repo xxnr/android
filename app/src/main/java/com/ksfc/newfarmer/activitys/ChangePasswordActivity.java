@@ -2,10 +2,10 @@ package com.ksfc.newfarmer.activitys;
 
 import com.ksfc.newfarmer.App;
 import com.ksfc.newfarmer.BaseActivity;
-import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.db.Store;
 
+import com.ksfc.newfarmer.event.ChangePassWordEvent;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
@@ -20,7 +20,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
-import net.yangentao.util.msg.MsgCenter;
+
+import org.greenrobot.eventbus.EventBus;
 
 
 @TargetApi(Build.VERSION_CODES.GINGERBREAD)
@@ -51,22 +52,22 @@ public class ChangePasswordActivity extends BaseActivity {
             password = new_pass.getText().toString();
             confirm = confirm_pass.getText().toString();
             if (StringUtil.empty(old_pwd)) {
-                showToast("请输入旧密码");
+                showToast(getString(R.string.input_old_password));
                 return;
             } else if (StringUtil.empty(password)) {
-                showToast("请输入新密码");
+                showToast(getString(R.string.newPasswork));
                 return;
             } else if (StringUtil.empty(confirm)) {
-                showToast("请输入确认密码");
+                showToast(getString(R.string.input_confirm_password));
                 return;
             } else if (!password.equals(confirm)) {
-                showToast("两次密码不一致，请重新输入");
+                showToast(getString(R.string.password_not_fit));
                 return;
             } else if (password.length()<6){
-                showToast("密码需不小于6位");
+                showToast(getString(R.string.password_lt_6));
                 return;
             } else if (password.length() > 20) {
-                showToast("密码长度不能大于20位");
+                showToast(getString(R.string.password_gt_20));
                 return;
             }
             showProgressDialog();
@@ -104,7 +105,7 @@ public class ChangePasswordActivity extends BaseActivity {
                 showToast("修改密码成功");
                 App.loginOut();
                 //通知 "我"activity 结束
-                MsgCenter.fireNull(MsgID.MyaccountActivityFinish, "finish");
+                EventBus.getDefault().post(new ChangePassWordEvent());
                 IntentUtil.activityForward(ChangePasswordActivity.this,
                         LoginActivity.class, null, true);
             }

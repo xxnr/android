@@ -25,13 +25,13 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.jakewharton.rxbinding.view.RxView;
 import com.ksfc.newfarmer.BaseActivity;
-import com.ksfc.newfarmer.MsgID;
-import com.ksfc.newfarmer.common.GlideHelper;
+import com.ksfc.newfarmer.common.PicassoHelper;
 import com.ksfc.newfarmer.common.OrderHelper;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.common.CommonAdapter;
 import com.ksfc.newfarmer.common.CommonViewHolder;
 import com.ksfc.newfarmer.db.Store;
+import com.ksfc.newfarmer.event.RscOrderChangeEvent;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
@@ -47,7 +47,8 @@ import com.ksfc.newfarmer.widget.RecyclerImageView;
 import com.ksfc.newfarmer.widget.UnSwipeGridView;
 import com.ksfc.newfarmer.widget.UnSwipeListView;
 
-import net.yangentao.util.msg.MsgCenter;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -385,7 +386,7 @@ public class RscOrderDetailActivity extends BaseActivity implements KeyboardList
                                                                 showCheckOfflinePayPopUp(go_to_pay, order);
                                                             } else {
                                                                 requestData(orderId);
-                                                                MsgCenter.fireNull(MsgID.Rsc_order_Change, "CONFIRM");
+                                                                EventBus.getDefault().post(new RscOrderChangeEvent());
                                                             }
                                                         }
                                                     };
@@ -484,19 +485,19 @@ public class RscOrderDetailActivity extends BaseActivity implements KeyboardList
             if (req.getData().getStatus().equals("1000")) {
                 showCustomToast("审核成功", R.drawable.toast_success_icon);
                 requestData(orderId);
-                MsgCenter.fireNull(MsgID.Rsc_order_Change, "CONFIRM");
+                EventBus.getDefault().post(new RscOrderChangeEvent());
             }
         } else if (req.getApi() == ApiType.RSC_ORDER_DELIVERING) {
             if (req.getData().getStatus().equals("1000")) {
                 showCustomToast("发货成功", R.drawable.toast_success_icon);
                 requestData(orderId);
-                MsgCenter.fireNull(MsgID.Rsc_order_Change, "DELIVERING");
+                EventBus.getDefault().post(new RscOrderChangeEvent());
             }
         } else if (ApiType.RSC_ORDER_SELF_DELIVERY == req.getApi()) {
             if (req.getData().getStatus().equals("1000")) {
                 showCustomToast("自提成功", R.drawable.toast_success_icon);
                 requestData(orderId);
-                MsgCenter.fireNull(MsgID.Rsc_order_Change, "SELF_DELIVERY");
+                EventBus.getDefault().post(new RscOrderChangeEvent());
                 if (null != popupWindowSelfDelivery && popupWindowSelfDelivery.isShowing()) {
                     popupWindowSelfDelivery.dismiss();
                 }
@@ -630,7 +631,7 @@ public class RscOrderDetailActivity extends BaseActivity implements KeyboardList
             if (skUsEntity != null) {
 
                 //商品图片
-                GlideHelper.setImageRes(RscOrderDetailActivity.this,skUsEntity.thumbnail,(RecyclerImageView) holder.getView(R.id.ordering_item_img));
+                PicassoHelper.setImageRes(RscOrderDetailActivity.this,skUsEntity.thumbnail,(RecyclerImageView) holder.getView(R.id.ordering_item_img));
                 //商品个数
                 TextView goodsCount = (TextView) holder.getView(R.id.ordering_item_geshu_for_rsc_detail);
                 goodsCount.setVisibility(View.VISIBLE);

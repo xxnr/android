@@ -20,9 +20,15 @@ android {
     }
 
     buildTypes {
+        debug{
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
         release {
-            minifyEnabled false
-            shrinkResources false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -121,10 +127,14 @@ dependencies {
     //retrofit2
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+    compile 'com.squareup.retrofit2:converter-scalars:2.1.0'
     compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
-    //glide
-    compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile 'com.github.bumptech.glide:okhttp3-integration:1.4.0@aar'
     //greendao
     compile 'org.greenrobot:greendao:3.0.1'
+    //picasso
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    //图片裁剪库
+    compile 'com.soundcloud.android:android-crop:1.0.1@aar'
+    //事件总线
+    compile 'org.greenrobot:eventbus:3.0.0'
 }

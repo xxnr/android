@@ -22,8 +22,6 @@ public class BuildingList extends ResponseResult {
 	public static class BuildData {
 		public String id;
 		public String name;
-		public String businessId;
-		public String areaId;
 		public String _id;
 	}
 }

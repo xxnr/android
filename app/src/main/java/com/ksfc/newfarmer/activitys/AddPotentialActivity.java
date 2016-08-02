@@ -13,9 +13,9 @@ import com.google.gson.Gson;
 import com.jakewharton.rxbinding.widget.RxTextView;
 import com.jakewharton.rxbinding.widget.TextViewTextChangeEvent;
 import com.ksfc.newfarmer.BaseActivity;
-import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.db.Store;
+import com.ksfc.newfarmer.event.AddPotentialEvent;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
@@ -24,7 +24,8 @@ import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.MaxLengthWatcher;
 import com.ksfc.newfarmer.utils.StringUtil;
 
-import net.yangentao.util.msg.MsgCenter;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.HashMap;
 import java.util.List;
@@ -116,7 +117,7 @@ public class AddPotentialActivity extends BaseActivity {
                             }
                         } else {
                             if (key.length() == 11) {
-                                showToast("请输入正确的手机号");
+                                showToast(getString(R.string.please_input_right_phone));
                             } else {
                                 phone_error_ll.setVisibility(View.GONE);
                                 dividing_line.setVisibility(View.GONE);
@@ -235,7 +236,7 @@ public class AddPotentialActivity extends BaseActivity {
                     saveInfo();
                 } else {
                     if (phone_error_ll.getVisibility() == View.VISIBLE) {
-                        showToast("请修改填写的手机号");
+                        showToast(getString(R.string.please_input_right_phone));
                     } else {
                         showToast("请完善信息");
                     }
@@ -302,7 +303,7 @@ public class AddPotentialActivity extends BaseActivity {
         } else if (req.getApi() == ApiType.ADD_POTENTIAL_CUSTOMER) {
             if (req.getData().getStatus().equals("1000")) {
                 showToast("添加成功");
-                MsgCenter.fireNull(MsgID.add_potential_success, "add");
+                EventBus.getDefault().post(new AddPotentialEvent());
                 finish();
             }
 

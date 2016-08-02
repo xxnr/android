@@ -11,8 +11,8 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 
 import com.ksfc.newfarmer.BaseActivity;
-import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
+import com.ksfc.newfarmer.event.MainTabSelectEvent;
 import com.ksfc.newfarmer.fragment.RscExchangeFragment;
 import com.ksfc.newfarmer.fragment.RscGiftOrderListFragment;
 import com.ksfc.newfarmer.fragment.RscOrderListFragment;
@@ -22,7 +22,8 @@ import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.PopWindowUtils;
 import com.ksfc.newfarmer.utils.Utils;
 
-import net.yangentao.util.msg.MsgCenter;
+
+import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -77,7 +78,7 @@ public class RSCOrderListActivity extends BaseActivity implements RscOrderListFr
             Intent intent = new Intent(RSCOrderListActivity.this, MainActivity.class);
             intent.putExtra("id",MainActivity.Tab.MINE);
             startActivity(intent);
-            MsgCenter.fireNull(MsgID.MainActivity_select_tab,  MainActivity.Tab.MINE);
+            EventBus.getDefault().post(new MainTabSelectEvent(MainActivity.Tab.MINE));
             finish();
             return true;
         }
@@ -102,7 +103,7 @@ public class RSCOrderListActivity extends BaseActivity implements RscOrderListFr
                 Intent intent = new Intent(RSCOrderListActivity.this, MainActivity.class);
                 intent.putExtra("id",MainActivity.Tab.MINE);
                 startActivity(intent);
-                MsgCenter.fireNull(MsgID.MainActivity_select_tab,  MainActivity.Tab.MINE);
+                EventBus.getDefault().post(new MainTabSelectEvent(MainActivity.Tab.MINE));
                 finish();
                 break;
         }

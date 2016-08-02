@@ -32,7 +32,6 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="10dp"
-                android:text="V2.1.4"
                 android:textColor="@color/main_index_gary"
                 android:textSize="18sp" />
 
@@ -50,8 +49,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:focusable="true"
+                    android:lineSpacingExtra="6dp"
                     android:textColor="@color/main_index_gary"
-                    android:textSize="12sp" />
+                    android:textSize="15sp" />
             </RelativeLayout>
 
 

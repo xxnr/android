@@ -7,9 +7,9 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.ksfc.newfarmer.BaseActivity;
-import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.db.Store;
+import com.ksfc.newfarmer.event.UserInfoChangeEvent;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
@@ -18,7 +18,8 @@ import com.ksfc.newfarmer.beans.TownList;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
 
-import net.yangentao.util.msg.MsgCenter;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -217,7 +218,7 @@ public class ChoiceHomeAddress extends BaseActivity {
                 Intent intent = new Intent();
                 intent.putExtra("str", city + town);
                 setResult(0x13, intent);
-                MsgCenter.fireNull(MsgID.UPDATE_USER, "update");
+                EventBus.getDefault().post(new UserInfoChangeEvent());
                 finish();
             }
 

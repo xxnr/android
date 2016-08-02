@@ -7,18 +7,14 @@ import com.singulariti.deepshare.DeepShare;
 import com.singulariti.deepshare.listeners.DSInappDataListener;
 import com.trello.rxlifecycle.components.RxActivity;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
+
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 
 import net.yangentao.util.PreferenceUtil;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.concurrent.TimeUnit;
@@ -63,7 +59,7 @@ public class SplashActivity extends RxActivity implements DSInappDataListener {
     @Override
     protected void onStart() {
         super.onStart();
-        DeepShare.init(this, "c8c3c0850ecb8d07", this);
+        DeepShare.init(this, "363ebd292023cc28", this);
     }
 
     @Override

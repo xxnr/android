@@ -1,10 +1,12 @@
 package com.ksfc.newfarmer.common;
 
 import com.ksfc.newfarmer.activitys.FloatingLayerActivity;
+import com.ksfc.newfarmer.activitys.GiftDetailActivity;
+import com.ksfc.newfarmer.activitys.GoodsDetailActivity;
 import com.ksfc.newfarmer.activitys.GoodsListActivity;
 import com.ksfc.newfarmer.activitys.HomepageActivity;
 import com.ksfc.newfarmer.activitys.MineActivity;
-import com.ksfc.newfarmer.activitys.NewFarmerInfomationActivity;
+import com.ksfc.newfarmer.activitys.NewFarmerInformationActivity;
 import com.ksfc.newfarmer.activitys.ShoppingCartActivity;
 import com.ksfc.newfarmer.protocol.ApiType;
 
@@ -26,8 +28,11 @@ public class ClassFilter {
         unSetStatusBar.add(HomepageActivity.class.getSimpleName());
         unSetStatusBar.add(MineActivity.class.getSimpleName());
         unSetStatusBar.add(ShoppingCartActivity.class.getSimpleName());
-        unSetStatusBar.add(NewFarmerInfomationActivity.class.getSimpleName());
+        unSetStatusBar.add(NewFarmerInformationActivity.class.getSimpleName());
         unSetStatusBar.add(FloatingLayerActivity.class.getSimpleName());
+        unSetStatusBar.add(GoodsDetailActivity.class.getSimpleName());
+        unSetStatusBar.add(GiftDetailActivity.class.getSimpleName());
+
 
         return unSetStatusBar;
     }
@@ -58,7 +63,6 @@ public class ClassFilter {
         UnToastApis.add(ApiType.GET_RECOMMEND_INVITER);
         UnToastApis.add(ApiType.GET_INVITEE_ORDER_BY_NAME);
         UnToastApis.add(ApiType.GET_POTENTIAL_CUSTOMER_LIST_NEW);
-
         return UnToastApis;
     }
 

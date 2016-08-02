@@ -1,6 +1,7 @@
 package com.ksfc.newfarmer.activitys;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +26,19 @@ public class CheckPayDetailActivity extends BaseActivity {
     private ListView listView;
     private TextView orderId_tv, orderStep_tv, orderState_tv, to_pay_price_tv, order_yet_tv;
 
+    public static final String ARG_PARAM1 = "param1";
+    public static final String ARG_PARAM2 = "param2";
+
+
+    public static Intent getCallingIntent(Context context, String orderId, MyOrderDetailResult.Rows.SubOrders subOrder) {
+        Intent callingIntent = new Intent(context, CheckPayDetailActivity.class);
+        callingIntent.putExtra(ARG_PARAM1, orderId);
+        callingIntent.putExtra(ARG_PARAM2, subOrder);
+
+        return callingIntent;
+    }
+
+
     @Override
     public int getLayout() {
         return R.layout.activity_my_order_detail;
@@ -33,12 +47,10 @@ public class CheckPayDetailActivity extends BaseActivity {
     @Override
     public void OnActCreate(Bundle savedInstanceState) {
         setTitle("查看支付详情");
-        String orderId = getIntent().getStringExtra("orderId");
-        MyOrderDetailResult.Rows.SubOrders subOrder = (MyOrderDetailResult.Rows.SubOrders) getIntent().getSerializableExtra("payInfo");
+        String orderId = getIntent().getStringExtra(ARG_PARAM1);
+        MyOrderDetailResult.Rows.SubOrders subOrder = (MyOrderDetailResult.Rows.SubOrders) getIntent().getSerializableExtra(ARG_PARAM2);
         initView();
-        if (StringUtil.checkStr(orderId)) {
-            orderId_tv.setText("订单号：" + orderId);
-        }
+        orderId_tv.setText(StringUtil.checkStr(orderId) ? "订单号：" + orderId : "");
         if (subOrder != null) {
             //支付阶段
             switch (subOrder.type) {
@@ -129,13 +141,13 @@ public class CheckPayDetailActivity extends BaseActivity {
                 //支付金额
                 if (StringUtil.checkStr(payments.price)) {
                     holder.setText(R.id.pay_price, "¥" + payments.price);
-                }else {
-                    holder.setText(R.id.pay_price,"");
+                } else {
+                    holder.setText(R.id.pay_price, "");
                 }
                 //支付时间
                 if (StringUtil.checkStr(payments.datePaid)) {
                     holder.setText(R.id.order_pay_time, DateFormatUtils.convertTime(payments.datePaid));
-                }else {
+                } else {
                     holder.setText(R.id.order_pay_time, "");
                 }
                 //支付结果

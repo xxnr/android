@@ -27,9 +27,8 @@ import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.jakewharton.rxbinding.view.RxView;
-import com.ksfc.newfarmer.BaseFragment;
-import com.ksfc.newfarmer.MsgID;
-import com.ksfc.newfarmer.common.GlideHelper;
+import com.ksfc.newfarmer.EventBaseFragment;
+import com.ksfc.newfarmer.common.PicassoHelper;
 import com.ksfc.newfarmer.common.LoadMoreScrollListener;
 import com.ksfc.newfarmer.common.OrderHelper;
 import com.ksfc.newfarmer.R;
@@ -38,6 +37,8 @@ import com.ksfc.newfarmer.activitys.RscOrderDetailActivity;
 import com.ksfc.newfarmer.common.CommonAdapter;
 import com.ksfc.newfarmer.common.CommonViewHolder;
 import com.ksfc.newfarmer.db.Store;
+import com.ksfc.newfarmer.event.RscOrderChangeEvent;
+import com.ksfc.newfarmer.event.RscSwipeEvent;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
@@ -55,8 +56,9 @@ import com.ksfc.newfarmer.widget.RecyclerImageView;
 import com.ksfc.newfarmer.widget.UnSwipeGridView;
 import com.ksfc.newfarmer.widget.WidgetUtil;
 
-import net.yangentao.util.msg.MsgCenter;
-import net.yangentao.util.msg.MsgListener;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -70,7 +72,7 @@ import rx.functions.Action1;
 /**
  * Created by HePeng on 2015/12/3.
  */
-public class RscOrderListFragment extends BaseFragment implements
+public class RscOrderListFragment extends EventBaseFragment implements
         PullToRefreshBase.OnRefreshListener,
         KeyboardListenRelativeLayout.IOnKeyboardStateChangedListener {
     private static final String ARG_PARAM1 = "param1";
@@ -153,37 +155,34 @@ public class RscOrderListFragment extends BaseFragment implements
             showProgressDialog();
         }
 
-        //滑动时刷新
-        MsgCenter.addListener(new MsgListener() {
-            @Override
-            public void onMsg(Object sender, String msg, Object... args) {
-                try {
-                    if (((Integer) args[0]) == TYPE) {
-                        showProgressDialog();
-                        page = 1;
-                        getData(page);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }, MsgID.rsc_swipe_reFlash);
-
-        //订单状态改变时刷新
-        MsgCenter.addListener(new MsgListener() {
-            @Override
-            public void onMsg(Object sender, String msg, Object... args) {
-                page = 1;
-                getData(page);
-            }
-        }, MsgID.Rsc_order_Change);
-
         getData(page);
         getPayWay();
         return view;
     }
 
+    /**
+     * 订单状态改变时刷新
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void RscOrderChange(RscOrderChangeEvent event){
+        page = 1;
+        getData(page);
+    }
+
+
+    /**
+     * 滑动时刷新
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void RscSwpieChange(RscSwipeEvent event){
+        if (event.getPosition()== TYPE) {
+            showProgressDialog();
+            page = 1;
+            getData(page);
+        }
+    }
 
     @Override
     public void onResponsed(Request req) {
@@ -568,7 +567,7 @@ public class RscOrderListFragment extends BaseFragment implements
                         RscOrderResult.OrdersEntity.SKUsEntity skUsEntity = SKUsList.get(i);
                         if (skUsEntity != null) {
                             //商品图片
-                            GlideHelper.setImageRes(RscOrderListFragment.this,skUsEntity.thumbnail,viewHolderChild.ordering_item_img);
+                            PicassoHelper.setImageRes(RscOrderListFragment.this,skUsEntity.thumbnail,viewHolderChild.ordering_item_img);
 
                             //商品个数
                             viewHolderChild.ordering_item_geshu.setText("X " + skUsEntity.count);

@@ -8,8 +8,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.ksfc.newfarmer.BaseFragment;
-import com.ksfc.newfarmer.MsgID;
+import com.ksfc.newfarmer.EventBaseFragment;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.activitys.AddPotentialActivity;
 import com.ksfc.newfarmer.activitys.CustomerDetailActivity;
@@ -17,6 +16,8 @@ import com.ksfc.newfarmer.common.CommonAdapter;
 import com.ksfc.newfarmer.common.CommonViewHolder;
 import com.ksfc.newfarmer.db.DBManager;
 import com.ksfc.newfarmer.db.Store;
+import com.ksfc.newfarmer.event.AddPotentialEvent;
+import com.ksfc.newfarmer.event.ChangePotentialEvent;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
@@ -31,8 +32,9 @@ import com.ksfc.newfarmer.utils.Utils;
 import net.yangentao.util.PreferenceUtil;
 
 
-import net.yangentao.util.msg.MsgCenter;
-import net.yangentao.util.msg.MsgListener;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,7 +45,7 @@ import greendao.PotentialCustomersEntityDao;
 /**
  * Created by HePeng on 2016/2/1.
  */
-public class PotentialCustomer extends BaseFragment {
+public class PotentialCustomer extends EventBaseFragment {
     private TextView count_left, count_total;
     private ListView listView;
     private QuickAlphabeticBar alphabeticBar;// 快速索引条
@@ -90,24 +92,29 @@ public class PotentialCustomer extends BaseFragment {
             getIsLatest(0);
         }
 
-        //添加了用户数据
-        MsgCenter.addListener(new MsgListener() {
-            @Override
-            public void onMsg(Object sender, String msg, Object... args) {
-                //每添加用户，请求一次全部
-                getIsLatest(0);
-            }
-        }, MsgID.add_potential_success);
-
-        //更新了用户数据
-        MsgCenter.addListener(new MsgListener() {
-            @Override
-            public void onMsg(Object sender, String msg, Object... args) {
-                getOfflineList();
-            }
-        }, MsgID.change_potential_success);
         return view;
     }
+
+    /**
+     * 添加了用户数据
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void addPotentialEvent(AddPotentialEvent event){
+        //每添加用户，请求一次全部
+        getIsLatest(0);
+    }
+
+    /**
+     * 更新了用户数据
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void changePotentialEvent(ChangePotentialEvent event){
+        //每添加用户，请求一次全部
+        getOfflineList();
+    }
+
 
     //获取客户信息
     private void getIsLatest(int count) {
@@ -279,9 +286,8 @@ public class PotentialCustomer extends BaseFragment {
                 holder.getConvertView().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(activity, CustomerDetailActivity.class);
                         if (StringUtil.checkStr(potentialCustomers._id)) {
-                            intent.putExtra("_id", potentialCustomers._id);
+                            Intent intent =   CustomerDetailActivity.getCallingIntent(activity,potentialCustomers._id);
                             startActivity(intent);
                         }
                     }

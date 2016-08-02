@@ -1,13 +1,12 @@
 package com.ksfc.newfarmer.activitys;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.ksfc.newfarmer.App;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.db.Store;
+import com.ksfc.newfarmer.event.IsLoginEvent;
+import com.ksfc.newfarmer.event.UserInfoChangeEvent;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
@@ -20,6 +19,7 @@ import com.ksfc.newfarmer.utils.Utils;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.HeadImageView;
+import com.squareup.picasso.Picasso;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -33,8 +33,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import net.yangentao.util.msg.MsgCenter;
-import net.yangentao.util.msg.MsgListener;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.io.IOException;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -71,14 +75,15 @@ public class MineActivity extends BaseActivity {
                     if (bitmap != null) {
                         myself_userImg.setImageBitmap(bitmap);
                         //虚化处理
-                        Observable.create(new Observable.OnSubscribe<Bitmap>() {
-                            @Override
-                            public void call(Subscriber<? super Bitmap> subscriber) {
-                                Bitmap aeroBitmap = FastBlur.doBlur(bitmap, 50, false, 0);
-                                subscriber.onNext(aeroBitmap);
-                            }
-                        })
-                                .subscribeOn(Schedulers.computation())
+                        Observable
+                                .create(new Observable.OnSubscribe<Bitmap>() {
+                                    @Override
+                                    public void call(Subscriber<? super Bitmap> subscriber) {
+                                        Bitmap aeroBitmap = FastBlur.doBlur(bitmap, 50, false, 0);
+                                        subscriber.onNext(aeroBitmap);
+                                    }
+                                })
+                                .subscribeOn(Schedulers.newThread() )
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .compose(MineActivity.this.<Bitmap>bindToLifecycle())
                                 .subscribe(new Action1<Bitmap>() {
@@ -87,6 +92,11 @@ public class MineActivity extends BaseActivity {
                                         if (bitmap != null) {
                                             head_View_bg_iv.setImageBitmap(bitmap);
                                         }
+                                    }
+                                }, new Action1<Throwable>() {
+                                    @Override
+                                    public void call(Throwable throwable) {
+                                        throwable.printStackTrace();
                                     }
                                 });
                     }
@@ -108,17 +118,15 @@ public class MineActivity extends BaseActivity {
 
     @Override
     public void OnActCreate(Bundle savedInstanceState) {
+        EventBus.getDefault().register(this);
         initView();
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             int statusHeight = ScreenUtil.getStatusHeight(this);
             ScreenUtil.setMargins(title_tv, 0, Utils.dip2px(MineActivity.this, 10) + statusHeight, 0, 0);
         } else {
             ScreenUtil.setMargins(title_tv, 0, Utils.dip2px(MineActivity.this, 10), 0, 0);
         }
-
         setData();
-
         if (isLogin()) {
             setLayout(true);
             getData();
@@ -134,15 +142,38 @@ public class MineActivity extends BaseActivity {
             if (userInfo != null) {
                 final String imgUrl = userInfo.photo;
                 if (!StringUtil.empty(imgUrl)) {
-                    Glide.with(MineActivity.this).load(MsgID.IP + imgUrl).asBitmap().into(new SimpleTarget<Bitmap>() {
+                    Observable.create(new Observable.OnSubscribe<Bitmap>() {
                         @Override
-                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                            Message msg = Message.obtain();
-                            msg.obj = resource;
-                            msg.what = 0;
-                            handler.sendMessage(msg);
+                        public void call(Subscriber<? super Bitmap> subscriber) {
+                            try {
+                                Bitmap bitmap = Picasso.with(MineActivity.this)
+                                        .load(MsgID.IP + imgUrl)
+                                        .resize(210,210)
+                                        .noFade().get();
+                                subscriber.onNext(bitmap);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                         }
-                    });
+                    })
+                            .compose(this.<Bitmap>bindToLifecycle())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribeOn(Schedulers.io())
+                            .subscribe(new Action1<Bitmap>() {
+                                @Override
+                                public void call(Bitmap bitmap) {
+                                    Message msg = Message.obtain();
+                                    msg.obj = bitmap;
+                                    msg.what = 0;
+                                    handler.sendMessage(msg);
+                                }
+                            }, new Action1<Throwable>() {
+                                @Override
+                                public void call(Throwable throwable) {
+                                    throwable.printStackTrace();
+                                }
+                            });
+
                 } else {
                     handler.sendEmptyMessage(1);
                 }
@@ -222,42 +253,36 @@ public class MineActivity extends BaseActivity {
         setViewClick(R.id.mine_button3);
         setViewClick(R.id.mine_button4);
 
-        //修改用信息通知
-        MsgCenter.addListener(new MsgListener() {
-
-            @Override
-            public void onMsg(Object sender, String msg, Object... args) {
-                if (isLogin()) {
-                    setLayout(true);
-                    getData();
-                } else {
-                    setLayout(false);
-                }
-            }
-        }, MsgID.UPDATE_USER);
-        //登陆通知
-        MsgCenter.addListener(new MsgListener() {
-            @Override
-            public void onMsg(Object sender, String msg, Object... args) {
-                if (isLogin()) {
-                    setLayout(true);
-                    getData();
-                } else {
-                    setLayout(false);
-                }
-            }
-        }, MsgID.ISLOGIN);
-
-        //退出登录通知
-        MsgCenter.addListener(new MsgListener() {
-
-            @Override
-            public void onMsg(Object sender, String msg, Object... args) {
-                setLayout(false);
-            }
-        }, MsgID.CLEAR_USER);
-
     }
+
+    /**
+     * 监听登录事件
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void isLoginEvent(IsLoginEvent event){
+        if (isLogin()) {
+            setLayout(true);
+            getData();
+        } else {
+            setLayout(false);
+        }
+    }
+
+    /**
+     * 修改用户信息通知
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void UserInfoChangeEvent(UserInfoChangeEvent event){
+        if (isLogin()) {
+            setLayout(true);
+            getData();
+        } else {
+            setLayout(false);
+        }
+    }
+
 
     @Override
     public void OnViewClick(View v) {
@@ -368,50 +393,70 @@ public class MineActivity extends BaseActivity {
             Data user = data.datas;
             //下载并存储头像
             if (user != null) {
-                String imgUrl = user.getImageUrl();
+                final String imgUrl = user.getImageUrl();
                 if (!StringUtil.empty(imgUrl)) {
-                    Glide.with(App.getApp())
-                            .load(MsgID.IP + imgUrl).asBitmap()
-                            .into(new SimpleTarget<Bitmap>() {
+                    Observable
+                            .create(new Observable.OnSubscribe<Bitmap>() {
                                 @Override
-                                public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                                public void call(Subscriber<? super Bitmap> subscriber) {
+                                    try {
+                                        Bitmap bitmap = Picasso.with(MineActivity.this)
+                                                .load(MsgID.IP + imgUrl)
+                                                .resize(210,210)
+                                                .noFade().get();
+                                        subscriber.onNext(bitmap);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            })
+                            .compose(this.<Bitmap>bindToLifecycle())
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Action1<Bitmap>() {
+                                @Override
+                                public void call(Bitmap bitmap) {
                                     Message msg = Message.obtain();
-                                    msg.obj = resource;
+                                    msg.obj = bitmap;
                                     msg.what = 0;
                                     handler.sendMessage(msg);
                                 }
+                            }, new Action1<Throwable>() {
+                                @Override
+                                public void call(Throwable throwable) {
+                                    throwable.printStackTrace();
+                                }
                             });
-                } else {
-                    handler.sendEmptyMessage(1);
                 }
-
-                if (StringUtil.checkStr(user.nickname)) {
-                    nickname = user.nickname;
-                    nickName_tv.setText(nickname);
-                } else {
-                    nickName_tv.setText("新新农人");
-                }
-                if (StringUtil.checkStr(user.userTypeInName)) {
-                    mine_type_tv.setText(user.userTypeInName);
-                } else {
-                    mine_type_tv.setText("还没填写呦~");
-                }
-
-                if (user.isVerified) {
-                    isVerified_iv.setVisibility(View.VISIBLE);
-                } else {
-                    isVerified_iv.setVisibility(View.INVISIBLE);
-                }
-                if (user.isRSC) {
-                    my_order_open_ll.setVisibility(View.GONE);
-                    my_state_ll.setVisibility(View.VISIBLE);
-                } else {
-                    my_order_open_ll.setVisibility(View.VISIBLE);
-                    my_state_ll.setVisibility(View.GONE);
-                }
-                saveMe(user);
+            } else {
+                handler.sendEmptyMessage(1);
             }
 
+            if (StringUtil.checkStr(user.nickname)) {
+                nickname = user.nickname;
+                nickName_tv.setText(nickname);
+            } else {
+                nickName_tv.setText("新新农人");
+            }
+            if (StringUtil.checkStr(user.userTypeInName)) {
+                mine_type_tv.setText(user.userTypeInName);
+            } else {
+                mine_type_tv.setText("还没填写呦~");
+            }
+
+            if (user.isVerified) {
+                isVerified_iv.setVisibility(View.VISIBLE);
+            } else {
+                isVerified_iv.setVisibility(View.INVISIBLE);
+            }
+            if (user.isRSC) {
+                my_order_open_ll.setVisibility(View.GONE);
+                my_state_ll.setVisibility(View.VISIBLE);
+            } else {
+                my_order_open_ll.setVisibility(View.VISIBLE);
+                my_state_ll.setVisibility(View.GONE);
+            }
+            saveMe(user);
         }
     }
 
@@ -505,4 +550,11 @@ public class MineActivity extends BaseActivity {
             mine_type_tv.setText("");
         }
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
 }

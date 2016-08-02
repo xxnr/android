@@ -9,6 +9,8 @@ import com.ksfc.newfarmer.beans.AttrSelectResult;
 import com.ksfc.newfarmer.beans.BrandsResult;
 import com.ksfc.newfarmer.beans.BuildingList;
 import com.ksfc.newfarmer.beans.CameraResult;
+import com.ksfc.newfarmer.beans.CampaignDetailResult;
+import com.ksfc.newfarmer.beans.CampaignListResult;
 import com.ksfc.newfarmer.beans.CityList;
 import com.ksfc.newfarmer.beans.ClassIDResult;
 import com.ksfc.newfarmer.beans.ConsigneeResult;
@@ -465,13 +467,23 @@ public enum ApiType {
     GET_RSC_GIFT_ORDER_SELF_DELIVERY("/api/v2.3/RSC/rewardshop/order/selfDelivery", ResponseResult.class),
 
     /**
+     * 活动：获取所有上线活动:
+     */
+    GET_CAMPAIGNS("/api/v2.3/campaigns", CampaignListResult.class),
+
+    /**
+     * 活动：获取app分享详情:
+     */
+    GET_APP_SHARE_INFO("/api/v2.3/campaign/app_share_info", CampaignDetailResult.class),
+
+    /**
      * Host:
      */
     TEST("", ResponseResult.class);
 
-    //    private static String server_url = "http://api.xinxinnongren.com";
-    private static String server_url = "http://101.200.194.203";
-    //    private static String server_url = "http://192.168.1.4";
+//        private static String server_url = "http://api.xinxinnongren.com";
+//    private static String server_url = "http://101.200.194.203";
+    private static String server_url = "http://192.168.1.15:8070";
 
 
     public static final String url = server_url;

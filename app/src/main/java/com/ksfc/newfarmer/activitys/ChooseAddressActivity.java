@@ -10,21 +10,21 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import com.ksfc.newfarmer.BaseActivity;
-import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.common.CommonAdapter;
 import com.ksfc.newfarmer.common.CommonViewHolder;
 import com.ksfc.newfarmer.db.Store;
+import com.ksfc.newfarmer.event.AddressChangeEvent;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
 import com.ksfc.newfarmer.beans.AddressList;
 import com.ksfc.newfarmer.beans.LoginResult;
 import com.ksfc.newfarmer.widget.dialog.CustomDialog;
-import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
 
-import net.yangentao.util.msg.MsgCenter;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,7 +36,6 @@ import java.util.List;
 public class ChooseAddressActivity extends BaseActivity {
     private ListView address_list;
     HashMap<String, Integer> map = new HashMap<>();
-    private final int reqestcode = 1;
     private AddressAdapter adapter;
     private List<AddressList.Address> addlist;
     private AddressList.Address state;//接受addressId
@@ -69,7 +68,7 @@ public class ChooseAddressActivity extends BaseActivity {
         setLeftClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MsgCenter.fireNull(MsgID.MSG_Change_ADDRESS, state);
+                EventBus.getDefault().post(new AddressChangeEvent(state));
                 finish();
             }
         });
@@ -78,10 +77,10 @@ public class ChooseAddressActivity extends BaseActivity {
         setRightTextViewListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                bundle.putInt("addressCount", addressCount);
-                IntentUtil.startActivityForResult(ChooseAddressActivity.this, AddAddressActivity.class,
-                        reqestcode, bundle);
+
+                Intent callingIntent = AddAddressActivity.getCallingIntent(ChooseAddressActivity.this, addressCount);
+                startActivity(callingIntent);
+
             }
         });
     }
@@ -90,7 +89,7 @@ public class ChooseAddressActivity extends BaseActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-            MsgCenter.fireNull(MsgID.MSG_Change_ADDRESS, state);
+            EventBus.getDefault().post(new AddressChangeEvent(state));
             finish();
             return true;
         }
@@ -224,7 +223,7 @@ public class ChooseAddressActivity extends BaseActivity {
 
                                                 if (state !=null&&address.addressId.equals(state.addressId)) {
                                                     state = null;
-                                                    MsgCenter.fireNull(MsgID.MSG_Change_ADDRESS,state);
+                                                    EventBus.getDefault().post(new AddressChangeEvent(state));
                                                 }
                                                 showProgressDialog();
                                                 RequestParams params = new RequestParams();
@@ -262,7 +261,7 @@ public class ChooseAddressActivity extends BaseActivity {
                     @Override
                     public void onClick(View v) {
                         state = address;
-                        MsgCenter.fireNull(MsgID.MSG_Change_ADDRESS, state);
+                        EventBus.getDefault().post(new AddressChangeEvent(state));
                         finish();
                     }
                 });

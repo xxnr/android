@@ -67,7 +67,7 @@ public abstract class BaseActivity extends RxFragmentActivity implements OnClick
         loadTitle();
         //设置状态栏颜色状态栏
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            //过滤掉四个tab的Activity
+            //过滤掉Activity
             if (!ClassFilter.getunSetStatusBarClasses().contains(getClass().getSimpleName())) {
                 if (titleLoaded) {
                     Utils.setBarTint(this, R.color.green);
@@ -365,6 +365,9 @@ public abstract class BaseActivity extends RxFragmentActivity implements OnClick
     public void execApi(final ApiType api, RequestParams params) {
 
         // 判断是不是通过验证
+        if (params==null){
+            params=  new RequestParams();
+        }
         if (params.containsKey("userId")) {
             if (Store.User.queryMe() != null) {
                 params.put("token", Store.User.queryMe().token);

@@ -8,9 +8,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.custom.vg.list.CustomAdapter;
 import com.custom.vg.list.CustomListView;
 import com.google.gson.Gson;
@@ -22,6 +19,7 @@ import com.ksfc.newfarmer.common.CommonFragmentPagerAdapter;
 import com.ksfc.newfarmer.db.DBManager;
 import com.ksfc.newfarmer.beans.dbbeans.OfflineShoppingCart;
 import com.ksfc.newfarmer.db.Store;
+import com.ksfc.newfarmer.event.MainTabSelectEvent;
 import com.ksfc.newfarmer.fragment.GoodsDetailButtomFragment;
 import com.ksfc.newfarmer.fragment.GoodsDetailTopFragment;
 import com.ksfc.newfarmer.protocol.ApiType;
@@ -37,11 +35,15 @@ import com.ksfc.newfarmer.utils.PopWindowUtils;
 import com.ksfc.newfarmer.utils.Utils;
 import com.ksfc.newfarmer.widget.KeyboardListenRelativeLayout;
 import com.ksfc.newfarmer.widget.VerticalViewPager;
+import com.ksfc.newfarmer.widget.XCRoundRectImageView;
+import com.squareup.picasso.Picasso;
 
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
+import android.support.v4.view.ViewPager;
 import android.view.Gravity;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -64,49 +66,66 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import net.yangentao.util.msg.MsgCenter;
+
+import org.greenrobot.eventbus.EventBus;
 
 import greendao.OfflineShoppingCartDao;
 
 public class GoodsDetailActivity extends BaseActivity implements KeyboardListenRelativeLayout.IOnKeyboardStateChangedListener {
-    private String goodId;
-    private GetGoodsDetail.GoodsDetail detail;
-    private TextView jinqingqidai_bar;
-    private LinearLayout shangpin_detail_bottom_bar;
-    private int fenshu;
+
     private VerticalViewPager viewPager;
-    private boolean toast_flag = true;//true的时候提示 添加购物车成功  false 为不提示
+    private LinearLayout shangpin_detail_bottom_bar;
+    private TextView jinqingqidai_bar;
     private PopupWindow popupWindow;
     private LinearLayout shangpin_detail_bg;
-    private ImageView pop_image;
+
+    private XCRoundRectImageView pop_image;
     private TextView pop_price;
     private TextView pop_title;
     private CustomListView pop_gv5;
     private TextView pop_text5;
-    private ArrayList<AttributesAdapter> adapters;
-    private ArrayList<TextView> pop_texts;
-    private boolean pop_flag = false;//如果从点击购物车 或者立即购买进入popWindow pop_flag_为true ,否则false;
+
     private LinearLayout pop_bottom_bar;
     private LinearLayout pop_buy_now;
     private LinearLayout pop_add_to_shopcart;
     private LinearLayout pop_sure;
-    private boolean pop_action = false;//如果从点击购物车 或者立即购买进入popWindow sure键有不同的action; true为加入购物车false为立即购买
-    private EditText pop_discount_geshu;
-    private TextView pop_jingqingqidai_bar;
     private LinearLayout pop_discount_lin;
-    private String SKUId;
+    private EditText pop_discount_geshu;
+
     private TextView product_price;//商品价格
     private TextView market_price_tv;//商品市场价
     private TextView product_attribute;//商品已选择的属性
+    private TextView pop_jingqingqidai_bar;
+
     private AdditionsAdapter additionsAdapter;
     private LinearLayout add_sku_tv_gv_ll;//动态添加sku的父布局
     private LinearLayout market_price_ll;//商品市场价lin
     private KeyboardListenRelativeLayout activity_rootView;
     private LinearLayout shangpin_detail_bottom;
+
     private ImageView animationImage;
+    private ImageView rightImageView;
+
     private Animation mAnimation_center;
     private Animation mAnimation_top;
-    private ImageView rightImageView;
+
+    private ArrayList<AttributesAdapter> adapters;
+    private ArrayList<TextView> pop_texts;
+
+    private GetGoodsDetail.GoodsDetail detail;
+    private String SKUId;
+    private String goodId;
+    private int fenshu;
+
+    private boolean pop_action = false;//如果从点击购物车 或者立即购买进入popWindow sure键有不同的action; true为加入购物车false为立即购买
+    private boolean pop_flag = false;//如果从点击购物车 或者立即购买进入popWindow pop_flag_为true ,否则false;
+    private boolean toast_flag = true;//true的时候提示 添加购物车成功  false 为不提示
+
+    private View titleBar;
+    private View title_bg_down;
+    private View title_bg_up;
+    private View title_div;
+    private TextView title_name_text;
 
 
     @Override
@@ -120,13 +139,57 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
         goodId = getIntent().getStringExtra("goodId");
         setTitle("商品详情");
         initView();
+        //透明状态栏和设置状态栏颜色
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            int statusHeight = ScreenUtil.getStatusHeight(this);
+            title_div.setVisibility(View.VISIBLE);
+            title_div.getLayoutParams().height = statusHeight;
+            title_bg_down.getLayoutParams().height = Utils.dip2px(GoodsDetailActivity.this, 45) + statusHeight;
+            title_bg_up.getLayoutParams().height = Utils.dip2px(GoodsDetailActivity.this, 45) + statusHeight;
+        } else {
+            title_div.setVisibility(View.GONE);
+            title_bg_down.getLayoutParams().height = Utils.dip2px(GoodsDetailActivity.this, 45);
+            title_bg_up.getLayoutParams().height = Utils.dip2px(GoodsDetailActivity.this, 45);
+        }
+        titleBar.setBackgroundResource(R.color.transparent);
+
+        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                float v = positionOffset * 2.5f;
+                title_name_text.setVisibility(View.VISIBLE);
+                title_bg_up.setVisibility(View.VISIBLE);
+                if (position == 0 && 0 <= v && v <= 1) {
+                    if (v < 0.5f) {
+                        title_name_text.setAlpha(0);
+                        title_bg_up.setAlpha(0);
+                        title_bg_down.setAlpha((1 - v * 2));
+                    } else {
+                        title_bg_down.setAlpha(0);
+                        title_bg_up.setAlpha((v - 0.5f) * 2);
+                        title_name_text.setAlpha((v - 0.5f) * 2);
+                    }
+                } else {
+                    title_bg_up.setAlpha(1);
+                    title_name_text.setAlpha(1);
+                    title_bg_down.setAlpha(0);
+                }
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         getData();
-
         mAnimation_top = AnimationUtils.loadAnimation(this, R.anim.cart_anim_top);
-
         mAnimation_center = AnimationUtils.loadAnimation(this, R.anim.cart_anim);
         mAnimation_center.setAnimationListener(new Animation.AnimationListener() {
-
             @Override
             public void onAnimationStart(Animation animation) {
                 // TODO Auto-generated method stub
@@ -161,6 +224,14 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
 
     private void initView() {
 
+        titleBar = findViewById(R.id.titleview);
+        title_bg_down = findViewById(R.id.title_bg_down);
+        title_bg_up = findViewById(R.id.title_bg_up);
+        title_div = findViewById(R.id.title_div);
+        title_bg_up.setVisibility(View.INVISIBLE);
+        title_name_text = (TextView) findViewById(R.id.title_name_text);
+        title_name_text.setVisibility(View.INVISIBLE);
+
         viewPager = (VerticalViewPager) findViewById(R.id.viewPager_vertical);
         //预售时显示
         shangpin_detail_bottom = (LinearLayout) findViewById(R.id.shangpin_detail_bottom);
@@ -179,7 +250,7 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
                 Intent intent = new Intent(GoodsDetailActivity.this, MainActivity.class);
                 intent.putExtra("id", MainActivity.Tab.SHOPPING_CART);
                 startActivity(intent);
-                MsgCenter.fireNull(MsgID.MainActivity_select_tab, MainActivity.Tab.SHOPPING_CART);
+                EventBus.getDefault().post(new MainTabSelectEvent(MainActivity.Tab.SHOPPING_CART));
                 finish();
             }
         });
@@ -322,7 +393,7 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
         //扩大点击区域
         ExpandViewTouch.expandViewTouchDelegate(pop_close, 100, 100, 100, 100);
         pop_close.setOnClickListener(this);
-        pop_image = ((ImageView) popupWindow_view.findViewById(R.id.pop_image));
+        pop_image = ((XCRoundRectImageView) popupWindow_view.findViewById(R.id.pop_image));
         pop_price = ((TextView) popupWindow_view.findViewById(R.id.pop_price));
         pop_title = ((TextView) popupWindow_view.findViewById(R.id.pop_title));
         //附加选项
@@ -396,17 +467,13 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
     //初始化popWindow上的一些属性
     private void initPopData() {
         if (detail.pictures != null && !detail.pictures.isEmpty()) {
-            Glide.with(GoodsDetailActivity.this)
+            Picasso.with(GoodsDetailActivity.this)
                     .load(MsgID.IP + detail.pictures.get(0).thumbnail)
-                    .asBitmap()
+                    .noFade()
+                    .config(Bitmap.Config.RGB_565)
                     .placeholder(R.drawable.zhanweitu)
                     .error(R.drawable.error)
-                    .into(new SimpleTarget<Bitmap>() {
-                        @Override
-                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                            pop_image.setImageBitmap(resource);
-                        }
-                    });
+                    .into(pop_image);
         }
         //名称
         if (StringUtil.checkStr(detail.name)) {
@@ -825,16 +892,16 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
                         .getWritableDaoSession()
                         .getOfflineShoppingCartDao();
 
-                OfflineShoppingCart  offlineShoppingCart= shoppingCartDao.load(SKUId);
+                OfflineShoppingCart offlineShoppingCart = shoppingCartDao.load(SKUId);
 
-                if (offlineShoppingCart==null) {//新插入一条数据
+                if (offlineShoppingCart == null) {//新插入一条数据
 
-                    OfflineShoppingCart offlineData=new OfflineShoppingCart();
+                    OfflineShoppingCart offlineData = new OfflineShoppingCart();
 
                     offlineData.setSKUId(SKUId);
                     offlineData.setNumbers(pop_discount_geshu.getText().toString().trim() + "");
                     //附加选项存在本地数据库
-                    String additions="[]";
+                    String additions = "[]";
                     if (detail.SKUAdditions != null && !detail.SKUAdditions.isEmpty()) {
                         if (additionsAdapter != null
                                 && additionsAdapter.states != null
@@ -852,7 +919,7 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
                                 }
                             }
                             Gson gson = new Gson();
-                            additions= gson.toJson(skuAdditions);
+                            additions = gson.toJson(skuAdditions);
                         }
                     }
                     offlineData.setAdditions(additions);
@@ -936,17 +1003,12 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
             }
             if (detail != null && detail.pictures != null && !detail.pictures.isEmpty()) {
 
-                Glide.with(GoodsDetailActivity.this)
+                Picasso.with(GoodsDetailActivity.this)
                         .load(MsgID.IP + detail.pictures.get(0).thumbnail)
-                        .asBitmap()
+                        .noFade()
                         .placeholder(R.drawable.zhanweitu)
                         .error(R.drawable.error)
-                        .into(new SimpleTarget<Bitmap>() {
-                            @Override
-                            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                                animationImage.setImageBitmap(resource);
-                            }
-                        });
+                        .into(animationImage);
             }
 
             setViewClick(R.id.add_to_shopcart);

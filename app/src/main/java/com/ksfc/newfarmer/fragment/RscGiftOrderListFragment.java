@@ -19,14 +19,14 @@ import android.widget.TextView;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.widget.RxTextView;
 import com.jakewharton.rxbinding.widget.TextViewTextChangeEvent;
-import com.ksfc.newfarmer.BaseFragment;
-import com.ksfc.newfarmer.MsgID;
+import com.ksfc.newfarmer.EventBaseFragment;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.activitys.RSCOrderListActivity;
 import com.ksfc.newfarmer.common.CommonAdapter;
 import com.ksfc.newfarmer.common.CommonViewHolder;
-import com.ksfc.newfarmer.common.GlideHelper;
+import com.ksfc.newfarmer.common.PicassoHelper;
 import com.ksfc.newfarmer.common.LoadMoreScrollListener;
+import com.ksfc.newfarmer.event.RscGiftOrderListRefresh;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.remoteapi.RemoteApi;
 import com.ksfc.newfarmer.protocol.Request;
@@ -36,8 +36,9 @@ import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.widget.LoadingFooter;
 import com.ksfc.newfarmer.widget.PtrHeaderView;
 
-import net.yangentao.util.msg.MsgCenter;
-import net.yangentao.util.msg.MsgListener;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -54,7 +55,7 @@ import rx.functions.Action1;
 /**
  * Created by CAI on 2016/7/6.
  */
-public class RscGiftOrderListFragment extends BaseFragment  {
+public class RscGiftOrderListFragment extends EventBaseFragment {
     @BindView(R.id.gift_order_listView)
     ListView giftOrderListView;
     @BindView(R.id.rotate_header_list_view_frame)
@@ -144,26 +145,22 @@ public class RscGiftOrderListFragment extends BaseFragment  {
                 return PtrDefaultHandler.checkContentCanBePulledDown(frame, content, header);
             }
         });
-        //滑动时刷新
-        MsgCenter.addListener(new MsgListener() {
-            @Override
-            public void onMsg(Object sender, String msg, Object... args) {
-                try {
-                    if (((Integer) args[0]) == type) {
-                        showProgressDialog();
-                        page = 1;
-                        RemoteApi.getRscGiftOrderList(RscGiftOrderListFragment.this, type, page);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }, MsgID.rsc_gift_swipe_reFlash);
 
         RemoteApi.getRscGiftOrderList(this, type, page);
         return inflate;
     }
-
+    /**
+     * Rsc礼品订单刷新
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void giftRefreshEvent(RscGiftOrderListRefresh event){
+        if (event.position == type) {
+            showProgressDialog();
+            page = 1;
+            RemoteApi.getRscGiftOrderList(RscGiftOrderListFragment.this, type, page);
+        }
+    }
 
     @Override
     public void onResponsed(Request req) {
@@ -244,7 +241,7 @@ public class RscGiftOrderListFragment extends BaseFragment  {
                     }
                 }
                 if (giftordersBean.gift != null) {
-                    GlideHelper.setImageRes(RscGiftOrderListFragment.this,giftordersBean.gift.thumbnail,(ImageView) holder.getView(R.id.gift_order_img_iv));
+                    PicassoHelper.setImageRes(RscGiftOrderListFragment.this,giftordersBean.gift.thumbnail,(ImageView) holder.getView(R.id.gift_order_img_iv));
                     holder.setText(R.id.gift_order_name_iv, StringUtil.checkStr(giftordersBean.gift.name)
                             ? giftordersBean.gift.name : "");
                     holder.setText(R.id.gift_order_price_iv, StringUtil.checkStr(String.valueOf(giftordersBean.gift.points))

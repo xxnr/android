@@ -8,12 +8,11 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.ksfc.newfarmer.BaseFragment;
-import com.ksfc.newfarmer.MsgID;
+import com.ksfc.newfarmer.EventBaseFragment;
 import com.ksfc.newfarmer.R;
-import com.ksfc.newfarmer.common.GlideHelper;
+import com.ksfc.newfarmer.common.PicassoHelper;
 import com.ksfc.newfarmer.common.LoadMoreScrollListener;
+import com.ksfc.newfarmer.event.GiftListReFresh;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.remoteapi.RemoteApi;
 import com.ksfc.newfarmer.protocol.Request;
@@ -24,8 +23,9 @@ import com.ksfc.newfarmer.widget.AnimatedExpandableListView;
 import com.ksfc.newfarmer.widget.LoadingFooter;
 import com.ksfc.newfarmer.widget.PtrHeaderView;
 
-import net.yangentao.util.msg.MsgCenter;
-import net.yangentao.util.msg.MsgListener;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
@@ -39,7 +39,7 @@ import in.srain.cube.views.ptr.PtrHandler;
 /**
  * Created by CAI on 2016/6/22.
  */
-public class GiftOrderListFragment extends BaseFragment  {
+public class GiftOrderListFragment extends EventBaseFragment {
     @BindView(R.id.gift_order_listView)
     AnimatedExpandableListView listView;
     @BindView(R.id.rotate_header_list_view_frame)
@@ -155,26 +155,24 @@ public class GiftOrderListFragment extends BaseFragment  {
                 }
             });
         }
-        //滑动时刷新
-        MsgCenter.addListener(new MsgListener() {
-            @Override
-            public void onMsg(Object sender, String msg, Object... args) {
-                try {
-                    if (((Integer) args[0]) == position) {
-                        showProgressDialog();
-                        page = 1;
-                        RemoteApi.getGiftOrderList(GiftOrderListFragment.this, type, page);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }, MsgID.gift_swipe_reFlash);
-
         RemoteApi.getGiftOrderList(this, type, page);
         return rootView;
     }
+
+    /**
+     * 礼品订单刷新
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void giftRefreshEvent(GiftListReFresh event){
+        if (event.position == position) {
+            showProgressDialog();
+            page = 1;
+            RemoteApi.getGiftOrderList(GiftOrderListFragment.this, type, page);
+        }
+    }
+
+
 
 
     @Override
@@ -311,7 +309,7 @@ public class GiftOrderListFragment extends BaseFragment  {
                             ? giftordersBean.orderStatus.value : "");
                 }
                 if (giftordersBean.gift != null) {
-                    GlideHelper.setImageRes(GiftOrderListFragment.this,giftordersBean.gift.thumbnail,holder.giftOrderImgIv);
+                    PicassoHelper.setImageRes(GiftOrderListFragment.this,giftordersBean.gift.thumbnail,holder.giftOrderImgIv);
 
                     holder.giftOrderNameIv.setText(StringUtil.checkStr(giftordersBean.gift.name)
                             ? giftordersBean.gift.name : "");
