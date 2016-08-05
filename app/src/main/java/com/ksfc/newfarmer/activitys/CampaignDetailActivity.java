@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
@@ -19,6 +21,9 @@ import com.ksfc.newfarmer.MsgID;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.beans.CampaignDetailResult;
 import com.ksfc.newfarmer.beans.CampaignListResult;
+import com.ksfc.newfarmer.beans.ShareAddPointsResult;
+import com.ksfc.newfarmer.db.Store;
+import com.ksfc.newfarmer.event.IsLoginEvent;
 import com.ksfc.newfarmer.event.WebShareUrlEvent;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.Request;
@@ -57,6 +62,9 @@ public class CampaignDetailActivity extends BaseActivity {
     WebView webView;
     @BindView(R.id.share_dialog_bg)
     View share_dialog_bg;//分享dialog的背景
+    @BindView(R.id.page_error_layout)
+    LinearLayout page_error_layout;
+
     private PopupWindow popupWindow;
 
     private String url; //webView加载的url
@@ -66,6 +74,8 @@ public class CampaignDetailActivity extends BaseActivity {
     private String urlTitle;    //分享内容的标题
     public String shareUrl;        //分享内容的url
     private String newsAbstract;    //分享内容的摘要
+
+    private String campaignId;  //活动Id
 
 
     @Override
@@ -86,11 +96,13 @@ public class CampaignDetailActivity extends BaseActivity {
         } else {
             fromList();
         }
-
-
         if (NetUtil.isConnected(this)) {
             showProgressDialog();
-            webView.loadUrl(url);
+            if (url.contains("http")) {
+                webView.loadUrl(url);
+            } else {
+                webView.loadUrl(MsgID.IP + url);
+            }
         } else {
             showToast("网络未连接");
         }
@@ -102,20 +114,42 @@ public class CampaignDetailActivity extends BaseActivity {
      * @param event
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void giftRefreshEvent(WebShareUrlEvent event) {
+    public void urlShareEvent(WebShareUrlEvent event) {
         if (StringUtil.checkStr(event.shareUrl)) {
             shareUrl = event.shareUrl;
             titleRightView.performClick();
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void isLoginEvent(IsLoginEvent event) {
+        if (NetUtil.isConnected(this)) {
+            showProgressDialog();
+            if (url.contains("http")) {
+                webView.loadUrl(url);
+            } else {
+                webView.loadUrl(MsgID.IP + url);
+            }
+        } else {
+            showToast("网络未连接");
+        }
+    }
+
 
     @SuppressLint({"SetJavaScriptEnabled", "AddJavascriptInterface"})
     private void init() {
+
+        if (Build.VERSION.SDK_INT >= 19) {
+            webView.getSettings().setLoadsImagesAutomatically(true);
+        } else {
+            webView.getSettings().setLoadsImagesAutomatically(false);
+        }
+
         // 允许运行js脚本
         webView.getSettings().setJavaScriptEnabled(true);
         // 如果web内出现链接 依旧由当前webVIew加载
         webView.addJavascriptInterface(new JavaScriptObject(this), "jsObj");
+        webView.getSettings().setSupportZoom(false);
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -128,6 +162,15 @@ public class CampaignDetailActivity extends BaseActivity {
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
                 disMissDialog();
+                if (!webView.getSettings().getLoadsImagesAutomatically()) {
+                    webView.getSettings().setLoadsImagesAutomatically(true);
+                }
+            }
+
+            @Override
+            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+                super.onReceivedError(view, errorCode, description, failingUrl);
+                page_error_layout.setVisibility(View.VISIBLE);
             }
         });
         //加载当前页标题
@@ -135,7 +178,7 @@ public class CampaignDetailActivity extends BaseActivity {
             @Override
             public void onReceivedTitle(WebView view, String title) {
                 super.onReceivedTitle(view, title);
-//               setTitle(StringUtil.checkStr(title) ? title : "");
+                setTitle(StringUtil.checkStr(title) ? title : "");
             }
         });
 
@@ -202,13 +245,30 @@ public class CampaignDetailActivity extends BaseActivity {
                     newsAbstract = campaign.share_abstract;
                     urlTitle = campaign.share_title;
                     urlImage = campaign.share_image;
+                    campaignId = campaign.campaign_id;
                     checkedShareContent();
                 }
             }
 
+        } else if (req.getApi() == ApiType.SHARE_ADD_POINTS) {
+            if (req.getData().getStatus().equals("1000")) {
+                ShareAddPointsResult reqData = (ShareAddPointsResult) req.getData();
+                if (reqData.points != 0) {
+                    showToast("分享成功，奖励您" + reqData.points + "积分");
+                }else {
+                    showToast("分享成功");
+                }
+            }else {
+                showToast("分享成功");
+            }
         }
     }
 
+    /**
+     * 请求活动详情
+     *
+     * @param urlH5
+     */
     private void fromAppLink(String urlH5) {
         RequestParams params = new RequestParams();
         params.put("url", urlH5);
@@ -227,8 +287,8 @@ public class CampaignDetailActivity extends BaseActivity {
                 } else {
                     hideRight();
                 }
-                setTitle(campaign.title);
                 //share content
+                campaignId = campaign._id;
                 shareUrl = campaign.share_url;
                 newsAbstract = campaign.share_abstract;
                 urlTitle = campaign.share_title;
@@ -368,7 +428,16 @@ public class CampaignDetailActivity extends BaseActivity {
     private UMShareListener umShareListener = new UMShareListener() {
         @Override
         public void onResult(SHARE_MEDIA platform) {
-            showToast("分享成功");
+            if (isLogin() && StringUtil.checkStr(campaignId)) {
+                RequestParams params = new RequestParams();
+                params.put("type", "campaign");
+                params.put("id", campaignId);
+                params.put("userId", Store.User.queryMe().userid);
+                execApi(ApiType.SHARE_ADD_POINTS, params);
+            } else {
+                showToast("分享成功");
+            }
+
             //分享成功后关闭对话框
             if (popupWindow != null && popupWindow.isShowing()) {
                 popupWindow.dismiss();
@@ -403,18 +472,10 @@ public class CampaignDetailActivity extends BaseActivity {
 
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        if (NetUtil.isConnected(this)) {
-            webView.loadUrl(url);
-        } else {
-            showToast("网络未连接");
-        }
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
     }
+
+
 }

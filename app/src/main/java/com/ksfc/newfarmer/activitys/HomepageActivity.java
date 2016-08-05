@@ -20,9 +20,11 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.ILoadingLayout;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
+import com.ksfc.newfarmer.App;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.beans.CampaignListResult;
@@ -31,8 +33,11 @@ import com.ksfc.newfarmer.common.CommonViewHolder;
 import com.ksfc.newfarmer.common.CommonFunction;
 import com.ksfc.newfarmer.common.CompleteReceiver;
 import com.ksfc.newfarmer.common.PicassoHelper;
+import com.ksfc.newfarmer.event.CampaignListEvent;
 import com.ksfc.newfarmer.event.IsLoginEvent;
+import com.ksfc.newfarmer.event.MainTabSelectEvent;
 import com.ksfc.newfarmer.event.SignEvent;
+import com.ksfc.newfarmer.event.TokenErrorEvent;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.remoteapi.RemoteApi;
 import com.ksfc.newfarmer.protocol.Request;
@@ -97,6 +102,9 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
     private CompleteReceiver completeReceiver;//监听下载
     private Animation shakeAnimation;//签到图标抖动的icon
     private boolean isSigned = false;
+    private List<CampaignListResult.CampaignsBean> campaigns;
+
+    private boolean isTokenError=false;
 
     @Override
     public int getLayout() {
@@ -122,30 +130,40 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
             RemoteApi.getIntegral(this);
         }
 
-
-
         //获取活动列表
         execApi(ApiType.GET_CAMPAIGNS.setMethod(ApiType.RequestMethod.GET), null);
     }
 
     /**
      * 监听登录事件
+     *
      * @param event
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void isLoginEvent(IsLoginEvent event){
+    public void isLoginEvent(IsLoginEvent event) {
         RemoteApi.getIntegral(HomepageActivity.this);
     }
 
     /**
      * 签到通知
+     *
      * @param event
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void isSignEvent(SignEvent event){
+    public void isSignEvent(SignEvent event) {
         isSigned = true;
     }
 
+
+    /**
+     * token错误通知
+     *
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void isSignEvent(TokenErrorEvent event) {
+        isTokenError = true;
+    }
 
     //获得首页列表数据
     private void getData(final HomepageViewBean homepageViewBean) {
@@ -199,6 +217,7 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
         setLeftClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 showCampaign();
             }
         });
@@ -336,14 +355,14 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
                             }
                             if (entity.name.equals("化肥")) {
                                 huaFeiClassId = entity.id;//设置化肥的id
-                                PreferenceUtil pu = new PreferenceUtil(this, "config");
+                                PreferenceUtil pu = new PreferenceUtil(this, App.SPNAME);
                                 pu.putString("huafei", huaFeiClassId);
 
                                 holder.view_bar_more_bar.setBackgroundColor(getResources().getColor(R.color.green));
                             }
                             if (entity.name.equals("汽车")) {
                                 carClassId = entity.id;//设置汽车的id
-                                PreferenceUtil pu = new PreferenceUtil(this, "config");
+                                PreferenceUtil pu = new PreferenceUtil(this, App.SPNAME);
                                 pu.putString("qiche", carClassId);
 
                                 holder.view_bar_more_bar.setBackgroundColor(getResources().getColor(R.color.orange_goods_price));
@@ -441,27 +460,18 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
         } else if (ApiType.GET_CAMPAIGNS == req.getApi()) {
             if (req.getData().getStatus().equals("1000")) {
                 CampaignListResult reqData = (CampaignListResult) req.getData();
-                List<CampaignListResult.CampaignsBean> campaigns = reqData.campaigns;
+                campaigns = reqData.campaigns;
                 //是否看过的活动
-                boolean isSeeAll = true;
-                PreferenceUtil pu = new PreferenceUtil(HomepageActivity.this, "config");
-                for (int i = 0; i < campaigns.size(); i++) {
-                    CampaignListResult.CampaignsBean campaignsBean = campaigns.get(i);
-                    if (campaignsBean != null) {
-                        boolean see = pu.getBool("seeCampaign" + campaignsBean._id, false);
-                        if (!see) { //只要有一个未看过
-                            isSeeAll = false;
-                        }
-                    }
+                boolean isSee = false;
+                PreferenceUtil pu = new PreferenceUtil(HomepageActivity.this, App.CAMPAIGN);
+                if (campaigns != null && !campaigns.isEmpty()) {
+                    CampaignListResult.CampaignsBean campaignsBean = campaigns.get(0);
+                    isSee = pu.getBool(campaignsBean._id, false);
                 }
-                if (!isSeeAll) {
-
+                if (!isSee&&!isTokenError) {
                     showCampaign();
                 }
-
-
             }
-
         }
     }
 
@@ -532,7 +542,7 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
                     public void onClick(View v) {
                         // 带商品的id过去
                         Intent intent = new Intent(HomepageActivity.this, GoodsDetailActivity.class);
-                        intent.putExtra("goodId", singleGood.goodsId);
+                        intent.putExtra("goodsId", singleGood.goodsId);
                         startActivity(intent);
                     }
                 });
@@ -563,11 +573,15 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
     }
 
     private void showCampaign() {
-
+        if (campaigns != null) {
+            EventBus.getDefault().postSticky(new CampaignListEvent(campaigns));
+        }
         Bundle bundle = new Bundle();
         bundle.putString(FloatingLayerActivity.KEY, FloatingLayerActivity.ACTIVITY_LIST);
         IntentUtil.activityForward(MainActivity.getInstance(), FloatingLayerActivity.class, bundle, false);
         ActivityAnimationUtils.setActivityAnimation(MainActivity.getInstance(), R.anim.animation_none, R.anim.animation_none);
+        EventBus.getDefault().post(new MainTabSelectEvent(MainActivity.Tab.INDEX));
     }
+
 
 }

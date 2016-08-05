@@ -24,6 +24,7 @@ import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.jakewharton.rxbinding.view.RxView;
+import com.ksfc.newfarmer.App;
 import com.ksfc.newfarmer.EventBaseFragment;
 import com.ksfc.newfarmer.common.PicassoHelper;
 import com.ksfc.newfarmer.common.LoadMoreScrollListener;
@@ -147,7 +148,7 @@ public class MyOrderListFragment extends EventBaseFragment implements PullToRefr
         }
 
         //设置classId
-        PreferenceUtil pu = new PreferenceUtil(activity, "config");
+        PreferenceUtil pu = new PreferenceUtil(activity, App.SPNAME);
         huaFeiClassId = pu.getString("huafei", "531680A5");
         carClassId = pu.getString("qiche", "6C7D8F66");
 
@@ -207,7 +208,7 @@ public class MyOrderListFragment extends EventBaseFragment implements PullToRefr
             waitingpay_lv.onRefreshComplete();
             if (data.getStatus().equals("1000")) {
                 List<WaitingPay.Orders> rows = data.datas.rows;
-                if (!rows.isEmpty()) {
+                if (rows!=null&&!rows.isEmpty()) {
                     null_layout.setVisibility(View.GONE);
                     loadingFooter.setSize(page, rows.size());
 

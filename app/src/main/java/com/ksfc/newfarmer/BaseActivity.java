@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit;
 import com.ksfc.newfarmer.activitys.HomepageActivity;
 import com.ksfc.newfarmer.activitys.LoginActivity;
 import com.ksfc.newfarmer.db.Store;
+import com.ksfc.newfarmer.event.TokenErrorEvent;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.OnApiDataReceivedCallback;
 import com.ksfc.newfarmer.protocol.Request;
@@ -32,6 +33,8 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import org.greenrobot.eventbus.EventBus;
 
 import rx.Observable;
 import rx.functions.Action1;
@@ -190,7 +193,9 @@ public abstract class BaseActivity extends RxFragmentActivity implements OnClick
                             }
                         } else if (req.getApi() == ApiType.SEND_SMS) {
                             onResponsed(req);
-                        } else {
+                        } else if (req.getApi() == ApiType.SHARE_ADD_POINTS) {
+                            onResponsed(req);
+                        }else {
                             req.showErrorMsg();
                         }
                     }
@@ -504,6 +509,7 @@ public abstract class BaseActivity extends RxFragmentActivity implements OnClick
     // 调用此方法 去登录页面
     public void tokenToLogin() {
         App.loginOut();
+        EventBus.getDefault().post(new TokenErrorEvent());
         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("isTokenError", true);

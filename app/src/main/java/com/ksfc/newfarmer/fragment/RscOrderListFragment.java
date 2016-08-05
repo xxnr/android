@@ -643,6 +643,7 @@ public class RscOrderListFragment extends EventBaseFragment implements
                 this.ordering_item_attr = (TextView) rootView.findViewById(R.id.ordering_item_attr);
                 this.ordering_item_additions = (TextView) rootView.findViewById(R.id.ordering_item_additions);
                 this.ordering_item_additionsll = (LinearLayout) rootView.findViewById(R.id.ordering_item_additionsll);
+                this.ordering_item_additions.setMaxLines(2);
             }
 
         }

@@ -1,5 +1,6 @@
 package com.ksfc.newfarmer.protocol.RxApi;
 
+import com.ksfc.newfarmer.beans.ArticleDetailResult;
 import com.ksfc.newfarmer.protocol.ResponseResult;
 import com.ksfc.newfarmer.beans.AttrSelectResult;
 import com.ksfc.newfarmer.beans.CameraResult;
@@ -19,6 +20,7 @@ import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 import rx.Observable;
 
@@ -52,6 +54,7 @@ public interface ApiService {
     Observable<MyOrderDetailResult> GET_ORDER_DETAILS(
             @Field("token") String token,
             @Field("orderId") String orderId);
+
 
     /**
      * RSC订单详情
@@ -87,5 +90,11 @@ public interface ApiService {
     @GET("/api/v2.0/usertypes")
     Observable<String> USER_TYPE();
 
+
+    /**
+     * 获取资讯详情
+     */
+    @GET("/api/v2.0/news/{newsId}")
+    Observable<ArticleDetailResult> GET_NEWS_DETAIL(@Path("newsId") String id);
 
 }

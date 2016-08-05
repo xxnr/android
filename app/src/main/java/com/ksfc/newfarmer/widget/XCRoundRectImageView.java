@@ -48,10 +48,11 @@ public class XCRoundRectImageView extends ImageView {
 
         Drawable drawable = getDrawable();
         if (null != drawable) {
-            Bitmap bitmap;
+            Bitmap bitmap = null;
             if (drawable instanceof BitmapDrawable) {
                 bitmap = ((BitmapDrawable) drawable).getBitmap();
-            } else {
+            }
+            if (bitmap==null){
                 return;
             }
             Bitmap b = getRoundBitmap(bitmap, 10);

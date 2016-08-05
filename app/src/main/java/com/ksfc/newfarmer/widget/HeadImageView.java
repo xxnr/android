@@ -54,13 +54,17 @@ public class HeadImageView extends ImageView {
         this.measure(0, 0);
         if (drawable.getClass() == NinePatchDrawable.class)
             return;
-        Bitmap b;
+        Bitmap b = null;
         if (drawable instanceof BitmapDrawable) {
             b = ((BitmapDrawable) drawable).getBitmap();
-        } else {
+        }
+        if (b==null){
             return;
         }
         Bitmap bitmap = b.copy(Config.ARGB_4444, true);
+        if (bitmap==null){
+            return;
+        }
         if (defaultWidth == 0) {
             defaultWidth = getWidth();
         }

@@ -12,5 +12,7 @@ public class CampaignDetailResult extends ResponseResult {
     public String share_url;
     public String share_abstract;
     public String share_image;
+    public String campaign_id;
+
 
 }

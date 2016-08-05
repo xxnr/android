@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.ksfc.newfarmer.App;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.common.CommonAdapter;
@@ -462,7 +463,7 @@ public class RewardShopActivity extends BaseActivity {
     //展示浮层
     private void showGuide(int integral, GiftListResult.DatasBean.GiftsBean gift) {
         //第一次进入我的展示积分引导页
-        PreferenceUtil pu = new PreferenceUtil(RewardShopActivity.this, "config");
+        PreferenceUtil pu = new PreferenceUtil(RewardShopActivity.this, App.SPNAME);
         boolean firstInIntegral = pu.getBool("firstInIntegral", true);
         if (firstInIntegral) {
             Bundle integralData = new Bundle();

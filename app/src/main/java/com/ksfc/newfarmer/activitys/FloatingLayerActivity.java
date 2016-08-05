@@ -10,6 +10,7 @@ import android.view.WindowManager;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.event.RewardShopGuideEvent;
+import com.ksfc.newfarmer.event.TokenErrorEvent;
 import com.ksfc.newfarmer.fragment.ActivityListFragment;
 import com.ksfc.newfarmer.fragment.IntegralTallGuideFragment;
 import com.ksfc.newfarmer.fragment.SignSuccessFragment;
@@ -103,6 +104,15 @@ public class FloatingLayerActivity extends BaseActivity {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         changFragment(event.page, transaction);
         transaction.commitAllowingStateLoss();
+    }
+
+
+    /**
+     * token 错误
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void tokenErrorEvent(TokenErrorEvent event) {
+            finish();
     }
 
     @Override

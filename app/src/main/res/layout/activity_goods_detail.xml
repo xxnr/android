@@ -184,7 +184,7 @@
         android:background="@color/transparent"
         android:visibility="visible">
 
-        <com.ksfc.newfarmer.widget.HeadImageView
+        <ImageView
             android:id="@+id/animation_Image"
             android:layout_width="35dp"
             android:layout_height="35dp"

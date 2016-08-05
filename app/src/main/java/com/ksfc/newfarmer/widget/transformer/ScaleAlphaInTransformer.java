@@ -5,37 +5,65 @@ import android.os.Build;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 
-public class ScaleInTransformer extends BasePageTransformer
+public class ScaleAlphaInTransformer extends BasePageTransformer
 {
     private static final float DEFAULT_MIN_SCALE = 0.85f;
     private float mMinScale = DEFAULT_MIN_SCALE;
 
-    public ScaleInTransformer()
+    private static final float DEFAULT_MIN_ALPHA = 0.8f;
+    private float mMinAlpha = DEFAULT_MIN_ALPHA;
+
+    public ScaleAlphaInTransformer()
     {
 
     }
 
-    public ScaleInTransformer(float minScale)
+    public ScaleAlphaInTransformer(float minScale, float minAlpha)
     {
-        this(minScale, NonPageTransformer.INSTANCE);
+        this(minAlpha,minScale, NonPageTransformer.INSTANCE);
     }
 
-    public ScaleInTransformer(ViewPager.PageTransformer pageTransformer)
+    public ScaleAlphaInTransformer(ViewPager.PageTransformer pageTransformer)
     {
-        this(DEFAULT_MIN_SCALE, pageTransformer);
+        this(DEFAULT_MIN_ALPHA,DEFAULT_MIN_SCALE, pageTransformer);
     }
 
 
-    public ScaleInTransformer(float minScale, ViewPager.PageTransformer pageTransformer)
+    public ScaleAlphaInTransformer(float minAlpha, float minScale, ViewPager.PageTransformer pageTransformer)
     {
+        mMinAlpha = minAlpha;
         mMinScale = minScale;
         mPageTransformer = pageTransformer;
     }
 
 
+
+
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void pageTransform(View view, float position)
     {
+        if (position < -1)
+        { // [-Infinity,-1)
+            view.setAlpha(mMinAlpha);
+        } else if (position <= 1)
+        { // [-1,1]
+
+            if (position < 0) //[0，-1]
+            {           //[1,min]
+                float factor = mMinAlpha + (1 - mMinAlpha) * (1 + position);
+                view.setAlpha(factor);
+            } else//[1，0]
+            {
+                //[min,1]
+                float factor = mMinAlpha + (1 - mMinAlpha) * (1 - position);
+                view.setAlpha(factor);
+            }
+        } else
+        { // (1,+Infinity]
+            view.setAlpha(mMinAlpha);
+        }
+
+
         int pageWidth = view.getWidth();
         int pageHeight = view.getHeight();
 

@@ -11,6 +11,7 @@ import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.RelativeLayout;
 
+import com.ksfc.newfarmer.App;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.db.Store;
@@ -211,7 +212,7 @@ public class NewFramerInviteActivity extends BaseActivity implements
             tanTransaction.hide(potentialCustomer);
         } else if (checkedId == R.id.radio_button3) {
             //是否是第一次到客户登记tab 如果是的话展示引导
-            PreferenceUtil pu = new PreferenceUtil(this, "config");
+            PreferenceUtil pu = new PreferenceUtil(this, App.SPNAME);
             boolean isFirst = pu.getBool("first3", true);
             if (isFirst && potentialCount == 0) {
                 customer_bg.setVisibility(View.VISIBLE);

@@ -1,5 +1,6 @@
 package com.ksfc.newfarmer.activitys;
 
+import com.ksfc.newfarmer.App;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.StringUtil;
@@ -36,7 +37,7 @@ public class SplashActivity extends RxActivity implements DSInappDataListener {
         // 屏幕竖屏
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_welcome);
-        final PreferenceUtil pu = new PreferenceUtil(this, "config");
+        final PreferenceUtil pu = new PreferenceUtil(this, App.SPNAME);
         final boolean isFirst = pu.getBool("first", true); //判断用户是否是第一次打开app
         // 判断是否第一次启动
         Observable.timer(3, TimeUnit.SECONDS)
@@ -103,4 +104,5 @@ public class SplashActivity extends RxActivity implements DSInappDataListener {
         super.onStop();
         DeepShare.onStop();
     }
+
 }

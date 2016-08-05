@@ -11,6 +11,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshExpandableListView;
+import com.ksfc.newfarmer.App;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.activitys.ShoppingCartActivity.Data.Category;
@@ -307,7 +308,7 @@ public class ShoppingCartActivity extends BaseActivity {
 
         //设置classId
 
-        PreferenceUtil pu = new PreferenceUtil(this, "config");
+        PreferenceUtil pu = new PreferenceUtil(this, App.SPNAME);
         huaFeiClassId = pu.getString("huafei", "531680A5");
         carClassId = pu.getString("qiche", "6C7D8F66");
 
@@ -1475,7 +1476,7 @@ public class ShoppingCartActivity extends BaseActivity {
                                 @Override
                                 public void onClick(View v) {
                                     Intent intent = new Intent(ShoppingCartActivity.this, GoodsDetailActivity.class);
-                                    intent.putExtra("goodId", goodsList.get(childPosition).id);
+                                    intent.putExtra("goodsId", goodsList.get(childPosition).id);
                                     startActivity(intent);
 
                                 }
@@ -1485,7 +1486,7 @@ public class ShoppingCartActivity extends BaseActivity {
                                 @Override
                                 public void onClick(View v) {
                                     Intent intent = new Intent(ShoppingCartActivity.this, GoodsDetailActivity.class);
-                                    intent.putExtra("goodId", goodsList.get(childPosition).id);
+                                    intent.putExtra("goodsId", goodsList.get(childPosition).id);
                                     startActivity(intent);
                                 }
                             });

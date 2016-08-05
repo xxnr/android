@@ -36,6 +36,7 @@ import com.ksfc.newfarmer.utils.Utils;
 import com.ksfc.newfarmer.widget.KeyboardListenRelativeLayout;
 import com.ksfc.newfarmer.widget.VerticalViewPager;
 import com.ksfc.newfarmer.widget.XCRoundRectImageView;
+import com.ksfc.newfarmer.widget.transformer.CircleTransform;
 import com.squareup.picasso.Picasso;
 
 import android.content.res.ColorStateList;
@@ -136,7 +137,7 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
     @Override
     public void OnActCreate(Bundle savedInstanceState) {
         RndApplication.tempDestroyActivityList.add(GoodsDetailActivity.this);
-        goodId = getIntent().getStringExtra("goodId");
+        goodId = getIntent().getStringExtra("goodsId");
         setTitle("商品详情");
         initView();
         //透明状态栏和设置状态栏颜色
@@ -1006,6 +1007,7 @@ public class GoodsDetailActivity extends BaseActivity implements KeyboardListenR
                 Picasso.with(GoodsDetailActivity.this)
                         .load(MsgID.IP + detail.pictures.get(0).thumbnail)
                         .noFade()
+                        .transform(new CircleTransform())
                         .placeholder(R.drawable.zhanweitu)
                         .error(R.drawable.error)
                         .into(animationImage);

@@ -914,7 +914,7 @@ public class GoodsListActivity extends BaseActivity implements OnItemClickListen
         Intent intent = new Intent(GoodsListActivity.this,
                 GoodsDetailActivity.class);
         if (!TextUtils.isEmpty(good.goodsId)) {
-            intent.putExtra("goodId", good.goodsId);
+            intent.putExtra("goodsId", good.goodsId);
             startActivity(intent);
         }
 

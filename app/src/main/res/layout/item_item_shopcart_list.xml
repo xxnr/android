@@ -218,7 +218,6 @@
                 android:layout_marginLeft="32dp"
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
-                android:maxLines="2"
                 android:textColor="@color/main_index_gary"
                 android:textSize="14sp" />
 

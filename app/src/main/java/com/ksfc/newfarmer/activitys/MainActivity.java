@@ -141,7 +141,7 @@ public class MainActivity extends TabActivity implements View.OnClickListener {
                         break;
                     case R.id.rb_shopkeeper:
                         //第一次进入我的展示积分引导页
-                        PreferenceUtil pu = new PreferenceUtil(MainActivity.this, "config");
+                        PreferenceUtil pu = new PreferenceUtil(MainActivity.this, App.SPNAME);
                         boolean firstInMine = pu.getBool("firstInMine", true);
                         if (firstInMine) {
                             LoginResult.UserInfo userInfo = Store.User.queryMe();

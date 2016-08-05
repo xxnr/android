@@ -76,19 +76,50 @@
     <include layout="@layout/line_lay" />
 
 
-    <com.handmark.pulltorefresh.library.PullToRefreshListView xmlns:ptr="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/consumer_listView"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="@color/default_act_bg"
-        android:dividerHeight="10dp"
-        android:footerDividersEnabled="false"
-        android:headerDividersEnabled="false"
-        android:scrollbars="none"
-        ptr:ptrAnimationStyle="rotate"
-        ptr:ptrDrawable="@drawable/loader"
-        ptr:ptrHeaderBackground="@color/re_flash"
-        ptr:ptrListViewExtrasEnabled="false"
-        ptr:ptrScrollingWhileRefreshingEnabled="true" />
+        android:layout_height="match_parent">
+
+        <com.handmark.pulltorefresh.library.PullToRefreshListView xmlns:ptr="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/consumer_listView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@color/default_act_bg"
+            android:dividerHeight="10dp"
+            android:footerDividersEnabled="false"
+            android:headerDividersEnabled="false"
+            android:scrollbars="none"
+            ptr:ptrAnimationStyle="rotate"
+            ptr:ptrDrawable="@drawable/loader"
+            ptr:ptrHeaderBackground="@color/re_flash"
+            ptr:ptrListViewExtrasEnabled="false"
+            ptr:ptrScrollingWhileRefreshingEnabled="true" />
+
+
+        <LinearLayout
+            android:id="@+id/empty_ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:layout_marginTop="100dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/consumer_order_icon" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="这位客户暂无订单记录"
+                android:textColor="@color/gray" />
+
+        </LinearLayout>
+
+    </FrameLayout>
+
 
 </LinearLayout>

@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
     <LinearLayout
-        android:gravity="center"
         android:layout_width="45dp"
-        android:layout_height="45dp">
+        android:layout_height="45dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:gravity="center">
+
         <ImageView
             android:id="@+id/close_float"
             android:layout_width="wrap_content"
@@ -18,9 +20,10 @@
 
 
     <FrameLayout
+        android:id="@+id/content_frame"
         android:layout_width="match_parent"
         android:layout_height="340dp"
-        android:layout_marginTop="55dp"
+        android:layout_centerInParent="true"
         android:clipChildren="false">
 
         <android.support.v4.view.ViewPager
@@ -35,13 +38,14 @@
     </FrameLayout>
 
     <ImageView
-        android:visibility="invisible"
         android:id="@+id/activity_list_tips"
-        android:layout_marginTop="40dp"
-        android:layout_gravity="center_horizontal"
-        android:background="@drawable/swipe_view_more"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_below="@id/content_frame"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/swipe_view_more"
+        android:visibility="invisible" />
 
 
-</LinearLayout>
+</RelativeLayout>

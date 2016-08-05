@@ -77,7 +77,7 @@ public class LoginActivity extends BaseActivity {
             login_layout_password.requestFocus();
         } else {
             //获取上次保存再本地的手机号
-            PreferenceUtil pu = new PreferenceUtil(this, "config");
+            PreferenceUtil pu = new PreferenceUtil(this, App.SPNAME);
             String lastPhoneNumber = pu.getString("lastPhoneNumber", "");
             if (StringUtil.checkStr(lastPhoneNumber)) {
                 login_layout_phone.setText(lastPhoneNumber);
@@ -182,7 +182,7 @@ public class LoginActivity extends BaseActivity {
                 SPUtils.put(LoginActivity.this, "shopCartId",
                         login.datas.cartId);
                 //保存到本地此用户的上次登陆的手机号
-                PreferenceUtil pu = new PreferenceUtil(this, "config");
+                PreferenceUtil pu = new PreferenceUtil(this, App.SPNAME);
                 pu.putString("lastPhoneNumber", login.datas.phone);
                 //登陆msg
                 EventBus.getDefault().post(new IsLoginEvent());

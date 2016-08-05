@@ -6,6 +6,7 @@ package com.ksfc.newfarmer;
 import java.util.HashMap;
 
 import com.ksfc.newfarmer.common.ClassFilter;
+import com.ksfc.newfarmer.event.TokenErrorEvent;
 import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.activitys.LoginActivity;
 import com.ksfc.newfarmer.db.Store;
@@ -28,6 +29,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager.BadTokenException;
+
+import org.greenrobot.eventbus.EventBus;
 
 
 /**
@@ -218,6 +221,7 @@ public abstract class BaseFragment extends RxFragment implements
     // 调用此方法 去登录页面
     public void tokenToLogin() {
         App.loginOut();
+        EventBus.getDefault().post(new TokenErrorEvent());
         Intent intent = new Intent(activity, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("isTokenError", true);

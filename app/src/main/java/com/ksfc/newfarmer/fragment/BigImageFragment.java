@@ -99,7 +99,7 @@ public class BigImageFragment extends EventBaseFragment implements PhotoViewAtta
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void updateItem(BigImageEvent event) {
+    public void activityExit(BigImageEvent event) {
         activityExitAnim();
         Observable
                 .timer(DURATION, TimeUnit.MILLISECONDS)
@@ -127,7 +127,6 @@ public class BigImageFragment extends EventBaseFragment implements PhotoViewAtta
 
 
     private void activityExitAnim() {
-        rootView.setAlpha(0.0f);
         ObjectAnimator
                 .ofFloat(photoView, "translationY", 0.0f, -top)
                 .setDuration(DURATION)

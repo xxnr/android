@@ -14,6 +14,7 @@ import com.ksfc.newfarmer.beans.LoginResult;
 import com.ksfc.newfarmer.beans.PersonalData;
 import com.ksfc.newfarmer.beans.PersonalData.Data;
 import com.ksfc.newfarmer.utils.FastBlur;
+import com.ksfc.newfarmer.utils.PopWindowUtils;
 import com.ksfc.newfarmer.utils.ScreenUtil;
 import com.ksfc.newfarmer.utils.Utils;
 import com.ksfc.newfarmer.utils.IntentUtil;
@@ -24,13 +25,19 @@ import com.squareup.picasso.Picasso;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 
@@ -65,6 +72,10 @@ public class MineActivity extends BaseActivity {
     private TextView unLogin_msg_tv;
     private LinearLayout login_content_ll;
 
+    private View pop_bg;
+
+    private PopupWindow popupWindow;
+
 
     private Handler handler = new Handler() {
         @Override
@@ -83,7 +94,7 @@ public class MineActivity extends BaseActivity {
                                         subscriber.onNext(aeroBitmap);
                                     }
                                 })
-                                .subscribeOn(Schedulers.newThread() )
+                                .subscribeOn(Schedulers.newThread())
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .compose(MineActivity.this.<Bitmap>bindToLifecycle())
                                 .subscribe(new Action1<Bitmap>() {
@@ -148,7 +159,7 @@ public class MineActivity extends BaseActivity {
                             try {
                                 Bitmap bitmap = Picasso.with(MineActivity.this)
                                         .load(MsgID.IP + imgUrl)
-                                        .resize(210,210)
+                                        .resize(210, 210)
                                         .noFade().get();
                                 subscriber.onNext(bitmap);
                             } catch (IOException e) {
@@ -205,6 +216,51 @@ public class MineActivity extends BaseActivity {
         }
     }
 
+    //显示popWindow
+    private void showPopUp(View parent) {
+        if (null != popupWindow) {
+            popupWindow.dismiss();
+        } else {
+            initPopWindow();
+        }
+        PopWindowUtils.setBackgroundBlack(pop_bg, 0);
+        popupWindow.showAtLocation(parent, Gravity.BOTTOM, 0, 0);
+
+    }
+
+
+    //初始化popWindow
+    public void initPopWindow() {
+        View popupWindow_view = getLayoutInflater().inflate(
+                R.layout.pop_layout_contact_service, null);
+        TextView call_phone_tv = (TextView) popupWindow_view.findViewById(R.id.call_phone);
+        TextView qq_service_tv = (TextView) popupWindow_view.findViewById(R.id.qq_service);
+        LinearLayout cancel_ll = (LinearLayout) popupWindow_view.findViewById(R.id.cancel_ll);
+
+        //增加按纽点击样式
+        call_phone_tv.setOnClickListener(this);
+        qq_service_tv.setOnClickListener(this);
+        cancel_ll.setOnClickListener(this);
+
+        // 创建PopupWindow实例,200,LayoutParams.MATCH_PARENT分别是宽度和高度
+        popupWindow = new PopupWindow(popupWindow_view,
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+
+        // 设置动画效果
+        popupWindow.setAnimationStyle(R.style.popWindow_anim_style);
+        popupWindow.setFocusable(true);
+        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                PopWindowUtils.setBackgroundBlack(pop_bg, 1);
+            }
+        });
+
+
+    }
+
+
     /**
      * 获取个人信息
      */
@@ -218,6 +274,7 @@ public class MineActivity extends BaseActivity {
     }
 
     private void initView() {
+
 
         title_tv = (TextView) findViewById(R.id.title_tv);
         head_View_bg_iv = (ImageView) findViewById(R.id.head_View_bg); //登录时的背景
@@ -235,6 +292,8 @@ public class MineActivity extends BaseActivity {
         my_state_ll = (LinearLayout) findViewById(R.id.my_state_ll);
         my_order_open_ll = (LinearLayout) findViewById(R.id.my_order_open_ll);
         my_order_open_ll.setVisibility(View.GONE);
+
+        pop_bg = findViewById(R.id.pop_bg);
 
         setViewClick(R.id.head_View);
 
@@ -257,10 +316,11 @@ public class MineActivity extends BaseActivity {
 
     /**
      * 监听登录事件
+     *
      * @param event
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void isLoginEvent(IsLoginEvent event){
+    public void isLoginEvent(IsLoginEvent event) {
         if (isLogin()) {
             setLayout(true);
             getData();
@@ -271,10 +331,11 @@ public class MineActivity extends BaseActivity {
 
     /**
      * 修改用户信息通知
+     *
      * @param event
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void UserInfoChangeEvent(UserInfoChangeEvent event){
+    public void UserInfoChangeEvent(UserInfoChangeEvent event) {
         if (isLogin()) {
             setLayout(true);
             getData();
@@ -325,10 +386,7 @@ public class MineActivity extends BaseActivity {
                         RewardShopActivity.class, null, false);
                 break;
             case R.id.my_kefudianhua:
-//                Intent intent1 = new Intent(this, ActivityDetailActivity.class);
-//                intent1.putExtra("url", "http://wpa.qq.com/msgrd?v=3&uin=2487401812&site=qq&menu=yes");
-//                startActivity(intent1);
-                Utils.dial(this, "400-056-0371");
+                showPopUp(v);
                 break;
             case R.id.my_set:
                 startActivity(SettingActivity.class);
@@ -373,6 +431,32 @@ public class MineActivity extends BaseActivity {
                     startActivity(intent);
                 }
                 break;
+            case R.id.call_phone:
+                if (popupWindow != null && popupWindow.isShowing()) {
+                    popupWindow.dismiss();
+                }
+                Utils.dial(this, "400-056-0371");
+                break;
+            case R.id.qq_service:
+                if(Utils.isQQClientAvailable(MineActivity.this)){
+                    if (popupWindow != null && popupWindow.isShowing()) {
+                        popupWindow.dismiss();
+                    }
+                    String url = "http://wpa.qq.com/msgrd?v=3&uin=2487401812&site=qq&menu=yes";
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.addCategory(Intent.CATEGORY_BROWSABLE);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    i.setData(Uri.parse(url));
+                    startActivity(i);
+                }else {
+                    showToast("未检测到QQ，请选择其他方式");
+                }
+                break;
+            case R.id.cancel_ll:
+                if (popupWindow != null && popupWindow.isShowing()) {
+                    popupWindow.dismiss();
+                }
+                break;
             default:
                 break;
         }
@@ -402,7 +486,7 @@ public class MineActivity extends BaseActivity {
                                     try {
                                         Bitmap bitmap = Picasso.with(MineActivity.this)
                                                 .load(MsgID.IP + imgUrl)
-                                                .resize(210,210)
+                                                .resize(210, 210)
                                                 .noFade().get();
                                         subscriber.onNext(bitmap);
                                     } catch (IOException e) {

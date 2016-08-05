@@ -13,6 +13,11 @@ import greendao.DaoSession;
 public class App {
     private static RndApplication app;
 
+    public static final String SPNAME = "config";
+
+    public static final String CAMPAIGN = "campaign_id";
+
+
     public static void setApp(RndApplication application) {
         app = application;
     }
@@ -24,7 +29,7 @@ public class App {
     /**
      * 退出登录
      */
-    public static void loginOut(){
+    public static void loginOut() {
 
         Context context = app.getApplicationContext();
         LoginResult.UserInfo userInfo = Store.User.queryMe();
@@ -40,7 +45,6 @@ public class App {
         writableDaoSession.getPotentialCustomersEntityDao().deleteAll();
         writableDaoSession.getInviteeEntityDao().deleteAll();
         writableDaoSession.getPotentialCustomersEntityDao().deleteAll();
-
 
     }
 

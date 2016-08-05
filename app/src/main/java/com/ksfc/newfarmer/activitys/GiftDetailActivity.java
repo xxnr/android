@@ -135,11 +135,12 @@ public class GiftDetailActivity extends BaseActivity {
         }
         id = extras.getString("id");
         score = extras.getInt("score", 0);
-
         showProgressDialog();
-        RemoteApi.getGiftDetail(this, id);
-
-
+        if (isLogin()){
+            RemoteApi.getIntegral(GiftDetailActivity.this);
+        }else {
+            RemoteApi.getGiftDetail(this, id);
+        }
     }
 
     /**

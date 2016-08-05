@@ -1,26 +1,32 @@
 package com.ksfc.newfarmer.fragment;
 
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import com.ksfc.newfarmer.BaseFragment;
+import com.ksfc.newfarmer.App;
+import com.ksfc.newfarmer.EventBaseFragment;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.activitys.CampaignDetailActivity;
 import com.ksfc.newfarmer.beans.CampaignListResult;
+import com.ksfc.newfarmer.event.CampaignListEvent;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.utils.IntentUtil;
 import com.ksfc.newfarmer.utils.Utils;
-import com.ksfc.newfarmer.widget.transformer.ScaleInTransformer;
+import com.ksfc.newfarmer.widget.transformer.ScaleAlphaInTransformer;
 import com.squareup.picasso.Picasso;
 
 import net.yangentao.util.PreferenceUtil;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,12 +39,15 @@ import butterknife.OnClick;
 /**
  * Created by CAI on 2016/6/14.
  */
-public class ActivityListFragment extends BaseFragment {
+public class ActivityListFragment extends EventBaseFragment {
 
     @BindView(R.id.activity_viewpager)
     ViewPager mViewPager;
     @BindView(R.id.activity_list_tips)
     ImageView activity_list_tips;
+    @BindView(R.id.content_frame)
+    FrameLayout content_frame;
+    private List<CampaignListResult.CampaignsBean> campaigns;
 
 
     public static ActivityListFragment newInstance() {
@@ -58,9 +67,16 @@ public class ActivityListFragment extends BaseFragment {
     private void init() {
         //设置Page间间距
         mViewPager.setPageMargin(Utils.dip2px(activity, 24));
-        //设置缓存的页面数量
-        mViewPager.setOffscreenPageLimit(3);
-        mViewPager.setPageTransformer(true, new ScaleInTransformer());
+        //设置释放父组件触摸事件给viewpager
+        content_frame.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return mViewPager.dispatchTouchEvent(event);
+            }
+        });
+
+        mViewPager.setPageTransformer(true, new ScaleAlphaInTransformer());
+
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -78,8 +94,14 @@ public class ActivityListFragment extends BaseFragment {
             }
         });
 
+        if (campaigns != null && !campaigns.isEmpty()) {
+            //设置缓存的页面数量
+            mViewPager.setOffscreenPageLimit(campaigns.size());
+            mViewPager.setAdapter(new ActivityListAdapter(campaigns));
+        }
+
         //第一次展示tips
-        PreferenceUtil pu = new PreferenceUtil(activity, "config");
+        PreferenceUtil pu = new PreferenceUtil(activity, App.SPNAME);
         boolean firstInMine = pu.getBool("firstActivityList", true);
         if (firstInMine) {
             activity_list_tips.setVisibility(View.VISIBLE);
@@ -88,6 +110,13 @@ public class ActivityListFragment extends BaseFragment {
         }
         pu.putBool("firstActivityList", false);
 
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void onEvent(CampaignListEvent event) {
+        if (event.campaigns != null && !event.campaigns.isEmpty()) {
+            campaigns = event.campaigns;
+        }
     }
 
     @OnClick(R.id.close_float)
@@ -101,8 +130,10 @@ public class ActivityListFragment extends BaseFragment {
         if (req.getApi() == ApiType.GET_CAMPAIGNS) {
             if (req.getData().getStatus().equals("1000")) {
                 CampaignListResult reqData = (CampaignListResult) req.getData();
-                List<CampaignListResult.CampaignsBean> campaigns = reqData.campaigns;
+                campaigns = reqData.campaigns;
                 if (campaigns != null && !campaigns.isEmpty()) {
+                    //设置缓存的页面数量
+                    mViewPager.setOffscreenPageLimit(campaigns.size());
                     mViewPager.setAdapter(new ActivityListAdapter(campaigns));
                 } else {
                     mViewPager.setAdapter(null);
@@ -125,25 +156,28 @@ public class ActivityListFragment extends BaseFragment {
         }
 
         @Override
-        public Object instantiateItem(ViewGroup container, int position) {
+        public Object instantiateItem(ViewGroup container, final int position) {
             View inflate = inflater.inflate(R.layout.item_activity_list, null);
             ImageView iv = (ImageView) inflate.findViewById(R.id.imageView);
+
 
             final CampaignListResult.CampaignsBean campaignsBean = campaigns.get(position);
             if (campaignsBean != null) {
                 Picasso.with(activity)
                         .load(campaignsBean.image)
-                        .placeholder(R.drawable.zhanweitu)
-                        .config(Bitmap.Config.RGB_565)
+                        .resize(Utils.dip2px(activity, 245), Utils.dip2px(activity, 340))
+                        .placeholder(R.drawable.campaign_loading_icon)
+                        .error(R.drawable.campaign_loading_icon)
                         .into(iv);
                 container.addView(inflate);
                 iv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         //加入看过列表
-                        PreferenceUtil pu = new PreferenceUtil(activity, "config");
-                        pu.putBool(campaignsBean._id, true);
-
+                        if (position==0){
+                            PreferenceUtil pu = new PreferenceUtil(activity, App.CAMPAIGN);
+                            pu.putBool(campaignsBean._id, true);
+                        }
                         Bundle bundle = new Bundle();
                         bundle.putSerializable("campaign", campaignsBean);
                         IntentUtil.activityForward(activity, CampaignDetailActivity.class, bundle, true);
@@ -160,9 +194,14 @@ public class ActivityListFragment extends BaseFragment {
 
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
-            container.removeView((View) object);
+
         }
 
+
+        @Override
+        public float getPageWidth(int position) {
+            return super.getPageWidth(position);
+        }
     }
 
     @Override
@@ -171,45 +210,6 @@ public class ActivityListFragment extends BaseFragment {
     }
 
 
-    /**
-     * 假数据
-     */
-    public void setData() {
-        List<CampaignListResult.CampaignsBean> campaigns = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
-            CampaignListResult.CampaignsBean campaign = new CampaignListResult.CampaignsBean();
-            campaign.image = "http://imgsrc.baidu.com/forum/w%3D580/sign=14b323b3f8dcd100cd9cf829428a47be/ac386d600c338744c48ca6c2510fd9f9d62aa0db.jpg";
-            switch (i) {
-                case 0:
-                    campaign.title = "积分商城上线了";
-                    campaign.url = "http://192.168.1.21:8070/campaigns/events/rewardShopLaunch";
-                    campaign.share_url = "http://192.168.1.21:8070/campaigns/events/rewardShopLaunch";
-                    campaign.share_title = "积分商城上线了";
-                    campaign.share_abstract = "积分商城上线了";
-                    campaign.share_button = false;
-                    break;
-                case 1:
-                    campaign.title = "快来抢积分";
-                    campaign.url = "http://192.168.1.21:8070/campaigns/events/shareAndGetPoints";
-                    campaign.share_url = "http://192.168.1.21:8070/campaigns/events/shareAndGetPoints";
-                    campaign.share_title = "快来抢积分";
-                    campaign.share_abstract = "快来抢积分";
-                    campaign.share_button = true;
-                    break;
-                case 2:
-                    campaign.title = "答题拿积分";
-                    campaign.url = "http://192.168.1.21:8070/campaigns/quizs/jacCarsQuiz";
-                    campaign.share_url = "http://192.168.1.21:8070/campaigns/quizs/jacCarsQuiz";
-                    campaign.share_title = "答题拿积分";
-                    campaign.share_abstract = "答题拿积分";
-                    campaign.share_button = true;
-                    break;
-            }
-            campaigns.add(campaign);
-        }
-        mViewPager.setAdapter(new ActivityListAdapter(campaigns));
-
-    }
 
 }
 

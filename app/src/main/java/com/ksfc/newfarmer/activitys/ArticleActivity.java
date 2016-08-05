@@ -11,13 +11,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
+import com.ksfc.newfarmer.beans.ArticleDetailResult;
 import com.ksfc.newfarmer.beans.InformationResult;
+import com.ksfc.newfarmer.beans.ShareAddPointsResult;
+import com.ksfc.newfarmer.db.Store;
+import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.Request;
+import com.ksfc.newfarmer.protocol.RequestParams;
+import com.ksfc.newfarmer.protocol.RxApi.RxService;
 import com.ksfc.newfarmer.utils.RndLog;
 import com.ksfc.newfarmer.utils.StringUtil;
 import com.ksfc.newfarmer.utils.PopWindowUtils;
@@ -52,16 +59,17 @@ public class ArticleActivity extends BaseActivity {
     private String newsAbstract;    //分享内容的摘要
     private PopupWindow popupWindow;
 
+    private String newsId;
+
     public static final String ARG_PARAM1 = "param1";
-    public static final String ARG_SHARE_URL = "param2";
-    public static final String ARG_URL_IMG = "param3";
-    public static final String ARG_URL_TITLE = "param4";
-    public static final String ARG_ABSTRACT = "param5";
+
 
     @BindView(R.id.webView)
     WebView web;
     @BindView(R.id.share_dialog_bg)
     View share_dialog_bg;
+    @BindView(R.id.page_error_layout)
+    LinearLayout page_error_layout;
 
     public static Intent getCallingIntent(Context context, InformationResult.DatasEntity.ItemsEntity itemsEntity) {
         Intent callingIntent = new Intent(context, ArticleActivity.class);
@@ -74,7 +82,15 @@ public class ArticleActivity extends BaseActivity {
     private UMShareListener umShareListener = new UMShareListener() {
         @Override
         public void onResult(SHARE_MEDIA platform) {
-            showToast("分享成功");
+            if (isLogin()&&StringUtil.checkStr(newsId)) {
+                RequestParams params = new RequestParams();
+                params.put("type", "news");
+                params.put("id", newsId);
+                params.put("userId", Store.User.queryMe().userid);
+                execApi(ApiType.SHARE_ADD_POINTS, params);
+            } else {
+                showToast("分享成功");
+            }
             //分享成功后关闭对话框
             if (popupWindow != null && popupWindow.isShowing()) {
                 popupWindow.dismiss();
@@ -113,6 +129,8 @@ public class ArticleActivity extends BaseActivity {
             urlImage = itemsEntity.image;
             urlTitle = itemsEntity.title;
             newsAbstract = itemsEntity.newsabstract;
+
+            newsId = itemsEntity.id;
             //加载url内容
             if (StringUtil.checkStr(url) && NetUtil.isConnected(this)) {
                 RndLog.d(TAG, url);
@@ -122,37 +140,38 @@ public class ArticleActivity extends BaseActivity {
                 showToast("网络未连接");
             }
 
-            //分享content
-            if (!StringUtil.checkStr(urlTitle)) {
-                urlTitle = "新农资讯";
-            }
-            if (StringUtil.checkStr(urlImage)) {
-                //验证urlImage是否有效
-                Observable
-                        .create(new Observable.OnSubscribe<Boolean>() {
-                            @Override
-                            public void call(Subscriber<? super Boolean> subscriber) {
-                                subscriber.onNext(NetUtil.isValid(urlImage));
-                            }
-                        })
+            shareContentCheck();
+        } else {
+            String id = getIntent().getStringExtra("id");
+            newsId=id;
+            if (StringUtil.checkStr(id)) {
+                RxService.createApi()
+                        .GET_NEWS_DETAIL(id)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .compose(this.<Boolean>bindToLifecycle())
-                        .subscribe(new Action1<Boolean>() {
+                        .compose(this.<ArticleDetailResult>bindToLifecycle())
+                        .subscribe(new Action1<ArticleDetailResult>() {
                             @Override
-                            public void call(Boolean aBoolean) {
-                                if (aBoolean) {
-                                    image = new UMImage(ArticleActivity.this, urlImage);
-                                } else {
-                                    image = new UMImage(ArticleActivity.this, R.drawable.share_app_icon);
+                            public void call(ArticleDetailResult articleDetailResult) {
+                                if (articleDetailResult != null && articleDetailResult.datas != null) {
+                                    ArticleDetailResult.DatasBean datas = articleDetailResult.datas;
+
+                                    if (StringUtil.checkStr(datas.url)) {
+                                        web.loadUrl(datas.url);
+                                    }
+                                    shareUrl = datas.shareurl;
+                                    urlImage = datas.image;
+                                    urlTitle = datas.title;
+                                    newsAbstract = datas.abstractX;
+                                    shareContentCheck();
                                 }
                             }
+                        }, new Action1<Throwable>() {
+                            @Override
+                            public void call(Throwable throwable) {
+                                throwable.printStackTrace();
+                            }
                         });
-            } else {
-                image = new UMImage(ArticleActivity.this, R.drawable.share_app_icon);
-            }
-            if (!StringUtil.checkStr(newsAbstract)) {
-                newsAbstract = "分享自@新新农人";
             }
         }
 
@@ -182,6 +201,12 @@ public class ArticleActivity extends BaseActivity {
                         showPopUp(v);
                     }
                 });
+            }
+
+            @Override
+            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+                super.onReceivedError(view, errorCode, description, failingUrl);
+                page_error_layout.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -217,7 +242,18 @@ public class ArticleActivity extends BaseActivity {
 
     @Override
     public void onResponsed(Request req) {
-
+         if (req.getApi() == ApiType.SHARE_ADD_POINTS) {
+            if (req.getData().getStatus().equals("1000")) {
+                ShareAddPointsResult reqData = (ShareAddPointsResult) req.getData();
+                if (reqData.points != 0) {
+                    showToast("分享成功，奖励您" + reqData.points + "积分");
+                }else {
+                    showToast("分享成功");
+                }
+            }else{
+                showToast("分享成功");
+            }
+        }
     }
 
     //初始化popWindow
@@ -304,5 +340,40 @@ public class ArticleActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void shareContentCheck() {
+        //分享content
+        if (!StringUtil.checkStr(urlTitle)) {
+            urlTitle = "新农资讯";
+        }
+        if (StringUtil.checkStr(urlImage)) {
+            //验证urlImage是否有效
+            Observable
+                    .create(new Observable.OnSubscribe<Boolean>() {
+                        @Override
+                        public void call(Subscriber<? super Boolean> subscriber) {
+                            subscriber.onNext(NetUtil.isValid(urlImage));
+                        }
+                    })
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .compose(this.<Boolean>bindToLifecycle())
+                    .subscribe(new Action1<Boolean>() {
+                        @Override
+                        public void call(Boolean aBoolean) {
+                            if (aBoolean) {
+                                image = new UMImage(ArticleActivity.this, urlImage);
+                            } else {
+                                image = new UMImage(ArticleActivity.this, R.drawable.share_app_icon);
+                            }
+                        }
+                    });
+        } else {
+            image = new UMImage(ArticleActivity.this, R.drawable.share_app_icon);
+        }
+        if (!StringUtil.checkStr(newsAbstract)) {
+            newsAbstract = "分享自@新新农人";
+        }
     }
 }

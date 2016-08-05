@@ -53,6 +53,7 @@ import com.ksfc.newfarmer.beans.RscGiftOrderListResult;
 import com.ksfc.newfarmer.beans.RscOrderDetailResult;
 import com.ksfc.newfarmer.beans.RscOrderResult;
 import com.ksfc.newfarmer.beans.SaveAdressList;
+import com.ksfc.newfarmer.beans.ShareAddPointsResult;
 import com.ksfc.newfarmer.beans.SmsResult;
 import com.ksfc.newfarmer.beans.TownList;
 import com.ksfc.newfarmer.beans.UnionPayResponse;
@@ -477,13 +478,19 @@ public enum ApiType {
     GET_APP_SHARE_INFO("/api/v2.3/campaign/app_share_info", CampaignDetailResult.class),
 
     /**
+     * 分享：用户分享加积分:
+     */
+    SHARE_ADD_POINTS("/api/v2.3/user/shareAddPoints", ShareAddPointsResult.class),
+
+    /**
      * Host:
      */
     TEST("", ResponseResult.class);
 
 //        private static String server_url = "http://api.xinxinnongren.com";
-//    private static String server_url = "http://101.200.194.203";
-    private static String server_url = "http://192.168.1.15:8070";
+    private static String server_url = "http://101.200.194.203";
+//    private static String server_url = "http://192.168.1.15:8070";
+//    private static String server_url = "http://192.168.1.21:8070";
 
 
     public static final String url = server_url;

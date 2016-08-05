@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.ksfc.newfarmer.App;
 import com.ksfc.newfarmer.EventBaseFragment;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.activitys.AddPotentialActivity;
@@ -84,7 +85,7 @@ public class PotentialCustomer extends EventBaseFragment {
         getIsLatest(count);
 
         //是否大于24小时 如果是就更新
-        PreferenceUtil pu = new PreferenceUtil(activity, "config");
+        PreferenceUtil pu = new PreferenceUtil(activity, App.SPNAME);
         long last_up_date = pu.getLong("customer_up_date", 0L);
         long currentTimeMillis = System.currentTimeMillis();
         if ((currentTimeMillis - last_up_date) > (24 * 60 * 60 * 1000)) {
@@ -196,7 +197,7 @@ public class PotentialCustomer extends EventBaseFragment {
                     potentialCustomersEntityDao.deleteAll();
                     potentialCustomersEntityDao.insertInTx(potentialCustomersEntities);
                     //记下更新时间
-                    PreferenceUtil pu = new PreferenceUtil(activity, "config");
+                    PreferenceUtil pu = new PreferenceUtil(activity, App.SPNAME);
                     pu.putLong("customer_up_date", System.currentTimeMillis());
 
                 }

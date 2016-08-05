@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/transparent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:clipToPadding="true"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"/>
+
+            <TextView
+                android:id="@+id/call_phone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="10dp"
+                android:drawableTop="@drawable/call_phone"
+                android:gravity="center"
+                android:text="拨打电话"
+                android:textColor="@color/main_index_gary"
+                android:textSize="12sp" />
+
+            <View
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"/>
+
+            <TextView
+                android:id="@+id/qq_service"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="10dp"
+                android:drawableTop="@drawable/qq_service"
+                android:gravity="center"
+                android:text="QQ客服"
+                android:textColor="@color/main_index_gary"
+                android:textSize="12sp" />
+
+            <View
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"/>
+
+
+        </LinearLayout>
+
+        <include layout="@layout/line_lay" />
+
+        <LinearLayout
+            android:id="@+id/cancel_ll"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/list_bg_selector"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="取消"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</RelativeLayout>

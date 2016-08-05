@@ -25,7 +25,6 @@ public class RndApplication extends MultiDexApplication {
     public static Context applicationContext;
     private static RndApplication instance;
 
-
     public static List<Activity> unDestroyActivityList = new ArrayList<>();
     public static List<Activity> tempDestroyActivityList = new ArrayList<>();
 
@@ -71,7 +70,6 @@ public class RndApplication extends MultiDexApplication {
         Log.LOG = false;
         Config.IsToastTip = false;
     }
-
 
 
     public static RndApplication getInstance() {

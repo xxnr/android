@@ -66,7 +66,6 @@
                     android:host="com.ksfc.newfarmer"
                     android:scheme="ds363ebd292023cc28" />
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>

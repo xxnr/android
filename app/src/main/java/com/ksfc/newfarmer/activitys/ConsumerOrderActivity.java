@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -42,6 +43,7 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
     private OrderAdapter adapter;
     private TextView consumer_address;
     private LoadingFooter loadingFooter;
+    private LinearLayout empty_ll;
 
     public static final String ARG_PARAM1 = "param1";
 
@@ -95,6 +97,8 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
         phone = ((TextView) findViewById(R.id.consumer_phone));
         consumer_address = (TextView) findViewById(R.id.consumer_address);//所在地区
 
+        empty_ll = (LinearLayout) findViewById(R.id.empty_ll);
+        empty_ll.setVisibility(View.GONE);
         listView = ((PullToRefreshListView) findViewById(R.id.consumer_listView));
         listView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
         listView.setOnRefreshListener(this);
@@ -104,7 +108,6 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
         //设置刷新的文字
         PullToRefreshHelper.setFreshText(listView);
         consumer_count = (TextView) findViewById(R.id.consumer_count);
-
 
 
         setViewClick(R.id.consumer_phone);
@@ -169,6 +172,7 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
 
                     List<ConsumerOrderResult.Rows> rows = datas.rows;
                     if (rows != null && !rows.isEmpty()) {
+                        empty_ll.setVisibility(View.GONE);
                         loadingFooter.setSize(page, rows.size());
                         if (page == 1) {
                             if (adapter == null) {
@@ -190,14 +194,13 @@ public class ConsumerOrderActivity extends BaseActivity implements PullToRefresh
                             if (adapter != null) {
                                 adapter.clear();
                             }
+                            empty_ll.setVisibility(View.VISIBLE);
                         } else {
                             page--;
                         }
                     }
                 }
             }
-
-
         }
 
     }

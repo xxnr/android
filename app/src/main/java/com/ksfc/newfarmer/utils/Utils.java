@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -42,6 +43,7 @@ public class Utils {
 
     /**
      * 判断是否是手机号
+     *
      * @param mobiles
      * @return
      */
@@ -55,6 +57,7 @@ public class Utils {
 
     /**
      * 获取版本号
+     *
      * @return
      */
     public static String getVersionInfo(Context context) {
@@ -107,6 +110,7 @@ public class Utils {
 
     /**
      * 防止连点
+     *
      * @return
      */
     public synchronized static boolean isFastClick() {
@@ -118,23 +122,10 @@ public class Utils {
         return false;
     }
 
-    /**
-     * app是否安装
-     * @return
-     */
-    public static boolean isPkgInstalled(Context context, String pkgName) {
-        PackageInfo packageInfo = null;
-        try {
-            packageInfo = context.getPackageManager().getPackageInfo(pkgName, 0);
-        } catch (PackageManager.NameNotFoundException e) {
-            packageInfo = null;
-            e.printStackTrace();
-        }
-        return packageInfo != null;
-    }
 
     /**
      * 从Assets中判断文件是否存在
+     *
      * @return
      */
     public static boolean copyApkFromAssets(Context context, String fileName, String path) {
@@ -145,7 +136,7 @@ public class Utils {
             file.createNewFile();
             FileOutputStream fos = new FileOutputStream(file);
             byte[] temp = new byte[1024];
-            int i = 0;
+            int i;
             while ((i = is.read(temp)) > 0) {
                 fos.write(temp, 0, i);
             }
@@ -160,6 +151,7 @@ public class Utils {
 
     /**
      * 从Assets中安装apk
+     *
      * @return
      */
     public static void addApk(final Context mContext, final String fileName) {
@@ -206,9 +198,9 @@ public class Utils {
     }
 
 
-
     /**
      * 将字母装换成数字
+     *
      * @param letter
      * @param list
      * @return
@@ -227,6 +219,7 @@ public class Utils {
 
     /**
      * 拨号
+     *
      * @return
      */
     public static void dial(final Activity activity, final String phoneNum) {
@@ -282,4 +275,60 @@ public class Utils {
         return 0;
     }
 
+
+    /**
+     * 得到手机上安装的软件集合
+     *
+     * @param context
+     * @param
+     * @return
+     */
+    private static List<String> getPackageNames(Context context) {
+        // 获取packagemanager
+        final PackageManager packageManager = context.getPackageManager();
+        // 获取所有已安装程序的包信息
+        List<PackageInfo> packageInfos = packageManager.getInstalledPackages(0);
+        // 用于存储所有已安装程序的包名
+        List<String> packageNames = new ArrayList<>();
+        // 从pinfo中将包名字逐一取出，压入pName list中
+        if (packageInfos != null) {
+            for (int i = 0; i < packageInfos.size(); i++) {
+                String packName = packageInfos.get(i).packageName;
+                packageNames.add(packName);
+            }
+        }
+        return packageNames;
+    }
+
+    /**
+     * app是否安装
+     *
+     * @return
+     */
+    public static boolean isPkgInstalled(Context context, String pkgName) {
+        return getPackageNames(context).contains(pkgName);
+    }
+
+    /**
+     * 判断qq是否可用
+     *
+     * @param context
+     * @return
+     */
+    public static boolean isQQClientAvailable(Context context) {
+        List<String> packageNames = getPackageNames(context);
+        for (int i = 0; i < packageNames.size(); i++) {
+            String pn = packageNames.get(i);
+            if (pn.equals("com.tencent.mobileqq")) {
+                return true;
+            }
+            if (pn.equals("com.tencent.mobileqq1")) {
+                return true;
+            }
+            if (pn.equals("com.tencent.qqlite")) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

@@ -10,18 +10,53 @@
 
         <include layout="@layout/title_lay" />
 
-        <WebView
-            android:id="@+id/webView"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="none" />
+            android:layout_height="match_parent">
+
+            <WebView
+                android:id="@+id/webView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="none" />
+
+            <LinearLayout
+                android:id="@+id/page_error_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/default_act_bg"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-50dp"
+                    android:background="@drawable/page_404_icon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="糟了，页面找不到了"
+                    android:textColor="@color/deep_gray"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
+
+        </FrameLayout>
+
+
     </LinearLayout>
 
     <View
-        android:visibility="invisible"
         android:id="@+id/share_dialog_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/eight_transparent" />
+        android:background="@color/eight_transparent"
+        android:visibility="invisible" />
+
 
 </FrameLayout>
