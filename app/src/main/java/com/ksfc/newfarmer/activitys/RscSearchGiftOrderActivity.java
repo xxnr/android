@@ -261,7 +261,7 @@ public class RscSearchGiftOrderActivity extends BaseActivity implements
             if (giftordersBean != null) {
 
                 holder.setText(R.id.gift_order_time, DateFormatUtils.convertTime(giftordersBean.dateCreated));
-                holder.setText(R.id.gift_order_person, StringUtil.checkStr(giftordersBean.buyerName) ? giftordersBean.buyerName : "");
+                holder.setText(R.id.gift_order_person, StringUtil.checkStr(giftordersBean.consigneeName) ? giftordersBean.consigneeName : "");
                 View pick_up_rel = holder.getView(R.id.pick_up_rel);
                 pick_up_rel.setVisibility(View.GONE);
 
@@ -373,8 +373,8 @@ public class RscSearchGiftOrderActivity extends BaseActivity implements
         pop_save.setEnabled(false);
         pop_save.setText("确定");
 
-        recipient_name.setText(StringUtil.checkStr(giftordersBean.buyerName) ? giftordersBean.buyerName : "");
-        recipient_phone.setText(StringUtil.checkStr(giftordersBean.buyerPhone) ? giftordersBean.buyerPhone : "");
+        recipient_name.setText(StringUtil.checkStr(giftordersBean.consigneeName) ? giftordersBean.consigneeName : "");
+        recipient_phone.setText(StringUtil.checkStr(giftordersBean.consigneePhone) ? giftordersBean.consigneePhone : "");
 
         //设置背景及展示
         PopWindowUtils.setBackgroundBlack(popBg, 0);

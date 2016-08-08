@@ -245,7 +245,7 @@ public class ArticleActivity extends BaseActivity {
          if (req.getApi() == ApiType.SHARE_ADD_POINTS) {
             if (req.getData().getStatus().equals("1000")) {
                 ShareAddPointsResult reqData = (ShareAddPointsResult) req.getData();
-                if (reqData.points != 0) {
+                if (reqData.points > 0) {
                     showToast("分享成功，奖励您" + reqData.points + "积分");
                 }else {
                     showToast("分享成功");

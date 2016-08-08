@@ -30,6 +30,7 @@ import com.ksfc.newfarmer.beans.GiftOrderListResult;
 import com.ksfc.newfarmer.beans.HomeImageResult;
 import com.ksfc.newfarmer.beans.InformationResult;
 import com.ksfc.newfarmer.beans.IntegralGetResult;
+import com.ksfc.newfarmer.beans.IntentProductsResult;
 import com.ksfc.newfarmer.beans.IntentionProductsResult;
 import com.ksfc.newfarmer.beans.IsPotentialCustomerResult;
 import com.ksfc.newfarmer.beans.LoginResult;
@@ -284,6 +285,11 @@ public enum ApiType {
      */
     GET_PURPOSE_GOODS_LIST("/api/v2.1/intentionProducts", IntentionProductsResult.class),
     /**
+     * 用户报备 获取意向商品列表
+     */
+    GET_INTENT_PRODUCTS("/api/v2.3/intentionProducts", IntentProductsResult.class),
+
+    /**
      * 用户报备 判断手机号是否能添加为潜在客户
      */
     IS_POTENTIAL_CUSTOMER("/api/v2.1/potentialCustomer/isAvailable", IsPotentialCustomerResult.class),
@@ -488,8 +494,8 @@ public enum ApiType {
     TEST("", ResponseResult.class);
 
 //        private static String server_url = "http://api.xinxinnongren.com";
-    private static String server_url = "http://101.200.194.203";
-//    private static String server_url = "http://192.168.1.15:8070";
+    private static String server_url = "http://ppe.xinxinnongren.com";
+//    private static String server_url = "http://192.168.0.6:8070";
 //    private static String server_url = "http://192.168.1.21:8070";
 
 

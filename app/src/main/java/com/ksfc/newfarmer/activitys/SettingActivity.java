@@ -58,8 +58,8 @@ public class SettingActivity extends BaseActivity implements CompoundButton.OnCh
     private CheckBox checkBox;
     private Dialog progressDialog;
 
-    private String msg = "农业互联网综合服务领先者";
-    private String title = "新新农人-农业互联网综合服务平台";
+    private String msg = "下载新新农人APP，买车实惠又方便！";
+    private String title = "新新农人-互联网汽车综合服务平台";
     private String url = "http://www.xinxinnongren.com/shareApp.html";
     private UMImage image ;
 

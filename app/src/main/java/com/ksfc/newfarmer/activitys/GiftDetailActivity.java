@@ -15,6 +15,7 @@ import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.common.PicassoHelper;
 import com.ksfc.newfarmer.event.IsLoginEvent;
+import com.ksfc.newfarmer.event.RewardConsumeEvent;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.remoteapi.RemoteApi;
 import com.ksfc.newfarmer.protocol.Request;
@@ -152,6 +153,15 @@ public class GiftDetailActivity extends BaseActivity {
         RemoteApi.getIntegral(GiftDetailActivity.this);
     }
 
+    /**
+     * 消费通知
+     *
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void rewardConsume(RewardConsumeEvent event) {
+        RemoteApi.getIntegral(GiftDetailActivity.this);
+    }
 
     @Override
     public void OnViewClick(View v) {

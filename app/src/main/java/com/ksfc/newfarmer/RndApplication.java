@@ -40,7 +40,7 @@ public class RndApplication extends MultiDexApplication {
         instance = this;
         App.setApp(this);
         //是否显示log
-        RndLog.DEBUG_MODE = true;
+        RndLog.DEBUG_MODE = false;
         //初始化数据库管理器
         DBManager.getInstance(this);
         //初始化CrashHandler
@@ -59,6 +59,9 @@ public class RndApplication extends MultiDexApplication {
             setUid(userInfo.userid);
         }
     }
+
+
+
 
 
     //社会化分享初始化
@@ -142,6 +145,7 @@ public class RndApplication extends MultiDexApplication {
     public String getPwd() {
         return this.pwd;
     }
+
 
 
 }
