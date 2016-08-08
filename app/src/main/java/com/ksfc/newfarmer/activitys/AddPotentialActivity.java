@@ -227,21 +227,32 @@ public class AddPotentialActivity extends BaseActivity {
                         1000, null);
                 break;
             case R.id.choice_compelet:
-                if (StringUtil.checkStr(name.getText().toString().trim())
-                        && phone_error_ll.getVisibility() == View.GONE
-                        && isMobileNum(phone.getText().toString().trim())
-                        && StringUtil.checkStr(choice_city_text.getText().toString().trim())
-                        && StringUtil.checkStr(choice_town_text.getText().toString().trim())
-                        && StringUtil.checkStr(intent_product_text.getText().toString().trim())) {
-                    saveInfo();
-                } else {
-                    if (phone_error_ll.getVisibility() == View.VISIBLE) {
-                        showToast(getString(R.string.please_input_right_phone));
-                    } else {
-                        showToast("请完善信息");
-                    }
-
+                if (!StringUtil.checkStr(name.getText().toString().trim())) {
+                    showToast("请输入姓名");
+                    return;
                 }
+                if (!StringUtil.checkStr(phone.getText().toString().trim())) {
+                    showToast("请输入手机号");
+                    return;
+                }
+                if (!isMobileNum(phone.getText().toString().trim())
+                        || phone_error_ll.getVisibility() == View.VISIBLE) {
+                    showToast(getString(R.string.please_input_right_phone));
+                    return;
+                }
+                if (!StringUtil.checkStr(choice_city_text.getText().toString().trim())) {
+                    showToast("请选择地区");
+                    return;
+                }
+                if (!StringUtil.checkStr(choice_town_text.getText().toString().trim())) {
+                    showToast("请选择街道");
+                    return;
+                }
+                if (!StringUtil.checkStr(intent_product_text.getText().toString().trim())) {
+                    showToast("请选择意向商品");
+                    return;
+                }
+                saveInfo();
                 break;
 
         }

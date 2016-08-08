@@ -183,9 +183,7 @@ public abstract class BaseActivity extends RxFragmentActivity implements OnClick
                 } else {
                     //这些Api不返回前台用户error msg
                     if (!ClassFilter.getUnToastApis().contains(req.getApi())) {
-                        if (req.getApi() == ApiType.RSC_ORDER_SELF_DELIVERY && req.getData().getStatus().equals("1429")) {
-                            App.getApp().showToast("您输入错误次数较多，请1分钟后再操作");
-                        } else if (req.getData().getStatus().equals("1403")) {
+                        if (req.getData().getStatus().equals("1403")) {
                             RndLog.d(TAG, req.getData().getMessage());
                         } else if (req.getApi() == ApiType.APP_UP_GRADE) {
                             if (!getClass().getSimpleName().equals(HomepageActivity.class.getSimpleName())) {
@@ -195,7 +193,7 @@ public abstract class BaseActivity extends RxFragmentActivity implements OnClick
                             onResponsed(req);
                         } else if (req.getApi() == ApiType.SHARE_ADD_POINTS) {
                             onResponsed(req);
-                        }else {
+                        } else {
                             req.showErrorMsg();
                         }
                     }
@@ -370,8 +368,8 @@ public abstract class BaseActivity extends RxFragmentActivity implements OnClick
     public void execApi(final ApiType api, RequestParams params) {
 
         // 判断是不是通过验证
-        if (params==null){
-            params=  new RequestParams();
+        if (params == null) {
+            params = new RequestParams();
         }
         if (params.containsKey("userId")) {
             if (Store.User.queryMe() != null) {

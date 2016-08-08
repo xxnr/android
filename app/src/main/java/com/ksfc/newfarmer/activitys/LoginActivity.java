@@ -8,6 +8,7 @@ import com.ksfc.newfarmer.App;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.event.IsLoginEvent;
 import com.ksfc.newfarmer.event.MainTabSelectEvent;
+import com.ksfc.newfarmer.event.RegisterEvent;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
@@ -31,6 +32,8 @@ import android.view.View.OnClickListener;
 import net.yangentao.util.PreferenceUtil;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 /**
  * 项目名称：newFarmer 类名称：LoginActivity 类描述： 创建人：王蕾 创建时间：2015-5-28 上午11:05:33 修改备注：
@@ -39,7 +42,6 @@ public class LoginActivity extends BaseActivity {
     private ClearEditText login_layout_phone, login_layout_password;
     private String phoneNumber;
     private String phonePassword;
-    private boolean isFromReg = false; // 是否从注册页跳转
     private String reg_phone;// 注册页注册的手机号
     private boolean isTokenError = false;
 
@@ -50,14 +52,20 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     public void OnActCreate(Bundle savedInstanceState) {
-        //接收注册的号码
-        Bundle bundle = getIntent().getExtras();
-        if (bundle != null) {
-            isFromReg = bundle.getBoolean("from_reg", false);
-            reg_phone = bundle.getString("reg_phone");
-        }
-
+        setTitle("登录");
+        EventBus.getDefault().register(this);
         initView();
+
+    }
+
+    /**
+     * 注册成功
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void registerEvent(RegisterEvent event) {
+        login_layout_phone.setText(StringUtil.checkStr(event.phone) ? event.phone : "");
+        login_layout_phone.clearFocus();
+        login_layout_password.requestFocus();
     }
 
 
@@ -68,22 +76,15 @@ public class LoginActivity extends BaseActivity {
         setViewClick(R.id.login_layout_complete);
         setViewClick(R.id.login_layoutforgetpassword);
         setViewClick(R.id.login_layoutReg);
-        setTitle("登录");
 
-        //注册完，登陆默认填入
-        if (isFromReg && StringUtil.checkStr(reg_phone)) {
-            login_layout_phone.setText(reg_phone);
+
+        //获取上次保存再本地的手机号
+        PreferenceUtil pu = new PreferenceUtil(this, App.SPNAME);
+        String lastPhoneNumber = pu.getString("lastPhoneNumber", "");
+        if (StringUtil.checkStr(lastPhoneNumber)&&login_layout_phone.getText().toString().trim().isEmpty()) {
+            login_layout_phone.setText(lastPhoneNumber);
             login_layout_phone.clearFocus();
             login_layout_password.requestFocus();
-        } else {
-            //获取上次保存再本地的手机号
-            PreferenceUtil pu = new PreferenceUtil(this, App.SPNAME);
-            String lastPhoneNumber = pu.getString("lastPhoneNumber", "");
-            if (StringUtil.checkStr(lastPhoneNumber)) {
-                login_layout_phone.setText(lastPhoneNumber);
-                login_layout_phone.clearFocus();
-                login_layout_password.requestFocus();
-            }
         }
         isTokenError = getIntent().getBooleanExtra("isTokenError", false);
 
@@ -93,7 +94,7 @@ public class LoginActivity extends BaseActivity {
             public void onClick(View v) {
                 if (isTokenError) {
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    intent.putExtra("id",MainActivity.Tab.MINE);
+                    intent.putExtra("id", MainActivity.Tab.MINE);
                     startActivity(intent);
                     EventBus.getDefault().post(new MainTabSelectEvent(MainActivity.Tab.MINE));
                 }
@@ -109,7 +110,7 @@ public class LoginActivity extends BaseActivity {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
             if (isTokenError) {
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                intent.putExtra("id",MainActivity.Tab.MINE);
+                intent.putExtra("id", MainActivity.Tab.MINE);
                 startActivity(intent);
                 EventBus.getDefault().post(new MainTabSelectEvent(MainActivity.Tab.MINE));
             }
@@ -197,7 +198,7 @@ public class LoginActivity extends BaseActivity {
                 //登录成功跳转
                 if (isTokenError) {
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    intent.putExtra("id",MainActivity.Tab.MINE);
+                    intent.putExtra("id", MainActivity.Tab.MINE);
                     startActivity(intent);
                     EventBus.getDefault().post(new MainTabSelectEvent(MainActivity.Tab.MINE));
                 }
@@ -248,5 +249,11 @@ public class LoginActivity extends BaseActivity {
             Store.User.saveMe(me);
         }
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

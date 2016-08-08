@@ -1,5 +1,6 @@
 package com.ksfc.newfarmer.activitys;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.ksfc.newfarmer.BaseActivity;
 import com.ksfc.newfarmer.R;
+import com.ksfc.newfarmer.RndApplication;
 import com.ksfc.newfarmer.db.Store;
 import com.ksfc.newfarmer.event.MainTabSelectEvent;
 import com.ksfc.newfarmer.event.UserInfoChangeEvent;
@@ -81,12 +83,7 @@ public class ImprovePersonActivity extends BaseActivity {
         setLeftClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EventBus.getDefault().post(new UserInfoChangeEvent());
-                Intent intent = new Intent(ImprovePersonActivity.this, MainActivity.class);
-                intent.putExtra("id",MainActivity.Tab.MINE);
-                startActivity(intent);
-                EventBus.getDefault().post(new MainTabSelectEvent(MainActivity.Tab.MINE));
-                finish();
+                toTurn();
             }
         });
     }
@@ -96,12 +93,7 @@ public class ImprovePersonActivity extends BaseActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-            EventBus.getDefault().post(new UserInfoChangeEvent());
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra("id",MainActivity.Tab.MINE);
-            startActivity(intent);
-            EventBus.getDefault().post(new MainTabSelectEvent(MainActivity.Tab.MINE));
-            finish();
+            toTurn();
             return true;
         }
         return super.onKeyDown(keyCode, event);
@@ -270,12 +262,7 @@ public class ImprovePersonActivity extends BaseActivity {
                 }
                 break;
             case R.id.choice_cancel:
-                EventBus.getDefault().post(new UserInfoChangeEvent());
-                Intent intent = new Intent(ImprovePersonActivity.this, MainActivity.class);
-                intent.putExtra("id",MainActivity.Tab.MINE);
-                startActivity(intent);
-                EventBus.getDefault().post(new MainTabSelectEvent(MainActivity.Tab.MINE));
-                finish();
+                toTurn();
                 break;
         }
     }
@@ -312,12 +299,7 @@ public class ImprovePersonActivity extends BaseActivity {
         if (req.getApi() == ApiType.SAVE_MYUSER) {
             if (req.getData().getStatus().equals("1000")) {
                 showToast("保存成功");
-                EventBus.getDefault().post(new UserInfoChangeEvent());
-                Intent intent = new Intent(ImprovePersonActivity.this, MainActivity.class);
-                intent.putExtra("id",MainActivity.Tab.MINE);
-                startActivity(intent);
-                EventBus.getDefault().post(new MainTabSelectEvent(MainActivity.Tab.MINE));
-                finish();
+                toTurn();
             }
         } else if (req.getApi() == ApiType.QUERYTOWNID) {
             TownList add = (TownList) req.getData();
@@ -349,5 +331,23 @@ public class ImprovePersonActivity extends BaseActivity {
         execApi(ApiType.SAVE_MYUSER.setMethod(ApiType.RequestMethod.POSTJSON), params);
     }
 
+
+    private void toTurn() {
+        int size = RndApplication.unDestroyActivityList.size();
+        if (size >= 2) {
+            Activity activity = RndApplication.unDestroyActivityList.get(size - 2);
+            if (!activity.getClass().getSimpleName().equals(CampaignDetailActivity.class.getSimpleName())) {
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.putExtra("id", MainActivity.Tab.MINE);
+                startActivity(intent);
+                EventBus.getDefault().post(new MainTabSelectEvent(MainActivity.Tab.MINE));
+            }
+        }
+        EventBus.getDefault().post(new UserInfoChangeEvent());
+        finish();
+    }
+
 }
+
+
 

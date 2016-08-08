@@ -87,9 +87,7 @@ public abstract class BaseFragment extends RxFragment implements
                 onResponsed(req);
             } else {
                 if (!ClassFilter.getUnToastApis().contains(req.getApi())) {
-                    if (req.getApi() == ApiType.RSC_ORDER_SELF_DELIVERY && req.getData().getStatus().equals("1429")) {
-                        App.getApp().showToast("您输入错误次数较多，请1分钟后再操作");
-                    } else if (req.getData().getStatus().equals("1403")) {
+                     if (req.getData().getStatus().equals("1403")) {
                         RndLog.d("onResponse", req.getData().getMessage());
                     } else {
                         req.showErrorMsg();

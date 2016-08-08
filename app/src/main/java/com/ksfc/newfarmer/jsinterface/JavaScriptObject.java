@@ -97,7 +97,15 @@ public class JavaScriptObject {
     }
 
     @JavascriptInterface
+    public void shareUrl(String shareUrl,boolean isNeedRefresh) {
+        RndLog.d("JavaScriptObject", "isNeedRefresh:" + isNeedRefresh);
+        RndLog.d("JavaScriptObject", "shareUrl:" + shareUrl);
+
+        EventBus.getDefault().post(new WebShareUrlEvent(shareUrl,isNeedRefresh));
+    }
+
+    @JavascriptInterface
     public void shareUrl(String shareUrl) {
-        EventBus.getDefault().post(new WebShareUrlEvent(shareUrl));
+        shareUrl(shareUrl,false);
     }
 }

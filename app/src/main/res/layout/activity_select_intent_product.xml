@@ -1,32 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/base_activity"
     android:orientation="vertical">
 
     <include layout="@layout/title_lay" />
 
-    <ListView
-        android:id="@+id/listView"
+    <ExpandableListView
+        android:id="@+id/expandListView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/choice_compelet"
-        android:layout_below="@+id/titleview"
-        android:divider="@color/gray"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:cacheColorHint="#00000000"
+        android:childDivider="@color/deep1_gray"
+        android:divider="@color/deep1_gray"
         android:dividerHeight="1px"
         android:scrollbars="none" />
 
 
-    <TextView
-        android:id="@+id/choice_compelet"
-        android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="16dp"
-        android:background="@drawable/login_roate"
-        android:gravity="center"
-        android:padding="10dp"
-        android:text="确定"
-        android:textColor="@color/white"
-        android:textSize="18sp" />
+    <include layout="@layout/line_lay" />
 
-</RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="@color/white"
+        android:gravity="center"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <TextView
+            android:id="@+id/choice_compelet"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/login_roate"
+            android:gravity="center"
+            android:text="确定"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

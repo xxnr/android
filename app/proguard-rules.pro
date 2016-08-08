@@ -254,30 +254,45 @@
     -keep class im.yixin.sdk.api.YXMessage {*;}
     -keep class im.yixin.sdk.api.** implements im.yixin.sdk.api.YXMessage$YXMessageData{*;}
     #友盟推送
-    -dontwarn com.ut.mini.**
-    -dontwarn okio.**
-    -dontwarn com.xiaomi.**
-    -dontwarn com.squareup.wire.**
-    -dontwarn android.support.v4.**
-    -keepattributes *Annotation*
-    -keep class android.support.v4.** { *; }
-    -keep interface android.support.v4.app.** { *; }
-    -keep class okio.** {*;}
-    -keep class com.squareup.wire.** {*;}
-    -keep class com.umeng.message.protobuffer.* {
-    	 public <fields>;
-             public <methods>;
-    }
+
     -keep class com.umeng.message.* {
-    	 public <fields>;
-             public <methods>;
+        public <fields>;
+        public <methods>;
     }
-    -keep class org.android.agoo.impl.* {
-    	 public <fields>;
-             public <methods>;
+
+    -keep class com.umeng.message.protobuffer.* {
+        public <fields>;
+        public <methods>;
     }
+
+    -keep class com.squareup.wire.* {
+        public <fields>;
+        public <methods>;
+    }
+
+    -keep class com.umeng.message.local.* {
+        public <fields>;
+        public <methods>;
+    }
+    -keep class org.android.agoo.impl.*{
+        public <fields>;
+        public <methods>;
+    }
+
+    -dontwarn com.xiaomi.**
+
+    -dontwarn com.ut.mini.**
+
     -keep class org.android.agoo.service.* {*;}
+
     -keep class org.android.spdy.**{*;}
+
+    -keep public class com.ksfc.newfarmer.R$*{
+        public static final int *;
+    }
+
+
+
 
 
 

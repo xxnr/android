@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
@@ -77,6 +78,8 @@ public class CampaignDetailActivity extends BaseActivity {
 
     private String campaignId;  //活动Id
 
+    private boolean isNeedRerefreh;
+
 
     @Override
     public int getLayout() {
@@ -96,16 +99,7 @@ public class CampaignDetailActivity extends BaseActivity {
         } else {
             fromList();
         }
-        if (NetUtil.isConnected(this)) {
-            showProgressDialog();
-            if (url.contains("http")) {
-                webView.loadUrl(url);
-            } else {
-                webView.loadUrl(MsgID.IP + url);
-            }
-        } else {
-            showToast("网络未连接");
-        }
+        refreshWeb();
     }
 
     /**
@@ -117,12 +111,18 @@ public class CampaignDetailActivity extends BaseActivity {
     public void urlShareEvent(WebShareUrlEvent event) {
         if (StringUtil.checkStr(event.shareUrl)) {
             shareUrl = event.shareUrl;
+            isNeedRerefreh = event.isRefresh;
             titleRightView.performClick();
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void isLoginEvent(IsLoginEvent event) {
+        refreshWeb();
+    }
+
+
+    private void refreshWeb() {
         if (NetUtil.isConnected(this)) {
             showProgressDialog();
             if (url.contains("http")) {
@@ -133,6 +133,7 @@ public class CampaignDetailActivity extends BaseActivity {
         } else {
             showToast("网络未连接");
         }
+
     }
 
 
@@ -253,13 +254,16 @@ public class CampaignDetailActivity extends BaseActivity {
         } else if (req.getApi() == ApiType.SHARE_ADD_POINTS) {
             if (req.getData().getStatus().equals("1000")) {
                 ShareAddPointsResult reqData = (ShareAddPointsResult) req.getData();
-                if (reqData.points != 0) {
+                if (reqData.points > 0) {
                     showToast("分享成功，奖励您" + reqData.points + "积分");
-                }else {
+                } else {
                     showToast("分享成功");
                 }
-            }else {
+            } else {
                 showToast("分享成功");
+            }
+            if (isNeedRerefreh){
+                refreshWeb();
             }
         }
     }
@@ -468,6 +472,17 @@ public class CampaignDetailActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
+    }
+
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK) && webView.canGoBack()) {
+            webView.goBack(); //goBack()表示返回WebView的上一页面
+            return true;
+        }
+        finish();//结束退出程序
+        return false;
     }
 
 

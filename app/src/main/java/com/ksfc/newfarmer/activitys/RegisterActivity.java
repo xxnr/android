@@ -9,6 +9,7 @@ import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.beans.LoginResult;
 import com.ksfc.newfarmer.beans.PublicKeyResult;
 import com.ksfc.newfarmer.beans.SmsResult;
+import com.ksfc.newfarmer.event.RegisterEvent;
 import com.ksfc.newfarmer.protocol.ApiType;
 import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.protocol.RequestParams;
@@ -21,7 +22,6 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.os.Bundle;
@@ -31,12 +31,14 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
+
 
 /**
  * 项目名称：newFarmer 类名称：RegisterActivity 类描述： 创建人：王蕾 创建时间：2015-5-28 上午11:43:11
  * 修改备注：
  */
-public class RegisterActivity extends BaseActivity {
+public class   RegisterActivity extends BaseActivity {
     private ClearEditText backedit1, backnewpassword, confimPasword;
     private EditText backyanzhengma;
     private TextView backgetVerificationCode, register_layoutxieyi;
@@ -69,18 +71,6 @@ public class RegisterActivity extends BaseActivity {
         setViewClick(R.id.register_layoutxieyi);
         setViewClick(R.id.reg_dengLubutton);
         register_layoutxieyi.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
-
-        setLeftClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
-                intent.putExtra("id", MainActivity.Tab.MINE);
-                startActivity(intent);
-                finish();
-            }
-        });
-
     }
 
 
@@ -352,15 +342,11 @@ public class RegisterActivity extends BaseActivity {
                 }
             }
         } else if (req.getApi() == ApiType.REGISTER) {
-
             LoginResult res = (LoginResult) req.getData();
             if ("1000".equals(res.getStatus())) {
                 showToast("注册成功");
-                Bundle bundle = new Bundle();
-                bundle.putBoolean("from_reg", true);
-                bundle.putString("reg_phone", phoneNumber);
-                IntentUtil.activityForward(this, LoginActivity.class, bundle,
-                        true);
+                EventBus.getDefault().post(new RegisterEvent(phoneNumber));
+                IntentUtil.activityForward(this, LoginActivity.class, null, true);
                 finish();
             } else {
                 showToast(res.getMessage());
