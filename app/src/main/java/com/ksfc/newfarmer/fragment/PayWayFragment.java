@@ -552,12 +552,16 @@ public class PayWayFragment extends BaseFragment {
                 String json = response.body().string();
                 Gson gson = new Gson();
                 if (StringUtil.checkStr(json)) {
-                    UnionPayResponse unionPayResponse = gson.fromJson(json, UnionPayResponse.class);
-                    if (unionPayResponse != null) {
-                        Message msg = Message.obtain();
-                        msg.what = 0;
-                        msg.obj = unionPayResponse;
-                        handler.sendMessage(msg);
+                    try {
+                        UnionPayResponse unionPayResponse = gson.fromJson(json, UnionPayResponse.class);
+                        if (unionPayResponse != null) {
+                            Message msg = Message.obtain();
+                            msg.what = 0;
+                            msg.obj = unionPayResponse;
+                            handler.sendMessage(msg);
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
                     }
                 }
             }

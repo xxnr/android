@@ -65,7 +65,7 @@ import in.srain.cube.views.ptr.PtrHandler;
 public class RewardShopActivity extends BaseActivity {
 
     @BindView(R.id.titleview)
-    RelativeLayout titleview;
+    LinearLayout titleview;
     @BindView(R.id.integral_count_tv)
     TextView integral_tv;
     @BindView(R.id.view_container)

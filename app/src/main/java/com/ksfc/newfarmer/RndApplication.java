@@ -40,7 +40,7 @@ public class RndApplication extends MultiDexApplication {
         instance = this;
         App.setApp(this);
         //是否显示log
-        RndLog.DEBUG_MODE = false;
+        RndLog.DEBUG_MODE = true;
         //初始化数据库管理器
         DBManager.getInstance(this);
         //初始化CrashHandler

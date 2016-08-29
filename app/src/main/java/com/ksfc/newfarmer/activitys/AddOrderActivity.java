@@ -100,10 +100,10 @@ public class AddOrderActivity extends BaseActivity implements RadioGroup.OnCheck
             String pic;
             List<GetshopCart.SKU.Additions> additionsList;
             int num;
-            float additionPrice;
+            double additionPrice;
             String attr;
-            float xianjia;
-            float dingjin;
+            double xianjia;
+            double dingjin;
         }
     }
 
@@ -566,14 +566,14 @@ public class AddOrderActivity extends BaseActivity implements RadioGroup.OnCheck
                             .empty(rows.get(i).SKUList.get(j).price)) {
                         goods.xianjia = 0;
                     } else {
-                        goods.xianjia = Float.parseFloat(rows.get(i).SKUList
+                        goods.xianjia = Double.parseDouble(rows.get(i).SKUList
                                 .get(j).price);
                     }
                     //订金
                     if (StringUtil.empty(rows.get(i).SKUList.get(j).deposit)) {
                         goods.dingjin = 0;
                     } else {
-                        goods.dingjin = Float.parseFloat(rows.get(i).SKUList
+                        goods.dingjin = Double.parseDouble(rows.get(i).SKUList
                                 .get(j).deposit);
                     }
                     //Sku属性
@@ -590,7 +590,7 @@ public class AddOrderActivity extends BaseActivity implements RadioGroup.OnCheck
                     //附加选项
                     if (rows.get(i).SKUList.get(j).additions != null && !rows.get(i).SKUList.get(j).additions.isEmpty()) {
                         goods.additionsList = rows.get(i).SKUList.get(j).additions;
-                        float addi_price = 0;
+                        double addi_price = 0;
                         for (int k = 0; k < rows.get(i).SKUList.get(j).additions.size(); k++) {
                             addi_price += rows.get(i).SKUList.get(j).additions.get(k).price;
                         }
@@ -672,8 +672,8 @@ public class AddOrderActivity extends BaseActivity implements RadioGroup.OnCheck
     /**
      * 获得商品总额
      */
-    private float getTotalPrice() {
-        float price = 0;
+    private double getTotalPrice() {
+        double price = 0;
         for (int i = 0; i < data.category.size(); i++) {
             for (int j = 0; j < data.category.get(i).goods.size(); j++) {
                 Data.Goods good = data.category.get(i).goods.get(j);

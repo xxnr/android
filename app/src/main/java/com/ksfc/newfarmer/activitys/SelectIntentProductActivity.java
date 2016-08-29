@@ -1,7 +1,10 @@
 package com.ksfc.newfarmer.activitys;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,12 +42,18 @@ public class SelectIntentProductActivity extends BaseActivity {
     @BindView(R.id.choice_compelet)
     TextView choice_compelet;
 
-
     private ProductAdapter adapter;
 
     private HashMap<String, Boolean> checkMap = new HashMap<>();
     private HashMap<String, Boolean> checkNameMap = new HashMap<>();
 
+
+    public static Intent startActivity(Context context, HashMap<String, Boolean> checkMap) {
+        Intent intent = new Intent();
+        intent.putExtra("checkMap", checkMap);
+        intent.setClass(context, SelectIntentProductActivity.class);
+        return intent;
+    }
 
     @Override
     public int getLayout() {
@@ -52,12 +61,18 @@ public class SelectIntentProductActivity extends BaseActivity {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void OnActCreate(Bundle savedInstanceState) {
         ButterKnife.bind(this);
         setTitle("选择意向商品");
         expandableListView.setGroupIndicator(null);
-        showProgressDialog();
+
+        HashMap<String, Boolean> checkMap_receive = (HashMap<String, Boolean>) getIntent().getSerializableExtra("checkMap");
+        if (checkMap_receive != null&&!checkMap_receive.isEmpty()) {
+            checkMap.putAll(checkMap_receive);
+        }
         if (isLogin()) {
+            showProgressDialog();
             execApi(ApiType.GET_INTENT_PRODUCTS.setMethod(ApiType.RequestMethod.GET), null);
         }
     }
@@ -75,7 +90,7 @@ public class SelectIntentProductActivity extends BaseActivity {
             }
             for (Map.Entry<String, Boolean> entry : checkNameMap.entrySet()) {
                 if (entry.getValue()) {
-                    builder.append(entry.getKey()).append("；");
+                    builder.append(entry.getKey()).append(";");
                 }
             }
             if (StringUtil.checkStr(builder.toString())) {
@@ -243,18 +258,18 @@ public class SelectIntentProductActivity extends BaseActivity {
                                     Boolean aBoolean = checkMap.get(product._id);
                                     if (aBoolean != null && aBoolean) {
                                         checkMap.put(product._id, false);
-                                        checkNameMap.put(product.name, false);
                                     } else {
                                         checkMap.put(product._id, true);
-                                        checkNameMap.put(product.name, true);
                                     }
                                     notifyDataSetChanged();
                                 }
                             });
                     if (checkMap.get(product._id) != null && checkMap.get(product._id)) {
+                        checkNameMap.put(product.name, true);
                         holder.itemSelectIntentName.setTextColor(getResources().getColor(R.color.green));
                         holder.itemSelectIntentCheckbox.setVisibility(View.VISIBLE);
                     } else {
+                        checkNameMap.put(product.name, false);
                         holder.itemSelectIntentName.setTextColor(getResources().getColor(R.color.black_goods_titile));
                         holder.itemSelectIntentCheckbox.setVisibility(View.INVISIBLE);
                     }

@@ -29,7 +29,7 @@ public class SureOrder extends ResponseResult {
 		public String shopCartId;
 		public String deliveryTime;
 		public long dataSubmit;
-		public float totalPrice;
+		public double totalPrice;
 		public String invoiceId;
 		public String payType;
 		public String privilegeId;

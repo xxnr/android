@@ -105,12 +105,17 @@ public class ChoiceHomeAddress extends BaseActivity {
                         cityRequestCode, bundle1);
                 break;
             case R.id.choice_town_layout:
-                Bundle bundle = new Bundle();
-                bundle.putInt("tag", 1);
-                bundle.putString("queueid", queueid);
-                bundle.putString("buildid", buildid);
-                IntentUtil.startActivityForResult(this, SelectAddressActivity.class,
-                        townRequestCode, bundle);
+                if (StringUtil.checkStr(choice_city_text.getText().toString())){
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("tag", 1);
+                    bundle.putString("queueid", queueid);
+                    bundle.putString("buildid", buildid);
+                    IntentUtil.startActivityForResult(this, SelectAddressActivity.class,
+                            townRequestCode, bundle);
+                }else {
+                    showToast("请选选择地区");
+                }
+
                 break;
 
             case R.id.name_submit_tv:

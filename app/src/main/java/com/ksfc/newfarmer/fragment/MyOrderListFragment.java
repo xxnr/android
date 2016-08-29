@@ -551,7 +551,7 @@ public class MyOrderListFragment extends EventBaseFragment implements PullToRefr
 
                     //附加选项
                     StringBuilder stringAdditions = new StringBuilder();
-                    float car_additions_price = 0;
+                    double car_additions_price = 0;
                     if (SKUsList.get(i).additions != null && !SKUsList.get(i).additions.isEmpty()) {
                         viewHolderChild.additions_lin.setVisibility(View.VISIBLE);
                         stringAdditions.append("附加项目:");

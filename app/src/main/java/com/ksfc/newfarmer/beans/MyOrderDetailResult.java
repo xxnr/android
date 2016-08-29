@@ -111,13 +111,13 @@ public class MyOrderDetailResult extends ResponseResult implements Serializable 
         public static class SKUS implements Serializable {
             public String name; //SKU名称
             public int count; //商品数量
-            public float price;// 商品价格
+            public double price;// 商品价格
             public String orderSubType;
             public String orderSubNo;
             public String ref;
             public String goodsId; //商品id
             public String imgs; //skuID
-            public float deposit;// 商品定金
+            public double deposit;// 商品定金
             public String category; //商品分类
             public String deliverStatus; //发货状态
             public String productName; //SKU简称
@@ -125,7 +125,7 @@ public class MyOrderDetailResult extends ResponseResult implements Serializable 
             public List<Attributes> attributes; //属性
 
             public static class Additions implements Serializable {
-                public float price;//附加选项价格
+                public double price;//附加选项价格
                 public String name;// 附加选项名称
                 public String ref;//附加选项_id
                 public String _id;//附加选项_id
@@ -147,12 +147,12 @@ public class MyOrderDetailResult extends ResponseResult implements Serializable 
         public String goodsId;
         public String orderSubType;
         public String originalPrice;
-        public float unitPrice;
+        public double unitPrice;
         public int goodsCount;
         public String goodsName;
         public String orderSubNo;
         public String deliverStatus;
-        public float deposit;
+        public double deposit;
 
     }
 

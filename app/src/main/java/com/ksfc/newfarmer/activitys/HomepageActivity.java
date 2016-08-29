@@ -327,7 +327,11 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
                         });
                 CustomDialog dialog = builder.create();
                 dialog.setCanceledOnTouchOutside(false);
-                dialog.show();
+                try {
+                    dialog.show();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }
         } else if (ApiType.GET_CLASSID == req.getApi()) {
             ClassIDResult data = (ClassIDResult) req.getData();
@@ -356,7 +360,6 @@ public class HomepageActivity extends BaseActivity implements PullToRefreshBase.
                                 huaFeiClassId = entity.id;//设置化肥的id
                                 PreferenceUtil pu = new PreferenceUtil(this, App.SPNAME);
                                 pu.putString("huafei", huaFeiClassId);
-
                                 holder.view_bar_more_bar.setBackgroundColor(getResources().getColor(R.color.green));
                             }
                             if (entity.name.equals("汽车")) {

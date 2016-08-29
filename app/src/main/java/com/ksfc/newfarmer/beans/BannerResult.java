@@ -22,9 +22,9 @@ public class BannerResult extends ResponseResult {
 		public String shop_title;
 		public String shop_thumb;
 		public String shop_url;
-		public float shop_express;
-		public float shop_price_max;
-		public float shop_price_discount;
+		public double shop_express;
+		public double shop_price_max;
+		public double shop_price_discount;
 		public String shop_open_time;
 		public int imgUrl;
 	}

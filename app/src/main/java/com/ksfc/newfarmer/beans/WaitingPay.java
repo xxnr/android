@@ -82,8 +82,8 @@ public class WaitingPay extends ResponseResult {
         public int count;// 数量
         public String thumbnail;// 商品图片
         public String name;//商品名称
-        public float deposit;// 商品定金
-        public float price;// 商品价格
+        public double deposit;// 商品定金
+        public double price;// 商品价格
         public String id;// 商品id
 
     }
@@ -91,8 +91,8 @@ public class WaitingPay extends ResponseResult {
     public static class SKUS implements Serializable {
         public String ref; //skuID
         public String productId; //商品id
-        public float deposit;// 商品定金
-        public float price;// 商品价格
+        public double deposit;// 商品定金
+        public double price;// 商品价格
         public String productName; //SKU简称
         public String name; //SKU名称
         public String thumbnail; //商品略缩图
@@ -103,7 +103,7 @@ public class WaitingPay extends ResponseResult {
         public List<Attributes> attributes; //属性
 
         public static class Additions implements Serializable {
-            public float price;//附加选项价格
+            public double price;//附加选项价格
             public String name;// 附加选项名称
             public String ref;//附加选项_id
             public String _id;//附加选项_id
@@ -122,7 +122,7 @@ public class WaitingPay extends ResponseResult {
 
     public static class SubOrders implements Serializable {
         public String id;// 阶段订单id
-        public float price;// 子订单价格
+        public double price;// 子订单价格
         public String type;//// 子订单类型'deposit':阶段一定金, 'balance':阶段二尾款 'full':全款
         public String _id;// 类别 化肥 汽车
         public String payStatus;// / 子订单付款状态1:待付款, 2:已付款, 3:部分付款

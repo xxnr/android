@@ -731,7 +731,7 @@ public class MyOrderDetailActivity extends BaseActivity {
                     }
                 }
                 //附加选项的总价
-                float car_additions_price = 0;
+                double car_additions_price = 0;
                 if (SKUsList.get(position).additions != null && !SKUsList.get(position).additions.isEmpty()) {
                     for (int k = 0; k < SKUsList.get(position).additions.size(); k++) {
                         if (StringUtil.checkStr(SKUsList.get(position).additions.get(k).name)) {

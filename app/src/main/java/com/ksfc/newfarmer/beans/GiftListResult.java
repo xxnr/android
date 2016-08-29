@@ -48,7 +48,7 @@ public class GiftListResult extends ResponseResult {
             public String _id;
             public String id;
             public String name;
-            public float marketPrice;
+            public double marketPrice;
             public int points;
             public String dateupdated;
             public String datecreated;

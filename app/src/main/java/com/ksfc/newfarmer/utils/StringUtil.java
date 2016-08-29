@@ -85,8 +85,6 @@ public class StringUtil {
 
     // 将元转换为分
     public static String unitToCent(String unit) {
-
-
         Double v = Double.parseDouble(unit);
         return (String.valueOf((int)(v * 100)));
     }

@@ -183,6 +183,8 @@ public class CampaignDetailActivity extends BaseActivity {
             }
         });
 
+        titleRightView.setVisibility(View.GONE);
+        showRightImage();
         setRightImage(R.drawable.share_icon);
         setRightViewListener(new View.OnClickListener() {
             @Override
@@ -230,16 +232,9 @@ public class CampaignDetailActivity extends BaseActivity {
                 if (campaign != null) {
                     // 是否右上角又分享按钮
                     if (campaign.share_button) {
-                        setRightImage(R.drawable.share_icon);
-                        showRightImage();
-                        setRightViewListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                showPopUp(v);
-                            }
-                        });
+                        titleRightView.setVisibility(View.VISIBLE);
                     } else {
-                        hideRight();
+                        titleRightView.setVisibility(View.GONE);
                     }
                     //share content
                     shareUrl = campaign.share_url;
@@ -287,9 +282,9 @@ public class CampaignDetailActivity extends BaseActivity {
                 url = campaign.url;
                 // 是否右上角又分享按钮
                 if (campaign.share_button) {
-                    showRightImage();
+                    titleRightView.setVisibility(View.VISIBLE);
                 } else {
-                    hideRight();
+                    titleRightView.setVisibility(View.GONE);
                 }
                 //share content
                 campaignId = campaign._id;

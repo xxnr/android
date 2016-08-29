@@ -90,7 +90,7 @@ public class RscOrderResult extends ResponseResult {
 
 
             public static class Additions implements Serializable {
-                public float price;//附加选项价格
+                public double price;//附加选项价格
                 public String name;// 附加选项名称
                 public String ref;//附加选项_id
                 public String _id;//附加选项_id

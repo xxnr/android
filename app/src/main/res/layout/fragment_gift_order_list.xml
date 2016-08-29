@@ -18,7 +18,7 @@
         cube_ptr:ptr_resistance="1.7">
 
 
-        <com.ksfc.newfarmer.widget.AnimatedExpandableListView
+        <ExpandableListView
             android:id="@+id/gift_order_listView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

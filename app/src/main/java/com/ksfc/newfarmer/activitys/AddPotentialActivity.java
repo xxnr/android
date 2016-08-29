@@ -223,8 +223,14 @@ public class AddPotentialActivity extends BaseActivity {
                 }
                 break;
             case R.id.choose_type_ll:
-                IntentUtil.startActivityForResult(this, SelectIntentProductActivity.class,
-                        1000, null);
+                HashMap<String,Boolean> checkedMap =new HashMap<>();
+                if (productIdList!=null&&!productIdList.isEmpty()){
+                    for(String key:productIdList){
+                        checkedMap.put(key,true);
+                    }
+                }
+                Intent intent = SelectIntentProductActivity.startActivity(this, checkedMap);
+                startActivityForResult(intent,1000);
                 break;
             case R.id.choice_compelet:
                 if (!StringUtil.checkStr(name.getText().toString().trim())) {

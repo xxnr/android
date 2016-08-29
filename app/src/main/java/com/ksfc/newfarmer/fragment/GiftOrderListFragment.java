@@ -4,10 +4,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.ksfc.newfarmer.EventBaseFragment;
 import com.ksfc.newfarmer.R;
 import com.ksfc.newfarmer.common.PicassoHelper;
@@ -19,7 +21,7 @@ import com.ksfc.newfarmer.protocol.Request;
 import com.ksfc.newfarmer.beans.GiftOrderListResult;
 import com.ksfc.newfarmer.utils.DateFormatUtils;
 import com.ksfc.newfarmer.utils.StringUtil;
-import com.ksfc.newfarmer.widget.AnimatedExpandableListView;
+import com.ksfc.newfarmer.utils.Utils;
 import com.ksfc.newfarmer.widget.LoadingFooter;
 import com.ksfc.newfarmer.widget.PtrHeaderView;
 
@@ -41,7 +43,7 @@ import in.srain.cube.views.ptr.PtrHandler;
  */
 public class GiftOrderListFragment extends EventBaseFragment {
     @BindView(R.id.gift_order_listView)
-    AnimatedExpandableListView listView;
+    ExpandableListView listView;
     @BindView(R.id.rotate_header_list_view_frame)
     PtrClassicFrameLayout frameLayout;
     @BindView(R.id.exchange_record_empty_iv)
@@ -128,17 +130,13 @@ public class GiftOrderListFragment extends EventBaseFragment {
                 public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
 
                     if (parent.isGroupExpanded(groupPosition)) {
-                        //展开被选的group
-                        listView.collapseGroupWithAnimation(groupPosition);
-                        //设置被选中的group置于顶端
-                        listView.setSelectedGroup(groupPosition);
+                        listView.collapseGroup(groupPosition);
                     } else {
-                        //展开被选的group
-                        listView.expandGroupWithAnimation(groupPosition);
+                        listView.expandGroup(groupPosition, true);
                         //设置被选中的group置于顶端
+                        listView.smoothScrollToPositionFromTop(groupPosition, -Utils.dip2px(activity, 10), 300);
                         listView.setSelectedGroup(groupPosition);
                     }
-
                     return true;
                 }
             });
@@ -161,18 +159,17 @@ public class GiftOrderListFragment extends EventBaseFragment {
 
     /**
      * 礼品订单刷新
+     *
      * @param event
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void giftRefreshEvent(GiftListReFresh event){
+    public void giftRefreshEvent(GiftListReFresh event) {
         if (event.position == position) {
             showProgressDialog();
             page = 1;
             RemoteApi.getGiftOrderList(GiftOrderListFragment.this, type, page);
         }
     }
-
-
 
 
     @Override
@@ -216,10 +213,8 @@ public class GiftOrderListFragment extends EventBaseFragment {
         }
     }
 
-
-    class GiftOrderListAdapter extends AnimatedExpandableListView.AnimatedExpandableListAdapter {
+    class GiftOrderListAdapter extends BaseExpandableListAdapter {
         private List<GiftOrderListResult.DatasBean.GiftordersBean> giftorders;
-
 
         public GiftOrderListAdapter(List<GiftOrderListResult.DatasBean.GiftordersBean> giftorders) {
             this.giftorders = giftorders;
@@ -236,13 +231,13 @@ public class GiftOrderListFragment extends EventBaseFragment {
         }
 
         @Override
-        public int getRealChildrenCount(int groupPosition) {
-            return 1;
+        public int getGroupCount() {
+            return giftorders.size();
         }
 
         @Override
-        public int getGroupCount() {
-            return giftorders.size();
+        public int getChildrenCount(int groupPosition) {
+            return 1;
         }
 
         @Override
@@ -309,7 +304,7 @@ public class GiftOrderListFragment extends EventBaseFragment {
                             ? giftordersBean.orderStatus.value : "");
                 }
                 if (giftordersBean.gift != null) {
-                    PicassoHelper.setImageRes(GiftOrderListFragment.this,giftordersBean.gift.thumbnail,holder.giftOrderImgIv);
+                    PicassoHelper.setImageRes(GiftOrderListFragment.this, giftordersBean.gift.thumbnail, holder.giftOrderImgIv);
 
                     holder.giftOrderNameIv.setText(StringUtil.checkStr(giftordersBean.gift.name)
                             ? giftordersBean.gift.name : "");
@@ -321,15 +316,13 @@ public class GiftOrderListFragment extends EventBaseFragment {
         }
 
         @Override
-        public View getRealChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+        public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
             if (convertView == null) {
                 convertView = LayoutInflater.from(activity)
                         .inflate(R.layout.item_gift_order_list_child, null);
                 convertView.setTag(new ChildViewHolder(convertView));
             }
             ChildViewHolder holder = (ChildViewHolder) convertView.getTag();
-
-
             GiftOrderListResult.DatasBean.GiftordersBean giftordersBean = giftorders.get(groupPosition);
             if (giftordersBean != null) {
                 if (giftordersBean.deliveryType == 1) {
@@ -356,7 +349,7 @@ public class GiftOrderListFragment extends EventBaseFragment {
     }
 
 
-    static class GroupViewHolder {
+    class GroupViewHolder {
         @BindView(R.id.gift_order_time)
         TextView giftOrderTime;
         @BindView(R.id.gift_order_delivery_state)
@@ -372,13 +365,12 @@ public class GiftOrderListFragment extends EventBaseFragment {
         @BindView(R.id.item_gift_order_Indicator)
         ImageView item_gift_order_Indicator;
 
-
         GroupViewHolder(View view) {
             ButterKnife.bind(this, view);
         }
     }
 
-    static class ChildViewHolder {
+    class ChildViewHolder {
         @BindView(R.id.gift_order_delivery_code)
         TextView giftOrderDeliveryCode;
         @BindView(R.id.select_state_name)
@@ -397,11 +389,5 @@ public class GiftOrderListFragment extends EventBaseFragment {
         ChildViewHolder(View view) {
             ButterKnife.bind(this, view);
         }
-    }
-
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
     }
 }
